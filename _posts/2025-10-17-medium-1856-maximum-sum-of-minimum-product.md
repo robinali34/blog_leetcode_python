@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 1856. Maximum Sum of Minimum Product"
 date: 2025-10-17 22:36:25 -0700
-categories: leetcode algorithm medium cpp stack monotonic-stack prefix-sum problem-solving
+categories: python stack monotonic-stack prefix-sum problem-solving
 ---
 
 # [Medium] 1856. Maximum Sum of Minimum Product
@@ -63,37 +63,37 @@ Explanation:
 
 Use monotonic stack to find the range where each element is minimum, then calculate the maximum product using prefix sums.
 
-```cpp
-class Solution {
-public:
-    int maxSumMinProduct(vector<int>& nums) {
-        int n = nums.size();
+```python
+class Solution:
+
+    def maxSumMinProduct(self, list[int] nums) -> int:
+        int n = numslen();
         vector<long long> prefix(n + 1, 0);
         
         // Build prefix sum array
-        for(int i = 0; i < n; i++) {
+        for(i = 0 i < n; i++) {
             prefix[i + 1] = prefix[i] + nums[i];
         }
         
-        vector<int> left(n, -1), right(n, n);
+        list[int] left(n, -1), right(n, n);
         stack<int> s;
         
         // Find boundaries in single pass
-        for(int i = 0; i < n; i++) {
+        for(i = 0 i < n; i++) {
             // Find right boundaries for elements in stack
-            while(!s.empty() && nums[s.top()] >= nums[i]) {
+            while(!snot   nums[s.top()] >= nums[i]) {
                 right[s.top()] = i;
                 s.pop();
             }
             // Set left boundary for current element
-            if(!s.empty()) left[i] = s.top();
+            if(!snot ) left[i] = s.top();
             s.push(i);
         }
         
         long long maxProduct = 0;
         
         // Calculate maximum product for each element as minimum
-        for(int i = 0; i < n; i++) {
+        for(i = 0 i < n; i++) {
             long long totalSum = prefix[right[i]] - prefix[left[i] + 1];
             maxProduct = max(maxProduct, totalSum * nums[i]);
         }
@@ -154,15 +154,15 @@ right = [4, 3, 4, 4]
 ## Algorithm Breakdown
 
 ### Single Pass Boundary Finding:
-```cpp
-for(int i = 0; i < n; i++) {
+```python
+for(i = 0 i < n; i++) {
     // Find right boundaries for elements in stack
-    while(!s.empty() && nums[s.top()] >= nums[i]) {
+    while(!snot   nums[s.top()] >= nums[i]) {
         right[s.top()] = i;
         s.pop();
     }
     // Set left boundary for current element
-    if(!s.empty()) left[i] = s.top();
+    if(!snot ) left[i] = s.top();
     s.push(i);
 }
 ```
@@ -174,8 +174,8 @@ for(int i = 0; i < n; i++) {
 4. **Single pass:** Both boundaries found in one traversal
 
 ### Product Calculation:
-```cpp
-for(int i = 0; i < n; i++) {
+```python
+for(i = 0 i < n; i++) {
     long long totalSum = prefix[right[i]] - prefix[left[i] + 1];
     maxProduct = max(maxProduct, totalSum * nums[i]);
 }
@@ -259,14 +259,14 @@ right = [3, 3, 3, 5, 5]
 ## Alternative Approaches
 
 ### Approach 1: Brute Force
-```cpp
-class Solution {
-public:
-    int maxSumMinProduct(vector<int>& nums) {
+```python
+class Solution:
+
+    def maxSumMinProduct(self, list[int] nums) -> int:
         long long maxProduct = 0;
-        int n = nums.size();
+        int n = numslen();
         
-        for(int i = 0; i < n; i++) {
+        for(i = 0 i < n; i++) {
             for(int j = i; j < n; j++) {
                 int minVal = *min_element(nums.begin() + i, nums.begin() + j + 1);
                 long long sum = accumulate(nums.begin() + i, nums.begin() + j + 1, 0LL);
@@ -283,10 +283,10 @@ public:
 **Space Complexity:** O(1)
 
 ### Approach 2: Divide and Conquer
-```cpp
-class Solution {
+```python
+class Solution:
 private:
-    long long maxProduct(vector<int>& nums, int left, int right) {
+    long def maxProduct(self, list[int] nums, int left, int right) -> long:
         if(left > right) return 0;
         if(left == right) return (long long)nums[left] * nums[left];
         
@@ -297,9 +297,9 @@ private:
         return max({product, maxProduct(nums, left, minIdx - 1), maxProduct(nums, minIdx + 1, right)});
     }
     
-public:
-    int maxSumMinProduct(vector<int>& nums) {
-        return (int)(maxProduct(nums, 0, nums.size() - 1) % 1000000007);
+
+    def maxSumMinProduct(self, list[int] nums) -> int:
+        return (int)(maxProduct(nums, 0, numslen() - 1) % 1000000007);
     }
 };
 ```

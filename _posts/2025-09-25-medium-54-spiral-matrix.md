@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[Medium] 54. Spiral Matrix"
-categories: leetcode algorithm matrix data-structures simulation traversal medium cpp spiral-matrix problem-solving
+categories: python spiral-matrix problem-solving
 ---
 
 # [Medium] 54. Spiral Matrix
@@ -38,48 +38,39 @@ There are two main approaches to solve this problem:
 
 ## Solution 1: Boundary Tracking Approach
 
-```cpp
-class Solution {
-public:
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        vector<int> rtn;
-        const int rows = matrix.size(), cols = matrix[0].size();
-        int up = 0, left = 0, right = cols - 1, down = rows - 1;
+```python
+class Solution:
+    def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
+        result = []
+        rows, cols = len(matrix), len(matrix[0])
+        up, left = 0, 0
+        right, down = cols - 1, rows - 1
         
-        while(rtn.size() < rows * cols) {
-            // Traverse right along top row
-            for(int col = left; col <= right; col++) {
-                rtn.push_back(matrix[up][col]);
-            }
+        while len(result) < rows * cols:
+            # Traverse right along top row
+            for col in range(left, right + 1):
+                result.append(matrix[up][col])
             
-            // Traverse down along right column
-            for(int row = up + 1; row <= down; row++) {
-                rtn.push_back(matrix[row][right]);
-            }
+            # Traverse down along right column
+            for row in range(up + 1, down + 1):
+                result.append(matrix[row][right])
             
-            // Traverse left along bottom row (if not same as top)
-            if(up != down) {
-                for (int col = right - 1; col >= left; col--) {
-                    rtn.push_back(matrix[down][col]);
-                }
-            }
+            # Traverse left along bottom row (if not same as top)
+            if up != down:
+                for col in range(right - 1, left - 1, -1):
+                    result.append(matrix[down][col])
             
-            // Traverse up along left column (if not same as right)
-            if(left != right) {
-                for(int row = down - 1; row > up; row--) {
-                    rtn.push_back(matrix[row][left]);
-                }
-            }
+            # Traverse up along left column (if not same as right)
+            if left != right:
+                for row in range(down - 1, up, -1):
+                    result.append(matrix[row][left])
             
-            // Move boundaries inward
-            left++;
-            right--;
-            up++;
-            down--;
-        }
-        return rtn;
-    }
-};
+            # Move boundaries inward
+            left += 1
+            right -= 1
+            up += 1
+            down -= 1
+        return result
 ```
 
 **Time Complexity:** O(m × n) - Visit each cell exactly once
@@ -87,41 +78,34 @@ public:
 
 ## Solution 2: Direction Simulation Approach
 
-```cpp
-class Solution {
-public:
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        const int VISITED = 101;
-        const int rows = matrix.size(), cols = matrix[0].size();
-        vector<vector<int>> dirs = \{\{0, 1\}, \{1, 0\}, \{0, -1\}, \{-1, 0\}\}; // right, down, left, up
-        int dir = 0;
-        vector<int> rtn;
-        int row = 0, col = 0;
+```python
+class Solution:
+    def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
+        VISITED = 101
+        rows, cols = len(matrix), len(matrix[0])
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # right, down, left, up
+        dir_idx = 0
+        result = []
+        row, col = 0, 0
         
-        for(int i = 0; i < rows * cols; i++) {
-            rtn.push_back(matrix[row][col]);
-            matrix[row][col] = VISITED; // Mark as visited
+        for _ in range(rows * cols):
+            result.append(matrix[row][col])
+            matrix[row][col] = VISITED  # Mark as visited
             
-            // Calculate next position
-            int nextRow = row + dirs[dir][0];
-            int nextCol = col + dirs[dir][1];
+            # Calculate next position
+            nextRow = row + dirs[dir_idx][0]
+            nextCol = col + dirs[dir_idx][1]
             
-            // Check if next position is valid and not visited
-            if (nextRow >= 0 && nextRow < rows &&
-                nextCol >= 0 && nextCol < cols &&
-                matrix[nextRow][nextCol] != VISITED) {
-                    row = nextRow;
-                    col = nextCol;
-                } else {
-                    // Change direction and move
-                    dir = (dir + 1) % 4;
-                    row += dirs[dir][0];
-                    col += dirs[dir][1];
-                }
-        }
-        return rtn;
-    }
-};
+            # Check if next position is valid and not visited
+            if (0 <= nextRow < rows and 0 <= nextCol < cols and 
+                matrix[nextRow][nextCol] != VISITED):
+                row, col = nextRow, nextCol
+            else:
+                # Change direction and move
+                dir_idx = (dir_idx + 1) % 4
+                row += dirs[dir_idx][0]
+                col += dirs[dir_idx][1]
+        return result
 ```
 
 **Time Complexity:** O(m × n) - Visit each cell exactly once

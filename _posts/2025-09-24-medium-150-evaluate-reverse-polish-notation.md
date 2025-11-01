@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 150. Evaluate Reverse Polish Notation"
 date: 2025-09-24 20:00:00 -0000
-categories: leetcode algorithm stack data-structures mathematical-expression medium cpp reverse-polish-notation rpn problem-solving
+categories: python reverse-polish-notation rpn problem-solving
 ---
 
 # [Medium] 150. Evaluate Reverse Polish Notation
@@ -54,70 +54,64 @@ The solution uses a stack-based approach:
 3. **Operation Execution**: Pop two operands, perform operation, push result
 4. **Final Result**: The remaining element in stack is the answer
 
-## Solution 1: Using std::stack
+## Solution 1: Using List as Stack
 
 **Time Complexity:** O(n) - Process each token once  
 **Space Complexity:** O(n) - Stack can hold up to n/2 operands
 
-```cpp
-class Solution {
-public:
-    int evalRPN(vector<string>& tokens) {
-        stack<int> stk;
-        unordered_set<string> ops = {"+", "-", "*", "/"};
-        const int n = tokens.size();
-        for (const auto& token : tokens) {
-            if (!ops.count(token)){
-                stk.push(stoi(token));
-            } else {
-                int num2 = stk.top();
-                stk.pop();
-                int num1 = stk.top();
-                stk.pop();
-                int rtn = 0;
-                switch (token[0]) {
-                    case '+': rtn = num1 + num2; break;
-                    case '-': rtn = num1 - num2; break;
-                    case '*': rtn = num1 * num2; break;
-                    case '/': rtn = num1 / num2; break;
-                }
-                stk.push(rtn);
-            }
-        }
-        return stk.top();
-    }
-};
+```python
+class Solution:
+    def evalRPN(self, tokens: list[str]) -> int:
+        stack = []
+        ops = {"+", "-", "*", "/"}
+        for token in tokens:
+            if token not in ops:
+                stack.append(int(token))
+            else:
+                num2 = stack.pop()
+                num1 = stack.pop()
+                if token == '+':
+                    result = num1 + num2
+                elif token == '-':
+                    result = num1 - num2
+                elif token == '*':
+                    result = num1 * num2
+                else:  # token == '/'
+                    result = int(num1 / num2)  # Truncate towards zero
+                stack.append(result)
+        return stack[-1]
 ```
 
-## Solution 2: Using Vector as Stack
+## Solution 2: Using List with Index Tracking
 
 **Time Complexity:** O(n) - Process each token once  
-**Space Complexity:** O(n) - Vector can hold up to n/2 operands
+**Space Complexity:** O(n) - List can hold up to n/2 operands
 
-```cpp
-class Solution {
-public:
-    int evalRPN(vector<string>& tokens) {
-        const int n = tokens.size();
-        vector<int> stk((n + 1) / 2);
-        int idx = -1;
-        unordered_set<string> ops = {"+", "-", "*", "/"};
-        for (const auto& token : tokens) {
-            if (token.length() > 1 || !ops.count(token)){
-                idx++;
-                stk[idx] = stoi(token);
-            } else {
-                switch (token[0]) {
-                    case '+': idx--; stk[idx] += stk[idx + 1]; break;
-                    case '-': idx--; stk[idx] -= stk[idx + 1]; break;
-                    case '*': idx--; stk[idx] *= stk[idx + 1]; break;
-                    case '/': idx--; stk[idx] /= stk[idx + 1]; break;
-                }
-            }
-        }
-        return stk[idx];
-    }
-};
+```python
+class Solution:
+    def evalRPN(self, tokens: list[str]) -> int:
+        n = len(tokens)
+        stack = [0] * ((n + 1) // 2)
+        idx = -1
+        ops = {"+", "-", "*", "/"}
+        for token in tokens:
+            if len(token) > 1 or token not in ops:
+                idx += 1
+                stack[idx] = int(token)
+            else:
+                if token == '+':
+                    idx -= 1
+                    stack[idx] += stack[idx + 1]
+                elif token == '-':
+                    idx -= 1
+                    stack[idx] -= stack[idx + 1]
+                elif token == '*':
+                    idx -= 1
+                    stack[idx] *= stack[idx + 1]
+                else:  # token == '/'
+                    idx -= 1
+                    stack[idx] = int(stack[idx] / stack[idx + 1])  # Truncate towards zero
+        return stack[idx]
 ```
 
 ## Step-by-Step Example
@@ -150,14 +144,14 @@ Let's trace through Solution 1 with tokens = `["2","1","+","3","*"]`:
 1. **Stack LIFO**: Last In, First Out property matches RPN evaluation order
 2. **Operator Precedence**: RPN eliminates need for operator precedence rules
 3. **Operand Order**: First popped operand is the second operand in the operation
-4. **Integer Division**: Division truncates toward zero (C++ behavior)
+4. **Integer Division**: Division truncates toward zero (Python behavior)
 
 ## Solution Comparison
 
 | Approach | Pros | Cons |
 |----------|------|------|
-| **std::stack** | Clean API, easy to understand | Slight overhead from function calls |
-| **Vector Stack** | More efficient, direct array access | Manual index management |
+| **List Stack** | Clean API, easy to understand | Slight overhead from list operations |
+| **List with Index** | More efficient, direct array access | Manual index management |
 
 ## Edge Cases
 

@@ -2,7 +2,7 @@
 layout: post
 title: "[Hard] 25. Reverse Nodes in k-Group"
 date: 2025-09-24 22:00:00 -0000
-categories: leetcode algorithm linked-list recursive data-structures pointers hard cpp reverse-nodes k-group recursion problem-solving
+categories: python reverse-nodes k-group recursion problem-solving
 ---
 
 # [Hard] 25. Reverse Nodes in k-Group
@@ -51,28 +51,28 @@ The solution uses a recursive approach:
 3. **Recursive Call**: Recursively process the remaining list
 4. **Connect Groups**: Link the reversed group with the result from recursion
 
-## Solution in C++
+## Solution in Python
 
 **Time Complexity:** O(n) - Each node is visited once  
 **Space Complexity:** O(n/k) - Recursion stack depth
 
-```cpp
+```python
 /**
  * Definition for singly-linked list.
  * struct ListNode {
- *     int val;
+ *     # val = 0
  *     ListNode *next;
  *     ListNode() : val(0), next(nullptr) {}
  *     ListNode(int x) : val(x), next(nullptr) {}
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-class Solution {
-public:
+class Solution:
+
     ListNode* reverseKGroup(ListNode* head, int k) {
-        int count = 0;
+        count = 0
         ListNode* ptr = head;
-        while(count < k && ptr != nullptr) {
+        while(count < k  ptr != nullptr) {
             ptr = ptr->next;
             count++;
         }

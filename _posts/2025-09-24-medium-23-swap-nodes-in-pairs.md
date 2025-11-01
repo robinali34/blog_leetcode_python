@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 24. Swap Nodes in Pairs"
 date: 2025-09-24 15:11:00 -0000
-categories: leetcode algorithm linked-list recursive data-structures pointers medium cpp swap-nodes recursion iterative problem-solving
+categories: python swap-nodes recursion iterative problem-solving
 ---
 
 # [Medium] 24. Swap Nodes in Pairs
@@ -37,24 +37,20 @@ Output: [1]
 - The number of nodes in the list is in the range [0, 100]
 - 0 <= Node.val <= 100
 
-## Template in C++
+## Template in Python
 
 ### ListNode definition
 
-```cpp
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
+```python
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
 ```
-Typical Leetcode template includes:
+Typical LeetCode template includes:
 
-- Convert std::vector<int> → ListNode* (linked list)
-
-- Convert ListNode* → std::vector<int>
-
-- Auto memory cleanup (freeList)
+- Convert list[int] → ListNode (linked list)
+- Convert ListNode → list[int]
 - Clean, reusable design for testing LeetCode-style problems
 
 ## Approach
@@ -64,7 +60,7 @@ There are two main approaches to solve this problem:
 1. **Recursive Approach**: Use recursion to swap pairs and handle the rest of the list
 2. **Iterative Approach**: Use a dummy node and pointers to traverse and swap pairs
 
-## Solution in C++
+## Solution in Python
 
 ### Recursive Approach
 
@@ -76,28 +72,22 @@ The recursive approach works by:
 2. Swap the first two nodes
 3. Recursively call the function on the rest of the list
 4. Connect the swapped pair with the result from recursion
-```cpp
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
-class Solution {
-public:
-    ListNode* swapPairs(ListNode* head) {
-        if ((head == nullptr) || (head->next == nullptr)) return head;
-        ListNode *first = head;
-        ListNode *second = head->next;
-        first->next = swapPairs(second->next);
-        second->next = first;
-        return second;
-    }
-};
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        if not head or not head.next:
+            return head
+        first = head
+        second = head.next
+        first.next = self.swapPairs(second.next)
+        second.next = first
+        return second
 ```
 
 ### Iterative Approach
@@ -111,34 +101,27 @@ The iterative approach works by:
 3. For each pair, swap the nodes and update pointers
 4. Move to the next pair
 
-```cpp
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
-class Solution {
-public:
-    ListNode* swapPairs(ListNode* head) {
-        ListNode dummy(-1); // Stack allocation - automatically destroyed when function returns
-        dummy.next = head;
-        ListNode *pre = &dummy; // Pointer to dummy node's address
-        while((head != nullptr) && (head->next != nullptr)) {
-            ListNode *first = head, *second = head->next;
-            pre->next = second;
-            first->next = second->next;
-            second->next = first;
-            pre = first;
-            head = first->next;
-        }
-        return dummy.next;
-    }
-};
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def swapPairs(self, head: ListNode) -> ListNode:
+        dummy = ListNode(-1)
+        dummy.next = head
+        pre = dummy
+        while head and head.next:
+            first = head
+            second = head.next
+            pre.next = second
+            first.next = second.next
+            second.next = first
+            pre = first
+            head = first.next
+        return dummy.next
 ```
 
 ## Step-by-Step Example

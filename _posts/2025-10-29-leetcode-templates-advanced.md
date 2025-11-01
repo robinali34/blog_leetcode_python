@@ -17,13 +17,21 @@ tags: [leetcode, templates, advanced]
 
 ## Coordinate Compression
 
-```cpp
-template<class T>
-struct Compressor{
-    vector<T> vals; template<class It> void add(It b, It e){ vals.insert(vals.end(), b, e); }
-    void build(){ sort(vals.begin(), vals.end()); vals.erase(unique(vals.begin(), vals.end()), vals.end()); }
-    int get(const T& x) const { return int(lower_bound(vals.begin(), vals.end(), x)-vals.begin()); }
-};
+```python
+from bisect import bisect_left
+
+class Compressor:
+    def __init__(self):
+        self.vals = []
+    
+    def add(self, items):
+        self.vals.extend(items)
+    
+    def build(self):
+        self.vals = sorted(set(self.vals))
+    
+    def get(self, x):
+        return bisect_left(self.vals, x)
 ```
 
 | ID | Title | Link |
@@ -33,12 +41,32 @@ struct Compressor{
 
 ## Meet-in-the-Middle (subset sums)
 
-```cpp
-long long countSubsets(vector<int>& a, long long T){
-    int n=a.size(), m=n/2; vector<long long> L,R; L.reserve(1<<m); R.reserve(1<<(n-m));
-    auto go=[&](int l,int r, vector<long long>& out){ int k=r-l; for(int mask=0; mask<(1<<k); ++mask){ long long s=0; for(int i=0;i<k;++i) if(mask>>i & 1) s+=a[l+i]; out.push_back(s); } };
-    go(0,m,L); go(m,n,R); sort(R.begin(), R.end()); long long ans=0; for(long long x: L){ auto pr=equal_range(R.begin(), R.end(), T-x); ans += pr.second - pr.first; } return ans;
-}
+```python
+from bisect import bisect_left, bisect_right
+
+def count_subsets(a: list[int], T: int) -> int:
+    n = len(a)
+    m = n // 2
+    L, R = [], []
+    
+    def go(l: int, r: int, out: list):
+        k = r - l
+        for mask in range(1 << k):
+            s = 0
+            for i in range(k):
+                if mask >> i & 1:
+                    s += a[l + i]
+            out.append(s)
+    
+    go(0, m, L)
+    go(m, n, R)
+    R.sort()
+    ans = 0
+    for x in L:
+        left = bisect_left(R, T - x)
+        right = bisect_right(R, T - x)
+        ans += right - left
+    return ans
 ```
 
 | ID | Title | Link |
@@ -48,12 +76,26 @@ long long countSubsets(vector<int>& a, long long T){
 
 ## Manacher (Longest Palindromic Substring, O(n))
 
-```cpp
-string manacher(const string& s){ string t="|"; for(char c:s){ t.push_back(c); t.push_back('|'); }
-    int n=t.size(); vector<int> p(n); int c=0,r=0, best=0, center=0;
-    for(int i=0;i<n;++i){ int mir=2*c-i; if(i<r) p[i]=min(r-i,p[mir]); while(i-1-p[i]>=0 && i+1+p[i]<n && t[i-1-p[i]]==t[i+1+p[i]]) ++p[i]; if(i+p[i]>r){ c=i; r=i+p[i]; } if(p[i]>best){ best=p[i]; center=i; } }
-    int start=(center-best)/2; return s.substr(start, best);
-}
+```python
+def manacher(s: str) -> str:
+    t = "|" + "|".join(s) + "|"
+    n = len(t)
+    p = [0] * n
+    c = r = best = center = 0
+    for i in range(n):
+        mir = 2 * c - i
+        if i < r:
+            p[i] = min(r - i, p[mir])
+        while i - 1 - p[i] >= 0 and i + 1 + p[i] < n and t[i - 1 - p[i]] == t[i + 1 + p[i]]:
+            p[i] += 1
+        if i + p[i] > r:
+            c = i
+            r = i + p[i]
+        if p[i] > best:
+            best = p[i]
+            center = i
+    start = (center - best) // 2
+    return s[start:start + best]
 ```
 
 | ID | Title | Link |
@@ -62,8 +104,20 @@ string manacher(const string& s){ string t="|"; for(char c:s){ t.push_back(c); t
 
 ## Z-Algorithm (Pattern occurrences)
 
-```cpp
-vector<int> zfunc(const string& s){ int n=s.size(); vector<int> z(n); int l=0,r=0; for(int i=1;i<n;++i){ if(i<=r) z[i]=min(r-i+1, z[i-l]); while(i+z[i]<n && s[z[i]]==s[i+z[i]]) ++z[i]; if(i+z[i]-1>r){ l=i; r=i+z[i]-1; } } return z; }
+```python
+def z_func(s: str) -> list[int]:
+    n = len(s)
+    z = [0] * n
+    l = r = 0
+    for i in range(1, n):
+        if i <= r:
+            z[i] = min(r - i + 1, z[i - l])
+        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+            z[i] += 1
+        if i + z[i] - 1 > r:
+            l = i
+            r = i + z[i] - 1
+    return z
 ```
 
 | ID | Title | Link |
@@ -72,11 +126,36 @@ vector<int> zfunc(const string& s){ int n=s.size(); vector<int> z(n); int l=0,r=
 
 ## Bitwise Trie (Max XOR Pair)
 
-```cpp
-struct BitTrie{ struct Node{int ch[2]; Node(){ch[0]=ch[1]=-1;}}; vector<Node> t{Node()};
-    void insert(int x){ int u=0; for(int b=31;b>=0;--b){ int bit=(x>>b)&1; if(t[u].ch[bit]==-1){ t[u].ch[bit]=t.size(); t.push_back(Node()); } u=t[u].ch[bit]; } }
-    int maxXor(int x){ int u=0, ans=0; for(int b=31;b>=0;--b){ int bit=(x>>b)&1, want=bit^1; if(t[u].ch[want]!=-1){ ans |= 1<<b; u=t[u].ch[want]; } else u=t[u].ch[bit]; } return ans; }
-};
+```python
+class BitTrie:
+    class Node:
+        def __init__(self):
+            self.ch = [-1, -1]
+    
+    def __init__(self):
+        self.t = [self.Node()]
+    
+    def insert(self, x: int):
+        u = 0
+        for b in range(31, -1, -1):
+            bit = (x >> b) & 1
+            if self.t[u].ch[bit] == -1:
+                self.t[u].ch[bit] = len(self.t)
+                self.t.append(self.Node())
+            u = self.t[u].ch[bit]
+    
+    def max_xor(self, x: int) -> int:
+        u = 0
+        ans = 0
+        for b in range(31, -1, -1):
+            bit = (x >> b) & 1
+            want = bit ^ 1
+            if self.t[u].ch[want] != -1:
+                ans |= 1 << b
+                u = self.t[u].ch[want]
+            else:
+                u = self.t[u].ch[bit]
+        return ans
 ```
 
 | ID | Title | Link |

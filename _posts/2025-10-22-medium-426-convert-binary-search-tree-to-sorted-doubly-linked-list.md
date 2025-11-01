@@ -57,32 +57,30 @@ Output: [1,2,3]
 **Time Complexity:** O(n)  
 **Space Complexity:** O(h) where h is height of tree
 
-```cpp
-class Solution {
-public:
-    Node* treeToDoublyList(Node* root) {
-        if(!root) return nullptr;
-        inorder(root);
-        last->right = first;
-        first->left = last;
-        return first;
-    }
-private:
-    Node* first = nullptr, *last = nullptr;
-    void inorder(Node* node) {
-        if(node) {
-            inorder(node->left);
-            if(last) {
-                last->right = node;
-                node->left = last;
-            } else {
-                first = node;
-            }
-            last = node;
-            inorder(node->right);
-        }
-    }
-};
+```python
+class Solution:
+    def __init__(self):
+        self.first = None
+        self.last = None
+    
+    def treeToDoublyList(self, root: 'Node') -> 'Node':
+        if not root:
+            return None
+        self.inorder(root)
+        self.last.right = self.first
+        self.first.left = self.last
+        return self.first
+    
+    def inorder(self, node: 'Node') -> None:
+        if node:
+            self.inorder(node.left)
+            if self.last:
+                self.last.right = node
+                node.left = self.last
+            else:
+                self.first = node
+            self.last = node
+            self.inorder(node.right)
 ```
 
 ### Approach 2: Inorder Traversal with Return Values
@@ -95,38 +93,34 @@ private:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(h)
 
-```cpp
-class Solution {
-public:
-    Node* treeToDoublyList(Node* root) {
-        if(!root) return nullptr;
+```python
+class Solution:
+    def treeToDoublyList(self, root: 'Node') -> 'Node':
+        if not root:
+            return None
         
-        Node* head = nullptr;
-        Node* tail = nullptr;
-        inorder(root, head, tail);
+        head = [None]
+        tail = [None]
+        self.inorder(root, head, tail)
         
-        head->left = tail;
-        tail->right = head;
-        return head;
-    }
+        head[0].left = tail[0]
+        tail[0].right = head[0]
+        return head[0]
     
-private:
-    void inorder(Node* node, Node*& head, Node*& tail) {
-        if(!node) return;
+    def inorder(self, node: 'Node', head: list, tail: list) -> None:
+        if not node:
+            return
         
-        inorder(node->left, head, tail);
+        self.inorder(node.left, head, tail)
         
-        if(!head) {
-            head = node;
-        } else {
-            tail->right = node;
-            node->left = tail;
-        }
-        tail = node;
+        if not head[0]:
+            head[0] = node
+        else:
+            tail[0].right = node
+            node.left = tail[0]
+        tail[0] = node
         
-        inorder(node->right, head, tail);
-    }
-};
+        self.inorder(node.right, head, tail)
 ```
 
 ### Approach 3: Iterative Inorder Traversal
@@ -140,43 +134,39 @@ private:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(h)
 
-```cpp
-class Solution {
-public:
-    Node* treeToDoublyList(Node* root) {
-        if(!root) return nullptr;
+```python
+class Solution:
+    def treeToDoublyList(self, root: 'Node') -> 'Node':
+        if not root:
+            return None
         
-        stack<Node*> stk;
-        Node* first = nullptr;
-        Node* last = nullptr;
-        Node* curr = root;
+        stk = []
+        first = None
+        last = None
+        curr = root
         
-        while(curr || !stk.empty()) {
-            while(curr) {
-                stk.push(curr);
-                curr = curr->left;
-            }
+        while curr or stk:
+            while curr:
+                stk.append(curr)
+                curr = curr.left
             
-            curr = stk.top();
-            stk.pop();
+            curr = stk.pop()
             
-            if(!first) {
-                first = curr;
-            } else {
-                last->right = curr;
-                curr->left = last;
-            }
-            last = curr;
+            if not first:
+                first = curr
+            else:
+                last.right = curr
+                curr.left = last
+            last = curr
             
-            curr = curr->right;
-        }
+            curr = curr.right
         
-        first->left = last;
-        last->right = first;
-        return first;
-    }
-};
+        first.left = last
+        last.right = first
+        return first
 ```
+<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
+read_file
 
 ## Algorithm Analysis
 
@@ -198,31 +188,31 @@ public:
 ## Implementation Details
 
 ### Global Variables Approach
-```cpp
-Node* first = nullptr, *last = nullptr;
-
-void inorder(Node* node) {
-    if(node) {
-        inorder(node->left);
-        // Process current node
-        if(last) {
-            last->right = node;
-            node->left = last;
-        } else {
-            first = node;  // First node in sorted order
-        }
-        last = node;
-        inorder(node->right);
-    }
-}
+```python
+class Solution:
+    def __init__(self):
+        self.first = None
+        self.last = None
+    
+    def inorder(self, node: 'Node') -> None:
+        if node:
+            self.inorder(node.left)
+            # Process current node
+            if self.last:
+                self.last.right = node
+                node.left = self.last
+            else:
+                self.first = node  # First node in sorted order
+            self.last = node
+            self.inorder(node.right)
 ```
 
 ### Circular Connection
-```cpp
-// After inorder traversal
-last->right = first;  // Last points to first
-first->left = last;   // First points to last
-return first;         // Return smallest element
+```python
+# After inorder traversal
+self.last.right = self.first  # Last points to first
+self.first.left = self.last   # First points to last
+return self.first             # Return smallest element
 ```
 
 ## Edge Cases

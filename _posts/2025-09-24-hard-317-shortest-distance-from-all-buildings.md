@@ -2,7 +2,7 @@
 layout: post
 title: "[Hard] 317. Shortest Distance from All Buildings"
 date: 2025-09-24 19:00:00 -0000
-categories: leetcode algorithm bfs graph data-structures matrix shortest-path hard cpp shortest-distance buildings problem-solving
+categories: python shortest-distance buildings problem-solving
 ---
 
 # [Hard] 317. Shortest Distance from All Buildings
@@ -61,92 +61,72 @@ There are three main approaches to solve this problem:
 **Time Complexity:** O(m²n²) - For each empty land, BFS to all buildings  
 **Space Complexity:** O(mn) - For visited array and queue
 
-```cpp
-class Solution {
-public:
-    int shortestDistance(vector<vector<int>>& grid) {
-        const int rows = grid.size();
-        const int cols = grid[0].size();
+```python
+from collections import deque
 
-        int totalHouses = 0;
-        for (const auto& row : grid) {
-            for (const auto& cell : row) {
-                if (cell == 1) totalHouses++;
-            }
-        }
+class Solution:
+    def shortestDistance(self, grid: list[list[int]]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
 
-        int minDistance = INT_MAX;
-        for (int r = 0; r < rows; ++r) {
-            for (int c = 0; c < cols; ++c) {
-                if (grid[r][c] == 0) {
-                    minDistance = std::min(minDistance, bfs(grid, r, c, totalHouses));
-                }
-            }
-        }
+        totalHouses = 0
+        for row in grid:
+            for cell in row:
+                if cell == 1:
+                    totalHouses += 1
 
-        return (minDistance == INT_MAX) ? -1 : minDistance;
-    }
+        minDistance = float('inf')
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 0:
+                    result = self.bfs(grid, r, c, totalHouses)
+                    minDistance = min(minDistance, result)
 
-private:
-    int bfs(vector<vector<int>>& grid, int startRow, int startCol, int totalHouses) {
-        constexpr array<pair<int, int>, 4> directions\{\{
-            \{1, 0\}, \{-1, 0\}, \{0, 1\}, \{0, -1\}
-        \}\};
+        return -1 if minDistance == float('inf') else minDistance
 
-        const int rows = grid.size();
-        const int cols = grid[0].size();
+    def bfs(self, grid: list[list[int]], startRow: int, startCol: int, totalHouses: int) -> int:
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        
+        rows = len(grid)
+        cols = len(grid[0])
 
-        int distanceSum = 0;
-        int housesReached = 0;
-        int steps = 0;
+        distanceSum = 0
+        housesReached = 0
+        steps = 0
 
-        queue<pair<int, int>> q;
-        q.emplace(startRow, startCol);
+        q = deque([(startRow, startCol)])
+        visited = [[False] * cols for _ in range(rows)]
+        visited[startRow][startCol] = True
 
-        vector<vector<bool>> visited(rows, vector<bool>(cols, false));
-        visited[startRow][startCol] = true;
+        while q and housesReached != totalHouses:
+            levelSize = len(q)
 
-        while (!q.empty() && housesReached != totalHouses) {
-            const int levelSize = q.size();
+            for _ in range(levelSize):
+                r, c = q.popleft()
 
-            for (int i = 0; i < levelSize; ++i) {
-                auto [r, c] = q.front();
-                q.pop();
+                if grid[r][c] == 1:
+                    distanceSum += steps
+                    housesReached += 1
+                    continue
 
-                if (grid[r][c] == 1) {
-                    distanceSum += steps;
-                    ++housesReached;
-                    continue;
-                }
+                for dr, dc in directions:
+                    nr = r + dr
+                    nc = c + dc
 
-                for (const auto& [dr, dc] : directions) {
-                    int nr = r + dr;
-                    int nc = c + dc;
+                    if (0 <= nr < rows and 0 <= nc < cols and 
+                        not visited[nr][nc] and grid[nr][nc] != 2):
+                        visited[nr][nc] = True
+                        q.append((nr, nc))
+            steps += 1
 
-                    if (nr >= 0 && nc >= 0 && nr < rows && nc < cols &&
-                        !visited[nr][nc] && grid[nr][nc] != 2) {
-                        visited[nr][nc] = true;
-                        q.emplace(nr, nc);
-                    }
-                }
-            }
-            steps++;
-        }
+        if housesReached != totalHouses:
+            for r in range(rows):
+                for c in range(cols):
+                    if grid[r][c] == 0 and visited[r][c]:
+                        grid[r][c] = 2  # Mark as unreachable
+            return float('inf')
 
-        if (housesReached != totalHouses) {
-            for (int r = 0; r < rows; ++r) {
-                for (int c = 0; c < cols; ++c) {
-                    if (grid[r][c] == 0 && visited[r][c]) {
-                        grid[r][c] = 2;  // Mark as unreachable
-                    }
-                }
-            }
-            return INT_MAX;
-        }
-
-        return distanceSum;
-    }
-};
+        return distanceSum
 ```
 
 ## Solution 2: BFS from Each Building
@@ -154,65 +134,53 @@ private:
 **Time Complexity:** O(m²n²) - For each building, BFS to all empty lands  
 **Space Complexity:** O(mn) - For distance tracking and visited array
 
-```cpp
-class Solution {
-public:
-    int shortestDistance(vector<vector<int>>& grid) {
-        const int cols = grid[0].size(), rows = grid.size();
-        int minDisatnce = INT_MAX, totalHouses = 0;
-        vector<vector<array<int, 2>>> distances(rows, vector<array<int, 2>> (cols, {0, 0}));
-        for(int row = 0; row < rows; row++) {
-            for(int col = 0; col < cols; col++) {
-                if(grid[row][col] == 1) {
-                    totalHouses++;
-                    bfs(grid, distances, row, col);
-                }
-            }
-        }
-        for (int row = 0; row < rows; row++) {
-            for(int col = 0; col < cols; col++) {
-                if(distances[row][col][1] == totalHouses) {
-                    minDisatnce = min(minDisatnce, distances[row][col][0]);
-                }
-            }
-        }
-        return minDisatnce == INT_MAX ? -1: minDisatnce;
-    }
+```python
+from collections import deque
 
-private:
-    void bfs(vector<vector<int>>& grid, vector<vector<array<int, 2>>>& distance, int row, int col) {
-        constexpr array<pair<int, int>, 4> dirs = \{\{\{1, 0\}, \{-1, 0\}, \{0, 1\}, \{0, -1\}\}\};
-        const int rows = grid.size(), cols = grid[0].size();
-        queue<pair<int, int>> q;
-        q.emplace(row, col);
-        vector<vector<bool>> vis (rows, vector<bool>(cols, false));
-        vis[row][col] = true;
-        int steps = 0;
-        while(!q.empty()) {
-            for (int i = q.size(); i > 0; i--) {
-                auto cur = q.front();
-                q.pop();
-                row = cur.first;
-                col = cur.second;
-                if(grid[row][col] == 0) {
-                    distance[row][col][0] += steps;
-                    distance[row][col][1] += 1;
-                }
-                for(auto& [dr, dc]: dirs) {
-                    int nextRow = row + dr;
-                    int nextCol = col + dc;
-                    if (nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols) {
-                        if(!vis[nextRow][nextCol] && grid[nextRow][nextCol] == 0) {
-                            vis[nextRow][nextCol] = true;
-                            q.emplace(nextRow, nextCol);
-                        }
-                    }
-                }
-            }
-            steps++;
-        }
-    }
-};
+class Solution:
+    def shortestDistance(self, grid: list[list[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        minDistance = float('inf')
+        totalHouses = 0
+        # distances[row][col] = [totalDistance, housesReached]
+        distances = [[[0, 0] for _ in range(cols)] for _ in range(rows)]
+        
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1:
+                    totalHouses += 1
+                    self.bfs(grid, distances, row, col)
+        
+        for row in range(rows):
+            for col in range(cols):
+                if distances[row][col][1] == totalHouses:
+                    minDistance = min(minDistance, distances[row][col][0])
+        
+        return -1 if minDistance == float('inf') else minDistance
+
+    def bfs(self, grid: list[list[int]], distances: list[list[list[int]]], 
+            startRow: int, startCol: int) -> None:
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        rows, cols = len(grid), len(grid[0])
+        q = deque([(startRow, startCol)])
+        vis = [[False] * cols for _ in range(rows)]
+        vis[startRow][startCol] = True
+        steps = 0
+        
+        while q:
+            for _ in range(len(q)):
+                r, c = q.popleft()
+                if grid[r][c] == 0:
+                    distances[r][c][0] += steps
+                    distances[r][c][1] += 1
+                for dr, dc in dirs:
+                    nextRow = r + dr
+                    nextCol = c + dc
+                    if (0 <= nextRow < rows and 0 <= nextCol < cols and
+                        not vis[nextRow][nextCol] and grid[nextRow][nextCol] == 0):
+                        vis[nextRow][nextCol] = True
+                        q.append((nextRow, nextCol))
+            steps += 1
 ```
 
 ## Solution 3: Optimized BFS with Grid Modification
@@ -220,46 +188,39 @@ private:
 **Time Complexity:** O(m²n²) - For each building, BFS to all reachable empty lands  
 **Space Complexity:** O(mn) - For total distance tracking
 
-```cpp
-class Solution {
-public:
-    int shortestDistance(vector<vector<int>>& grid) {
-        const int rows = grid.size(), cols = grid[0].size();
-        constexpr array<pair<int, int>, 4> dirs = \{\{\{1, 0\}, \{-1, 0\}, \{0, 1\}, \{0, -1\}\}\};
-        int emptyLandValue =0, minDist = INT_MAX;
-        vector<vector<int>> total(rows, vector<int> (cols, 0));
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                if(grid[row][col] == 1) {
-                    minDist = INT_MAX;
-                    queue<pair<int, int>> q;
-                    q.emplace(row, col);
-                    int steps = 0;
-                    while(!q.empty()) {
-                        steps++;
-                        for(int level = q.size(); level > 0; level--) {
-                            auto cur = q.front();
-                            q.pop();
-                            for (auto& [dr, dc]: dirs) {
-                                int nextRow = cur.first + dr;
-                                int nextCol = cur.second + dc;
-                                if(nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols
-                                && grid[nextRow][nextCol] == emptyLandValue){
-                                    grid[nextRow][nextCol]--;
-                                    total[nextRow][nextCol] += steps;
-                                    q.emplace(nextRow, nextCol);
-                                    minDist = min(minDist, total[nextRow][nextCol]);
-                                }
-                            }
-                        }
-                    }
-                    emptyLandValue--;
-                }
-            }
-        }
-        return minDist == INT_MAX ? -1 : minDist;
-    }
-};
+```python
+from collections import deque
+
+class Solution:
+    def shortestDistance(self, grid: list[list[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        emptyLandValue = 0
+        minDist = float('inf')
+        total = [[0] * cols for _ in range(rows)]
+        
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1:
+                    minDist = float('inf')
+                    q = deque([(row, col)])
+                    steps = 0
+                    while q:
+                        steps += 1
+                        for _ in range(len(q)):
+                            r, c = q.popleft()
+                            for dr, dc in dirs:
+                                nextRow = r + dr
+                                nextCol = c + dc
+                                if (0 <= nextRow < rows and 0 <= nextCol < cols and
+                                    grid[nextRow][nextCol] == emptyLandValue):
+                                    grid[nextRow][nextCol] -= 1
+                                    total[nextRow][nextCol] += steps
+                                    q.append((nextRow, nextCol))
+                                    minDist = min(minDist, total[nextRow][nextCol])
+                    emptyLandValue -= 1
+        
+        return -1 if minDist == float('inf') else minDist
 ```
 
 ## Step-by-Step Example

@@ -20,24 +20,25 @@ tags: [leetcode, templates, graph]
 
 ## BFS / Shortest Path (unweighted)
 
-```cpp
-int bfsGrid(vector<string>& g, pair<int,int> s, pair<int,int> t){
-    int m=g.size(), n=g[0].size();
-    queue<pair<int,int>> q; vector<vector<int>> dist(m, vector<int>(n, -1));
-    int dirs[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
-    q.push(s); dist[s.first][s.second] = 0;
-    while(!q.empty()){
-        auto [x,y] = q.front(); q.pop();
-        if (make_pair(x,y) == t) return dist[x][y];
-        for (auto& d: dirs){
-            int nx=x+d[0], ny=y+d[1];
-            if (nx>=0&&nx<m&&ny>=0&&ny<n && g[nx][ny] != '#' && dist[nx][ny]==-1){
-                dist[nx][ny] = dist[x][y] + 1; q.push({nx,ny});
-            }
-        }
-    }
-    return -1;
-}
+```python
+from collections import deque
+
+def bfs_grid(g: list[str], s: tuple[int, int], t: tuple[int, int]) -> int:
+    m, n = len(g), len(g[0])
+    q = deque([s])
+    dist = [[-1] * n for _ in range(m)]
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    dist[s[0]][s[1]] = 0
+    while q:
+        x, y = q.popleft()
+        if (x, y) == t:
+            return dist[x][y]
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < m and 0 <= ny < n and g[nx][ny] != '#' and dist[nx][ny] == -1:
+                dist[nx][ny] = dist[x][y] + 1
+                q.append((nx, ny))
+    return -1
 ```
 
 | ID | Title | Link |
@@ -48,22 +49,27 @@ int bfsGrid(vector<string>& g, pair<int,int> s, pair<int,int> t){
 
 ## Multi-source BFS (grids/graphs)
 
-```cpp
-int multiSourceBfs(vector<string>& g, vector<pair<int,int>> sources){
-    int m=g.size(), n=g[0].size();
-    queue<pair<int,int>> q; vector<vector<int>> dist(m, vector<int>(n, -1));
-    for(auto [x,y]: sources){ dist[x][y]=0; q.push({x,y}); }
-    int dirs[4][2]={{1,0},{-1,0},{0,1},{0,-1}}; int best=0;
-    while(!q.empty()){
-        auto [x,y]=q.front(); q.pop();
-        for(auto& d: dirs){ int nx=x+d[0], ny=y+d[1];
-            if(nx>=0&&nx<m&&ny>=0&&ny<n && g[nx][ny] != '#' && dist[nx][ny]==-1){
-                dist[nx][ny]=dist[x][y]+1; best=max(best, dist[nx][ny]); q.push({nx,ny});
-            }
-        }
-    }
-    return best;
-}
+```python
+from collections import deque
+
+def multi_source_bfs(g: list[str], sources: list[tuple[int, int]]) -> int:
+    m, n = len(g), len(g[0])
+    q = deque()
+    dist = [[-1] * n for _ in range(m)]
+    for x, y in sources:
+        dist[x][y] = 0
+        q.append((x, y))
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    best = 0
+    while q:
+        x, y = q.popleft()
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < m and 0 <= ny < n and g[nx][ny] != '#' and dist[nx][ny] == -1:
+                dist[nx][ny] = dist[x][y] + 1
+                best = max(best, dist[nx][ny])
+                q.append((nx, ny))
+    return best
 ```
 
 | ID | Title | Link |
@@ -73,20 +79,29 @@ int multiSourceBfs(vector<string>& g, vector<pair<int,int>> sources){
 
 ## BFS on Bitmask State (visit all keys)
 
-```cpp
-struct State{int u,mask};
-int bfsMask(const vector<vector<int>>& g, int start){
-    int n=g.size(); int full=(1<<n)-1; queue<State> q; vector vis(n, vector<bool>(1<<n,false));
-    q.push({start, 1<<start}); vis[start][1<<start]=true; int d=0;
-    while(!q.empty()){
-        int sz=q.size();
-        while(sz--){ auto [u,mask]=q.front(); q.pop(); if(mask==full) return d;
-            for(int v: g[u]){ int m2=mask|(1<<v); if(!vis[v][m2]){ vis[v][m2]=true; q.push({v,m2}); } }
-        }
-        ++d;
-    }
-    return -1;
-}
+```python
+from collections import deque
+
+def bfs_mask(g: list[list[int]], start: int) -> int:
+    n = len(g)
+    full = (1 << n) - 1
+    q = deque([(start, 1 << start)])
+    vis = [[False] * (1 << n) for _ in range(n)]
+    vis[start][1 << start] = True
+    d = 0
+    while q:
+        sz = len(q)
+        for _ in range(sz):
+            u, mask = q.popleft()
+            if mask == full:
+                return d
+            for v in g[u]:
+                m2 = mask | (1 << v)
+                if not vis[v][m2]:
+                    vis[v][m2] = True
+                    q.append((v, m2))
+        d += 1
+    return -1
 ```
 
 | ID | Title | Link |
@@ -96,17 +111,29 @@ int bfsMask(const vector<vector<int>>& g, int start){
 
 ## Topological Sort (Kahn)
 
-```cpp
-vector<int> topoKahn(int n, const vector<vector<int>>& g){
-    vector<int> indeg(n); for(int u=0;u<n;++u) for(int v:g[u]) ++indeg[v];
-    queue<int> q; for(int i=0;i<n;++i) if(!indeg[i]) q.push(i);
-    vector<int> order;
-    while(!q.empty()){ int u=q.front(); q.pop(); order.push_back(u);
-        for(int v:g[u]) if(--indeg[v]==0) q.push(v);
-    }
-    if ((int)order.size()!=n) order.clear();
-    return order;
-}
+```python
+from collections import deque
+
+def topo_kahn(n: int, g: list[list[int]]) -> list[int]:
+    indeg = [0] * n
+    for u in range(n):
+        for v in g[u]:
+            indeg[v] += 1
+    q = deque()
+    for i in range(n):
+        if indeg[i] == 0:
+            q.append(i)
+    order = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in g[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+    if len(order) != n:
+        order.clear()
+    return order
 ```
 
 | ID | Title | Link |
@@ -117,17 +144,23 @@ vector<int> topoKahn(int n, const vector<vector<int>>& g){
 
 ## Dijkstra (weights ≥ 0)
 
-```cpp
-vector<long long> dijkstra(int n, const vector<vector<pair<int,int>>>& g, int s){
-    const long long INF = (1LL<<60);
-    vector<long long> dist(n, INF); dist[s]=0;
-    using P=pair<long long,int>; priority_queue<P, vector<P>, greater<P>> pq; pq.push({0,s});
-    while(!pq.empty()){
-        auto [d,u]=pq.top(); pq.pop(); if(d!=dist[u]) continue;
-        for(auto [v,w]: g[u]) if(dist[v]>d+w){ dist[v]=d+w; pq.push({dist[v],v}); }
-    }
-    return dist;
-}
+```python
+import heapq
+
+def dijkstra(n: int, g: list[list[tuple[int, int]]], s: int) -> list[int]:
+    INF = 1 << 60
+    dist = [INF] * n
+    dist[s] = 0
+    pq = [(0, s)]
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d != dist[u]:
+            continue
+        for v, w in g[u]:
+            if dist[v] > d + w:
+                dist[v] = d + w
+                heapq.heappush(pq, (dist[v], v))
+    return dist
 ```
 
 | ID | Title | Link |
@@ -137,17 +170,22 @@ vector<long long> dijkstra(int n, const vector<vector<pair<int,int>>>& g, int s)
 
 ## 0-1 BFS (weights 0 or 1)
 
-```cpp
-deque<int> dq; vector<int> dist(n, 1e9); dist[s]=0; dq.push_front(s);
-while(!dq.empty()){
-    int u=dq.front(); dq.pop_front();
-    for(auto [v,w]: g[u]){
-        int nd = dist[u] + w; // w in {0,1}
-        if (nd < dist[v]){
-            dist[v]=nd; if (w==0) dq.push_front(v); else dq.push_back(v);
-        }
-    }
-}
+```python
+from collections import deque
+
+dq = deque([s])
+dist = [10**9] * n
+dist[s] = 0
+while dq:
+    u = dq.popleft()
+    for v, w in g[u]:
+        nd = dist[u] + w  # w in {0, 1}
+        if nd < dist[v]:
+            dist[v] = nd
+            if w == 0:
+                dq.appendleft(v)
+            else:
+                dq.append(v)
 ```
 
 | ID | Title | Link |
@@ -157,13 +195,32 @@ while(!dq.empty()){
 
 ## Tarjan SCC / Bridges & Articulation
 
-```cpp
-int timer2; vector<int> tin2, low2; vector<pair<int,int>> bridges;
-void dfsBr(int u,int p,const vector<vector<int>>& g){ tin2[u]=low2[u]=++timer2; int child=0; bool isAP=false;
-    for(int v:g[u]) if(v!=p){ if(!tin2[v]){ ++child; dfsBr(v,u,g); low2[u]=min(low2[u], low2[v]); if(low2[v]>tin2[u]) bridges.push_back({u,v}); if(p!=-1 && low2[v]>=tin2[u]) isAP=true; }
-        else low2[u]=min(low2[u], tin2[v]); }
-    if(p==-1 && child>1) isAP=true;
-}
+```python
+timer2 = 0
+tin2 = []
+low2 = []
+bridges = []
+
+def dfs_br(u: int, p: int, g: list[list[int]]):
+    global timer2
+    tin2[u] = low2[u] = timer2
+    timer2 += 1
+    child = 0
+    is_ap = False
+    for v in g[u]:
+        if v != p:
+            if tin2[v] == -1:
+                child += 1
+                dfs_br(v, u, g)
+                low2[u] = min(low2[u], low2[v])
+                if low2[v] > tin2[u]:
+                    bridges.append((u, v))
+                if p != -1 and low2[v] >= tin2[u]:
+                    is_ap = True
+            else:
+                low2[u] = min(low2[u], tin2[v])
+    if p == -1 and child > 1:
+        is_ap = True
 ```
 
 | ID | Title | Link |

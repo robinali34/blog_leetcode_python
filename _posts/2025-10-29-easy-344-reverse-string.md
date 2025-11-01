@@ -17,22 +17,16 @@ Two pointers at the ends swap characters and converge toward the center.
 - Initialize `left=0`, `right=n-1`
 - While `left < right`, swap `s[left]` with `s[right]`, then move inward
 
-## C++ Solution
+## Python Solution
 
-```cpp
-class Solution {
-public:
-    void reverseString(vector<char>& s) {
-        int left = 0, right = (int)s.size() - 1;
-        while (left < right) {
-            char temp = s[left];
-            s[left] = s[right];
-            s[right] = temp;
-            ++left;
-            --right;
-        }
-    }
-};
+```python
+class Solution:
+    def reverseString(self, s: list[str]) -> None:
+        left, right = 0, len(s) - 1
+        while left < right:
+            s[left], s[right] = s[right], s[left]
+            left += 1
+            right -= 1
 ```
 
 ## Complexity

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[Medium] 50. Pow(x, n)"
-categories: leetcode algorithm math data-structures recursion bit-manipulation medium cpp pow problem-solving
+categories: python pow problem-solving
 ---
 
 # [Medium] 50. Pow(x, n)
@@ -48,25 +48,21 @@ Both approaches achieve O(log n) time complexity by reducing the problem size by
 
 ## Solution 1: Recursive Approach
 
-```cpp
-class Solution {
-public:
-    double myPow(double x, int n) {
-        long long N = n;
-        if (n < 0) {
-            x = 1/x;
-            N = -N;
-        }
-        return myPower(x, N);
-    }
+```python
+class Solution:
+
+    def myPow(self, x: float, n: int) -> float:
+        N = n
+        if n < 0:
+            x = 1 / x
+            N = -N
+        return self.myPower(x, N)
     
-private:
-    double myPower(double x, long long n) {
-        if(n == 0) return 1.0;
-        double half = myPower(x, n / 2);
-        return (n % 2 == 0) ? half * half : half * half * x;
-    }
-};
+    def myPower(self, x: float, n: int) -> float:
+        if n == 0:
+            return 1.0
+        half = self.myPower(x, n // 2)
+        return half * half if n % 2 == 0 else half * half * x
 ```
 
 **Time Complexity:** O(log n) - Each recursive call reduces n by half
@@ -74,32 +70,23 @@ private:
 
 ## Solution 2: Iterative Approach
 
-```cpp
-class Solution {
-public:
-    double myPow(double x, int n) {
-        return myPow(x, (long long) n);
-    }
+```python
+class Solution:
 
-private:
-    double myPow(double x, long long n) {
-        if(n == 0) return 1.0;
-        if(n < 0) {
-            n = -n;
-            x = 1 / x;
-        }
-        double rtn = 1;
-        while(n) {
-            if (n % 2 == 1) {
-                rtn *= x;
-                n -= 1;
-            }
-            x *= x;
-            n /= 2;
-        }
-        return rtn;
-    }
-};
+    def myPow(self, x: float, n: int) -> float:
+        if n == 0:
+            return 1.0
+        if n < 0:
+            n = -n
+            x = 1 / x
+        result = 1
+        while n:
+            if n % 2 == 1:
+                result *= x
+                n -= 1
+            x *= x
+            n //= 2
+        return result
 ```
 
 **Time Complexity:** O(log n) - Each iteration processes one bit of n

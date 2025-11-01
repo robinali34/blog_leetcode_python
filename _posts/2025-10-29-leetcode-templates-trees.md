@@ -15,28 +15,40 @@ tags: [leetcode, templates, trees]
 
 ## Traversals (iterative)
 
-```cpp
-vector<int> inorder(TreeNode* root){
-    vector<int> ans; stack<TreeNode*> st; auto cur = root;
-    while (cur || !st.empty()){
-        while (cur){ st.push(cur); cur = cur->left; }
-        cur = st.top(); st.pop(); ans.push_back(cur->val); cur = cur->right;
-    }
-    return ans;
-}
+```python
+def inorder(root: Optional[TreeNode]) -> list[int]:
+    ans = []
+    st = []
+    cur = root
+    while cur or st:
+        while cur:
+            st.append(cur)
+            cur = cur.left
+        cur = st.pop()
+        ans.append(cur.val)
+        cur = cur.right
+    return ans
 ```
 
-```cpp
-vector<vector<int>> levelOrder(TreeNode* root){
-    vector<vector<int>> res; if(!root) return res; queue<TreeNode*> q; q.push(root);
-    while(!q.empty()){
-        int sz=q.size(); res.emplace_back();
-        while(sz--){ auto* u=q.front(); q.pop(); res.back().push_back(u->val);
-            if(u->left) q.push(u->left); if(u->right) q.push(u->right);
-        }
-    }
-    return res;
-}
+```python
+from collections import deque
+
+def level_order(root: Optional[TreeNode]) -> list[list[int]]:
+    if not root:
+        return []
+    res = []
+    q = deque([root])
+    while q:
+        sz = len(q)
+        res.append([])
+        for _ in range(sz):
+            u = q.popleft()
+            res[-1].append(u.val)
+            if u.left:
+                q.append(u.left)
+            if u.right:
+                q.append(u.right)
+    return res
 ```
 
 | ID | Title | Link |
@@ -46,12 +58,37 @@ vector<vector<int>> levelOrder(TreeNode* root){
 
 ## LCA (Binary Lifting)
 
-```cpp
-const int K = 17; vector<int> depth; vector<array<int,K+1>> up;
-void dfsLift(int u,int p,const vector<vector<int>>& g){ up[u][0]=p; for(int k=1;k<=K;++k) up[u][k]= up[u][k-1]<0?-1: up[up[u][k-1]][k-1];
-    for(int v:g[u]) if(v!=p){ depth[v]=depth[u]+1; dfsLift(v,u,g);} }
-int lift(int u,int k){ for(int i=0;i<=K;++i) if(k&(1<<i)) u = (u<0)?-1: up[u][i]; return u; }
-int lca(int a,int b){ if(depth[a]<depth[b]) swap(a,b); a=lift(a, depth[a]-depth[b]); if(a==b) return a; for(int i=K;i>=0;--i) if(up[a][i]!=up[b][i]){ a=up[a][i]; b=up[b][i]; } return up[a][0]; }
+```python
+K = 17
+depth = []
+up = []  # up[u][k] = 2^k-th ancestor of u
+
+def dfs_lift(u: int, p: int, g: list[list[int]]):
+    up[u][0] = p
+    for k in range(1, K + 1):
+        up[u][k] = -1 if up[u][k-1] < 0 else up[up[u][k-1]][k-1]
+    for v in g[u]:
+        if v != p:
+            depth[v] = depth[u] + 1
+            dfs_lift(v, u, g)
+
+def lift(u: int, k: int) -> int:
+    for i in range(K + 1):
+        if k & (1 << i):
+            u = -1 if u < 0 else up[u][i]
+    return u
+
+def lca(a: int, b: int) -> int:
+    if depth[a] < depth[b]:
+        a, b = b, a
+    a = lift(a, depth[a] - depth[b])
+    if a == b:
+        return a
+    for i in range(K, -1, -1):
+        if up[a][i] != up[b][i]:
+            a = up[a][i]
+            b = up[b][i]
+    return up[a][0]
 ```
 
 | ID | Title | Link |
@@ -61,10 +98,43 @@ int lca(int a,int b){ if(depth[a]<depth[b]) swap(a,b); a=lift(a, depth[a]-depth[
 
 ## HLD (Heavy-Light Decomposition) skeleton
 
-```cpp
-const int N = 200000; vector<int> gH[N]; int szH[N], parH[N], depH[N], heavyH[N], headH[N], inH[N], curT=0;
-int dfs1(int u,int p){ parH[u]=p; depH[u]=(p==-1?0:depH[p]+1); szH[u]=1; heavyH[u]=-1; int best=0; for(int v:gH[u]) if(v!=p){ int s=dfs1(v,u); szH[u]+=s; if(s>best){best=s; heavyH[u]=v;} } return szH[u]; }
-void dfs2(int u,int h){ headH[u]=h; inH[u]=curT++; if(heavyH[u]!=-1){ dfs2(heavyH[u],h); for(int v:gH[u]) if(v!=parH[u] && v!=heavyH[u]) dfs2(v,v);} }
+```python
+N = 200000
+g_h = [[] for _ in range(N)]
+sz_h = [0] * N
+par_h = [0] * N
+dep_h = [0] * N
+heavy_h = [-1] * N
+head_h = [0] * N
+in_h = [0] * N
+cur_t = 0
+
+def dfs1(u: int, p: int) -> int:
+    global cur_t
+    par_h[u] = p
+    dep_h[u] = 0 if p == -1 else dep_h[p] + 1
+    sz_h[u] = 1
+    heavy_h[u] = -1
+    best = 0
+    for v in g_h[u]:
+        if v != p:
+            s = dfs1(v, u)
+            sz_h[u] += s
+            if s > best:
+                best = s
+                heavy_h[u] = v
+    return sz_h[u]
+
+def dfs2(u: int, h: int):
+    global cur_t
+    head_h[u] = h
+    in_h[u] = cur_t
+    cur_t += 1
+    if heavy_h[u] != -1:
+        dfs2(heavy_h[u], h)
+        for v in g_h[u]:
+            if v != par_h[u] and v != heavy_h[u]:
+                dfs2(v, v)
 ```
 
 > Note: HLD is rarely required on LeetCode.

@@ -53,26 +53,20 @@ This is a classic **Monotonic Stack** problem. The key insight is that for each 
 
 ## Solution
 
-```cpp
-class Solution {
-public:
-    int largestRectangleArea(vector<int>& heights) {
-        int max_area = 0;
-        heights.push_back(0); 
-        int n = heights.size();
-        stack<int> stk;
-        for(int i = 0; i < n; i++) {
-            while(!stk.empty() && heights[i] < heights[stk.top()]) {
-                int height = heights[stk.top()];
-                stk.pop();
-                int width = stk.empty()? i: i - stk.top() - 1;
-                max_area = max(max_area, height * width);
-            }
-            stk.push(i);
-        }
-        return max_area;
-    }
-};
+```python
+class Solution:
+    def largestRectangleArea(self, heights: list[int]) -> int:
+        max_area = 0
+        heights.append(0)
+        n = len(heights)
+        stk = []
+        for i in range(n):
+            while stk and heights[i] < heights[stk[-1]]:
+                height = heights[stk.pop()]
+                width = i if not stk else i - stk[-1] - 1
+                max_area = max(max_area, height * width)
+            stk.append(i)
+        return max_area
 ```
 
 ## Explanation
@@ -124,12 +118,12 @@ For `heights = [2,1,5,6,2,3]` with sentinel `[2,1,5,6,2,3,0]`:
 ## Alternative Approaches
 
 ### Brute Force (O(n²)):
-```cpp
-int largestRectangleArea(vector<int>& heights) {
-    int max_area = 0;
-    for(int i = 0; i < heights.size(); i++) {
+```python
+def largestRectangleArea(self, list[int] heights) -> int:
+    max_area = 0
+    for(i = 0 i < heightslen(); i++) {
         int min_height = heights[i];
-        for(int j = i; j < heights.size(); j++) {
+        for(int j = i; j < heightslen(); j++) {
             min_height = min(min_height, heights[j]);
             max_area = max(max_area, min_height * (j - i + 1));
         }
@@ -139,12 +133,12 @@ int largestRectangleArea(vector<int>& heights) {
 ```
 
 ### Divide and Conquer (O(n log n)):
-```cpp
-int largestRectangleArea(vector<int>& heights) {
-    return divideConquer(heights, 0, heights.size() - 1);
+```python
+def largestRectangleArea(self, list[int] heights) -> int:
+    return divideConquer(heights, 0, heightslen() - 1);
 }
 
-int divideConquer(vector<int>& heights, int left, int right) {
+def divideConquer(self, list[int] heights, int left, int right) -> int:
     if(left > right) return 0;
     if(left == right) return heights[left];
     

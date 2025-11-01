@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 240. Search a 2D Matrix II"
 date: 2025-10-07 22:01:10 -0700
-categories: leetcode algorithm medium cpp binary-search matrix 2d-array divide-conquer search optimization problem-solving
+categories: python binary-search matrix 2d-array divide-conquer search optimization problem-solving
 ---
 
 # [Medium] 240. Search a 2D Matrix II
@@ -62,29 +62,24 @@ Target = 20 not found in matrix
 
 Search each row using binary search.
 
-```cpp
-class Solution {
-public:
-    bool searchMatrix(vector<vector<int>>& matrix, int target) {
-        if(matrix.empty() || matrix[0].empty()) return false;
-        const int rows = matrix.size(), cols = matrix[0].size();
+```python
+class Solution:
+    def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:
+        if not matrix or not matrix[0]:
+            return False
+        rows, cols = len(matrix), len(matrix[0])
         
-        for(int i = 0; i < rows; i++) {
-            int left = 0, right = cols - 1;
-            while(left <= right) {
-                int mid = left + (right - left) / 2;
-                if(matrix[i][mid] == target) {
-                    return true;
-                } else if (matrix[i][mid] < target) {
-                    left = mid + 1;
-                } else {
-                    right = mid - 1;
-                }
-            }
-        }
-        return false;
-    }
-};
+        for i in range(rows):
+            left, right = 0, cols - 1
+            while left <= right:
+                mid = left + (right - left) // 2
+                if matrix[i][mid] == target:
+                    return True
+                elif matrix[i][mid] < target:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+        return False
 ```
 
 ### How it Works:
@@ -100,33 +95,32 @@ public:
 
 Use divide and conquer by eliminating regions based on the middle column.
 
-```cpp
-class Solution {
-private:
-    bool searchMatrix(vector<vector<int>>& matrix, int target, int top, int left, int bottom, int right) {
-        if(top > bottom || left > right) return false;
-        if(target < matrix[top][left] || target > matrix[bottom][right]) return false;
+```python
+class Solution:
+    def searchMatrixHelper(self, matrix: list[list[int]], target: int, 
+                          top: int, left: int, bottom: int, right: int) -> bool:
+        if top > bottom or left > right:
+            return False
+        if target < matrix[top][left] or target > matrix[bottom][right]:
+            return False
         
-        int midCol = left + (right - left) / 2;
-        int row = top;
+        midCol = left + (right - left) // 2
+        row = top
         
-        // Find the last row where matrix[row][midCol] <= target
-        while(row <= bottom && matrix[row][midCol] <= target) {
-            if(matrix[row][midCol] == target) return true;
-            row++;
-        }
+        # Find the last row where matrix[row][midCol] <= target
+        while row <= bottom and matrix[row][midCol] <= target:
+            if matrix[row][midCol] == target:
+                return True
+            row += 1
         
-        // Search in top-right and bottom-left quadrants
-        return searchMatrix(matrix, target, top, midCol + 1, row - 1, right) ||
-               searchMatrix(matrix, target, row, left, bottom, midCol - 1);
-    }
+        # Search in top-right and bottom-left quadrants
+        return (self.searchMatrixHelper(matrix, target, top, midCol + 1, row - 1, right) or
+                self.searchMatrixHelper(matrix, target, row, left, bottom, midCol - 1))
     
-public:
-    bool searchMatrix(vector<vector<int>>& matrix, int target) {
-        if(matrix.empty() || matrix[0].empty()) return false;
-        return searchMatrix(matrix, target, 0, 0, matrix.size() - 1, matrix[0].size() - 1);
-    }
-};
+    def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:
+        if not matrix or not matrix[0]:
+            return False
+        return self.searchMatrixHelper(matrix, target, 0, 0, len(matrix) - 1, len(matrix[0]) - 1)
 ```
 
 ### How it Works:
@@ -142,26 +136,22 @@ public:
 
 Start from top-right corner and eliminate row or column at each step.
 
-```cpp
-class Solution {
-public:
-    bool searchMatrix(vector<vector<int>>& matrix, int target) {
-        if(matrix.empty() || matrix[0].empty()) return false;
-        const int rows = matrix.size(), cols = matrix[0].size();
-        int row = 0, col = cols - 1;
+```python
+class Solution:
+    def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:
+        if not matrix or not matrix[0]:
+            return False
+        rows, cols = len(matrix), len(matrix[0])
+        row, col = 0, cols - 1
         
-        while(row < rows && col >= 0) {
-            if(matrix[row][col] == target) {
-                return true;
-            } else if(matrix[row][col] > target) {
-                col--;  // Eliminate current column
-            } else {
-                row++;  // Eliminate current row
-            }
-        }
-        return false;
-    }
-};
+        while row < rows and col >= 0:
+            if matrix[row][col] == target:
+                return True
+            elif matrix[row][col] > target:
+                col -= 1  # Eliminate current column
+            else:
+                row += 1  # Eliminate current row
+        return False
 ```
 
 ### How it Works:

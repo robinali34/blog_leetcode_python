@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 503. Next Greater Element II"
 date: 2025-10-17 11:03:18 -0700
-categories: leetcode algorithm medium cpp monotonic-stack stack problem-solving
+categories: python monotonic-stack stack problem-solving
 ---
 
 # [Medium] 503. Next Greater Element II
@@ -43,26 +43,23 @@ The second 3's next greater number is 4.
 
 Use a monotonic stack to find the next greater element for each position, processing the array twice to handle circularity.
 
-```cpp
-class Solution {
-public:
-    vector<int> nextGreaterElements(vector<int>& nums) {
-        int n = nums.size();
-        stack<int> st;
-        vector<int> rtn(n, -1);
+```python
+class Solution:
+
+    def nextGreaterElements(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        st = []
+        result = [-1] * n
         
-        for(int i = 2 * n + 1; i >= 0; i--) {
-            int idx = i % n;
-            while(!st.empty() && st.top() <= nums[idx]) {
-                st.pop();
-            }
-            if(!st.empty()) rtn[idx] = st.top();
-            st.push(nums[idx]);
-        }
+        for i in range(2 * n - 1, -1, -1):
+            idx = i % n
+            while st and st[-1] <= nums[idx]:
+                st.pop()
+            if st:
+                result[idx] = st[-1]
+            st.append(nums[idx])
         
-        return rtn;
-    }
-};
+        return result
 ```
 
 ## How the Algorithm Works
@@ -135,27 +132,26 @@ Wait, let me recalculate this more carefully...
 ## Algorithm Breakdown
 
 ### 1. Initialize Variables
-```cpp
-int n = nums.size();
+```python
+int n = numslen();
 stack<int> st;
-vector<int> rtn(n, -1);
+list[int] rtn(n, -1);
 ```
 
 **Purpose:** Set up result array and stack for values.
 
 ### 2. Process Array Twice (Circular)
-```cpp
-for(int i = 2 * n + 1; i >= 0; i--) {
-    int idx = i % n;
-    // Process nums[idx]
-}
+```python
+for i in range(2 * n - 1, -1, -1):
+    idx = i % n
+    # Process nums[idx]
 ```
 
 **Purpose:** Handle circular nature by processing array twice (note: `2 * n + 1` ensures we process twice).
 
 ### 3. Maintain Monotonic Stack
-```cpp
-while(!st.empty() && st.top() <= nums[idx]) {
+```python
+while(!stnot   st.top() <= nums[idx]) {
     st.pop();
 }
 ```
@@ -163,8 +159,8 @@ while(!st.empty() && st.top() <= nums[idx]) {
 **Purpose:** Remove values that are smaller or equal to maintain decreasing order.
 
 ### 4. Find Next Greater Element
-```cpp
-if(!st.empty()) rtn[idx] = st.top();
+```python
+if(!stnot ) rtn[idx] = st.top();
 st.push(nums[idx]);
 ```
 
@@ -173,60 +169,49 @@ st.push(nums[idx]);
 ## Alternative Approaches
 
 ### Approach 1: Brute Force
-```cpp
-class Solution {
-public:
-    vector<int> nextGreaterElements(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> res(n, -1);
+```python
+class Solution:
+
+    def nextGreaterElements(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        res = [-1] * n
         
-        for (int i = 0; i < n; i++) {
-            for (int j = 1; j < n; j++) {
-                int idx = (i + j) % n;
-                if (nums[idx] > nums[i]) {
-                    res[i] = nums[idx];
-                    break;
-                }
-            }
-        }
+        for i in range(n):
+            for j in range(1, n):
+                idx = (i + j) % n
+                if nums[idx] > nums[i]:
+                    res[i] = nums[idx]
+                    break
         
-        return res;
-    }
-};
+        return res
 ```
 
 **Time Complexity:** O(n²)  
 **Space Complexity:** O(1)
 
 ### Approach 2: Two Pass with Stack
-```cpp
-class Solution {
-public:
-    vector<int> nextGreaterElements(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> res(n, -1);
-        stack<int> st;
+```python
+class Solution:
+
+    def nextGreaterElements(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        res = [-1] * n
+        st = []
         
-        // First pass
-        for (int i = 0; i < n; i++) {
-            while (!st.empty() && nums[st.top()] < nums[i]) {
-                res[st.top()] = nums[i];
-                st.pop();
-            }
-            st.push(i);
-        }
+        # First pass
+        for i in range(n):
+            while st and nums[st[-1]] < nums[i]:
+                res[st[-1]] = nums[i]
+                st.pop()
+            st.append(i)
         
-        // Second pass for circular
-        for (int i = 0; i < n; i++) {
-            while (!st.empty() && nums[st.top()] < nums[i]) {
-                res[st.top()] = nums[i];
-                st.pop();
-            }
-        }
+        # Second pass for circular
+        for i in range(n):
+            while st and nums[st[-1]] < nums[i]:
+                res[st[-1]] = nums[i]
+                st.pop()
         
-        return res;
-    }
-};
+        return res
 ```
 
 **Time Complexity:** O(n)  

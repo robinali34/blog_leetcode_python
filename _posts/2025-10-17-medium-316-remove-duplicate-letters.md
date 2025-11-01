@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 316. Remove Duplicate Letters"
 date: 2025-10-17 22:23:33 -0700
-categories: leetcode algorithm medium cpp stack monotonic-stack greedy problem-solving
+categories: python stack monotonic-stack greedy problem-solving
 ---
 
 # [Medium] 316. Remove Duplicate Letters
@@ -50,12 +50,12 @@ Explanation:
 
 Use a monotonic stack to maintain lexicographically smallest result while ensuring each character appears exactly once.
 
-```cpp
-class Solution {
-public:
-    string removeDuplicateLetters(string s) {
-        vector<int> count(26, 0);
-        vector<bool> visited(26, false);
+```python
+class Solution:
+
+    def removeDuplicateLetters(self, string s) -> string:
+        list[int] count(26, 0);
+        list[bool] visited(26, false);
         stack<char> st;
         
         // Count frequency of each character
@@ -72,7 +72,7 @@ public:
             // Remove characters that are:
             // 1. Greater than current character
             // 2. Will appear again later
-            while(!st.empty() && st.top() > c && count[st.top() - 'a'] > 0) {
+            while(!stnot   st.top() > c  count[st.top() - 'a'] > 0) {
                 visited[st.top() - 'a'] = false;
                 st.pop();
             }
@@ -82,7 +82,7 @@ public:
         }
         
         string result;
-        while(!st.empty()) {
+        while(!stnot ) {
             result = st.top() + result;
             st.pop();
         }
@@ -134,7 +134,7 @@ public:
 ## Algorithm Breakdown
 
 ### Core Logic:
-```cpp
+```python
 for(char c : s) {
     count[c - 'a']--;
     
@@ -144,7 +144,7 @@ for(char c : s) {
     // Remove characters that are:
     // 1. Greater than current character
     // 2. Will appear again later
-    while(!st.empty() && st.top() > c && count[st.top() - 'a'] > 0) {
+    while(!stnot   st.top() > c  count[st.top() - 'a'] > 0) {
         visited[st.top() - 'a'] = false;
         st.pop();
     }
@@ -218,24 +218,24 @@ Where n is the length of the string.
 ## Alternative Approaches
 
 ### Approach 1: Recursive with Backtracking
-```cpp
-class Solution {
-public:
-    string removeDuplicateLetters(string s) {
-        if(s.empty()) return "";
+```python
+class Solution:
+
+    def removeDuplicateLetters(self, string s) -> string:
+        if(snot ) return "";
         
-        vector<int> count(26, 0);
+        list[int] count(26, 0);
         for(char c : s) count[c - 'a']++;
         
-        int pos = 0;
-        for(int i = 0; i < s.length(); i++) {
+        pos = 0
+        for(i = 0 i < s.length(); i++) {
             if(s[i] < s[pos]) pos = i;
             if(--count[s[i] - 'a'] == 0) break;
         }
         
         char c = s[pos];
         string remaining = s.substr(pos + 1);
-        for(char& ch : remaining) {
+        for(char ch : remaining) {
             if(ch == c) ch = ' ';
         }
         
@@ -248,10 +248,10 @@ public:
 **Space Complexity:** O(n)
 
 ### Approach 2: Set-based Approach
-```cpp
-class Solution {
-public:
-    string removeDuplicateLetters(string s) {
+```python
+class Solution:
+
+    def removeDuplicateLetters(self, string s) -> string:
         set<char> seen;
         string result;
         

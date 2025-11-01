@@ -75,74 +75,56 @@ This problem requires creating a **deep copy** of a graph, meaning we need to cr
 
 ### **Solution 1: BFS (Iterative)**
 
-```cpp
+```python
 /*
 // Definition for a Node.
 class Node {
-public:
-    int val;
-    vector<Node*> neighbors;
-    Node() {
-        val = 0;
-        neighbors = vector<Node*>();
-    }
-    Node(int _val) {
-        val = _val;
-        neighbors = vector<Node*>();
-    }
-    Node(int _val, vector<Node*> _neighbors) {
-        val = _val;
-        neighbors = _neighbors;
-    }
-};
+
+    # val = 0
+    # neighbors = []
+    # def __init__(self, val=0, neighbors=None):
+    #     self.val = val
+    #     self.neighbors = neighbors if neighbors is not None else []
 */
 
-class Solution {
-public:
-    Node* cloneGraph(Node* node) {
-        if(!node) return nullptr;
-        unordered_map<Node*, Node*> visited;
-        queue<Node*> q;
-        q.push(node);
-        visited[node] = new Node(node->val);
-        while(!q.empty()) {
-            Node* curr = q.front();
-            q.pop();
-            for(auto& neighbor: curr->neighbors) {
-                if(!visited.contains(neighbor)) {
-                    visited[neighbor] = new Node(neighbor->val);
-                    q.push(neighbor);
-                }
-                visited[curr]->neighbors.push_back(visited[neighbor]);
-            }
-        }
-        return visited[node];
-    }
-};
+from collections import deque
+
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        if not node:
+            return None
+        visited = {}
+        q = deque([node])
+        visited[node] = Node(node.val)
+        while q:
+            curr = q.popleft()
+            for neighbor in curr.neighbors:
+                if neighbor not in visited:
+                    visited[neighbor] = Node(neighbor.val)
+                    q.append(neighbor)
+                visited[curr].neighbors.append(visited[neighbor])
+        return visited[node]
 ```
 
 ### **Solution 2: DFS (Recursive)**
 
-```cpp
-class Solution {
-private:
-    Node* dfs(Node* node, unordered_map<Node*, Node*>& visited) {
-        if(visited.contains(node)) return visited[node];
-
-        Node* clone = new Node(node->val);
-        visited[node] = clone;
-        for(auto& neighbor: node->neighbors) {
-            clone->neighbors.push_back(dfs(neighbor, visited));
-        }
-        return clone;
-    }
-public:
-    Node* cloneGraph(Node* node) {
-        if(node == nullptr) return nullptr;
-        unordered_map<Node*, Node*> visited;
-        return dfs(node, visited);
-    }
-};
+```python
+class Solution:
+    def dfs(self, node: 'Node', visited: dict) -> 'Node':
+        if node in visited:
+            return visited[node]
+        
+        clone = Node(node.val)
+        visited[node] = clone
+        for neighbor in node.neighbors:
+            clone.neighbors.append(self.dfs(neighbor, visited))
+        return clone
+    
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        if node is None:
+            return None
+        visited = {}
+        return self.dfs(node, visited)
 ```
 
 ### **Algorithm Explanation:**
@@ -219,31 +201,25 @@ Final cloned graph has same structure as original.
 ## Alternative Approaches
 
 ### **DFS Iterative (Stack)**
-```cpp
-class Solution {
-public:
-    Node* cloneGraph(Node* node) {
-        if(!node) return nullptr;
-        unordered_map<Node*, Node*> visited;
-        stack<Node*> stk;
-        stk.push(node);
-        visited[node] = new Node(node->val);
+```python
+class Solution:
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        if not node:
+            return None
+        visited = {}
+        stk = [node]
+        visited[node] = Node(node.val)
         
-        while(!stk.empty()) {
-            Node* curr = stk.top();
-            stk.pop();
+        while stk:
+            curr = stk.pop()
             
-            for(auto& neighbor: curr->neighbors) {
-                if(!visited.contains(neighbor)) {
-                    visited[neighbor] = new Node(neighbor->val);
-                    stk.push(neighbor);
-                }
-                visited[curr]->neighbors.push_back(visited[neighbor]);
-            }
-        }
-        return visited[node];
-    }
-};
+            for neighbor in curr.neighbors:
+                if neighbor not in visited:
+                    visited[neighbor] = Node(neighbor.val)
+                    stk.append(neighbor)
+                visited[curr].neighbors.append(visited[neighbor])
+        
+        return visited[node]
 ```
 
 ## Related Problems

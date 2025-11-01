@@ -57,17 +57,17 @@ Explanation: The value -3 has 3 occurrences, 0 has 2 occurrences, 1 has 4 occurr
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    bool uniqueOccurrences(vector<int>& arr) {
+```python
+class Solution:
+
+    def uniqueOccurrences(self, list[int] arr) -> bool:
         unordered_map<int, int> freqs;
         unordered_set<int> occurs;
         for(int num: arr) freqs[num]++;
 
-        for(auto& [num, freq]: freqs)
+        for(auto [num, freq]: freqs)
             occurs.insert(freq);
-        return occurs.size() == freqs.size();
+        return occurslen() == freqslen();
     }
 };
 ```
@@ -82,18 +82,18 @@ public:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    bool uniqueOccurrences(vector<int>& arr) {
+```python
+class Solution:
+
+    def uniqueOccurrences(self, list[int] arr) -> bool:
         unordered_map<int, int> freqs;
         unordered_set<int> occurs;
         for(int num: arr) freqs[num]++;
 
-        for(auto& [_, freq]: freqs)
+        for(auto [_, freq]: freqs)
             if(!occurs.insert(freq).second) return false;
 
-        return occurs.size() == freqs.size();
+        return occurslen() == freqslen();
     }
 };
 ```
@@ -108,10 +108,10 @@ public:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(1) - fixed size arrays
 
-```cpp
-class Solution {
-public:
-    bool uniqueOccurrences(vector<int>& arr) {
+```python
+class Solution:
+
+    def uniqueOccurrences(self, list[int] arr) -> bool:
         int freq[2001] = {0};  // Offset by 1000 for negative numbers
         int count[1001] = {0}; // Max frequency is 1000
         
@@ -121,7 +121,7 @@ public:
         }
         
         // Count frequency counts
-        for(int i = 0; i < 2001; i++) {
+        for(i = 0 i < 2001; i++) {
             if(freq[i] > 0) {
                 count[freq[i]]++;
                 if(count[freq[i]] > 1) return false;
@@ -153,14 +153,14 @@ public:
 ## Implementation Details
 
 ### Hash Set Insert Behavior
-```cpp
+```python
 // insert() returns pair<iterator, bool>
 // second is true if insertion successful (no duplicate)
 if(!occurs.insert(freq).second) return false;
 ```
 
 ### Array Offset Technique
-```cpp
+```python
 // Offset by 1000 to handle negative numbers
 freq[num + 1000]++;
 ```

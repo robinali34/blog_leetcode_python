@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 1242. Web Crawler Multithreaded"
 date: 2025-09-24 18:00:00 -0000
-categories: leetcode algorithm multithreading concurrency data-structures synchronization medium cpp web-crawler concurrent-programming problem-solving
+categories: python web-crawler concurrent-programming problem-solving
 ---
 
 # [Medium] 1242. Web Crawler Multithreaded
@@ -65,33 +65,33 @@ The solution involves:
 4. **URL Filtering**: Only crawl URLs from the same domain
 5. **Visited Tracking**: Avoid revisiting the same URL
 
-## Solution in C++
+## Solution in Python
 
 **Time Complexity:** O(n) where n is the number of URLs in the same domain  
 **Space Complexity:** O(n) for storing visited URLs and results
 
-```cpp
+```python
 /**
  * // This is the HtmlParser's API interface.
  * // You should not implement it, or speculate about its implementation
  * class HtmlParser {
- *   public:
- *     vector<string> getUrls(string url);
+ *   
+ *     list[string] getUrls(string url);
  * };
  */
-class Solution {
-public:
-    vector<string> crawl(string startUrl, HtmlParser htmlParser) {
+class Solution:
+
+    list[string] crawl(string startUrl, HtmlParser htmlParser) {
         StUrl = getStartUrl(startUrl);
         q.push(startUrl);
-        auto eUrl = [&]() {
+        auto eUrl = []() {
             while(true) {
                 mtxq.lock();
-                if(!q.size()) {
+                if(!qlen()) {
                     mtxq.unlock();
                     this_thread::sleep_for(chrono::milliseconds(20));
                     mtxq.lock();
-                    if(!q.size()) {mtxq.unlock(); return;}
+                    if(!qlen()) {mtxq.unlock(); return;}
                 }
                 string t=q.front();
                 q.pop();
@@ -104,33 +104,33 @@ public:
                 mtxa.unlock();
                 mtxm.unlock();
                 mtxq.unlock();
-                vector<string> vec(htmlParser.getUrls(t));
+                list[string] vec(htmlParser.getUrls(t));
                 mtxq.lock();
-                for(auto& s:vec) {q.push(s);}
+                for(auto s:vec) {q.push(s);}
                 mtxq.unlock();
             }
             return;
         };
         while(n--) pool.emplace_back(thread(eUrl));
-        for(auto& t:pool) t.join();
+        for(auto t:pool) t.join();
         return rtn;
     }
 private:
-    vector<string> rtn;
+    list[string] rtn;
     unordered_map<string, bool> m;
     mutex mtxq, mtxm, mtxa;
     string StUrl;
     int n = thread::hardware_concurrency();
-    vector<thread> pool;
+    list[thread] pool;
     queue<string> q;
 
-    string getStartUrl(string& s){
-        int t = 3;
+    def getStartUrl(self, string s) -> string:
+        t = 3
         string rtn="";
-        for (char& c: s){
+        for (char c: s){
             if(c== '/') t--;
             if(!t) return rtn;
-            rtn.push_back(c);
+            rtn.append(c);
         }
         return rtn;
     }
@@ -210,7 +210,7 @@ Let's trace through the Python solution with startUrl = "http://news.yahoo.com/n
 
 ## Synchronization Patterns
 
-### C++ Approach:
+### Python Approach:
 - **Multiple Mutexes**: Separate locks for queue, map, and results
 - **Manual Thread Management**: Create and join threads manually
 - **Polling**: Sleep and check for work periodically

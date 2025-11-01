@@ -78,43 +78,32 @@ This is a **Data Structure Design** problem that simulates a simple bank system.
 
 ## Solution
 
-```cpp
-class Bank {
-private:
-    vector<long long> balance;
-    bool isValid(int account) {
-        return account >= 1 && account <= balance.size();
-    }
-public:
-    Bank(vector<long long>& balance) {
-        this->balance = balance;
-    }
+```python
+class Bank:
+    def __init__(self, balance: list[int]):
+        self.balance = balance
     
-    bool transfer(int account1, int account2, long long money) {
-        if(isValid(account1) && isValid(account2) && balance[account1 - 1] >= money) {
-            balance[account1 - 1] -= money;
-            balance[account2 - 1] += money;
-            return true;
-        }
-        return false;
-    }
+    def isValid(self, account: int) -> bool:
+        return 1 <= account <= len(self.balance)
     
-    bool deposit(int account, long long money) {
-        if(isValid(account)) {
-            balance[account - 1] += money;
-            return true;
-        }
-        return false;
-    }
+    def transfer(self, account1: int, account2: int, money: int) -> bool:
+        if self.isValid(account1) and self.isValid(account2) and self.balance[account1 - 1] >= money:
+            self.balance[account1 - 1] -= money
+            self.balance[account2 - 1] += money
+            return True
+        return False
     
-    bool withdraw(int account, long long money) {
-        if(isValid(account) && balance[account - 1] >= money) {
-            balance[account - 1] -= money;
-            return true;
-        }
-        return false;
-    }
-};
+    def deposit(self, account: int, money: int) -> bool:
+        if self.isValid(account):
+            self.balance[account - 1] += money
+            return True
+        return False
+    
+    def withdraw(self, account: int, money: int) -> bool:
+        if self.isValid(account) and self.balance[account - 1] >= money:
+            self.balance[account - 1] -= money
+            return True
+        return False
 
 /**
  * Your Bank object will be instantiated and called as such:
@@ -202,52 +191,37 @@ For `balance = [10, 100, 20, 50, 30]` (5 accounts):
 ## Alternative Approaches
 
 ### Using Map for Dynamic Accounts:
-```cpp
-class Bank {
-private:
-    unordered_map<int, long long> balance;
-public:
-    Bank(vector<long long>& balance) {
-        for(int i = 0; i < balance.size(); i++) {
-            this->balance[i + 1] = balance[i];
-        }
-    }
+```python
+class Bank:
+    def __init__(self, balance: list[int]):
+        self.balance = {}
+        for i, bal in enumerate(balance):
+            self.balance[i + 1] = bal
     
-    bool transfer(int account1, int account2, long long money) {
-        if(balance.count(account1) && balance.count(account2) && 
-           balance[account1] >= money) {
-            balance[account1] -= money;
-            balance[account2] += money;
-            return true;
-        }
-        return false;
-    }
-    // ... other methods
-};
+    def transfer(self, account1: int, account2: int, money: int) -> bool:
+        if account1 in self.balance and account2 in self.balance and self.balance[account1] >= money:
+            self.balance[account1] -= money
+            self.balance[account2] += money
+            return True
+        return False
+    # ... other methods
 ```
 
 ### With Additional Features:
-```cpp
-class Bank {
-private:
-    vector<long long> balance;
-    vector<string> transactionLog;
+```python
+class Bank:
+    def __init__(self, balance: list[int]):
+        self.balance = balance
+        self.transactionLog = []
     
-public:
-    bool transfer(int account1, int account2, long long money) {
-        if(isValid(account1) && isValid(account2) && 
-           balance[account1 - 1] >= money) {
-            balance[account1 - 1] -= money;
-            balance[account2 - 1] += money;
-            transactionLog.push_back("Transfer: " + to_string(account1) + 
-                                   " -> " + to_string(account2) + 
-                                   " $" + to_string(money));
-            return true;
-        }
-        return false;
-    }
-    // ... other methods
-};
+    def transfer(self, account1: int, account2: int, money: int) -> bool:
+        if self.isValid(account1) and self.isValid(account2) and self.balance[account1 - 1] >= money:
+            self.balance[account1 - 1] -= money
+            self.balance[account2 - 1] += money
+            self.transactionLog.append(f"Transfer: {account1} -> {account2} ${money}")
+            return True
+        return False
+    # ... other methods
 ```
 
 The vector-based approach is optimal for this problem due to its simplicity, efficiency, and direct array access patterns.

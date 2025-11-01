@@ -95,66 +95,59 @@ ticTacToe.move(2, 1, 1); // return 1 (player 1 wins)
 **Time Complexity:** O(n) per move  
 **Space Complexity:** O(n²)
 
-```cpp
-class TicTacToe {
-public:
-    TicTacToe(int n) {
-        board.resize(n, vector<int>(n));
-    }
+```python
+class TicTacToe:
+    def __init__(self, n: int):
+        self.board = [[''] * n for _ in range(n)]
     
-    int move(int row, int col, int player) {
-        if(player == 1)
-            board[row][col] = 'X';
-        else
-            board[row][col] = 'O';
-        if(win(player)) return player;
-        return 0;
-    }
+    def move(self, row: int, col: int, player: int) -> int:
+        if player == 1:
+            self.board[row][col] = 'X'
+        else:
+            self.board[row][col] = 'O'
+        if self.win(player):
+            return player
+        return 0
     
-private:
-    vector<vector<int>> board;
+    def win(self, player: int) -> bool:
+        ch = 'X' if player == 1 else 'O'
+        n = len(self.board)
 
-    bool win(int player){
-        char ch;
-        if(player == 1) ch = 'X';
-        else ch = 'O';
-        int n = board.size();
+        # Check rows
+        for i in range(n):
+            cnt = 0
+            for j in range(n):
+                if self.board[i][j] == ch:
+                    cnt += 1
+            if cnt == n:
+                return True
 
-        // Check rows
-        for(int i = 0; i < n; i++) {
-            int cnt = 0;
-            for(int j = 0; j < n; j++) {
-                if(board[i][j] == ch) cnt++;
-            }
-            if(cnt == n) return true;
-        }
+        # Check columns
+        for i in range(n):
+            cnt = 0
+            for j in range(n):
+                if self.board[j][i] == ch:
+                    cnt += 1
+            if cnt == n:
+                return True
 
-        // Check columns
-        for(int i = 0; i < n; i++) {
-            int cnt = 0;
-            for(int j = 0; j < n; j++) {
-                if(board[j][i] == ch) cnt++;
-            }
-            if(cnt == n) return true;
-        }
+        # Check main diagonal
+        cnt = 0
+        for i in range(n):
+            if self.board[i][i] == ch:
+                cnt += 1
+        if cnt == n:
+            return True
 
-        // Check main diagonal
-        int cnt = 0;
-        for(int i = 0; i < n; i++) {
-            if(board[i][i] == ch) cnt++;
-        }
-        if(cnt == n) return true;
-
-        // Check anti-diagonal
-        cnt = 0;
-        for(int i = 0; i < n; i++) {
-            if(board[i][n - i - 1] == ch) cnt++;
-        }
-        if(cnt == n) return true;
+        # Check anti-diagonal
+        cnt = 0
+        for i in range(n):
+            if self.board[i][n - i - 1] == ch:
+                cnt += 1
+        if cnt == n:
+            return True
         
-        return false;
-    }
-};
+        return False
 ```
 
 ### Approach 2: Optimized with Counters (Recommended)
@@ -169,31 +162,29 @@ private:
 **Time Complexity:** O(1) per move  
 **Space Complexity:** O(n)
 
-```cpp
-class TicTacToe {
-public:
-    TicTacToe(int n): rows(n), cols(n), diagonal(0), antiDiagonal(0) {
-    }
+```python
+class TicTacToe:
+    def __init__(self, n: int):
+        self.rows = [0] * n
+        self.cols = [0] * n
+        self.diagonal = 0
+        self.antiDiagonal = 0
     
-    int move(int row, int col, int player) {
-        int curr = player == 1 ? 1 : -1;
-        int n = rows.size();
+    def move(self, row: int, col: int, player: int) -> int:
+        curr = 1 if player == 1 else -1
+        n = len(self.rows)
 
-        rows[row] += curr;
-        cols[col] += curr;
-        if(row == col) diagonal += curr;
-        if(row == n - col - 1) antiDiagonal += curr;
+        self.rows[row] += curr
+        self.cols[col] += curr
+        if row == col:
+            self.diagonal += curr
+        if row == n - col - 1:
+            self.antiDiagonal += curr
 
-        if(abs(rows[row]) == n || abs(cols[col]) == n ||
-           abs(diagonal) == n || abs(antiDiagonal) == n)
-           return player;
-        return 0;
-    }
-    
-private:
-    vector<int> rows, cols;
-    int diagonal, antiDiagonal;
-};
+        if (abs(self.rows[row]) == n or abs(self.cols[col]) == n or
+            abs(self.diagonal) == n or abs(self.antiDiagonal) == n):
+            return player
+        return 0
 ```
 
 ## Algorithm Analysis
@@ -217,7 +208,7 @@ private:
 ## Implementation Details
 
 ### Counter Update Logic
-```cpp
+```python
 int curr = player == 1 ? 1 : -1;  // Player encoding
 rows[row] += curr;                 // Update row count
 cols[col] += curr;                 // Update column count
@@ -226,7 +217,7 @@ if(row == n - col - 1) antiDiagonal += curr;  // Anti-diagonal
 ```
 
 ### Win Condition Check
-```cpp
+```python
 if(abs(rows[row]) == n || abs(cols[col]) == n ||
    abs(diagonal) == n || abs(antiDiagonal) == n)
    return player;

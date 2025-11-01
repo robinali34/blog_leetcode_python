@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 48. Rotate Image"
 date: 2025-09-24 21:00:00 -0000
-categories: leetcode algorithm matrix data-structures 2d-array transformation medium cpp rotate-image in-place problem-solving
+categories: python rotate-image in-place problem-solving
 ---
 
 # [Medium] 48. Rotate Image
@@ -44,22 +44,17 @@ There are two main approaches to solve this problem:
 **Time Complexity:** O(n²) - Visit each element once  
 **Space Complexity:** O(1) - Only using constant extra space
 
-```cpp
-class Solution {
-public:
-    void rotate(vector<vector<int>>& matrix) {
-        int n = matrix.size();
-        for(int i = 0; i < (n+1)/2; i++) {
-            for (int j = 0; j< n/2; j++) {
-                int temp = matrix[i][j];
-                matrix[i][j] = matrix[n - 1 - j][i];
-                matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j];
-                matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i];
-                matrix[j][n - 1 - i] = temp;
-            }
-        }
-    }
-};
+```python
+class Solution:
+    def rotate(self, matrix: list[list[int]]) -> None:
+        n = len(matrix)
+        for i in range((n + 1) // 2):
+            for j in range(n // 2):
+                temp = matrix[i][j]
+                matrix[i][j] = matrix[n - 1 - j][i]
+                matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j]
+                matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i]
+                matrix[j][n - 1 - i] = temp
 ```
 
 ## Solution 2: Transpose + Reflect
@@ -67,30 +62,21 @@ public:
 **Time Complexity:** O(n²) - Visit each element twice  
 **Space Complexity:** O(1) - Only using constant extra space
 
-```cpp
-class Solution {
-public:
-    void rotate(vector<vector<int>>& matrix) {
-        transpose(matrix);
-        reflect(matrix);
-    }
-
-private:
-    void transpose(vector<vector<int>>& matrix) {
-        const int n = matrix.size();
-        for (int i = 0; i < n; i++){
-            for (int j = i + 1; j < n; j++) {
-                swap(matrix[j][i], matrix[i][j]);
-            }
-        }
-    }
-
-    void reflect(vector<vector<int>>& matrix) {
-        for (auto& row : matrix) {
-            reverse(row.begin(), row.end());
-        }
-    }
-};
+```python
+class Solution:
+    def rotate(self, matrix: list[list[int]]) -> None:
+        self.transpose(matrix)
+        self.reflect(matrix)
+    
+    def transpose(self, matrix: list[list[int]]) -> None:
+        n = len(matrix)
+        for i in range(n):
+            for j in range(i + 1, n):
+                matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
+    
+    def reflect(self, matrix: list[list[int]]) -> None:
+        for row in matrix:
+            row.reverse()
 ```
 
 ## Step-by-Step Example

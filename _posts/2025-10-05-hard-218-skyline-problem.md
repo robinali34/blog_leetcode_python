@@ -2,7 +2,7 @@
 layout: post
 title: "[Hard] 218. The Skyline Problem"
 date: 2025-10-05 00:00:00 -0000
-categories: leetcode algorithm hard cpp sweep-line priority-queue data-structures union-find problem-solving
+categories: python sweep-line priority-queue data-structures union-find problem-solving
 ---
 
 # [Hard] 218. The Skyline Problem
@@ -59,39 +59,28 @@ There are several approaches to solve this problem:
 
 ## Solution 1: Coordinate Compression + Brute Force
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
-        set<int> edgeSet;
-        for(auto& building: buildings) {
-            int left = building[0], right = building[1];
-            edgeSet.insert(left);
-            edgeSet.insert(right);
-        }
-        vector<int> edges(edgeSet.begin(), edgeSet.end());
-        map<int, int> edgeIdxMap;
-        for(int i = 0; i < edges.size(); i++) {
-            edgeIdxMap[edges[i]] = i;
-        }
-        vector<int> heights(edges.size());
-        for(auto& building :buildings) {
-            int left = building[0], right = building[1], height = building[2];
-            int leftIdx = edgeIdxMap[left], rightIdx = edgeIdxMap[right];
-            for(int idx = leftIdx; idx < rightIdx; idx++) {
-                heights[idx] = max(heights[idx], height);
-            }
-        }
-        vector<vector<int>> rtn;
-        for(int i = 0; i < heights.size(); i++) {
-            int curHeight = heights[i], curPos = edges[i];
-            if(i == 0 || curHeight != heights[i - 1]) {
-                rtn.push_back({curPos, curHeight});
-            }
-        }
-        return rtn;
-    }
-};
+```python
+class Solution:
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        edgeSet = set()
+        for building in buildings:
+            left, right = building[0], building[1]
+            edgeSet.add(left)
+            edgeSet.add(right)
+        edges = sorted(list(edgeSet))
+        edgeIdxMap = {edge: i for i, edge in enumerate(edges)}
+        heights = [0] * len(edges)
+        for building in buildings:
+            left, right, height = building[0], building[1], building[2]
+            leftIdx, rightIdx = edgeIdxMap[left], edgeIdxMap[right]
+            for idx in range(leftIdx, rightIdx):
+                heights[idx] = max(heights[idx], height)
+        result = []
+        for i in range(len(heights)):
+            curHeight, curPos = heights[i], edges[i]
+            if i == 0 or curHeight != heights[i - 1]:
+                result.append([curPos, curHeight])
+        return result
 ```
 
 **Time Complexity:** O(n²) - For each building, we update all positions it covers
@@ -105,39 +94,37 @@ public:
 
 ## Solution 2: Sweep Line with Map
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
-        vector<pair<int, int>> pairs;
-        for(auto& b: buildings) {
-            int left = b[0], right = b[1], height = b[2];
-            pairs.emplace_back(left, -height);
-            pairs.emplace_back(right, height);
-        }
-        sort(pairs.begin(), pairs.end(), [](const pair<int, int>& a, const pair<int, int>& b) {
-            if(a.first != b.first) return a.first < b.first;
-            else return a.second < b.second;
-        });
-        vector<vector<int>> rtn;
-        map<int, int> height_map;
-        height_map[0] = 1;
-        int pre = 0;
-        for(auto& [x, h]: pairs) {
-            if(h < 0) height_map[-h]++;
-            else {
-                height_map[h]--;
-                if(height_map[h] == 0) height_map.erase(h);
-            }
-            int cur = height_map.rbegin()->first;
-            if(cur != pre) {
-                rtn.push_back({x, cur});
-                pre = cur;
-            }
-        }
-        return rtn;
-    }
-};
+```python
+from sortedcontainers import SortedDict
+
+class Solution:
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        pairs = []
+        for b in buildings:
+            left, right, height = b[0], b[1], b[2]
+            pairs.append((left, -height))
+            pairs.append((right, height))
+        
+        pairs.sort(key=lambda x: (x[0], x[1]))
+        
+        result = []
+        height_map = SortedDict({0: 1})
+        pre = 0
+        
+        for x, h in pairs:
+            if h < 0:
+                height_map[-h] = height_map.get(-h, 0) + 1
+            else:
+                height_map[h] = height_map.get(h, 0) - 1
+                if height_map[h] == 0:
+                    del height_map[h]
+            
+            cur = height_map.keys()[-1]  # Get max key
+            if cur != pre:
+                result.append([x, cur])
+                pre = cur
+        
+        return result
 ```
 
 **Time Complexity:** O(n log n) - Sorting + map operations
@@ -151,39 +138,39 @@ public:
 
 ## Solution 3: Sweep Line with Priority Queue
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
-        vector<vector<int>> edges;
-        for(int i = 0; i < buildings.size(); i++) {
-            edges.push_back({buildings[i][0], i});
-            edges.push_back({buildings[i][1], i});
-        }
-        sort(edges.begin(), edges.end());
-        priority_queue<pair<int, int>> live;
-        vector<vector<int>> rtn;
-        int idx = 0;
-        while(idx < edges.size()) {
-            int cur = edges[idx][0];
-            while(idx < edges.size() && edges[idx][0] == cur) {
-                int b = edges[idx][1];
-                if(buildings[b][0] == cur) {
-                    int right = buildings[b][1];
-                    int height = buildings[b][2];
-                    live.push({height, right});
-                }
-                idx += 1;
-            }
-            while(!live.empty() && live.top().second <= cur) live.pop();
-            int curHeight = live.empty() ? 0: live.top().first;
-            if(rtn.empty() || rtn[rtn.size() - 1][1] != curHeight) {
-                rtn.push_back({cur, curHeight});
-            }
-        }
-        return rtn;
-    }
-};
+```python
+import heapq
+
+class Solution:
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        edges = []
+        for i, building in enumerate(buildings):
+            edges.append([building[0], i])
+            edges.append([building[1], i])
+        
+        edges.sort()
+        live = []  # Max heap: (-height, right)
+        result = []
+        idx = 0
+        
+        while idx < len(edges):
+            cur = edges[idx][0]
+            while idx < len(edges) and edges[idx][0] == cur:
+                b = edges[idx][1]
+                if buildings[b][0] == cur:
+                    right = buildings[b][1]
+                    height = buildings[b][2]
+                    heapq.heappush(live, (-height, right))
+                idx += 1
+            
+            while live and live[0][1] <= cur:
+                heapq.heappop(live)
+            
+            curHeight = -live[0][0] if live else 0
+            if not result or result[-1][1] != curHeight:
+                result.append([cur, curHeight])
+        
+        return result
 ```
 
 **Time Complexity:** O(n log n) - Sorting + priority queue operations
@@ -198,44 +185,45 @@ public:
 
 ## Solution 4: Sweep Line with Two Priority Queues
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
-        vector<vector<int>> edges;
-        for(auto& b: buildings) {
-            edges.push_back({b[0], b[2]});
-            edges.push_back({b[1], -b[2]});
-        }
-        sort(edges.begin(), edges.end(), [](const vector<int>& a, const vector<int>& b) {
-            if (a[0] != b[0]) return a[0] < b[0];
-            return a[1] > b[1];
-        });
-        priority_queue<int> live;
-        priority_queue<int> past;
-        vector<vector<int>> rtn;
-        int idx = 0;
-        while(idx < edges.size()) {
-            int cur = edges[idx][0];
-            while(idx < edges.size() && edges[idx][0] == cur) {
-                int height = edges[idx][1];
-                if(height > 0) live.push(height);
-                else past.push(-height);
-                idx += 1;
-            }
-            while(!live.empty() && !past.empty() && live.top() == past.top()) {
-                live.pop();
-                past.pop();
-            }
-            int curHeight = live.empty() ? 0: live.top();
-            if(rtn.empty() || rtn[rtn.size() - 1][1] != curHeight) {
-                rtn.push_back({cur, curHeight});
-            }
-        }
-        return rtn;
-    }
-};
+```python
+import heapq
+
+class Solution:
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        edges = []
+        for b in buildings:
+            edges.append([b[0], b[2]])
+            edges.append([b[1], -b[2]])
+        
+        edges.sort(key=lambda x: (x[0], -x[1]))
+        
+        live = []  # Max heap: (-height, height)
+        past = []  # Max heap: (-height, height)
+        result = []
+        idx = 0
+        
+        while idx < len(edges):
+            cur = edges[idx][0]
+            while idx < len(edges) and edges[idx][0] == cur:
+                height = edges[idx][1]
+                if height > 0:
+                    heapq.heappush(live, (-height, height))
+                else:
+                    heapq.heappush(past, (height, -height))
+                idx += 1
+            
+            while live and past and live[0][1] == past[0][1]:
+                heapq.heappop(live)
+                heapq.heappop(past)
+            
+            curHeight = -live[0][0] if live else 0
+            if not result or result[-1][1] != curHeight:
+                result.append([cur, curHeight])
+        
+        return result
 ```
+<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
+grep
 
 **Time Complexity:** O(n log n) - Sorting + priority queue operations
 **Space Complexity:** O(n) - Two priority queues
@@ -249,61 +237,47 @@ public:
 
 ## Solution 5: Union Find Optimization
 
-```cpp
-class UnionFind {
-private:
-    vector<int> root;
-public:
-    UnionFind(int n): root(n) {
-        iota(root.begin(), root.end(), 0);
-    }
-    int find(int x) {
-        if(root[x] != x) return find(root[x]);
-        return root[x];
-    }
-    void merge(int x, int y) {
-        root[find(x)] = find(y);
-    }
-};
+```python
+class UnionFind:
+    def __init__(self, n: int):
+        self.root = list(range(n))
+    
+    def find(self, x: int) -> int:
+        if self.root[x] != x:
+            return self.find(self.root[x])
+        return self.root[x]
+    
+    def merge(self, x: int, y: int) -> None:
+        self.root[self.find(x)] = self.find(y)
 
-class Solution {
-public:
-    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
-        sort(buildings.begin(), buildings.end(), [](auto& a, auto& b) {
-            return a[2] > b[2];
-        });
-        set<int> edgeSet;
-        for(auto& b: buildings) {
-            edgeSet.insert(b[0]);
-            edgeSet.insert(b[1]);
-        }
-        vector<int> edges(edgeSet.begin(), edgeSet.end());
-        unordered_map<int, int> edgeIdxMap;
-        for(int i = 0; i < edges.size(); i++) {
-            edgeIdxMap[edges[i]] = i;
-        }
-        UnionFind uf(edges.size());
-        vector<int> heights(edges.size());
-        for(auto& b: buildings) {
-            int left = b[0], right = b[1], height = b[2];
-            int leftIdx = uf.find(edgeIdxMap[left]);
-            int rightIdx = edgeIdxMap[right];
-            while(leftIdx < rightIdx) {
-                heights[leftIdx] = height;
-                uf.merge(leftIdx, rightIdx);
-                leftIdx = uf.find(++leftIdx);
-            }
-        }
-        vector<vector<int>> rtn;
-        for(int i = 0; i < edges.size(); i++) {
-            if(i == 0 || heights[i] != heights[i - 1]) {
-                rtn.push_back({edges[i], heights[i]});
-            }
-        }
-        return rtn;
-    }
-};
+class Solution:
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        buildings.sort(key=lambda x: x[2], reverse=True)
+        edgeSet = set()
+        for b in buildings:
+            edgeSet.add(b[0])
+            edgeSet.add(b[1])
+        edges = sorted(list(edgeSet))
+        edgeIdxMap = {edge: i for i, edge in enumerate(edges)}
+        uf = UnionFind(len(edges))
+        heights = [0] * len(edges)
+        for b in buildings:
+            left, right, height = b[0], b[1], b[2]
+            leftIdx = uf.find(edgeIdxMap[left])
+            rightIdx = edgeIdxMap[right]
+            while leftIdx < rightIdx:
+                heights[leftIdx] = height
+                uf.merge(leftIdx, rightIdx)
+                leftIdx += 1
+                leftIdx = uf.find(leftIdx)
+        result = []
+        for i in range(len(edges)):
+            if i == 0 or heights[i] != heights[i - 1]:
+                result.append([edges[i], heights[i]])
+        return result
 ```
+<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
+read_file
 
 **Time Complexity:** O(n²) in worst case, but optimized with Union Find
 **Space Complexity:** O(n) - Union Find and height arrays

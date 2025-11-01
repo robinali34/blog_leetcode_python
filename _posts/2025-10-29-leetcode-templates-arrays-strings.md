@@ -21,20 +21,24 @@ tags: [leetcode, templates, arrays, strings]
 
 ## Sliding Window (fixed/variable)
 
-```cpp
-// Variable-size window (e.g., longest substring without repeating)
-int longestNoRepeat(const string& s){
-    vector<int> cnt(256, 0);
-    int dup = 0, best = 0;
-    for (int l = 0, r = 0; r < (int)s.size(); ++r){
-        dup += (++cnt[(unsigned char)s[r]] == 2);
-        while (dup > 0){
-            dup -= (--cnt[(unsigned char)s[l++]] == 1);
-        }
-        best = max(best, r - l + 1);
-    }
-    return best;
-}
+```python
+# Variable-size window (e.g., longest substring without repeating)
+def longest_no_repeat(s: str) -> int:
+    cnt = [0] * 256
+    dup = 0
+    best = 0
+    l = 0
+    for r in range(len(s)):
+        cnt[ord(s[r])] += 1
+        if cnt[ord(s[r])] == 2:
+            dup += 1
+        while dup > 0:
+            cnt[ord(s[l])] -= 1
+            if cnt[ord(s[l])] == 1:
+                dup -= 1
+            l += 1
+        best = max(best, r - l + 1)
+    return best
 ```
 
 | ID | Title | Link |
@@ -45,16 +49,18 @@ int longestNoRepeat(const string& s){
 
 ## Two Pointers (sorted arrays/strings)
 
-```cpp
-bool twoSumSorted(const vector<int>& a, int target){
-    int l = 0, r = (int)a.size() - 1;
-    while (l < r){
-        long long sum = (long long)a[l] + a[r];
-        if (sum == target) return true;
-        if (sum < target) ++l; else --r;
-    }
-    return false;
-}
+```python
+def two_sum_sorted(a: list[int], target: int) -> bool:
+    l, r = 0, len(a) - 1
+    while l < r:
+        s = a[l] + a[r]
+        if s == target:
+            return True
+        if s < target:
+            l += 1
+        else:
+            r -= 1
+    return False
 ```
 
 | ID | Title | Link |
@@ -65,15 +71,19 @@ bool twoSumSorted(const vector<int>& a, int target){
 
 ## Binary Search on Answer (monotonic predicate)
 
-```cpp
-long long binsearch(long long lo, long long hi){ // [lo, hi]
-    auto good = [&](long long x){ /* check feasibility */ return true; };
-    while (lo < hi){
-        long long mid = (lo + hi) >> 1;
-        if (good(mid)) hi = mid; else lo = mid + 1;
-    }
-    return lo;
-}
+```python
+def bin_search(lo: int, hi: int) -> int:  # [lo, hi]
+    def good(x: int) -> bool:
+        # check feasibility
+        return True
+    
+    while lo < hi:
+        mid = (lo + hi) >> 1
+        if good(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
 ```
 
 | ID | Title | Link |
@@ -85,12 +95,12 @@ long long binsearch(long long lo, long long hi){ // [lo, hi]
 
 ## Prefix Sum / Difference Array
 
-```cpp
-vector<int> prefix(const vector<int>& a){
-    vector<int> ps(a.size()+1);
-    for (int i = 0; i < (int)a.size(); ++i) ps[i+1] = ps[i] + a[i];
-    return ps;
-}
+```python
+def prefix(a: list[int]) -> list[int]:
+    ps = [0] * (len(a) + 1)
+    for i in range(len(a)):
+        ps[i + 1] = ps[i] + a[i]
+    return ps
 ```
 
 | ID | Title | Link |
@@ -102,9 +112,13 @@ vector<int> prefix(const vector<int>& a){
 
 ## Hash Map Frequencies
 
-```cpp
-unordered_map<int,int> freq;
-for (int x: nums) ++freq[x];
+```python
+from collections import Counter
+freq = Counter(nums)
+# or manually:
+freq = {}
+for x in nums:
+    freq[x] = freq.get(x, 0) + 1
 ```
 
 | ID | Title | Link |
@@ -115,16 +129,38 @@ for (int x: nums) ++freq[x];
 | 359 | Logger Rate Limiter | [Logger Rate Limiter](https://leetcode.com/problems/logger-rate-limiter/) |
 
 ## KMP (Substring Search)
+KMP is a pattern matching algorithm that finds occurrences of a pattern string P within a text string T efficiently — without re-checking characters that are already known to match.
 
-```cpp
-vector<int> kmpPi(const string& s){
-    int n=s.size(); vector<int> pi(n);
-    for(int i=1;i<n;++i){ int j=pi[i-1];
-        while(j>0 && s[i]!=s[j]) j=pi[j-1];
-        if(s[i]==s[j]) ++j; pi[i]=j;
-    }
-    return pi;
-}
+While a naive substring search checks character-by-character and backtracks when a mismatch occurs (worst case O(n * m)),
+KMP preprocesses the pattern to know how far it can safely skip ahead when mismatches happen.
+
+It does this using a “prefix function” (also called LPS — longest prefix which is also suffix).
+
+### Steps
+
+Preprocess the pattern to build the lps[] array.
+
+lps[i] = the length of the longest proper prefix of the substring P[0..i] which is also a suffix of this substring.
+
+Proper prefix = prefix ≠ the string itself.
+
+Use the LPS array during the search
+
+When mismatch occurs, instead of resetting j = 0,
+we move j back to lps[j-1].
+
+```python
+def kmp_pi(s: str) -> list[int]:
+    n = len(s)
+    pi = [0] * n
+    for i in range(1, n):
+        j = pi[i - 1]
+        while j > 0 and s[i] != s[j]:
+            j = pi[j - 1]
+        if s[i] == s[j]:
+            j += 1
+        pi[i] = j
+    return pi
 ```
 
 | ID | Title | Link |
@@ -134,12 +170,26 @@ vector<int> kmpPi(const string& s){
 
 ## Manacher (Longest Palindromic Substring, O(n))
 
-```cpp
-string manacher(const string& s){ string t="|"; for(char c:s){ t.push_back(c); t.push_back('|'); }
-    int n=t.size(); vector<int> p(n); int c=0,r=0, best=0, center=0;
-    for(int i=0;i<n;++i){ int mir=2*c-i; if(i<r) p[i]=min(r-i,p[mir]); while(i-1-p[i]>=0 && i+1+p[i]<n && t[i-1-p[i]]==t[i+1+p[i]]) ++p[i]; if(i+p[i]>r){ c=i; r=i+p[i]; } if(p[i]>best){ best=p[i]; center=i; } }
-    int start=(center-best)/2; return s.substr(start, best);
-}
+```python
+def manacher(s: str) -> str:
+    t = "|" + "|".join(s) + "|"
+    n = len(t)
+    p = [0] * n
+    c = r = best = center = 0
+    for i in range(n):
+        mir = 2 * c - i
+        if i < r:
+            p[i] = min(r - i, p[mir])
+        while i - 1 - p[i] >= 0 and i + 1 + p[i] < n and t[i - 1 - p[i]] == t[i + 1 + p[i]]:
+            p[i] += 1
+        if i + p[i] > r:
+            c = i
+            r = i + p[i]
+        if p[i] > best:
+            best = p[i]
+            center = i
+    start = (center - best) // 2
+    return s[start:start + best]
 ```
 
 | ID | Title | Link |
@@ -148,8 +198,20 @@ string manacher(const string& s){ string t="|"; for(char c:s){ t.push_back(c); t
 
 ## Z-Algorithm (Pattern occurrences)
 
-```cpp
-vector<int> zfunc(const string& s){ int n=s.size(); vector<int> z(n); int l=0,r=0; for(int i=1;i<n;++i){ if(i<=r) z[i]=min(r-i+1, z[i-l]); while(i+z[i]<n && s[z[i]]==s[i+z[i]]) ++z[i]; if(i+z[i]-1>r){ l=i; r=i+z[i]-1; } } return z; }
+```python
+def z_func(s: str) -> list[int]:
+    n = len(s)
+    z = [0] * n
+    l = r = 0
+    for i in range(1, n):
+        if i <= r:
+            z[i] = min(r - i + 1, z[i - l])
+        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+            z[i] += 1
+        if i + z[i] - 1 > r:
+            l = i
+            r = i + z[i] - 1
+    return z
 ```
 
 | ID | Title | Link |
@@ -158,15 +220,21 @@ vector<int> zfunc(const string& s){ int n=s.size(); vector<int> z(n); int l=0,r=
 
 ## String Rolling Hash (Rabin–Karp)
 
-```cpp
-struct RH{
-    static const long long B=911382323, M=972663749; // example
-    vector<long long> p,h; RH(const string& s){ int n=s.size(); p.assign(n+1,1); h.assign(n+1,0);
-        for(int i=0;i<n;++i){ p[i+1]=p[i]*B%M; h[i+1]=(h[i]*B + s[i])%M; } }
-    long long get(int l,int r){ // [l,r)
-        return (h[r] - h[l]*p[r-l])%M;
-    }
-};
+```python
+class RH:
+    B = 911382323
+    M = 972663749  # example
+    
+    def __init__(self, s: str):
+        n = len(s)
+        self.p = [1] * (n + 1)
+        self.h = [0] * (n + 1)
+        for i in range(n):
+            self.p[i + 1] = (self.p[i] * self.B) % self.M
+            self.h[i + 1] = (self.h[i] * self.B + ord(s[i])) % self.M
+    
+    def get(self, l: int, r: int) -> int:  # [l, r)
+        return (self.h[r] - self.h[l] * self.p[r - l]) % self.M
 ```
 
 | ID | Title | Link |

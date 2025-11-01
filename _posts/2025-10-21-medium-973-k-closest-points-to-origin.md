@@ -64,16 +64,11 @@ Since we're finding the distance to the origin `(0, 0)`, we can simplify the dis
 **Time Complexity:** O(n log n)  
 **Space Complexity:** O(1) (excluding output)
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
-        sort(points.begin(), points.end(), [](const vector<int>& a, const vector<int>& b){
-            return (a[0] * a[0] + a[1] * a[1]) < (b[0] * b[0] + b[1] * b[1]);
-        });
-        return vector<vector<int>>(points.begin(), points.begin() + k);
-    }
-};
+```python
+class Solution:
+    def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
+        points.sort(key=lambda p: p[0] * p[0] + p[1] * p[1])
+        return points[:k]
 ```
 
 ### Approach 2: Max Heap
@@ -86,30 +81,24 @@ public:
 **Time Complexity:** O(n log k)  
 **Space Complexity:** O(k)
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
-        priority_queue<pair<int, vector<int>>> maxHeap;
+```python
+import heapq
+
+class Solution:
+    def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
+        # Use negative distance for max heap (Python has min heap)
+        maxHeap = []
         
-        for(auto& point : points) {
-            int dist = point[0] * point[0] + point[1] * point[1];
-            if(maxHeap.size() < k) {
-                maxHeap.push({dist, point});
-            } else if(dist < maxHeap.top().first) {
-                maxHeap.pop();
-                maxHeap.push({dist, point});
-            }
-        }
+        for point in points:
+            dist = point[0] * point[0] + point[1] * point[1]
+            if len(maxHeap) < k:
+                heapq.heappush(maxHeap, (-dist, point))
+            elif dist < -maxHeap[0][0]:
+                heapq.heappop(maxHeap)
+                heapq.heappush(maxHeap, (-dist, point))
         
-        vector<vector<int>> result;
-        while(!maxHeap.empty()) {
-            result.push_back(maxHeap.top().second);
-            maxHeap.pop();
-        }
-        return result;
-    }
-};
+        result = [point for _, point in maxHeap]
+        return result
 ```
 
 ### Approach 3: Quickselect (Optimal for Large k)
@@ -122,41 +111,35 @@ public:
 **Time Complexity:** O(n) average, O(n²) worst case  
 **Space Complexity:** O(1)
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
-        int left = 0, right = points.size() - 1;
+```python
+class Solution:
+    def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
+        left, right = 0, len(points) - 1
         
-        while(left <= right) {
-            int pivotIndex = partition(points, left, right);
-            if(pivotIndex == k) break;
-            else if(pivotIndex < k) left = pivotIndex + 1;
-            else right = pivotIndex - 1;
-        }
+        while left <= right:
+            pivotIndex = self.partition(points, left, right)
+            if pivotIndex == k:
+                break
+            elif pivotIndex < k:
+                left = pivotIndex + 1
+            else:
+                right = pivotIndex - 1
         
-        return vector<vector<int>>(points.begin(), points.begin() + k);
-    }
+        return points[:k]
     
-private:
-    int partition(vector<vector<int>>& points, int left, int right) {
-        int pivotDist = getDistance(points[right]);
-        int i = left;
+    def partition(self, points: list[list[int]], left: int, right: int) -> int:
+        def getDistance(point):
+            return point[0] * point[0] + point[1] * point[1]
         
-        for(int j = left; j < right; j++) {
-            if(getDistance(points[j]) <= pivotDist) {
-                swap(points[i], points[j]);
-                i++;
-            }
-        }
-        swap(points[i], points[right]);
-        return i;
-    }
-    
-    int getDistance(const vector<int>& point) {
-        return point[0] * point[0] + point[1] * point[1];
-    }
-};
+        pivotDist = getDistance(points[right])
+        i = left
+        
+        for j in range(left, right):
+            if getDistance(points[j]) <= pivotDist:
+                points[i], points[j] = points[j], points[i]
+                i += 1
+        points[i], points[right] = points[right], points[i]
+        return i
 ```
 
 ## Complexity Analysis

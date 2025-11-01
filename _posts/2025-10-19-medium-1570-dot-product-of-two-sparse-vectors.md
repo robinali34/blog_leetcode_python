@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 1570. Dot Product of Two Sparse Vectors"
 date: 2025-10-19 20:05:38 -0700
-categories: leetcode algorithm medium cpp hash-map data-structure optimization problem-solving
+categories: python hash-map data-structure optimization problem-solving
 ---
 
 # [Medium] 1570. Dot Product of Two Sparse Vectors
@@ -58,39 +58,29 @@ v1.dotProduct(v2) = 0*1 + 1*0 + 0*0 + 0*0 + 2*3 + 0*0 + 0*4 = 6
 
 Use a hash map to store only non-zero elements, then optimize dot product by iterating through the smaller hash map.
 
-```cpp
-class SparseVector {
-private:
-    unordered_map<int, int> cache;
+```python
+class SparseVector:
+    def __init__(self, nums: list[int]):
+        self.cache = {}
+        for i, num in enumerate(nums):
+            if num != 0:
+                self.cache[i] = num
     
-public:
-    SparseVector(vector<int> &nums) {
-        for(int i = 0; i < (int)nums.size(); i++) {
-            if(nums[i] != 0) {
-                cache[i] = nums[i];
-            }
-        }
-    }
-    
-    // Return the dotProduct of two sparse vectors
-    int dotProduct(SparseVector& vec) {
-        int rtn = 0;
-        auto& smaller = (this->cache.size() <= vec.cache.size()) ? this->cache : vec.cache;
-        auto& larger = (this->cache.size() <= vec.cache.size()) ? vec.cache : this->cache;
+    # Return the dotProduct of two sparse vectors
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        result = 0
+        smaller = self.cache if len(self.cache) <= len(vec.cache) else vec.cache
+        larger = vec.cache if len(self.cache) <= len(vec.cache) else self.cache
         
-        for(auto& [idx, num]: smaller) {
-            if(larger.contains(idx)) {
-                rtn += num * larger[idx];
-            }
-        }
-        return rtn;
-    }
-};
+        for idx, num in smaller.items():
+            if idx in larger:
+                result += num * larger[idx]
+        return result
 
-// Your SparseVector object will be instantiated and called as such:
-// SparseVector v1(nums1);
-// SparseVector v2(nums2);
-// int ans = v1.dotProduct(v2);
+# Your SparseVector object will be instantiated and called as such:
+# v1 = SparseVector(nums1)
+# v2 = SparseVector(nums2)
+# ans = v1.dotProduct(v2)
 ```
 
 ## How the Algorithm Works
@@ -134,14 +124,12 @@ Result = 8
 ## Algorithm Breakdown
 
 ### Constructor:
-```cpp
-SparseVector(vector<int> &nums) {
-    for(int i = 0; i < (int)nums.size(); i++) {
-        if(nums[i] != 0) {
-            cache[i] = nums[i];
-        }
-    }
-}
+```python
+def __init__(self, nums: list[int]):
+    self.cache = {}
+    for i, num in enumerate(nums):
+        if num != 0:
+            self.cache[i] = num
 ```
 
 **Process:**
@@ -151,19 +139,16 @@ SparseVector(vector<int> &nums) {
 4. **Space optimization:** Save space by not storing zeros
 
 ### Dot Product:
-```cpp
-int dotProduct(SparseVector& vec) {
-    int rtn = 0;
-    auto& smaller = (this->cache.size() <= vec.cache.size()) ? this->cache : vec.cache;
-    auto& larger = (this->cache.size() <= vec.cache.size()) ? vec.cache : this->cache;
+```python
+def dotProduct(self, vec: 'SparseVector') -> int:
+    result = 0
+    smaller = self.cache if len(self.cache) <= len(vec.cache) else vec.cache
+    larger = vec.cache if len(self.cache) <= len(vec.cache) else self.cache
     
-    for(auto& [idx, num]: smaller) {
-        if(larger.contains(idx)) {
-            rtn += num * larger[idx];
-        }
-    }
-    return rtn;
-}
+    for idx, num in smaller.items():
+        if idx in larger:
+            result += num * larger[idx]
+    return result
 ```
 
 **Process:**
@@ -234,63 +219,45 @@ Result = 6
 ## Alternative Approaches
 
 ### Approach 1: Brute Force
-```cpp
-class SparseVector {
-private:
-    vector<int> nums;
+```python
+class SparseVector:
+    def __init__(self, nums: list[int]):
+        self.nums = nums
     
-public:
-    SparseVector(vector<int> &nums) {
-        this->nums = nums;
-    }
-    
-    int dotProduct(SparseVector& vec) {
-        int result = 0;
-        for(int i = 0; i < nums.size(); i++) {
-            result += nums[i] * vec.nums[i];
-        }
-        return result;
-    }
-};
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        result = 0
+        for i in range(len(self.nums)):
+            result += self.nums[i] * vec.nums[i]
+        return result
 ```
 
 **Time Complexity:** O(n) for dotProduct  
 **Space Complexity:** O(n)
 
 ### Approach 2: List of Pairs
-```cpp
-class SparseVector {
-private:
-    vector<pair<int, int>> nonZeros;
+```python
+class SparseVector:
+    def __init__(self, nums: list[int]):
+        self.nonZeros = []  # List of (index, value) tuples
+        for i, num in enumerate(nums):
+            if num != 0:
+                self.nonZeros.append((i, num))
     
-public:
-    SparseVector(vector<int> &nums) {
-        for(int i = 0; i < nums.size(); i++) {
-            if(nums[i] != 0) {
-                nonZeros.push_back({i, nums[i]});
-            }
-        }
-    }
-    
-    int dotProduct(SparseVector& vec) {
-        int result = 0;
-        int i = 0, j = 0;
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        result = 0
+        i, j = 0, 0
         
-        while(i < nonZeros.size() && j < vec.nonZeros.size()) {
-            if(nonZeros[i].first == vec.nonZeros[j].first) {
-                result += nonZeros[i].second * vec.nonZeros[j].second;
-                i++;
-                j++;
-            } else if(nonZeros[i].first < vec.nonZeros[j].first) {
-                i++;
-            } else {
-                j++;
-            }
-        }
+        while i < len(self.nonZeros) and j < len(vec.nonZeros):
+            if self.nonZeros[i][0] == vec.nonZeros[j][0]:
+                result += self.nonZeros[i][1] * vec.nonZeros[j][1]
+                i += 1
+                j += 1
+            elif self.nonZeros[i][0] < vec.nonZeros[j][0]:
+                i += 1
+            else:
+                j += 1
         
-        return result;
-    }
-};
+        return result
 ```
 
 **Time Complexity:** O(k1 + k2) for dotProduct  

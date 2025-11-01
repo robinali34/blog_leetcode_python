@@ -24,21 +24,17 @@ Walk the array from left to right. If we see `1`, we must consume two bits (`10`
 - If we stop with `i == n - 1`, the last character is 1‑bit (`0`) → return true
 - If we stop with `i == n`, the last character was a 2‑bit that consumed the final `0` → return false
 
-## C++ Solution
+## Python Solution
 
-```cpp
-class Solution {
-public:
-    bool isOneBitCharacter(vector<int>& bits) {
-        int n = (int)bits.size();
-        int i = 0;
-        // Parse until we reach or pass the last index
-        while (i < n - 1) {
-            i += (bits[i] == 1 ? 2 : 1);
-        }
-        return i == n - 1;
-    }
-};
+```python
+class Solution:
+    def isOneBitCharacter(self, bits: list[int]) -> bool:
+        n = len(bits)
+        i = 0
+        # Parse until we reach or pass the last index
+        while i < n - 1:
+            i += 2 if bits[i] == 1 else 1
+        return i == n - 1
 ```
 
 ## Complexity

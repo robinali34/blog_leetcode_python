@@ -57,28 +57,22 @@ This problem asks for all possible combinations of `k` numbers from `[1, n]`. Si
 
 ### **Solution: Backtracking with DFS**
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> combine(int n, int k) {
-        vector<vector<int>> rtn;
-        vector<int> path;
-        dfs(n, k, path, 1, rtn);
-        return rtn;
-    }
-private:
-    void dfs(const int n, const int k, vector<int>& path, int first_num, vector<vector<int>>& rtn) {
-        if (path.size() == k) {
-            rtn.push_back(path);
-            return;
-        }
-        for(int i = first_num; i <= n; i++) {
-            path.push_back(i);
-            dfs(n, k, path, i + 1, rtn);
-            path.pop_back();
-        }
-    }
-};
+```python
+class Solution:
+    def combine(self, n: int, k: int) -> list[list[int]]:
+        result = []
+        path = []
+        self.dfs(n, k, path, 1, result)
+        return result
+    
+    def dfs(self, n: int, k: int, path: list[int], first_num: int, result: list[list[int]]) -> None:
+        if len(path) == k:
+            result.append(path[:])
+            return
+        for i in range(first_num, n + 1):
+            path.append(i)
+            self.dfs(n, k, path, i + 1, result)
+            path.pop()
 ```
 
 ### **Algorithm Explanation:**

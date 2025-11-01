@@ -63,18 +63,17 @@ This approach ensures both pointers travel the same total distance, making them 
 
 ## Solution
 
-```cpp
-class Solution {
-public:
-    Node* lowestCommonAncestor(Node* p, Node * q) {
-        Node* a = p, *b = q;
-        while(a != b) {
-            a = a == nullptr ? q : a->parent;
-            b = b == nullptr ? p : b->parent;
-        }
-        return a;
-    }
-};
+```python
+class Solution:
+    def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
+        a, b = p, q
+        while a != b:
+            a = q if a is None else a.parent
+            b = p if b is None else b.parent
+        return a
+```
+<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
+read_file
 ```
 
 ## Explanation
@@ -141,61 +140,53 @@ If `p = G` and `q = F`:
 ## Alternative Approaches
 
 ### Approach 1: Path Collection
-```cpp
-Node* lowestCommonAncestor(Node* p, Node* q) {
-    unordered_set<Node*> path;
+```python
+def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
+    path = set()
     
-    // Collect path from p to root
-    Node* curr = p;
-    while(curr) {
-        path.insert(curr);
-        curr = curr->parent;
-    }
+    # Collect path from p to root
+    curr = p
+    while curr:
+        path.add(curr)
+        curr = curr.parent
     
-    // Find first common node in path from q to root
-    curr = q;
-    while(curr) {
-        if(path.count(curr)) return curr;
-        curr = curr->parent;
-    }
+    # Find first common node in path from q to root
+    curr = q
+    while curr:
+        if curr in path:
+            return curr
+        curr = curr.parent
     
-    return nullptr;
-}
+    return None
 ```
 
 ### Approach 2: Depth Calculation
-```cpp
-int getDepth(Node* node) {
-    int depth = 0;
-    while(node) {
-        depth++;
-        node = node->parent;
-    }
-    return depth;
-}
+```python
+def getDepth(self, node: 'Node') -> int:
+    depth = 0
+    while node:
+        depth += 1
+        node = node.parent
+    return depth
 
-Node* lowestCommonAncestor(Node* p, Node* q) {
-    int depthP = getDepth(p);
-    int depthQ = getDepth(q);
+def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
+    depthP = self.getDepth(p)
+    depthQ = self.getDepth(q)
     
-    // Move deeper node up to same level
-    while(depthP > depthQ) {
-        p = p->parent;
-        depthP--;
-    }
-    while(depthQ > depthP) {
-        q = q->parent;
-        depthQ--;
-    }
+    # Move deeper node up to same level
+    while depthP > depthQ:
+        p = p.parent
+        depthP -= 1
+    while depthQ > depthP:
+        q = q.parent
+        depthQ -= 1
     
-    // Move both up until they meet
-    while(p != q) {
-        p = p->parent;
-        q = q->parent;
-    }
+    # Move both up until they meet
+    while p != q:
+        p = p.parent
+        q = q.parent
     
-    return p;
-}
+    return p
 ```
 
 ## Comparison of Approaches

@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 2466. Count Ways To Build Good Strings"
 date: 2025-10-16 20:01:57 -0700
-categories: leetcode algorithm medium cpp dynamic-programming dp problem-solving
+categories: python dynamic-programming dp problem-solving
 ---
 
 # [Medium] 2466. Count Ways To Build Good Strings
@@ -49,30 +49,29 @@ Explanation: The good strings are "00", "11", "000", "110", and "011".
 
 Use bottom-up DP to calculate the number of ways to build strings of each length.
 
-```cpp
-class Solution {
+```python
+class Solution:
 private:
-    vector<int> dp;
-    const int MOD = 1e9 + 7;
+    list[int] dp;
+    int MOD = 1e9 + 7;
     
-public:
-    int countGoodStrings(int low, int high, int zero, int one) {
-        dp.resize(high + 1, 0);
-        dp[0] = 1;  // Base case: empty string
+
+    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
+        MOD = 10**9 + 7
+        dp = [0] * (high + 1)
+        dp[0] = 1  # Base case: empty string
         
-        for(int i = 1; i <= high; i++) {
-            if(i - zero >= 0) dp[i] = (dp[i] + dp[i - zero]) % MOD;
-            if(i - one >= 0) dp[i] = (dp[i] + dp[i - one]) % MOD;
-        }
+        for i in range(1, high + 1):
+            if i - zero >= 0:
+                dp[i] = (dp[i] + dp[i - zero]) % MOD
+            if i - one >= 0:
+                dp[i] = (dp[i] + dp[i - one]) % MOD
         
-        int rtn = 0;
-        for(int i = low; i <= high; i++) {
-            rtn = (rtn + dp[i]) % MOD;
-        }
+        result = 0
+        for i in range(low, high + 1):
+            result = (result + dp[i]) % MOD
         
-        return rtn;
-    }
-};
+        return result
 ```
 
 ## Solution 2: Top-Down Dynamic Programming (Memoization)
@@ -82,36 +81,33 @@ public:
 
 Use top-down DP with memoization to calculate the number of ways recursively.
 
-```cpp
-class Solution {
-private:
-    vector<int> dp;
-    const int MOD = 1e9 + 7;
-
-    int dfs(int zero, int one, int end) {
-        if(dp[end] != -1) return dp[end];
-        
-        int cnt = 0;
-        if(end >= one) cnt = (cnt + dfs(zero, one, end - one)) % MOD;
-        if(end >= zero) cnt = (cnt + dfs(zero, one, end - zero)) % MOD;
-        
-        dp[end] = cnt;
-        return dp[end];
-    }
+```python
+class Solution:
+    def __init__(self):
+        self.MOD = 10**9 + 7
     
-public:
-    int countGoodStrings(int low, int high, int zero, int one) {
-        dp.resize(high + 1, -1);
-        dp[0] = 1;  // Base case: empty string
+    def dfs(self, dp: list[int], zero: int, one: int, end: int) -> int:
+        if dp[end] != -1:
+            return dp[end]
         
-        int rtn = 0;
-        for(int len = low; len <= high; len++) {
-            rtn = (rtn + dfs(zero, one, len)) % MOD; 
-        }
+        cnt = 0
+        if end >= one:
+            cnt = (cnt + self.dfs(dp, zero, one, end - one)) % self.MOD
+        if end >= zero:
+            cnt = (cnt + self.dfs(dp, zero, one, end - zero)) % self.MOD
         
-        return rtn;
-    }
-};
+        dp[end] = cnt
+        return dp[end]
+    
+    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
+        dp = [-1] * (high + 1)
+        dp[0] = 1  # Base case: empty string
+        
+        result = 0
+        for length in range(low, high + 1):
+            result = (result + self.dfs(dp, zero, one, length)) % self.MOD
+        
+        return result
 ```
 
 ## How the Algorithm Works
@@ -157,14 +153,16 @@ Good strings (length 2-3): "00", "1", "000", "01", "10" = 5 ways
 
 ### Solution 1: Bottom-Up DP
 
-```cpp
-dp.resize(high + 1, 0);
-dp[0] = 1;  // Base case
+```python
+MOD = 10**9 + 7
+dp = [0] * (high + 1)
+dp[0] = 1  # Base case
 
-for(int i = 1; i <= high; i++) {
-    if(i - zero >= 0) dp[i] = (dp[i] + dp[i - zero]) % MOD;
-    if(i - one >= 0) dp[i] = (dp[i] + dp[i - one]) % MOD;
-}
+for i in range(1, high + 1):
+    if i - zero >= 0:
+        dp[i] = (dp[i] + dp[i - zero]) % MOD
+    if i - one >= 0:
+        dp[i] = (dp[i] + dp[i - one]) % MOD
 ```
 
 **Process:**
@@ -175,11 +173,11 @@ for(int i = 1; i <= high; i++) {
 
 ### Solution 2: Top-Down DP (Memoization)
 
-```cpp
-int dfs(int zero, int one, int end) {
+```python
+def dfs(self, int zero, int one, int end) -> int:
     if(dp[end] != -1) return dp[end];  // Memoization check
     
-    int cnt = 0;
+    cnt = 0
     if(end >= one) cnt = (cnt + dfs(zero, one, end - one)) % MOD;
     if(end >= zero) cnt = (cnt + dfs(zero, one, end - zero)) % MOD;
     
@@ -273,53 +271,46 @@ Sum = dp[2] + dp[3] = 2 + 3 = 5
 ## Alternative Approaches
 
 ### Approach 1: Brute Force (DFS)
-```cpp
-class Solution {
-public:
-    int countGoodStrings(int low, int high, int zero, int one) {
+```python
+class Solution:
+
+    def countGoodStrings(self, int low, int high, int zero, int one) -> int:
         return dfs(0, low, high, zero, one);
     }
     
-private:
-    int dfs(int len, int low, int high, int zero, int one) {
-        if (len > high) return 0;
-        int count = (len >= low) ? 1 : 0;
-        count = (count + dfs(len + zero, low, high, zero, one)) % MOD;
-        count = (count + dfs(len + one, low, high, zero, one)) % MOD;
-        return count;
-    }
-    
-    const int MOD = 1e9 + 7;
-};
+    def dfs(self, length: int, low: int, high: int, zero: int, one: int) -> int:
+        MOD = 10**9 + 7
+        if length > high:
+            return 0
+        count = 1 if length >= low else 0
+        count = (count + self.dfs(length + zero, low, high, zero, one)) % MOD
+        count = (count + self.dfs(length + one, low, high, zero, one)) % MOD
+        return count
 ```
 
 **Time Complexity:** O(2^high)  
 **Space Complexity:** O(high)
 
 ### Approach 2: Mathematical Formula
-```cpp
-class Solution {
-public:
-    int countGoodStrings(int low, int high, int zero, int one) {
-        vector<int> dp(high + 1, 0);
-        dp[0] = 1;
+```python
+class Solution:
+
+    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
+        MOD = 10**9 + 7
+        dp = [0] * (high + 1)
+        dp[0] = 1
         
-        for (int i = 1; i <= high; i++) {
-            if (i >= zero) dp[i] = (dp[i] + dp[i - zero]) % MOD;
-            if (i >= one) dp[i] = (dp[i] + dp[i - one]) % MOD;
-        }
+        for i in range(1, high + 1):
+            if i >= zero:
+                dp[i] = (dp[i] + dp[i - zero]) % MOD
+            if i >= one:
+                dp[i] = (dp[i] + dp[i - one]) % MOD
         
-        int result = 0;
-        for (int i = low; i <= high; i++) {
-            result = (result + dp[i]) % MOD;
-        }
+        result = 0
+        for i in range(low, high + 1):
+            result = (result + dp[i]) % MOD
         
-        return result;
-    }
-    
-private:
-    const int MOD = 1e9 + 7;
-};
+        return result
 ```
 
 ## Related Problems

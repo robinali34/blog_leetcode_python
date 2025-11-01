@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 131. Palindrome Partitioning"
 date: 2025-09-30 00:00:00 -0000
-categories: leetcode algorithm backtracking data-structures string palindrome recursion medium cpp partitioning problem-solving
+categories: python partitioning problem-solving
 ---
 
 # [Medium] 131. Palindrome Partitioning
@@ -37,39 +37,32 @@ The solution uses backtracking (DFS) with the following strategy:
 3. **Backtrack**: If palindrome, add to current partition and recurse, then remove
 4. **Palindrome Check**: Verify if substring from start to end is a palindrome
 
-## Solution in C++
+## Solution in Python
 
 **Time Complexity:** O(2^n × n) - Exponential due to backtracking, n for palindrome check  
 **Space Complexity:** O(n) - For recursion stack and current partition
 
-```cpp
-class Solution {
-public:
-    vector<vector<string>> partition(string s) {
-        vector<string> cur;
-        vector<vector<string>> rtn;
-        dfs(s, 0, cur, rtn);
-        return rtn;
-    }
+```python
+class Solution:
+    def partition(self, s: str) -> list[list[str]]:
+        cur = []
+        result = []
+        self.dfs(s, 0, cur, result)
+        return result
 
-private:
-    void dfs(const string& str, int start, vector<string>& cur, vector<vector<string>>& rtn) {
-        if(start >= str.length()) rtn.push_back(cur);
-        for (int end = start; end < str.length(); end++) {
-            if(isPalindrome(str, start, end)) {
-                cur.push_back(str.substr(start, end - start + 1));
-                dfs(str, end + 1, cur, rtn);
-                cur.pop_back();
-            }
-        }
-    }
+    def dfs(self, s: str, start: int, cur: list[str], result: list[list[str]]) -> None:
+        if start >= len(s):
+            result.append(cur[:])
+            return
+        for end in range(start, len(s)):
+            if self.isPalindrome(s, start, end):
+                cur.append(s[start:end + 1])
+                self.dfs(s, end + 1, cur, result)
+                cur.pop()
 
-    bool isPalindrome(const string& str, int start, int end) {
-        string copy = str.substr(start, end - start + 1);
-        reverse(copy.begin(), copy.end());
-        return str.substr(start, end - start + 1) == copy;
-    }
-};
+    def isPalindrome(self, s: str, start: int, end: int) -> bool:
+        substring = s[start:end + 1]
+        return substring == substring[::-1]
 ```
 
 ## Step-by-Step Example
@@ -114,22 +107,21 @@ For `s = "aab"`:
 ## Alternative Approaches
 
 ### 1. **Optimized Palindrome Check**
-```cpp
-bool isPalindrome(const string& str, int start, int end) {
-    while (start < end) {
-        if (str[start] != str[end]) return false;
-        start++;
-        end--;
-    }
-    return true;
-}
+```python
+def isPalindrome(self, s: str, start: int, end: int) -> bool:
+    while start < end:
+        if s[start] != s[end]:
+            return False
+        start += 1
+        end -= 1
+    return True
 ```
 
 ### 2. **Precompute Palindrome Table**
-```cpp
-vector<vector<bool>> isPal;
-// Precompute all palindrome substrings
-// Time: O(n²), Space: O(n²)
+```python
+isPal = [[False] * n for _ in range(n)]
+# Precompute all palindrome substrings
+# Time: O(n²), Space: O(n²)
 ```
 
 ## Common Mistakes

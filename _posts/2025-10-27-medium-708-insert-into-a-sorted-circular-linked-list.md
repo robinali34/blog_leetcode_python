@@ -66,12 +66,12 @@ Explanation: Insert 0 between 1 (tail) and 1 (head), wrapping around.
 **Time Complexity:** O(n) where n is the number of nodes  
 **Space Complexity:** O(1)
 
-```cpp
+```python
 /*
 // Definition for a Node.
 class Node {
-public:
-    int val;
+
+    # val = 0
     Node* next;
 
     Node() {}
@@ -88,46 +88,42 @@ public:
 };
 */
 
-class Solution {
-public:
-    Node* insert(Node* head, int insertVal) {
-        // Empty list case
-        if(!head) {
-            Node * newNode = new Node(insertVal);
-            newNode->next = newNode;
-            return newNode;
-        }
+class Solution:
 
-        Node* curr = head;
-        bool toInsert = false;
+    def insert(self, head: 'Node', insertVal: int) -> 'Node':
+        # Empty list case
+        if not head:
+            newNode = Node(insertVal)
+            newNode.next = newNode
+            return newNode
+
+        curr = head
+        toInsert = False
         
-        do {
-            // Normal case: insert between curr and curr->next
-            if(curr->val <= insertVal && curr->next->val >= insertVal) {
-                toInsert = true;
-            } 
-            // Wrap-around case: curr->next->val < curr->val indicates the wrap point
-            else if(curr->next->val < curr->val) {
-                // Insert at wrap-around (largest or smallest value)
-                if (insertVal >= curr->val || insertVal <= curr->next->val){
-                    toInsert = true;
-                }
-            }
+        while True:
+            # Normal case: insert between curr and curr.next
+            if curr.val <= insertVal <= curr.next.val:
+                toInsert = True
+            # Wrap-around case: curr.next.val < curr.val indicates the wrap point
+            elif curr.next.val < curr.val:
+                # Insert at wrap-around (largest or smallest value)
+                if insertVal >= curr.val or insertVal <= curr.next.val:
+                    toInsert = True
             
-            if(toInsert) {
-                Node* ptr = new Node(insertVal);
-                ptr->next = curr->next;
-                curr->next = ptr;
-                return head;
-            }
-            curr = curr->next;
-        } while(curr != head);
+            if toInsert:
+                newNode = Node(insertVal)
+                newNode.next = curr.next
+                curr.next = newNode
+                return head
+            
+            curr = curr.next
+            if curr == head:
+                break
 
-        // All values are the same or insert at current position
-        curr->next = new Node(insertVal, curr->next);
-        return head;
-    }
-};
+        # All values are the same or insert at current position
+        newNode = Node(insertVal, curr.next)
+        curr.next = newNode
+        return head
 ```
 
 ### Approach 2: Two-Pass with Preprocessing
@@ -140,54 +136,47 @@ public:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(1)
 
-```cpp
-class Solution {
-public:
-    Node* insert(Node* head, int insertVal) {
-        if(!head) {
-            Node* newNode = new Node(insertVal);
-            newNode->next = newNode;
-            return newNode;
-        }
+```python
+class Solution:
 
-        // Find the maximum node
-        Node* maxNode = head;
-        Node* curr = head->next;
+    def insert(self, head: 'Node', insertVal: int) -> 'Node':
+        if not head:
+            newNode = Node(insertVal)
+            newNode.next = newNode
+            return newNode
+
+        # Find the maximum node
+        maxNode = head
+        curr = head.next
         
-        while(curr != head) {
-            if(curr->val >= maxNode->val) {
-                maxNode = curr;
-            }
-            curr = curr->next;
-        }
+        while curr != head:
+            if curr.val >= maxNode.val:
+                maxNode = curr
+            curr = curr.next
 
-        // Insert at the end if value is too large
-        if(insertVal >= maxNode->val || insertVal <= maxNode->next->val) {
-            Node* newNode = new Node(insertVal, maxNode->next);
-            maxNode->next = newNode;
-            return head;
-        }
+        # Insert at the end if value is too large
+        if insertVal >= maxNode.val or insertVal <= maxNode.next.val:
+            newNode = Node(insertVal, maxNode.next)
+            maxNode.next = newNode
+            return head
 
-        // Find the correct insertion point
-        curr = maxNode->next;
-        while(curr->next->val < insertVal) {
-            curr = curr->next;
-        }
+        # Find the correct insertion point
+        curr = maxNode.next
+        while curr.next.val < insertVal:
+            curr = curr.next
 
-        Node* newNode = new Node(insertVal, curr->next);
-        curr->next = newNode;
-        return head;
-    }
-};
+        newNode = Node(insertVal, curr.next)
+        curr.next = newNode
+        return head
 ```
 
 ### Approach 3: Simplified Logic
 
 **Algorithm:** Streamlined version that handles all cases more elegantly.
 
-```cpp
-class Solution {
-public:
+```python
+class Solution:
+
     Node* insert(Node* head, int insertVal) {
         Node* newNode = new Node(insertVal);
         
@@ -197,27 +186,21 @@ public:
             return newNode;
         }
 
-        Node* curr = head;
+        curr = head
         
-        while(curr->next != head) {
-            // Normal insertion point
-            if(curr->val <= insertVal && insertVal <= curr->next->val) {
-                break;
-            }
-            // Wrap-around insertion point
-            if(curr->val > curr->next->val && 
-               (insertVal >= curr->val || insertVal <= curr->next->val)) {
-                break;
-            }
-            curr = curr->next;
-        }
+        while curr.next != head:
+            # Normal insertion point
+            if curr.val <= insertVal <= curr.next.val:
+                break
+            # Wrap-around insertion point
+            if curr.val > curr.next.val and (insertVal >= curr.val or insertVal <= curr.next.val):
+                break
+            curr = curr.next
         
-        // Insert at current position
-        newNode->next = curr->next;
-        curr->next = newNode;
-        return head;
-    }
-};
+        # Insert at current position
+        newNode.next = curr.next
+        curr.next = newNode
+        return head
 ```
 
 ## Algorithm Analysis
@@ -244,7 +227,7 @@ When curr = 4, curr->next = 1:
 ## Implementation Details
 
 ### Empty List Handling
-```cpp
+```python
 if(!head) {
     Node * newNode = new Node(insertVal);
     newNode->next = newNode;  // Self-referencing
@@ -253,9 +236,9 @@ if(!head) {
 ```
 
 ### Normal Insertion Case
-```cpp
+```python
 // Insert between curr and curr->next
-if(curr->val <= insertVal && curr->next->val >= insertVal) {
+if(curr->val <= insertVal  curr->next->val >= insertVal) {
     Node* newNode = new Node(insertVal, curr->next);
     curr->next = newNode;
     return head;
@@ -263,7 +246,7 @@ if(curr->val <= insertVal && curr->next->val >= insertVal) {
 ```
 
 ### Wrap-Around Insertion Case
-```cpp
+```python
 // At the wrap point (largest to smallest)
 if(curr->next->val < curr->val) {
     // Insert if value is larger than max OR smaller than min

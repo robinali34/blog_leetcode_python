@@ -66,29 +66,22 @@ Explanation: An empty string is also valid.
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    string minRemoveToMakeValid(string s) {
-        stack<int> stk;
-        for(int idx = 0; idx < (int)s.size(); idx++) {
-            if(s[idx] == '(') stk.push(idx);
-            if(s[idx] == ')') {
-                if(!stk.empty() && s[stk.top()] == '(') {
-                    stk.pop();
-                } else {
-                    stk.push(idx);
-                }
-            }
-        }
-        string rtn = s;
-        while(!stk.empty()) {
-            rtn.erase(stk.top(), 1);
-            stk.pop();
-        }
-        return rtn;
-    }
-};
+```python
+class Solution:
+    def minRemoveToMakeValid(self, s: str) -> str:
+        stack = []
+        for idx, char in enumerate(s):
+            if char == '(':
+                stack.append(idx)
+            elif char == ')':
+                if stack and s[stack[-1]] == '(':
+                    stack.pop()
+                else:
+                    stack.append(idx)
+        result = list(s)
+        while stack:
+            result[stack.pop()] = ''
+        return ''.join(result)
 ```
 
 ### Approach 2: Two-Pass String Building
@@ -101,50 +94,41 @@ public:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    string minRemoveToMakeValid(string s) {
-        // First pass: remove unmatched ')'
-        string result = "";
-        int balance = 0;
-        for(char c : s) {
-            if(c == '(') {
-                balance++;
-                result += c;
-            } else if(c == ')') {
-                if(balance > 0) {
-                    balance--;
-                    result += c;
-                }
-                // Skip unmatched ')'
-            } else {
-                result += c;
-            }
-        }
+```python
+class Solution:
+    def minRemoveToMakeValid(self, s: str) -> str:
+        # First pass: remove unmatched ')'
+        result = ""
+        balance = 0
+        for c in s:
+            if c == '(':
+                balance += 1
+                result += c
+            elif c == ')':
+                if balance > 0:
+                    balance -= 1
+                    result += c
+                # Skip unmatched ')'
+            else:
+                result += c
         
-        // Second pass: remove unmatched '('
-        string final_result = "";
-        balance = 0;
-        for(int i = result.length() - 1; i >= 0; i--) {
-            char c = result[i];
-            if(c == ')') {
-                balance++;
-                final_result = c + final_result;
-            } else if(c == '(') {
-                if(balance > 0) {
-                    balance--;
-                    final_result = c + final_result;
-                }
-                // Skip unmatched '('
-            } else {
-                final_result = c + final_result;
-            }
-        }
+        # Second pass: remove unmatched '('
+        final_result = ""
+        balance = 0
+        for i in range(len(result) - 1, -1, -1):
+            c = result[i]
+            if c == ')':
+                balance += 1
+                final_result = c + final_result
+            elif c == '(':
+                if balance > 0:
+                    balance -= 1
+                    final_result = c + final_result
+                # Skip unmatched '('
+            else:
+                final_result = c + final_result
         
-        return final_result;
-    }
-};
+        return final_result
 ```
 
 ### Approach 3: Set-Based Tracking
@@ -157,43 +141,34 @@ public:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    string minRemoveToMakeValid(string s) {
-        unordered_set<int> to_remove;
-        stack<int> stk;
+```python
+class Solution:
+
+    def minRemoveToMakeValid(self, s: str) -> str:
+        to_remove = set()
+        stk = []
         
-        // Find unmatched parentheses
-        for(int i = 0; i < s.length(); i++) {
-            if(s[i] == '(') {
-                stk.push(i);
-            } else if(s[i] == ')') {
-                if(stk.empty()) {
-                    to_remove.insert(i);
-                } else {
-                    stk.pop();
-                }
-            }
-        }
+        # Find unmatched parentheses
+        for i in range(len(s)):
+            if s[i] == '(':
+                stk.append(i)
+            elif s[i] == ')':
+                if not stk:
+                    to_remove.add(i)
+                else:
+                    stk.pop()
         
-        // Add remaining unmatched '(' to removal set
-        while(!stk.empty()) {
-            to_remove.insert(stk.top());
-            stk.pop();
-        }
+        # Add remaining unmatched '(' to removal set
+        while stk:
+            to_remove.add(stk.pop())
         
-        // Build result string
-        string result = "";
-        for(int i = 0; i < s.length(); i++) {
-            if(to_remove.find(i) == to_remove.end()) {
-                result += s[i];
-            }
-        }
+        # Build result string
+        result = ""
+        for i in range(len(s)):
+            if i not in to_remove:
+                result += s[i]
         
-        return result;
-    }
-};
+        return result
 ```
 
 ## Algorithm Analysis
@@ -216,11 +191,11 @@ public:
 ## Implementation Details
 
 ### Stack-Based Approach
-```cpp
+```python
 // Track indices of unmatched parentheses
 if(s[idx] == '(') stk.push(idx);
 if(s[idx] == ')') {
-    if(!stk.empty() && s[stk.top()] == '(') {
+    if(!stknot   s[stk.top()] == '(') {
         stk.pop();  // Match found
     } else {
         stk.push(idx);  // Unmatched ')'
@@ -229,13 +204,12 @@ if(s[idx] == ')') {
 ```
 
 ### String Modification
-```cpp
-// Remove unmatched parentheses from string
-string rtn = s;
-while(!stk.empty()) {
-    rtn.erase(stk.top(), 1);
-    stk.pop();
-}
+```python
+# Remove unmatched parentheses from string
+result = list(s)
+while stk:
+    result[stk.pop()] = ''
+result = ''.join(result)
 ```
 
 ## Edge Cases

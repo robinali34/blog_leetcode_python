@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 394. Decode String"
 date: 2025-10-19 17:24:19 -0700
-categories: leetcode algorithm medium cpp stack string-processing problem-solving
+categories: python stack string-processing problem-solving
 ---
 
 # [Medium] 394. Decode String
@@ -62,37 +62,31 @@ Explanation:
 
 Use two stacks to handle nested encoded strings: one for counts and one for strings.
 
-```cpp
-class Solution {
-public:
-    string decodeString(string s) {
-        stack<int> counts;
-        stack<string> strings;
-        string curr;
-        int k = 0;
+```python
+class Solution:
+
+    def decodeString(self, s: str) -> str:
+        counts = []
+        strings = []
+        curr = ""
+        k = 0
         
-        for(auto ch: s) {
-            if(isdigit(ch)) {
-                k = k * 10 + ch - '0';
-            } else if(ch == '[') {
-                counts.push(k);
-                strings.push(curr);
-                curr = "";
-                k = 0;
-            } else if(ch == ']') {
-                string decode = strings.top();
-                strings.pop();
-                int count = counts.top();
-                while(count--) decode += curr;
-                counts.pop();
-                curr = decode;
-            } else {
-                curr += ch;
-            }
-        }
-        return curr;
-    }
-};
+        for ch in s:
+            if ch.isdigit():
+                k = k * 10 + int(ch)
+            elif ch == '[':
+                counts.append(k)
+                strings.append(curr)
+                curr = ""
+                k = 0
+            elif ch == ']':
+                decode = strings.pop()
+                count = counts.pop()
+                curr = decode + curr * count
+            else:
+                curr += ch
+        
+        return curr
 ```
 
 ## How the Algorithm Works
@@ -127,26 +121,21 @@ public:
 ## Algorithm Breakdown
 
 ### Character Processing:
-```cpp
-for(auto ch: s) {
-    if(isdigit(ch)) {
-        k = k * 10 + ch - '0';
-    } else if(ch == '[') {
-        counts.push(k);
-        strings.push(curr);
-        curr = "";
-        k = 0;
-    } else if(ch == ']') {
-        string decode = strings.top();
-        strings.pop();
-        int count = counts.top();
-        while(count--) decode += curr;
-        counts.pop();
-        curr = decode;
-    } else {
-        curr += ch;
-    }
-}
+```python
+for ch in s:
+    if ch.isdigit():
+        k = k * 10 + int(ch)
+    elif ch == '[':
+        counts.append(k)
+        strings.append(curr)
+        curr = ""
+        k = 0
+    elif ch == ']':
+        decode = strings.pop()
+        count = counts.pop()
+        curr = decode + curr * count
+    else:
+        curr += ch
 ```
 
 **Process:**
@@ -158,7 +147,7 @@ for(auto ch: s) {
 ### Stack Operations:
 
 **Push Operation (on '['):**
-```cpp
+```python
 counts.push(k);
 strings.push(curr);
 curr = "";
@@ -166,7 +155,7 @@ k = 0;
 ```
 
 **Pop Operation (on ']'):**
-```cpp
+```python
 string decode = strings.top();
 strings.pop();
 int count = counts.top();
@@ -232,71 +221,57 @@ Where n is the input length and m is the decoded string length.
 ## Alternative Approaches
 
 ### Approach 1: Recursive Solution
-```cpp
-class Solution {
-private:
-    string decodeString(string& s, int& i) {
-        string result;
-        while(i < s.length() && s[i] != ']') {
-            if(isdigit(s[i])) {
-                int k = 0;
-                while(i < s.length() && isdigit(s[i])) {
-                    k = k * 10 + s[i++] - '0';
-                }
-                i++; // skip '['
-                string decoded = decodeString(s, i);
-                i++; // skip ']'
-                while(k--) result += decoded;
-            } else {
-                result += s[i++];
-            }
-        }
-        return result;
-    }
+```python
+class Solution:
+    def decodeString(self, s: str, i: list[int]) -> str:
+        result = ""
+        while i[0] < len(s) and s[i[0]] != ']':
+            if s[i[0]].isdigit():
+                k = 0
+                while i[0] < len(s) and s[i[0]].isdigit():
+                    k = k * 10 + int(s[i[0]])
+                    i[0] += 1
+                i[0] += 1  # skip '['
+                decoded = self.decodeString(s, i)
+                i[0] += 1  # skip ']'
+                result += decoded * k
+            else:
+                result += s[i[0]]
+                i[0] += 1
+        return result
     
-public:
-    string decodeString(string s) {
-        int i = 0;
-        return decodeString(s, i);
-    }
-};
+    def decodeString(self, s: str) -> str:
+        return self.decodeString(s, [0])
 ```
 
 **Time Complexity:** O(n + m)  
 **Space Complexity:** O(n) for recursion stack
 
 ### Approach 2: Iterative with Single Stack
-```cpp
-class Solution {
-public:
-    string decodeString(string s) {
-        stack<string> st;
-        string curr = "";
-        int k = 0;
+```python
+class Solution:
+
+    def decodeString(self, s: str) -> str:
+        st = []
+        curr = ""
+        k = 0
         
-        for(char c : s) {
-            if(isdigit(c)) {
-                k = k * 10 + c - '0';
-            } else if(c == '[') {
-                st.push(to_string(k));
-                st.push(curr);
-                curr = "";
-                k = 0;
-            } else if(c == ']') {
-                string prev = st.top(); st.pop();
-                int count = stoi(st.top()); st.pop();
-                string temp = "";
-                for(int i = 0; i < count; i++) {
-                    temp += curr;
-                }
-                curr = prev + temp;
-            } else {
-                curr += c;
-            }
-        }
-        return curr;
-    }
-};
+        for c in s:
+            if c.isdigit():
+                k = k * 10 + int(c)
+            elif c == '[':
+                st.append(str(k))
+                st.append(curr)
+                curr = ""
+                k = 0
+            elif c == ']':
+                prev = st.pop()
+                count = int(st.pop())
+                temp = curr * count
+                curr = prev + temp
+            else:
+                curr += c
+        return curr
 ```
 
 **Time Complexity:** O(n + m)  

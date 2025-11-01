@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 300. Longest Increasing Subsequence"
 date: 2025-10-17 15:18:26 -0700
-categories: leetcode algorithm medium cpp dynamic-programming dp binary-search problem-solving
+categories: python dynamic-programming dp binary-search problem-solving
 ---
 
 # [Medium] 300. Longest Increasing Subsequence
@@ -46,28 +46,21 @@ Explanation: The longest increasing subsequence is [7], therefore the length is 
 
 Use dynamic programming to track the length of the longest increasing subsequence ending at each position.
 
-```cpp
-class Solution {
-public:
-    int lengthOfLIS(vector<int>& nums) {
-        vector<int> dp(nums.size(), -1);
-        dp[0] = 1;
-        int rtn = 1;
+```python
+class Solution:
+    def lengthOfLIS(self, nums: list[int]) -> int:
+        dp = [1] * len(nums)
+        result = 1
         
-        for(int i = 1; i < (int) nums.size(); i++) {
-            int max_pre = 0;
-            for(int j = 0; j < i; j++) {
-                if(nums[i] > nums[j]) {
-                    max_pre = max(max_pre, dp[j]);
-                }
-            }
-            dp[i] = max_pre + 1;
-            rtn = max(rtn, dp[i]);
-        }
+        for i in range(1, len(nums)):
+            max_pre = 0
+            for j in range(i):
+                if nums[i] > nums[j]:
+                    max_pre = max(max_pre, dp[j])
+            dp[i] = max_pre + 1
+            result = max(result, dp[i])
         
-        return rtn;
-    }
-};
+        return result
 ```
 
 ## Solution 2: Binary Search with Patience Sorting
@@ -77,26 +70,22 @@ public:
 
 Use binary search to maintain a sorted array representing the smallest tail element of all increasing subsequences of different lengths.
 
-```cpp
-class Solution {
-public:
-    int lengthOfLIS(vector<int>& nums) {
-        vector<int> sub;
-        sub.push_back(nums[0]);
+```python
+import bisect
 
-        for(int i = 1; i < nums.size(); i++) {
-            int num = nums[i];
-            if(num > sub.back()) {
-                sub.push_back(num);
-            } else {
-                auto it = lower_bound(sub.begin(), sub.end(), num);
-                *it = num;
-            }
-        }
+class Solution:
+    def lengthOfLIS(self, nums: list[int]) -> int:
+        sub = [nums[0]]
         
-        return sub.size();
-    }
-};
+        for i in range(1, len(nums)):
+            num = nums[i]
+            if num > sub[-1]:
+                sub.append(num)
+            else:
+                idx = bisect.bisect_left(sub, num)
+                sub[idx] = num
+        
+        return len(sub)
 ```
 
 ## How the Algorithms Work
@@ -157,14 +146,14 @@ public:
 
 ### Solution 1: Dynamic Programming
 
-```cpp
-vector<int> dp(nums.size(), -1);
+```python
+list[int] dp(numslen(), -1);
 dp[0] = 1;
-int rtn = 1;
+rtn = 1
 
-for(int i = 1; i < (int) nums.size(); i++) {
-    int max_pre = 0;
-    for(int j = 0; j < i; j++) {
+for(i = 1 i < (int) numslen(); i++) {
+    max_pre = 0
+    for(j = 0 j < i; j++) {
         if(nums[i] > nums[j]) {
             max_pre = max(max_pre, dp[j]);
         }
@@ -182,14 +171,14 @@ for(int i = 1; i < (int) nums.size(); i++) {
 
 ### Solution 2: Binary Search
 
-```cpp
-vector<int> sub;
-sub.push_back(nums[0]);
+```python
+list[int] sub;
+sub.append(nums[0]);
 
-for(int i = 1; i < nums.size(); i++) {
+for(i = 1 i < numslen(); i++) {
     int num = nums[i];
-    if(num > sub.back()) {
-        sub.push_back(num);
+    if(num > sub[-1]) {
+        sub.append(num);
     } else {
         auto it = lower_bound(sub.begin(), sub.end(), num);
         *it = num;
@@ -272,24 +261,24 @@ i=5: [0,1,2,3]
 ## Alternative Approaches
 
 ### Approach 1: Recursive with Memoization
-```cpp
-class Solution {
-public:
-    int lengthOfLIS(vector<int>& nums) {
-        vector<int> memo(nums.size(), -1);
-        int maxLen = 0;
-        for(int i = 0; i < nums.size(); i++) {
+```python
+class Solution:
+
+    def lengthOfLIS(self, list[int] nums) -> int:
+        list[int] memo(numslen(), -1);
+        maxLen = 0
+        for(i = 0 i < numslen(); i++) {
             maxLen = max(maxLen, dfs(nums, i, memo));
         }
         return maxLen;
     }
     
 private:
-    int dfs(vector<int>& nums, int index, vector<int>& memo) {
+    def dfs(self, list[int] nums, int index, list[int] memo) -> int:
         if(memo[index] != -1) return memo[index];
         
-        int maxLen = 1;
-        for(int i = index + 1; i < nums.size(); i++) {
+        maxLen = 1
+        for(int i = index + 1; i < numslen(); i++) {
             if(nums[i] > nums[index]) {
                 maxLen = max(maxLen, 1 + dfs(nums, i, memo));
             }

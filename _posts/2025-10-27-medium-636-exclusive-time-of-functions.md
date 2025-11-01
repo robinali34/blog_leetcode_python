@@ -81,145 +81,91 @@ Explanation:
 **Time Complexity:** O(m) where m is the number of logs  
 **Space Complexity:** O(n) for the stack
 
-```cpp
-class Solution {
-public:
-    vector<int> exclusiveTime(int n, vector<string>& logs) {
-        vector<int> rtn(n, 0);
-        stack<pair<int, int>> st;  // {function_id, start_time}
+```python
+class Solution:
+
+    def exclusiveTime(self, n: int, logs: list[str]) -> list[int]:
+        result = [0] * n
+        st = []  # [(function_id, start_time), ...]
         
-        for(const string& log: logs) {
-            int id = 0, time = 0;
-            bool isStart = false;
-
-            // Parse function ID
-            int i = 0;
-            while(log[i] != ':') {
-                id = id * 10 + (log[i] - '0');
-                i++;
-            }
-            i++;
+        for log in logs:
+            parts = log.split(':')
+            func_id = int(parts[0])
+            action = parts[1]
+            timestamp = int(parts[2])
             
-            // Parse action (start or end)
-            if(log[i] == 's') {
-                isStart = true;
-                i += 6;  // skip "start"
-            } else {
-                i += 4;  // skip "end"
-            }
-            
-            // Parse timestamp
-            while(i < (int) log.size()) {
-                time = time * 10 + (log[i] - '0');
-                i++;
-            }
-            
-            if(isStart) {
-                // Push function to stack
-                st.push({id, time});
-            } else {
-                // Pop and calculate duration
-                auto [funcId, startTime] = st.top();
-                st.pop();
-                int duration = time - startTime + 1;  // +1 to include end timestamp
-                rtn[funcId] += duration;
-
-                // Subtract from parent function
-                if(!st.empty()) {
-                    rtn[st.top().first] -= duration;
-                }
-            }
-        }
-        return rtn;
-    }
-};
+            if action == 'start':
+                # Push function to stack
+                st.append((func_id, timestamp))
+            else:
+                # Pop and calculate duration
+                funcId, startTime = st.pop()
+                duration = timestamp - startTime + 1  # +1 to include end timestamp
+                result[funcId] += duration
+                
+                # Subtract from parent function
+                if st:
+                    result[st[-1][0]] -= duration
+        
+        return result
 ```
 
-### Approach 2: Using stringstream for Parsing
+### Approach 2: Using String Splitting for Parsing
 
-**Algorithm:** Same logic but using C++ stringstream for cleaner parsing.
+**Algorithm:** Same logic but using Python string splitting for cleaner parsing.
 
-```cpp
-class Solution {
-public:
-    vector<int> exclusiveTime(int n, vector<string>& logs) {
-        vector<int> rtn(n, 0);
-        stack<pair<int, int>> st;
+```python
+class Solution:
+    def exclusiveTime(self, n: int, logs: list[str]) -> list[int]:
+        result = [0] * n
+        st = []
         
-        for(const string& log: logs) {
-            stringstream ss(log);
-            string token;
+        for log in logs:
+            parts = log.split(':')
+            func_id = int(parts[0])
+            isStart = (parts[1] == "start")
+            timestamp = int(parts[2])
             
-            // Parse ID
-            getline(ss, token, ':');
-            int id = stoi(token);
-            
-            // Parse action
-            getline(ss, token, ':');
-            bool isStart = (token == "start");
-            
-            // Parse timestamp
-            getline(ss, token, ':');
-            int time = stoi(token);
-            
-            if(isStart) {
-                st.push({id, time});
-            } else {
-                auto [funcId, startTime] = st.top();
-                st.pop();
-                int duration = time - startTime + 1;
-                rtn[funcId] += duration;
+            if isStart:
+                st.append((func_id, timestamp))
+            else:
+                funcId, startTime = st.pop()
+                duration = timestamp - startTime + 1
+                result[funcId] += duration
                 
-                if(!st.empty()) {
-                    rtn[st.top().first] -= duration;
-                }
-            }
-        }
-        return rtn;
-    }
-};
+                if st:
+                    result[st[-1][0]] -= duration
+        return result
 ```
 
 ### Approach 3: Store Only Start Time
 
 **Algorithm:** Store only the start timestamp on the stack.
 
-```cpp
-class Solution {
-public:
-    vector<int> exclusiveTime(int n, vector<string>& logs) {
-        vector<int> rtn(n, 0);
-        stack<int> st;  // Only store function IDs
+```python
+class Solution:
+
+    def exclusiveTime(self, n: int, logs: list[str]) -> list[int]:
+        result = [0] * n
+        st = []  # Only store function IDs
         
-        int prevTime = 0;
-        for(const string& log: logs) {
-            stringstream ss(log);
-            string token;
+        prevTime = 0
+        for log in logs:
+            parts = log.split(':')
+            func_id = int(parts[0])
+            isStart = (parts[1] == "start")
+            timestamp = int(parts[2])
             
-            getline(ss, token, ':');
-            int id = stoi(token);
-            
-            getline(ss, token, ':');
-            bool isStart = (token == "start");
-            
-            getline(ss, token, ':');
-            int time = stoi(token);
-            
-            if(isStart) {
-                if(!st.empty()) {
-                    rtn[st.top()] += time - prevTime;
-                }
-                st.push(id);
-                prevTime = time;
-            } else {
-                rtn[st.top()] += time - prevTime + 1;
-                st.pop();
-                prevTime = time + 1;
-            }
-        }
-        return rtn;
-    }
-};
+            if isStart:
+                if st:
+                    result[st[-1]] += timestamp - prevTime
+                st.append(func_id)
+                prevTime = timestamp
+            else:
+                result[st[-1]] += timestamp - prevTime + 1
+                st.pop()
+                prevTime = timestamp + 1
+        return result
 ```
 
 ## Algorithm Analysis
@@ -252,38 +198,34 @@ With subtraction:
 
 ### Manual String Parsing
 
-```cpp
+```python
 // Parse function ID (numeric string to int)
-int id = 0;
-while(log[i] != ':') {
-    id = id * 10 + (log[i] - '0');
-    i++;
-}
+id = 0
+while i < len(log) and log[i] != ':':
+    id = id * 10 + int(log[i])
+    i += 1
 
-// Check for "start" or "end"
-if(log[i + 1] == 's') isStart = true;
+# Check for "start" or "end"
+if i + 1 < len(log) and log[i + 1] == 's':
+    isStart = True
 ```
 
 ### Stack Operations
 
-```cpp
-// Start event: push function onto stack
-if(isStart) {
-    st.push({id, time});
-}
+```python
+# Start event: push function onto stack
+if isStart:
+    st.append((id, time))
 
-// End event: pop and calculate
-else {
-    auto [funcId, startTime] = st.top();
-    st.pop();
-    int duration = time - startTime + 1;
-    rtn[funcId] += duration;
+# End event: pop and calculate
+else:
+    funcId, startTime = st.pop()
+    duration = time - startTime + 1
+    rtn[funcId] += duration
     
-    // Subtract from parent
-    if(!st.empty()) {
-        rtn[st.top().first] -= duration;
-    }
-}
+    # Subtract from parent
+    if st:
+        rtn[st[-1][0]] -= duration
 ```
 
 ## Edge Cases

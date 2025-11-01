@@ -59,32 +59,25 @@ This is a classic **Connected Components** problem that can be solved using **De
 
 ## Solution
 
-```cpp
-class Solution {
-private:
-    vector<vector<int>> dirs = {&#123;0, -1&#125;, &#123;0, 1&#125;, &#123;1, 0&#125;, &#123;-1, 0&#125;};
+```python
+class Solution:
+    def dfs(self, grid: list[list[int]], r: int, c: int) -> int:
+        if (r < 0 or r >= len(grid) or c < 0 or c >= len(grid[0]) 
+            or grid[r][c] == 0):
+            return 0
+        grid[r][c] = 0
+        area = 1
+        dirs = [(0, -1), (0, 1), (1, 0), (-1, 0)]
+        for dr, dc in dirs:
+            area += self.dfs(grid, r + dr, c + dc)
+        return area
 
-    int dfs(vector<vector<int>>& grid, int r, int c) {
-        if(r < 0 || r >= (int)grid.size() || c < 0 || c >= (int)grid[0].size()
-           || grid[r][c] == 0) return 0;
-        grid[r][c] = 0;
-        int rtn = 1;
-        for(auto& dir: dirs) {
-            rtn += dfs(grid, r + dir[0], c + dir[1]);
-        }
-        return rtn;
-    }
-public:
-    int maxAreaOfIsland(vector<vector<int>>& grid) {
-        int rtn = 0;
-        for(int r = 0; r < (int)grid.size(); r++) {
-            for(int c = 0; c < (int)grid[0].size(); c++) {
-                rtn = max(rtn, dfs(grid, r, c));
-            }
-        }
-        return rtn;
-    }
-};
+    def maxAreaOfIsland(self, grid: list[list[int]]) -> int:
+        max_area = 0
+        for r in range(len(grid)):
+            for c in range(len(grid[0])):
+                max_area = max(max_area, self.dfs(grid, r, c))
+        return max_area
 ```
 
 ## Explanation
@@ -132,30 +125,27 @@ For a simple grid `[[1,1],[1,0]]`:
 ## Alternative Approaches
 
 ### BFS Approach:
-```cpp
-int bfs(vector<vector<int>>& grid, int r, int c) {
-    queue<pair<int,int>> q;
-    q.push({r, c});
-    grid[r][c] = 0;
-    int area = 0;
+```python
+from collections import deque
+
+def bfs(self, grid: list[list[int]], r: int, c: int) -> int:
+    q = deque([(r, c)])
+    grid[r][c] = 0
+    area = 0
+    dirs = [(0, -1), (0, 1), (1, 0), (-1, 0)]
     
-    while(!q.empty()) {
-        auto [row, col] = q.front();
-        q.pop();
-        area++;
+    while q:
+        row, col = q.popleft()
+        area += 1
         
-        for(auto& dir: dirs) {
-            int newR = row + dir[0], newC = col + dir[1];
-            if(newR >= 0 && newR < grid.size() && 
-               newC >= 0 && newC < grid[0].size() && 
-               grid[newR][newC] == 1) {
-                grid[newR][newC] = 0;
-                q.push({newR, newC});
-            }
-        }
-    }
-    return area;
-}
+        for dr, dc in dirs:
+            newR, newC = row + dr, col + dc
+            if (newR >= 0 and newR < len(grid) and 
+                newC >= 0 and newC < len(grid[0]) and 
+                grid[newR][newC] == 1):
+                grid[newR][newC] = 0
+                q.append((newR, newC))
+    return area
 ```
 
 This problem demonstrates the fundamental pattern for finding connected components in a 2D grid using DFS or BFS.

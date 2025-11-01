@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 494. Target Sum"
 date: 2025-10-15 15:28:04 -0700
-categories: leetcode algorithm medium cpp dynamic-programming dp subset-sum problem-solving
+categories: python dynamic-programming dp subset-sum problem-solving
 ---
 
 # [Medium] 494. Target Sum
@@ -49,30 +49,25 @@ Output: 1
 
 Convert the problem to a subset sum problem using mathematical transformation.
 
-```cpp
-class Solution {
-public:
-    int findTargetSumWays(vector<int>& nums, int target) {
-        int totalSum = accumulate(nums.begin(), nums.end(), 0);
+```python
+class Solution:
+
+    def findTargetSumWays(self, nums: list[int], target: int) -> int:
+        totalSum = sum(nums)
         
-        // Check if target is achievable
-        if((target + totalSum) % 2 != 0 || abs(target) > totalSum) {
-            return 0;
-        }
+        # Check if target is achievable
+        if (target + totalSum) % 2 != 0 or abs(target) > totalSum:
+            return 0
         
-        int subsetSum = (target + totalSum) / 2;
-        vector<int> dp(subsetSum + 1, 0);
-        dp[0] = 1;
+        subsetSum = (target + totalSum) // 2
+        dp = [0] * (subsetSum + 1)
+        dp[0] = 1
         
-        for(int num : nums) {
-            for(int i = subsetSum; i >= num; i--) {
-                dp[i] += dp[i - num];
-            }
-        }
+        for num in nums:
+            for i in range(subsetSum, num - 1, -1):
+                dp[i] += dp[i - num]
         
-        return dp[subsetSum];
-    }
-};
+        return dp[subsetSum]
 ```
 
 ## How the Algorithm Works
@@ -129,7 +124,7 @@ Total: 5 ways
 ## Algorithm Breakdown
 
 ### 1. Validation Check
-```cpp
+```python
 if((target + totalSum) % 2 != 0 || abs(target) > totalSum) {
     return 0;
 }
@@ -140,7 +135,7 @@ if((target + totalSum) % 2 != 0 || abs(target) > totalSum) {
 - If `abs(target) > totalSum`, it's impossible to achieve the target
 
 ### 2. Subset Sum Calculation
-```cpp
+```python
 int subsetSum = (target + totalSum) / 2;
 ```
 
@@ -151,18 +146,16 @@ int subsetSum = (target + totalSum) / 2;
 - Therefore: `S+ = (target + totalSum) / 2`
 
 ### 3. DP Array Initialization
-```cpp
-vector<int> dp(subsetSum + 1, 0);
+```python
+list[int] dp(subsetSum + 1, 0);
 dp[0] = 1;  // One way to make sum 0 (empty subset)
 ```
 
 ### 4. Bottom-Up DP
-```cpp
-for(int num : nums) {
-    for(int i = subsetSum; i >= num; i--) {
-        dp[i] += dp[i - num];
-    }
-}
+```python
+for num in nums:
+    for i in range(subsetSum, num - 1, -1):
+        dp[i] += dp[i - num]
 ```
 
 **Why iterate backwards?**
@@ -172,55 +165,45 @@ for(int num : nums) {
 ## Alternative Approaches
 
 ### Approach 1: Brute Force (DFS)
-```cpp
-class Solution {
-public:
-    int findTargetSumWays(vector<int>& nums, int target) {
-        return dfs(nums, 0, target);
-    }
+```python
+class Solution:
+
+    def findTargetSumWays(self, nums: list[int], target: int) -> int:
+        return self.dfs(nums, 0, target)
     
-private:
-    int dfs(vector<int>& nums, int index, int target) {
-        if (index == nums.size()) {
-            return target == 0 ? 1 : 0;
-        }
+    def dfs(self, nums: list[int], index: int, target: int) -> int:
+        if index == len(nums):
+            return 1 if target == 0 else 0
         
-        return dfs(nums, index + 1, target - nums[index]) +
-               dfs(nums, index + 1, target + nums[index]);
-    }
-};
+        return (self.dfs(nums, index + 1, target - nums[index]) +
+                self.dfs(nums, index + 1, target + nums[index]))
 ```
 
 **Time Complexity:** O(2^n)  
 **Space Complexity:** O(n)
 
 ### Approach 2: Memoization
-```cpp
-class Solution {
-public:
-    int findTargetSumWays(vector<int>& nums, int target) {
+```python
+class Solution:
+
+    def findTargetSumWays(self, list[int] nums, int target) -> int:
         unordered_map<string, int> memo;
         return dfs(nums, 0, target, memo);
     }
     
-private:
-    int dfs(vector<int>& nums, int index, int target, unordered_map<string, int>& memo) {
-        if (index == nums.size()) {
-            return target == 0 ? 1 : 0;
-        }
+    def dfs(self, nums: list[int], index: int, target: int, memo: dict) -> int:
+        if index == len(nums):
+            return 1 if target == 0 else 0
         
-        string key = to_string(index) + "," + to_string(target);
-        if (memo.count(key)) {
-            return memo[key];
-        }
+        key = f"{index},{target}"
+        if key in memo:
+            return memo[key]
         
-        int result = dfs(nums, index + 1, target - nums[index], memo) +
-                     dfs(nums, index + 1, target + nums[index], memo);
+        result = (self.dfs(nums, index + 1, target - nums[index], memo) +
+                  self.dfs(nums, index + 1, target + nums[index], memo))
         
-        memo[key] = result;
-        return result;
-    }
-};
+        memo[key] = result
+        return result
 ```
 
 **Time Complexity:** O(n × sum)  

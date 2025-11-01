@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 77. Combinations"
 date: 2025-09-29 00:00:00 -0000
-categories: leetcode algorithm backtracking data-structures recursion medium cpp combinations dfs problem-solving
+categories: python combinations dfs problem-solving
 ---
 
 # [Medium] 77. Combinations
@@ -49,37 +49,29 @@ The solution uses backtracking (DFS) with the following strategy:
 4. **Backtrack**: Remove the last element before trying the next number
 5. **Avoid Duplicates**: Start from `i + 1` in the next recursive call to ensure ascending order
 
-## Solution in C++
+## Solution in Python
 
 **Time Complexity:** O(C(n,k) × k) - We generate C(n,k) combinations, each taking O(k) time  
 **Space Complexity:** O(k) - For the recursion stack and current path
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> combine(int n, int k) {
-        vector<vector<int>> rtn;
-        vector<int> path;
-        dfs(n, k, rtn, path, 1);
-        return rtn;
-    }
+```python
+class Solution:
+    def combine(self, n: int, k: int) -> list[list[int]]:
+        result = []
+        path = []
+        self.dfs(n, k, result, path, 1)
+        return result
 
-private:
-    void dfs(const int n, const int k, vector<vector<int>> & rtn, vector<int>& path, int first_num) {
-        if(path.size() == k) {
-            rtn.push_back(path);
-            return;
-        }
-        if (path.size() + (n - first_num + 1) < k) {
-            return;
-        }
-        for (int i = first_num; i <= n; i++) {
-            path.push_back(i);
-            dfs(n, k, rtn, path, i + 1);
-            path.pop_back();
-        }
-    }
-};
+    def dfs(self, n: int, k: int, result: list[list[int]], path: list[int], first_num: int) -> None:
+        if len(path) == k:
+            result.append(path[:])
+            return
+        if len(path) + (n - first_num + 1) < k:
+            return
+        for i in range(first_num, n + 1):
+            path.append(i)
+            self.dfs(n, k, result, path, i + 1)
+            path.pop()
 ```
 
 ## Step-by-Step Example
@@ -128,98 +120,72 @@ Let's trace through the solution with n = 4, k = 2:
 
 This problem follows the classic backtracking template:
 
-```cpp
-void backtrack(parameters) {
-    if (base_case) {
-        // Process result
-        return;
-    }
+```python
+def backtrack(self, parameters) -> None:
+    if base_case:
+        # Process result
+        return
     
-    for (choice in choices) {
-        // Make choice
-        make_choice(choice);
+    for choice in choices:
+        # Make choice
+        make_choice(choice)
         
-        // Recurse
-        backtrack(updated_parameters);
+        # Recurse
+        backtrack(updated_parameters)
         
-        // Undo choice (backtrack)
-        undo_choice(choice);
-    }
-}
+        # Undo choice (backtrack)
+        undo_choice(choice)
 ```
 
 ## Alternative Approaches
 
 ### Iterative Solution
-```cpp
-vector<vector<int>> combine(int n, int k) {
-    vector<vector<int>> result;
-    vector<int> combination(k);
+```python
+def combine(self, n: int, k: int) -> list[list[int]]:
+    result = []
+    combination = list(range(1, k + 1))
     
-    for (int i = 0; i < k; i++) {
-        combination[i] = i + 1;
-    }
+    while True:
+        result.append(combination[:])
+        
+        i = k - 1
+        while i >= 0 and combination[i] == n - k + i + 1:
+            i -= 1
+        
+        if i < 0:
+            break
+        
+        combination[i] += 1
+        for j in range(i + 1, k):
+            combination[j] = combination[j - 1] + 1
     
-    while (true) {
-        result.push_back(combination);
-        
-        int i = k - 1;
-        while (i >= 0 && combination[i] == n - k + i + 1) {
-            i--;
-        }
-        
-        if (i < 0) break;
-        
-        combination[i]++;
-        for (int j = i + 1; j < k; j++) {
-            combination[j] = combination[j - 1] + 1;
-        }
-    }
-    
-    return result;
-}
+    return result
 ```
 
 ### Mathematical Approach (Using Next Permutation)
-```cpp
-vector<vector<int>> combine(int n, int k) {
-    vector<vector<int>> result;
-    vector<int> combination(k);
-    
-    // Initialize with first k numbers
-    for (int i = 0; i < k; i++) {
-        combination[i] = i + 1;
-    }
-    
-    do {
-        result.push_back(combination);
-    } while (next_combination(combination, n, k));
-    
-    return result;
-}
+```python
+def combine(self, n: int, k: int) -> list[list[int]]:
+    from itertools import combinations
+    return list(combinations(range(1, n + 1), k))
 ```
 
 ## Optimization Techniques
 
 ### Early Termination
-```cpp
-void dfs(int n, int k, vector<vector<int>>& result, vector<int>& path, int start) {
-    // Early termination: not enough numbers left
-    if (path.size() + (n - start + 1) < k) {
-        return;
-    }
+```python
+def dfs(self, n: int, k: int, result: list[list[int]], path: list[int], start: int) -> None:
+    # Early termination: not enough numbers left
+    if len(path) + (n - start + 1) < k:
+        return
     
-    if (path.size() == k) {
-        result.push_back(path);
-        return;
-    }
+    if len(path) == k:
+        result.append(path[:])
+        return
     
-    for (int i = start; i <= n; i++) {
-        path.push_back(i);
-        dfs(n, k, result, path, i + 1);
-        path.pop_back();
-    }
-}
+    for i in range(start, n + 1):
+        path.append(i)
+        self.dfs(n, k, result, path, i + 1)
+        path.pop()
 ```
 
 ## Common Mistakes

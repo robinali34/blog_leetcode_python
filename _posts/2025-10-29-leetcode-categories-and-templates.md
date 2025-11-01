@@ -10,7 +10,7 @@ tags: [leetcode, templates, patterns, dp, graph, sliding-window, two-pointers, b
 {% raw %}
 # LeetCode Categories and Solution Templates
 
-A quick reference to the most common LeetCode categories and battle‑tested C++ templates to speed up implementation.
+A quick reference to the most common LeetCode categories and battle‑tested Python templates to speed up implementation.
 
 > This guide is now split into category posts:
 > - Arrays & Strings: [/posts/2025-10-29-leetcode-templates-arrays-strings/](/posts/2025-10-29-leetcode-templates-arrays-strings/)
@@ -71,20 +71,24 @@ A quick reference to the most common LeetCode categories and battle‑tested C++
 
 Use for subarray/substring with constraints (distinct count, sum/k, length).
 
-```cpp
-// Variable-size window (e.g., longest substring without repeating)
-int solve(const string& s){
-    vector<int> cnt(256, 0);
-    int dup = 0, best = 0;
-    for (int l = 0, r = 0; r < (int)s.size(); ++r){
-        dup += (++cnt[(unsigned char)s[r]] == 2);
-        while (dup > 0){
-            dup -= (--cnt[(unsigned char)s[l++]] == 1);
-        }
-        best = max(best, r - l + 1);
-    }
-    return best;
-}
+```python
+# Variable-size window (e.g., longest substring without repeating)
+def solve(self, s: str) -> int:
+    cnt = [0] * 256
+    dup = 0
+    best = 0
+    l = 0
+    for r in range(len(s)):
+        cnt[ord(s[r])] += 1
+        if cnt[ord(s[r])] == 2:
+            dup += 1
+        while dup > 0:
+            cnt[ord(s[l])] -= 1
+            if cnt[ord(s[l])] == 1:
+                dup -= 1
+            l += 1
+        best = max(best, r - l + 1)
+    return best
 ```
 
 Examples: 3 Longest Substring Without Repeating Characters; 76 Minimum Window Substring; 424 Longest Repeating Character Replacement.
@@ -97,17 +101,19 @@ Examples: 3 Longest Substring Without Repeating Characters; 76 Minimum Window Su
 
 ## Two Pointers (sorted arrays/strings)
 
-```cpp
-// Classic: two-sum on sorted array, or merging
-bool twoSum(const vector<int>& a, int target){
-    int l = 0, r = (int)a.size() - 1;
-    while (l < r){
-        long long sum = (long long)a[l] + a[r];
-        if (sum == target) return true;
-        if (sum < target) ++l; else --r;
-    }
-    return false;
-}
+```python
+# Classic: two-sum on sorted array, or merging
+def twoSum(self, a: list[int], target: int) -> bool:
+    l, r = 0, len(a) - 1
+    while l < r:
+        s = a[l] + a[r]
+        if s == target:
+            return True
+        if s < target:
+            l += 1
+        else:
+            r -= 1
+    return False
 ```
 
 Examples: 15 3Sum; 11 Container With Most Water; 125 Valid Palindrome.
@@ -120,16 +126,17 @@ Examples: 15 3Sum; 11 Container With Most Water; 125 Valid Palindrome.
 
 ## Binary Search on Answer (monotonic predicate)
 
-```cpp
-// find minimum x s.t. predicate(x) == true
-long long binsearch(long long lo, long long hi){ // [lo, hi]
-    auto good = [&](long long x){ /* check feasibility */ return true; };
-    while (lo < hi){
-        long long mid = (lo + hi) >> 1;
-        if (good(mid)) hi = mid; else lo = mid + 1;
-    }
-    return lo;
-}
+```python
+# find minimum x s.t. predicate(x) == True
+def binsearch(self, lo: int, hi: int, good: callable) -> int:
+    # [lo, hi] - find minimum x where good(x) is True
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if good(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
 ```
 
 Examples: 33 Search in Rotated Sorted Array; 34 First/Last Position; 162 Find Peak Element; 875 Koko Eating Bananas.
@@ -143,13 +150,13 @@ Examples: 33 Search in Rotated Sorted Array; 34 First/Last Position; 162 Find Pe
 
 ## Prefix Sum / Difference Array
 
-```cpp
-// range sum queries
-vector<int> prefix(const vector<int>& a){
-    vector<int> ps(a.size()+1);
-    for (int i = 0; i < (int)a.size(); ++i) ps[i+1] = ps[i] + a[i];
-    return ps;
-}
+```python
+# range sum queries
+def prefix(a: list[int]) -> list[int]:
+    ps = [0] * (len(a) + 1)
+    for i in range(len(a)):
+        ps[i + 1] = ps[i] + a[i]
+    return ps
 ```
 
 Examples: 560 Subarray Sum Equals K; 238 Product of Array Except Self; 525 Contiguous Array; 370 Range Addition.
@@ -163,10 +170,12 @@ Examples: 560 Subarray Sum Equals K; 238 Product of Array Except Self; 525 Conti
 
 ## Hash Map Frequencies
 
-```cpp
-// count frequencies and check uniqueness, etc.
-unordered_map<int,int> freq;
-for (int x: nums) ++freq[x];
+```python
+# count frequencies and check uniqueness, etc.
+from collections import defaultdict
+freq = defaultdict(int)
+for x in nums:
+    freq[x] += 1
 ```
 
 Examples: 1 Two Sum; 49 Group Anagrams; 981 Time Based Key-Value Store; 359 Logger Rate Limiter.
@@ -180,19 +189,20 @@ Examples: 1 Two Sum; 49 Group Anagrams; 981 Time Based Key-Value Store; 359 Logg
 
 ## Monotonic Stack (next greater / histogram)
 
-```cpp
-// Next Greater Element (circular if needed)
-vector<int> nextGreater(vector<int>& a){
-    int n = a.size(); vector<int> ans(n, -1); vector<int> st;
-    for (int i = 0; i < 2*n; ++i){
-        int idx = i % n;
-        while (!st.empty() && a[st.back()] < a[idx]){
-            ans[st.back()] = a[idx]; st.pop_back();
-        }
-        if (i < n) st.push_back(idx);
-    }
-    return ans;
-}
+```python
+# Next Greater Element (circular if needed)
+def nextGreater(a: list[int]) -> list[int]:
+    n = len(a)
+    ans = [-1] * n
+    st = []
+    for i in range(2 * n):
+        idx = i % n
+        while st and a[st[-1]] < a[idx]:
+            ans[st[-1]] = a[idx]
+            st.pop()
+        if i < n:
+            st.append(idx)
+    return ans
 ```
 
 Examples: 739 Daily Temperatures; 84 Largest Rectangle in Histogram; 239 Sliding Window Maximum.
@@ -215,25 +225,27 @@ Examples: 739 Daily Temperatures; 84 Largest Rectangle in Histogram; 239 Sliding
 
 ## BFS / Shortest Path (unweighted)
 
-// Grid BFS template (4-direction)
-```cpp
-int bfsGrid(vector<string>& g, pair<int,int> s, pair<int,int> t){
-    int m=g.size(), n=g[0].size();
-    queue<pair<int,int>> q; vector<vector<int>> dist(m, vector<int>(n, -1));
-    int dirs[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
-    q.push(s); dist[s.first][s.second] = 0;
-    while(!q.empty()){
-        auto [x,y] = q.front(); q.pop();
-        if (make_pair(x,y) == t) return dist[x][y];
-        for (auto& d: dirs){
-            int nx=x+d[0], ny=y+d[1];
-            if (nx>=0&&nx<m&&ny>=0&&ny<n && g[nx][ny] != '#' && dist[nx][ny]==-1){
-                dist[nx][ny] = dist[x][y] + 1; q.push({nx,ny});
-            }
-        }
-    }
-    return -1;
-}
+# Grid BFS template (4-direction)
+```python
+from collections import deque
+
+def bfsGrid(self, g: list[str], s: tuple[int, int], t: tuple[int, int]) -> int:
+    m, n = len(g), len(g[0])
+    q = deque([s])
+    dist = [[-1] * n for _ in range(m)]
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    dist[s[0]][s[1]] = 0
+    
+    while q:
+        x, y = q.popleft()
+        if (x, y) == t:
+            return dist[x][y]
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < m and 0 <= ny < n and g[nx][ny] != '#' and dist[nx][ny] == -1:
+                dist[nx][ny] = dist[x][y] + 1
+                q.append((nx, ny))
+    return -1
 ```
 
 | ID | Title | Link |
@@ -244,15 +256,16 @@ int bfsGrid(vector<string>& g, pair<int,int> s, pair<int,int> t){
 
 ## DFS / Backtracking
 
-```cpp
-// Subsets
-void dfs(int i, vector<int>& nums, vector<int>& cur, vector<vector<int>>& out){
-    if (i == (int)nums.size()){ out.push_back(cur); return; }
-    dfs(i+1, nums, cur, out);           // skip
-    cur.push_back(nums[i]);
-    dfs(i+1, nums, cur, out);           // take
-    cur.pop_back();
-}
+```python
+# Subsets
+def dfs(self, i: int, nums: list[int], cur: list[int], out: list[list[int]]) -> None:
+    if i == len(nums):
+        out.append(cur[:])
+        return
+    self.dfs(i + 1, nums, cur, out)  # skip
+    cur.append(nums[i])
+    self.dfs(i + 1, nums, cur, out)  # take
+    cur.pop()
 ```
 
 | ID | Title | Link |
@@ -266,63 +279,89 @@ void dfs(int i, vector<int>& nums, vector<int>& cur, vector<vector<int>>& out){
 
 ## Tree Traversals (iterative)
 
-// Inorder (iterative)
-```cpp
-vector<int> inorder(TreeNode* root){
-    vector<int> ans; stack<TreeNode*> st; auto cur = root;
-    while (cur || !st.empty()){
-        while (cur){ st.push(cur); cur = cur->left; }
-        cur = st.top(); st.pop(); ans.push_back(cur->val); cur = cur->right;
-    }
-    return ans;
-}
+# Inorder (iterative)
+```python
+def inorder(self, root: TreeNode) -> list[int]:
+    ans = []
+    st = []
+    cur = root
+    while cur or st:
+        while cur:
+            st.append(cur)
+            cur = cur.left
+        cur = st.pop()
+        ans.append(cur.val)
+        cur = cur.right
+    return ans
 ```
 
-// Level-order (BFS)
-```cpp
-vector<vector<int>> levelOrder(TreeNode* root){
-    vector<vector<int>> res; if(!root) return res; queue<TreeNode*> q; q.push(root);
-    while(!q.empty()){
-        int sz=q.size(); res.emplace_back();
-        while(sz--){ auto* u=q.front(); q.pop(); res.back().push_back(u->val);
-            if(u->left) q.push(u->left); if(u->right) q.push(u->right);
-        }
-    }
-    return res;
-}
+# Level-order (BFS)
+```python
+from collections import deque
+
+def levelOrder(self, root: TreeNode) -> list[list[int]]:
+    if not root:
+        return []
+    res = []
+    q = deque([root])
+    while q:
+        sz = len(q)
+        level = []
+        for _ in range(sz):
+            u = q.popleft()
+            level.append(u.val)
+            if u.left:
+                q.append(u.left)
+            if u.right:
+                q.append(u.right)
+        res.append(level)
+    return res
 ```
 
 ## LCA (Binary Lifting)
 
-```cpp
-const int K = 17; // adjust for n (e.g., 17 for n<=1e5)
-vector<int> depth;
-vector<array<int, K+1>> up;
+```python
+K = 17  # adjust for n (e.g., 17 for n<=1e5)
+depth = []
+up = []
 
-void dfsLift(int u, int p, const vector<vector<int>>& g){
-    up[u][0] = p;
-    for(int k=1;k<=K;++k)
-        up[u][k] = (up[u][k-1] < 0) ? -1 : up[ up[u][k-1] ][k-1];
-    for(int v: g[u]) if(v != p){
-        depth[v] = depth[u] + 1;
-        dfsLift(v, u, g);
-    }
-}
-
-int lift(int u, int k){
-    for(int i=0;i<=K;++i)
-        if(k & (1<<i)) u = (u<0) ? -1 : up[u][i];
-    return u;
-}
-
-int lca(int a, int b){
-    if(depth[a] < depth[b]) swap(a,b);
-    a = lift(a, depth[a]-depth[b]);
-    if(a == b) return a;
-    for(int i=K;i>=0;--i)
-        if(up[a][i] != up[b][i]){ a = up[a][i]; b = up[b][i]; }
-    return up[a][0];
-}
+class LCA:
+    def __init__(self, n: int):
+        self.K = K
+        self.depth = [0] * n
+        self.up = [[-1] * (K + 1) for _ in range(n)]
+    
+    def dfsLift(self, u: int, p: int, g: list[list[int]]) -> None:
+        self.up[u][0] = p
+        for k in range(1, self.K + 1):
+            if self.up[u][k-1] < 0:
+                self.up[u][k] = -1
+            else:
+                self.up[u][k] = self.up[self.up[u][k-1]][k-1]
+        for v in g[u]:
+            if v != p:
+                self.depth[v] = self.depth[u] + 1
+                self.dfsLift(v, u, g)
+    
+    def lift(self, u: int, k: int) -> int:
+        for i in range(self.K + 1):
+            if k & (1 << i):
+                if u < 0:
+                    return -1
+                u = self.up[u][i]
+        return u
+    
+    def lca(self, a: int, b: int) -> int:
+        if self.depth[a] < self.depth[b]:
+            a, b = b, a
+        a = self.lift(a, self.depth[a] - self.depth[b])
+        if a == b:
+            return a
+        for i in range(self.K, -1, -1):
+            if self.up[a][i] != self.up[b][i]:
+                a = self.up[a][i]
+                b = self.up[b][i]
+        return self.up[a][0]
 ```
 
 | ID | Title | Link |
@@ -332,50 +371,86 @@ int lca(int a, int b){
 
 ## HLD (Heavy-Light Decomposition) skeleton
 
-```cpp
-// Heavy-Light Decomposition for path queries on a tree
-// Build: dfs1 (sizes, heavy child), dfs2 (head/in), then segtree over in[]
-const int N = 200000;
-vector<int> gH[N];
-int szH[N], parH[N], depH[N], heavyH[N], headH[N], inH[N], curT=0;
+```python
+# Heavy-Light Decomposition for path queries on a tree
+# Build: dfs1 (sizes, heavy child), dfs2 (head/in), then segtree over in[]
+class HLD:
+    def __init__(self, n: int, g: list[list[int]]):
+        self.n = n
+        self.g = g
+        self.szH = [0] * n
+        self.parH = [-1] * n
+        self.depH = [0] * n
+        self.heavyH = [-1] * n
+        self.headH = [0] * n
+        self.inH = [0] * n
+        self.curT = 0
+    
+    def dfs1(self, u: int, p: int) -> int:
+        self.parH[u] = p
+        self.depH[u] = 0 if p == -1 else self.depH[p] + 1
+        self.szH[u] = 1
+        self.heavyH[u] = -1
+        best = 0
+        for v in self.g[u]:
+            if v != p:
+                s = self.dfs1(v, u)
+                self.szH[u] += s
+                if s > best:
+                    best = s
+                    self.heavyH[u] = v
+        return self.szH[u]
+    
+    def dfs2(self, u: int, h: int) -> None:
+        self.headH[u] = h
+        self.inH[u] = self.curT
+        self.curT += 1
+        if self.heavyH[u] != -1:
+            self.dfs2(self.heavyH[u], h)
+            for v in self.g[u]:
+                if v != self.parH[u] and v != self.heavyH[u]:
+                    self.dfs2(v, v)
 
-int dfs1(int u, int p){
-    parH[u]=p; depH[u]=(p==-1?0:depH[p]+1); szH[u]=1; heavyH[u]=-1; int best=0;
-    for(int v: gH[u]) if(v!=p){
-        int s = dfs1(v,u); szH[u]+=s;
-        if (s > best){ best=s; heavyH[u]=v; }
-    }
-    return szH[u];
-}
+# Example segment tree over values on nodes (mapped by inH[])
+class SegTree:
+    def __init__(self, n: int):
+        self.n = n
+        self.st = [0] * (4 * n)
+    
+    def upd(self, p: int, v: int, i: int = 1, l: int = 0, r: int = None) -> None:
+        if r is None:
+            r = self.n - 1
+        if l == r:
+            self.st[i] = v
+            return
+        m = (l + r) // 2
+        if p <= m:
+            self.upd(p, v, 2 * i, l, m)
+        else:
+            self.upd(p, v, 2 * i + 1, m + 1, r)
+        self.st[i] = self.st[2 * i] + self.st[2 * i + 1]
+    
+    def qry(self, ql: int, qr: int, i: int = 1, l: int = 0, r: int = None) -> int:
+        if r is None:
+            r = self.n - 1
+        if qr < l or r < ql:
+            return 0
+        if ql <= l and r <= qr:
+            return self.st[i]
+        m = (l + r) // 2
+        return self.qry(ql, qr, 2 * i, l, m) + self.qry(ql, qr, 2 * i + 1, m + 1, r)
 
-void dfs2(int u, int h){
-    headH[u]=h; inH[u]=curT++;
-    if (heavyH[u]!=-1){
-        dfs2(heavyH[u], h);
-        for(int v: gH[u]) if(v!=parH[u] && v!=heavyH[u]) dfs2(v, v);
-    }
-}
-
-// Example segment tree over values on nodes (mapped by inH[])
-struct Seg{ int n; vector<long long> st; Seg(int n):n(n),st(4*n,0){}
-    void upd(int p,long long v,int i,int l,int r){ if(l==r){ st[i]=v; return; }
-        int m=(l+r)/2; if(p<=m) upd(p,v,2*i,l,m); else upd(p,v,2*i+1,m+1,r);
-        st[i]=st[2*i]+st[2*i+1]; }
-    long long qry(int ql,int qr,int i,int l,int r){ if(qr<l||r<ql) return 0; if(ql<=l&&r<=qr) return st[i];
-        int m=(l+r)/2; return qry(ql,qr,2*i,l,m)+qry(ql,qr,2*i+1,m+1,r); }
-};
-
-long long queryPath(int a,int b, Seg& seg){
-    long long res=0;
-    while(headH[a]!=headH[b]){
-        if(depH[ headH[a] ] < depH[ headH[b] ]) swap(a,b);
-        res += seg.qry(inH[ headH[a] ], inH[a], 1, 0, seg.n-1);
-        a = parH[ headH[a] ];
-    }
-    if (depH[a] > depH[b]) swap(a,b);
-    res += seg.qry(inH[a], inH[b], 1, 0, seg.n-1);
-    return res;
-}
+def queryPath(self, a: int, b: int, seg: SegTree, hld: HLD) -> int:
+    res = 0
+    while hld.headH[a] != hld.headH[b]:
+        if hld.depH[hld.headH[a]] < hld.depH[hld.headH[b]]:
+            a, b = b, a
+        res += seg.qry(hld.inH[hld.headH[a]], hld.inH[a], 1, 0, seg.n - 1)
+        a = hld.parH[hld.headH[a]]
+    if hld.depH[a] > hld.depH[b]:
+        a, b = b, a
+    res += seg.qry(hld.inH[a], hld.inH[b], 1, 0, seg.n - 1)
+    return res
 ```
 
 | ID | Title | Link |
@@ -384,13 +459,28 @@ long long queryPath(int a,int b, Seg& seg){
 
 ## Union-Find (Disjoint Set Union)
 
-```cpp
-struct DSU{
-    vector<int> p, r;
-    DSU(int n): p(n), r(n,0){ iota(p.begin(), p.end(), 0); }
-    int find(int x){ return p[x]==x?x:p[x]=find(p[x]); }
-    bool unite(int a, int b){ a=find(a); b=find(b); if (a==b) return false; if (r[a]<r[b]) swap(a,b); p[b]=a; if (r[a]==r[b]) ++r[a]; return true; }
-};
+```python
+class DSU:
+    def __init__(self, n: int):
+        self.p = list(range(n))
+        self.r = [0] * n
+    
+    def find(self, x: int) -> int:
+        if self.p[x] != x:
+            self.p[x] = self.find(self.p[x])
+        return self.p[x]
+    
+    def unite(self, a: int, b: int) -> bool:
+        a = self.find(a)
+        b = self.find(b)
+        if a == b:
+            return False
+        if self.r[a] < self.r[b]:
+            a, b = b, a
+        self.p[b] = a
+        if self.r[a] == self.r[b]:
+            self.r[a] += 1
+        return True
 ```
 
 | ID | Title | Link |
@@ -401,18 +491,22 @@ struct DSU{
 
 ## Heap / K-way Merge
 
-```cpp
-vector<int> mergeK(vector<vector<int>>& lists){
-    using T = tuple<int,int,int>; // val, list idx, pos
-    priority_queue<T, vector<T>, greater<T>> pq;
-    for (int i=0;i<(int)lists.size();++i) if (!lists[i].empty()) pq.emplace(lists[i][0], i, 0);
-    vector<int> out;
-    while(!pq.empty()){
-        auto [v,i,j]=pq.top(); pq.pop(); out.push_back(v);
-        if (j+1 < (int)lists[i].size()) pq.emplace(lists[i][j+1], i, j+1);
-    }
-    return out;
-}
+```python
+import heapq
+
+def mergeK(lists: list[list[int]]) -> list[int]:
+    # T = (val, list_idx, pos)
+    pq = []
+    for i, lst in enumerate(lists):
+        if lst:
+            heapq.heappush(pq, (lst[0], i, 0))
+    out = []
+    while pq:
+        v, i, j = heapq.heappop(pq)
+        out.append(v)
+        if j + 1 < len(lists[i]):
+            heapq.heappush(pq, (lists[i][j + 1], i, j + 1))
+    return out
 ```
 
 | ID | Title | Link |
@@ -422,17 +516,29 @@ vector<int> mergeK(vector<vector<int>>& lists){
 
 ## Topological Sort (Kahn / DFS)
 
-```cpp
-vector<int> topoKahn(int n, const vector<vector<int>>& g){
-    vector<int> indeg(n); for(int u=0;u<n;++u) for(int v:g[u]) ++indeg[v];
-    queue<int> q; for(int i=0;i<n;++i) if(!indeg[i]) q.push(i);
-    vector<int> order;
-    while(!q.empty()){ int u=q.front(); q.pop(); order.push_back(u);
-        for(int v:g[u]) if(--indeg[v]==0) q.push(v);
-    }
-    if ((int)order.size()!=n) order.clear();
-    return order;
-}
+```python
+from collections import deque
+
+def topoKahn(n: int, g: list[list[int]]) -> list[int]:
+    indeg = [0] * n
+    for u in range(n):
+        for v in g[u]:
+            indeg[v] += 1
+    q = deque()
+    for i in range(n):
+        if not indeg[i]:
+            q.append(i)
+    order = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in g[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+    if len(order) != n:
+        order.clear()
+    return order
 ```
 
 | ID | Title | Link |
@@ -443,17 +549,23 @@ vector<int> topoKahn(int n, const vector<vector<int>>& g){
 
 ## Dijkstra (Shortest Path with Weights ≥ 0)
 
-```cpp
-vector<long long> dijkstra(int n, const vector<vector<pair<int,int>>>& g, int s){
-    const long long INF = (1LL<<60);
-    vector<long long> dist(n, INF); dist[s]=0;
-    using P=pair<long long,int>; priority_queue<P, vector<P>, greater<P>> pq; pq.push({0,s});
-    while(!pq.empty()){
-        auto [d,u]=pq.top(); pq.pop(); if(d!=dist[u]) continue;
-        for(auto [v,w]: g[u]) if(dist[v]>d+w){ dist[v]=d+w; pq.push({dist[v],v}); }
-    }
-    return dist;
-}
+```python
+import heapq
+
+def dijkstra(n: int, g: list[list[tuple[int, int]]], s: int) -> list[int]:
+    INF = 1 << 60
+    dist = [INF] * n
+    dist[s] = 0
+    pq = [(0, s)]
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d != dist[u]:
+            continue
+        for v, w in g[u]:
+            if dist[v] > d + w:
+                dist[v] = d + w
+                heapq.heappush(pq, (dist[v], v))
+    return dist
 ```
 
 | ID | Title | Link |
@@ -563,35 +675,48 @@ vector<long long> dijkstra(int n, const vector<vector<pair<int,int>>>& g, int s)
 
 ## Tarjan SCC (Strongly Connected Components)
 
-```cpp
-// Tarjan's algorithm: O(N+M) to label each node with SCC id
-struct TarjanSCC {
-    int n, timer = 0, compCnt = 0;
-    vector<vector<int>> g;
-    vector<int> tin, low, comp, st;
-    vector<char> in;
-
-    TarjanSCC(int n): n(n), g(n), tin(n, -1), low(n), comp(n, -1), in(n, 0) {}
-    void addEdge(int u, int v) { g[u].push_back(v); }
-
-    void dfs(int u) {
-        tin[u] = low[u] = timer++;
-        st.push_back(u); in[u] = 1;
-        for (int v : g[u]) {
-            if (tin[v] == -1) { dfs(v); low[u] = min(low[u], low[v]); }
-            else if (in[v])     low[u] = min(low[u], tin[v]);
-        }
-        if (low[u] == tin[u]) {
-            for (;;) {
-                int v = st.back(); st.pop_back(); in[v] = 0; comp[v] = compCnt;
-                if (v == u) break;
-            }
-            ++compCnt;
-        }
-    }
-
-    int run() { for (int i = 0; i < n; ++i) if (tin[i] == -1) dfs(i); return compCnt; }
-};
+```python
+# Tarjan's algorithm: O(N+M) to label each node with SCC id
+class TarjanSCC:
+    def __init__(self, n: int):
+        self.n = n
+        self.timer = 0
+        self.compCnt = 0
+        self.g = [[] for _ in range(n)]
+        self.tin = [-1] * n
+        self.low = [0] * n
+        self.comp = [-1] * n
+        self.st = []
+        self.in_stack = [False] * n
+    
+    def addEdge(self, u: int, v: int) -> None:
+        self.g[u].append(v)
+    
+    def dfs(self, u: int) -> None:
+        self.tin[u] = self.low[u] = self.timer
+        self.timer += 1
+        self.st.append(u)
+        self.in_stack[u] = True
+        for v in self.g[u]:
+            if self.tin[v] == -1:
+                self.dfs(v)
+                self.low[u] = min(self.low[u], self.low[v])
+            elif self.in_stack[v]:
+                self.low[u] = min(self.low[u], self.tin[v])
+        if self.low[u] == self.tin[u]:
+            while True:
+                v = self.st.pop()
+                self.in_stack[v] = False
+                self.comp[v] = self.compCnt
+                if v == u:
+                    break
+            self.compCnt += 1
+    
+    def run(self) -> int:
+        for i in range(self.n):
+            if self.tin[i] == -1:
+                self.dfs(i)
+        return self.compCnt
 ```
 
 | ID | Title | Link |
@@ -614,13 +739,16 @@ struct TarjanSCC {
 | 56 | Merge Intervals | https://leetcode.com/problems/merge-intervals/ |
 | 621 | Task Scheduler | https://leetcode.com/problems/task-scheduler/ |
 
-```cpp
-// Interval scheduling: select max non-overlapping
-int schedule(vector<pair<int,int>>& iv){
-    sort(iv.begin(), iv.end(), [](auto& a, auto& b){return a.second<b.second;});
-    int cnt=0, end=-1e9;
-    for (auto& [s,e]: iv){ if (s>=end){ ++cnt; end=e; } }
-    return cnt;
-}
+```python
+# Interval scheduling: select max non-overlapping
+def schedule(self, iv: list[tuple[int, int]]) -> int:
+    iv.sort(key=lambda x: x[1])
+    cnt = 0
+    end = -10**9
+    for s, e in iv:
+        if s >= end:
+            cnt += 1
+            end = e
+    return cnt
 ```
 {% endraw %}

@@ -58,52 +58,50 @@ Output: []
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
+```python
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
- *     int val;
+ *     # val = 0
  *     TreeNode *left;
  *     TreeNode *right;
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
 
-class Solution {
-public:
-    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        buildGraph(root, nullptr);
-        visited.insert(target->val);
-        dfs(target->val, 0, k);
-        return rtn;
-    }
-private:
-    unordered_map<int, vector<int>> graph;
-    vector<int> rtn;
-    unordered_set<int> visited;
-
-    void buildGraph(TreeNode* curr, TreeNode* parent) {
-        if(curr && parent) {
-            graph[curr->val].push_back(parent->val);
-            graph[parent->val].push_back(curr->val);
-        }
-        if(curr->left) buildGraph(curr->left, curr);
-        if(curr->right) buildGraph(curr->right, curr);
-    }
-
-    void dfs(int curr, int dist, int K) {
-        if(dist == K) {
-            rtn.push_back(curr);
-            return;
-        }
-        for(int neighbor: graph[curr]) {
-            if(!visited.contains(neighbor)) {
-                visited.insert(neighbor);
-                dfs(neighbor, dist + 1, K);
-            }
-        }
-    }
-};
+class Solution:
+    def __init__(self):
+        self.graph = {}
+        self.result = []
+        self.visited = set()
+    
+    def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> list[int]:
+        self.buildGraph(root, None)
+        self.visited.add(target.val)
+        self.dfs(target.val, 0, k)
+        return self.result
+    
+    def buildGraph(self, curr: TreeNode, parent: TreeNode) -> None:
+        if curr and parent:
+            if curr.val not in self.graph:
+                self.graph[curr.val] = []
+            if parent.val not in self.graph:
+                self.graph[parent.val] = []
+            self.graph[curr.val].append(parent.val)
+            self.graph[parent.val].append(curr.val)
+        if curr.left:
+            self.buildGraph(curr.left, curr)
+        if curr.right:
+            self.buildGraph(curr.right, curr)
+    
+    def dfs(self, curr: int, dist: int, K: int) -> None:
+        if dist == K:
+            self.result.append(curr)
+            return
+        for neighbor in self.graph.get(curr, []):
+            if neighbor not in self.visited:
+                self.visited.add(neighbor)
+                self.dfs(neighbor, dist + 1, K)
 ```
 
 ### Approach 2: Parent Pointer Map with DFS
@@ -120,50 +118,45 @@ private:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
+```python
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
- *     int val;
+ *     # val = 0
  *     TreeNode *left;
  *     TreeNode *right;
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
 
-class Solution {
-public:
-    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        addParent(root, nullptr);
-        vector<int> rtn;
-        unordered_set<TreeNode*> visited;
-        dfs(target, k, rtn, visited);
-        return rtn;
-    }
-
-private:
-    unordered_map<TreeNode*, TreeNode*> parent;
+class Solution:
+    def __init__(self):
+        self.parent = {}
     
-    void addParent(TreeNode* curr, TreeNode* parent) {
-        if(curr) {
-            this->parent[curr] = parent;
-            addParent(curr->left, curr);
-            addParent(curr->right, curr);
-        }
-    }
-
-    void dfs(TreeNode* curr, int dist, vector<int>& rtn, unordered_set<TreeNode*>& visited) {
-        if(!curr || visited.contains(curr)) return;
-        visited.insert(curr);
-        if(dist == 0) {
-            rtn.push_back(curr->val);
-            return;
-        }
-        dfs(parent[curr], dist - 1, rtn, visited);
-        dfs(curr->left, dist - 1, rtn, visited);
-        dfs(curr->right, dist - 1, rtn, visited);
-    }
-};
+    def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> list[int]:
+        self.addParent(root, None)
+        result = []
+        visited = set()
+        self.dfs(target, k, result, visited)
+        return result
+    
+    def addParent(self, curr: TreeNode, parent_node: TreeNode) -> None:
+        if curr:
+            self.parent[curr] = parent_node
+            self.addParent(curr.left, curr)
+            self.addParent(curr.right, curr)
+    
+    def dfs(self, curr: TreeNode, dist: int, rtn: list[int], visited: set) -> None:
+        if not curr or curr in visited:
+            return
+        visited.add(curr)
+        if dist == 0:
+            rtn.append(curr.val)
+            return
+        if curr in self.parent:
+            self.dfs(self.parent[curr], dist - 1, rtn, visited)
+        self.dfs(curr.left, dist - 1, rtn, visited)
+        self.dfs(curr.right, dist - 1, rtn, visited)
 ```
 
 ### Approach 3: BFS with Graph Representation
@@ -177,49 +170,43 @@ private:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        buildGraph(root, nullptr);
-        vector<int> rtn;
-        queue<pair<int, int>> q;  // {node, distance}
-        unordered_set<int> visited;
-        
-        q.push({target->val, 0});
-        visited.insert(target->val);
-        
-        while(!q.empty()) {
-            auto [curr, dist] = q.front();
-            q.pop();
-            
-            if(dist == k) {
-                rtn.push_back(curr);
-            } else if(dist < k) {
-                for(int neighbor: graph[curr]) {
-                    if(!visited.contains(neighbor)) {
-                        visited.insert(neighbor);
-                        q.push({neighbor, dist + 1});
-                    }
-                }
-            }
-        }
-        return rtn;
-    }
-
-private:
-    unordered_map<int, vector<int>> graph;
-    vector<int> rtn;
+```python
+class Solution:
+    def __init__(self):
+        self.graph = {}
     
-    void buildGraph(TreeNode* curr, TreeNode* parent) {
-        if(curr && parent) {
-            graph[curr->val].push_back(parent->val);
-            graph[parent->val].push_back(curr->val);
-        }
-        if(curr->left) buildGraph(curr->left, curr);
-        if(curr->right) buildGraph(curr->right, curr);
-    }
-};
+    def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> list[int]:
+        self.buildGraph(root, None)
+        from collections import deque
+        
+        result = []
+        q = deque([(target.val, 0)])
+        visited = {target.val}
+        
+        while q:
+            curr, dist = q.popleft()
+            
+            if dist == k:
+                result.append(curr)
+            elif dist < k:
+                for neighbor in self.graph.get(curr, []):
+                    if neighbor not in visited:
+                        visited.add(neighbor)
+                        q.append((neighbor, dist + 1))
+        return result
+    
+    def buildGraph(self, curr: TreeNode, parent: TreeNode) -> None:
+        if curr and parent:
+            if curr.val not in self.graph:
+                self.graph[curr.val] = []
+            if parent.val not in self.graph:
+                self.graph[parent.val] = []
+            self.graph[curr.val].append(parent.val)
+            self.graph[parent.val].append(curr.val)
+        if curr.left:
+            self.buildGraph(curr.left, curr)
+        if curr.right:
+            self.buildGraph(curr.right, curr)
 ```
 
 ## Algorithm Analysis
@@ -242,33 +229,28 @@ private:
 ## Implementation Details
 
 ### Building Parent-Child Relationships
-```cpp
-// Store bidirectional edges
-if(curr && parent) {
-    graph[curr->val].push_back(parent->val);
-    graph[parent->val].push_back(curr->val);
-}
+```python
+# Store bidirectional edges
+if curr and parent:
+    graph[curr.val].append(parent.val)
+    graph[parent.val].append(curr.val)
 ```
 
 ### DFS with Distance Control
-```cpp
-void dfs(int curr, int dist, int K) {
-    if(dist == K) {
-        rtn.push_back(curr);
-        return;
-    }
-    // Recursively explore all neighbors
-    for(int neighbor: graph[curr]) {
-        if(!visited.contains(neighbor)) {
-            visited.insert(neighbor);
-            dfs(neighbor, dist + 1, K);
-        }
-    }
-}
+```python
+def dfs(self, curr: int, dist: int, K: int) -> None:
+    if dist == K:
+        result.append(curr)
+        return
+    # Recursively explore all neighbors
+    for neighbor in graph.get(curr, []):
+        if neighbor not in visited:
+            visited.add(neighbor)
+            self.dfs(neighbor, dist + 1, K)
 ```
 
 ### Three-Directional Search
-```cpp
+```python
 // Explore: parent, left child, right child
 dfs(parent[curr], dist - 1, rtn, visited);
 dfs(curr->left, dist - 1, rtn, visited);

@@ -52,23 +52,19 @@ Output: 0
 **Time Complexity:** O(m × n)  
 **Space Complexity:** O(1)
 
-```cpp
-class Solution {
-public:
-    int countBattleships(vector<vector<char>>& board) {
-        int count = 0;
-        for(int i = 0; i < (int)board.size(); i++) {
-            for(int j = 0; j < (int)board[0].size(); j++) {
-                if(board[i][j] == 'X') {
-                    if(i > 0 && board[i - 1][j] == 'X') continue;
-                    if(j > 0 && board[i][j - 1] == 'X') continue;
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-};
+```python
+class Solution:
+    def countBattleships(self, board: list[list[str]]) -> int:
+        count = 0
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] == 'X':
+                    if i > 0 and board[i - 1][j] == 'X':
+                        continue
+                    if j > 0 and board[i][j - 1] == 'X':
+                        continue
+                    count += 1
+        return count
 ```
 
 ### Approach 2: DFS with Visited Tracking
@@ -81,39 +77,32 @@ public:
 **Time Complexity:** O(m × n)  
 **Space Complexity:** O(m × n) for visited array
 
-```cpp
-class Solution {
-public:
-    int countBattleships(vector<vector<char>>& board) {
-        int m = board.size(), n = board[0].size();
-        vector<vector<bool>> visited(m, vector<bool>(n, false));
-        int count = 0;
+```python
+class Solution:
+    def countBattleships(self, board: list[list[str]]) -> int:
+        m, n = len(board), len(board[0])
+        visited = [[False] * n for _ in range(m)]
+        count = 0
         
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(board[i][j] == 'X' && !visited[i][j]) {
-                    dfs(board, visited, i, j);
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == 'X' and not visited[i][j]:
+                    self.dfs(board, visited, i, j)
+                    count += 1
+        return count
     
-private:
-    void dfs(vector<vector<char>>& board, vector<vector<bool>>& visited, int i, int j) {
-        if(i < 0 || i >= board.size() || j < 0 || j >= board[0].size() || 
-           board[i][j] != 'X' || visited[i][j]) return;
+    def dfs(self, board: list[list[str]], visited: list[list[bool]], i: int, j: int) -> None:
+        if (i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or 
+            board[i][j] != 'X' or visited[i][j]):
+            return
         
-        visited[i][j] = true;
+        visited[i][j] = True
         
-        // Explore in all four directions
-        dfs(board, visited, i + 1, j);
-        dfs(board, visited, i - 1, j);
-        dfs(board, visited, i, j + 1);
-        dfs(board, visited, i, j - 1);
-    }
-};
+        # Explore in all four directions
+        self.dfs(board, visited, i + 1, j)
+        self.dfs(board, visited, i - 1, j)
+        self.dfs(board, visited, i, j + 1)
+        self.dfs(board, visited, i, j - 1)
 ```
 
 ### Approach 3: Union Find
@@ -125,66 +114,50 @@ private:
 **Time Complexity:** O(m × n × α(m × n)) where α is inverse Ackermann function  
 **Space Complexity:** O(m × n)
 
-```cpp
-class Solution {
-public:
-    int countBattleships(vector<vector<char>>& board) {
-        int m = board.size(), n = board[0].size();
-        UnionFind uf(m * n);
-        int count = 0;
+```python
+class Solution:
+
+    def countBattleships(self, board: list[list[str]]) -> int:
+        m, n = len(board), len(board[0])
+        uf = self.UnionFind(m * n)
+        count = 0
         
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(board[i][j] == 'X') {
-                    int curr = i * n + j;
-                    if(i > 0 && board[i - 1][j] == 'X') {
-                        uf.unionSets(curr, (i - 1) * n + j);
-                    }
-                    if(j > 0 && board[i][j - 1] == 'X') {
-                        uf.unionSets(curr, i * n + (j - 1));
-                    }
-                }
-            }
-        }
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == 'X':
+                    curr = i * n + j
+                    if i > 0 and board[i - 1][j] == 'X':
+                        uf.unionSets(curr, (i - 1) * n + j)
+                    if j > 0 and board[i][j - 1] == 'X':
+                        uf.unionSets(curr, i * n + (j - 1))
         
-        unordered_set<int> roots;
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(board[i][j] == 'X') {
-                    roots.insert(uf.find(i * n + j));
-                }
-            }
-        }
+        roots = set()
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == 'X':
+                    roots.add(uf.find(i * n + j))
         
-        return roots.size();
-    }
+        return len(roots)
     
-private:
-    class UnionFind {
-        vector<int> parent, rank;
+    class UnionFind:
+        def __init__(self, n: int):
+            self.parent = list(range(n))
+            self.rank = [0] * n
         
-    public:
-        UnionFind(int n) : parent(n), rank(n, 0) {
-            iota(parent.begin(), parent.end(), 0);
-        }
+        def find(self, x: int) -> int:
+            if self.parent[x] != x:
+                self.parent[x] = self.find(self.parent[x])
+            return self.parent[x]
         
-        int find(int x) {
-            if(parent[x] != x) {
-                parent[x] = find(parent[x]);
-            }
-            return parent[x];
-        }
-        
-        void unionSets(int x, int y) {
-            int px = find(x), py = find(y);
-            if(px != py) {
-                if(rank[px] < rank[py]) swap(px, py);
-                parent[py] = px;
-                if(rank[px] == rank[py]) rank[px]++;
-            }
-        }
-    };
-};
+        def unionSets(self, x: int, y: int) -> None:
+            px = self.find(x)
+            py = self.find(y)
+            if px != py:
+                if self.rank[px] < self.rank[py]:
+                    px, py = py, px
+                self.parent[py] = px
+                if self.rank[px] == self.rank[py]:
+                    self.rank[px] += 1
 ```
 
 ## Algorithm Analysis
@@ -197,9 +170,9 @@ private:
 - No extra space needed
 
 **Key Conditions:**
-```cpp
-if(i > 0 && board[i - 1][j] == 'X') continue;  // Not top-left
-if(j > 0 && board[i][j - 1] == 'X') continue;  // Not top-left
+```python
+if(i > 0  board[i - 1][j] == 'X') continue;  // Not top-left
+if(j > 0  board[i][j - 1] == 'X') continue;  // Not top-left
 ```
 
 ### Complexity Comparison

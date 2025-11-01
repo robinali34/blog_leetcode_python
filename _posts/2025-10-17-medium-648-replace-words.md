@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 648. Replace Words"
 date: 2025-10-17 16:17:34 -0700
-categories: leetcode algorithm medium cpp trie hash-set string-processing problem-solving
+categories: python trie hash-set string-processing problem-solving
 ---
 
 # [Medium] 648. Replace Words
@@ -53,35 +53,24 @@ Explanation:
 
 Use a hash set to store dictionary roots and check prefixes for each word.
 
-```cpp
-class Solution {
-private:
-    string shortestRoot(unordered_set<string> dicSet, string word) {
-        for(int i = 1; i <= word.size(); i++) {
-            string root = word.substr(0, i);
-            if(dicSet.contains(root)) {
-                return root;
-            }
-        }
-        return word;
-    }
+```python
+class Solution:
+    def shortestRoot(self, dicSet: set, word: str) -> str:
+        for i in range(1, len(word) + 1):
+            root = word[:i]
+            if root in dicSet:
+                return root
+        return word
     
-public:
-    string replaceWords(vector<string>& dictionary, string sentence) {
-        istringstream sStream(sentence);
-        unordered_set<string> dicSet(dictionary.begin(), dictionary.end());
-        string word;
-        string newSentence;
+    def replaceWords(self, dictionary: list[str], sentence: str) -> str:
+        dicSet = set(dictionary)
+        words = sentence.split()
+        result = []
         
-        while(getline(sStream, word, ' ')) {
-            newSentence.append(shortestRoot(dicSet, word));
-            newSentence.append(" ");
-        }
+        for word in words:
+            result.append(self.shortestRoot(dicSet, word))
         
-        if(!newSentence.empty()) newSentence.pop_back();
-        return newSentence;
-    }
-};
+        return ' '.join(result)
 ```
 
 ## Solution 2: Trie Data Structure
@@ -91,67 +80,49 @@ public:
 
 Use a trie to efficiently find the shortest root prefix for each word.
 
-```cpp
-class TrieNode{
-public:
-    bool isEnd;
-    vector<TrieNode*> children;
-    TrieNode(): children(26, nullptr) {isEnd = false;}
-};
+```python
+class TrieNode:
+    def __init__(self):
+        self.isEnd = False
+        self.children = [None] * 26
 
-class Trie {
-private:
-    TrieNode* root;
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
 
-public:
-    Trie() {root = new TrieNode();}
+    def insert(self, word: str) -> None:
+        current = self.root
+        for c in word:
+            idx = ord(c) - ord('a')
+            if current.children[idx] is None:
+                current.children[idx] = TrieNode()
+            current = current.children[idx]
+        current.isEnd = True
+    
+    def shortestRoot(self, word: str) -> str:
+        current = self.root
+        for i, ch in enumerate(word):
+            idx = ord(ch) - ord('a')
+            if current.children[idx] is None:
+                return word
+            current = current.children[idx]
+            if current.isEnd:
+                return word[:i + 1]
+        return word
 
-    void insert(string word) {
-        TrieNode * current = root;
-        for(char c: word) {
-            if(current->children[c - 'a'] == nullptr) {
-                current->children[c - 'a'] = new TrieNode();
-            }
-            current = current->children[c - 'a'];
-        }
-        current->isEnd = true;
-    }
-
-    string shortestRoot(string word) {
-        TrieNode* current = root;
-        for(int i = 0; i < word.size(); i++) {
-            char ch = word[i];
-            if(current->children[ch - 'a'] == nullptr) {
-                return word;
-            }
-            current = current->children[ch - 'a'];
-            if(current->isEnd) {
-                return word.substr(0, i + 1);
-            }
-        }
-        return word;
-    }
-};
-
-class Solution {
-public:
-    string replaceWords(vector<string>& dictionary, string sentence) {
-        istringstream sStream(sentence);
-        Trie dicTrie;
+class Solution:
+    def replaceWords(self, dictionary: list[str], sentence: str) -> str:
+        dicTrie = Trie()
         
-        for(string& word: dictionary) {
-            dicTrie.insert(word);
-        }
+        for word in dictionary:
+            dicTrie.insert(word)
         
-        string word, newSentence;
-        while(getline(sStream, word, ' ')) {
-            newSentence.append(dicTrie.shortestRoot(word) + " ");
-        }
+        words = sentence.split()
+        result = []
+        for word in words:
+            result.append(dicTrie.shortestRoot(word))
         
-        if(!newSentence.empty()) newSentence.pop_back();
-        return newSentence;
-    }
-};
+        return ' '.join(result)
 ```
 
 ## How the Algorithms Work
@@ -212,9 +183,9 @@ root
 
 ### Solution 1: Hash Set
 
-```cpp
-string shortestRoot(unordered_set<string> dicSet, string word) {
-    for(int i = 1; i <= word.size(); i++) {
+```python
+def shortestRoot(self, unordered_set<string> dicSet, string word) -> string:
+    for(i = 1 i <= wordlen(); i++) {
         string root = word.substr(0, i);
         if(dicSet.contains(root)) {
             return root;
@@ -231,21 +202,17 @@ string shortestRoot(unordered_set<string> dicSet, string word) {
 
 ### Solution 2: Trie
 
-```cpp
-string shortestRoot(string word) {
-    TrieNode* current = root;
-    for(int i = 0; i < word.size(); i++) {
-        char ch = word[i];
-        if(current->children[ch - 'a'] == nullptr) {
-            return word;
-        }
-        current = current->children[ch - 'a'];
-        if(current->isEnd) {
-            return word.substr(0, i + 1);
-        }
-    }
-    return word;
-}
+```python
+def shortestRoot(self, word: str) -> str:
+    current = self.root
+    for i, ch in enumerate(word):
+        idx = ord(ch) - ord('a')
+        if current.children[idx] is None:
+            return word
+        current = current.children[idx]
+        if current.isEnd:
+            return word[:i + 1]
+    return word
 ```
 
 **Process:**
@@ -329,56 +296,54 @@ root
 ## Alternative Approaches
 
 ### Approach 1: Brute Force
-```cpp
-class Solution {
-public:
-    string replaceWords(vector<string>& dictionary, string sentence) {
+```python
+class Solution:
+
+    def replaceWords(self, list[string] dictionary, string sentence) -> string:
         istringstream sStream(sentence);
         string word, result;
         
         while(getline(sStream, word, ' ')) {
             string shortest = word;
-            for(string& root : dictionary) {
-                if(word.substr(0, root.size()) == root && root.size() < shortest.size()) {
+            for(string root : dictionary) {
+                if(word.substr(0, rootlen()) == root  rootlen() < shortestlen()) {
                     shortest = root;
                 }
             }
-            result += shortest + " ";
+            result += shortest + " "
         }
         
-        if(!result.empty()) result.pop_back();
-        return result;
-    }
-};
+        if result:
+            result = result[:-1]  # Remove trailing space
+        return result
 ```
 
 **Time Complexity:** O(n * d * m)  
 **Space Complexity:** O(1)
 
 ### Approach 2: Sorted Dictionary
-```cpp
-class Solution {
-public:
-    string replaceWords(vector<string>& dictionary, string sentence) {
+```python
+class Solution:
+
+    def replaceWords(self, list[string] dictionary, string sentence) -> string:
         sort(dictionary.begin(), dictionary.end());
         istringstream sStream(sentence);
         string word, result;
         
         while(getline(sStream, word, ' ')) {
             string shortest = word;
-            for(string& root : dictionary) {
-                if(word.substr(0, root.size()) == root) {
+            for(string root : dictionary) {
+                if(word.substr(0, rootlen()) == root) {
                     shortest = root;
                     break;
                 }
             }
-            result += shortest + " ";
+            result += shortest + " "
         }
         
-        if(!result.empty()) result.pop_back();
-        return result;
-    }
-};
+        if result:
+            result = result[:-1]  # Remove trailing space
+        return result
 ```
 
 **Time Complexity:** O(d log d + n * d * m)  

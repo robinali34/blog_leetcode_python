@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 417. Pacific Atlantic Water Flow"
 date: 2025-10-19 11:43:11 -0700
-categories: leetcode algorithm medium cpp dfs bfs graph problem-solving
+categories: python dfs bfs graph problem-solving
 ---
 
 # [Medium] 417. Pacific Atlantic Water Flow
@@ -52,49 +52,45 @@ Explanation: All cells can flow to both Pacific and Atlantic oceans.
 
 Use DFS from Pacific and Atlantic ocean boundaries to find all cells that can reach each ocean, then find the intersection.
 
-```cpp
-class Solution {
-private:
-    int m, n;
-    vector<vector<int>> dirs = {&#123;0, 1&#125;, &#123;0, -1&#125;, &#123;1, 0&#125;, &#123;-1, 0&#125;};
-
-    void dfs(vector<vector<int>>& heights, vector<vector<bool>>& visited, int row, int col) {
-        visited[row][col] = true;
-        for(auto& dir: dirs) {
-            int newRow = row + dir[0], newCol = col + dir[1];
-            if(newRow < 0 || newRow >= m || newCol < 0 || newCol >= n) continue;
-            if(visited[newRow][newCol] || heights[row][col] > heights[newRow][newCol]) continue;
-
-            dfs(heights, visited, newRow, newCol);
-        }
-    }
-
-public:
-    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
-        m = heights.size(), n = heights[0].size();
-        vector<vector<bool>> pacific(m, vector<bool>(n, false));
-        vector<vector<bool>> atlantic(m, vector<bool>(n, false));
+```python
+class Solution:
+    def pacificAtlantic(self, heights: list[list[int]]) -> list[list[int]]:
+        self.m, self.n = len(heights), len(heights[0])
+        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         
-        // DFS from Pacific Ocean boundaries (left and top edges)
-        for(int i = 0; i < m; i++) dfs(heights, pacific, i, 0);
-        for(int j = 0; j < n; j++) dfs(heights, pacific, 0, j);
+        pacific = [[False] * self.n for _ in range(self.m)]
+        atlantic = [[False] * self.n for _ in range(self.m)]
         
-        // DFS from Atlantic Ocean boundaries (right and bottom edges)
-        for(int i = m - 1; i >= 0; i--) dfs(heights, atlantic, i, n - 1);
-        for(int j = n - 1; j >= 0; j--) dfs(heights, atlantic, m - 1, j);
+        # DFS from Pacific Ocean boundaries (left and top edges)
+        for i in range(self.m):
+            self.dfs(heights, pacific, i, 0, dirs)
+        for j in range(self.n):
+            self.dfs(heights, pacific, 0, j, dirs)
+        
+        # DFS from Atlantic Ocean boundaries (right and bottom edges)
+        for i in range(self.m - 1, -1, -1):
+            self.dfs(heights, atlantic, i, self.n - 1, dirs)
+        for j in range(self.n - 1, -1, -1):
+            self.dfs(heights, atlantic, self.m - 1, j, dirs)
 
-        // Find cells that can reach both oceans
-        vector<vector<int>> rtn;
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(pacific[i][j] && atlantic[i][j]) {
-                    rtn.push_back({i, j});
-                }
-            }
-        }
-        return rtn;
-    }
-};
+        # Find cells that can reach both oceans
+        result = []
+        for i in range(self.m):
+            for j in range(self.n):
+                if pacific[i][j] and atlantic[i][j]:
+                    result.append([i, j])
+        return result
+    
+    def dfs(self, heights: list[list[int]], visited: list[list[bool]], 
+            row: int, col: int, dirs: list[tuple]) -> None:
+        visited[row][col] = True
+        for dr, dc in dirs:
+            newRow, newCol = row + dr, col + dc
+            if (newRow < 0 or newRow >= self.m or newCol < 0 or newCol >= self.n):
+                continue
+            if visited[newRow][newCol] or heights[row][col] > heights[newRow][newCol]:
+                continue
+            self.dfs(heights, visited, newRow, newCol, dirs)
 ```
 
 ## How the Algorithm Works
@@ -164,17 +160,19 @@ Atlantic reachable cells:
 ## Algorithm Breakdown
 
 ### DFS Function:
-```cpp
-void dfs(vector<vector<int>>& heights, vector<vector<bool>>& visited, int row, int col) {
-    visited[row][col] = true;
-    for(auto& dir: dirs) {
-        int newRow = row + dir[0], newCol = col + dir[1];
-        if(newRow < 0 || newRow >= m || newCol < 0 || newCol >= n) continue;
-        if(visited[newRow][newCol] || heights[row][col] > heights[newRow][newCol]) continue;
-
-        dfs(heights, visited, newRow, newCol);
-    }
-}
+```python
+def dfs(self, heights: list[list[int]], visited: list[list[bool]], row: int, col: int) -> None:
+    visited[row][col] = True
+    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+    m, n = len(heights), len(heights[0])
+    for dir in dirs:
+        newRow = row + dir[0]
+        newCol = col + dir[1]
+        if newRow < 0 or newRow >= m or newCol < 0 or newCol >= n:
+            continue
+        if visited[newRow][newCol] or heights[row][col] > heights[newRow][newCol]:
+            continue
+        self.dfs(heights, visited, newRow, newCol)
 ```
 
 **Process:**
@@ -185,10 +183,10 @@ void dfs(vector<vector<int>>& heights, vector<vector<bool>>& visited, int row, i
 5. **Recursively visit** reachable cells
 
 ### Boundary DFS:
-```cpp
+```python
 // Pacific boundaries
-for(int i = 0; i < m; i++) dfs(heights, pacific, i, 0);
-for(int j = 0; j < n; j++) dfs(heights, pacific, 0, j);
+for(i = 0 i < m; i++) dfs(heights, pacific, i, 0);
+for(j = 0 j < n; j++) dfs(heights, pacific, 0, j);
 
 // Atlantic boundaries
 for(int i = m - 1; i >= 0; i--) dfs(heights, atlantic, i, n - 1);
@@ -269,167 +267,135 @@ Where m and n are the dimensions of the grid.
 ## Alternative Approaches
 
 ### Approach 1: BFS from Boundaries
-```cpp
-class Solution {
-private:
-    vector<vector<int>> dirs = {&#123;0, 1&#125;, &#123;0, -1&#125;, &#123;1, 0&#125;, &#123;-1, 0&#125;};
-    
-    void bfs(vector<vector<int>>& heights, vector<vector<bool>>& visited, queue<pair<int,int>>& q) {
-        while(!q.empty()) {
-            auto [row, col] = q.front();
-            q.pop();
+```python
+class Solution:
+    def bfs(self, heights: list[list[int]], visited: list[list[bool]], q) -> None:
+        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        m, n = len(heights), len(heights[0])
+        while q:
+            row, col = q.popleft()
             
-            for(auto& dir: dirs) {
-                int newRow = row + dir[0], newCol = col + dir[1];
-                if(newRow < 0 || newRow >= heights.size() || newCol < 0 || newCol >= heights[0].size()) continue;
-                if(visited[newRow][newCol] || heights[row][col] > heights[newRow][newCol]) continue;
+            for dir in dirs:
+                newRow = row + dir[0]
+                newCol = col + dir[1]
+                if newRow < 0 or newRow >= m or newCol < 0 or newCol >= n:
+                    continue
+                if visited[newRow][newCol] or heights[row][col] > heights[newRow][newCol]:
+                    continue
                 
-                visited[newRow][newCol] = true;
-                q.push({newRow, newCol});
-            }
-        }
-    }
+                visited[newRow][newCol] = True
+                q.append((newRow, newCol))
     
-public:
-    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
-        int m = heights.size(), n = heights[0].size();
-        vector<vector<bool>> pacific(m, vector<bool>(n, false));
-        vector<vector<bool>> atlantic(m, vector<bool>(n, false));
+
+    def pacificAtlantic(self, heights: list[list[int]]) -> list[list[int]]:
+        m, n = len(heights), len(heights[0])
+        pacific = [[False] * n for _ in range(m)]
+        atlantic = [[False] * n for _ in range(m)]
         
-        queue<pair<int,int>> pacificQ, atlanticQ;
+        from collections import deque
+        pacificQ, atlanticQ = deque(), deque()
         
-        // Add Pacific boundaries
-        for(int i = 0; i < m; i++) {
-            pacificQ.push({i, 0});
-            pacific[i][0] = true;
-        }
-        for(int j = 0; j < n; j++) {
-            pacificQ.push({0, j});
-            pacific[0][j] = true;
-        }
+        # Add Pacific boundaries
+        for i in range(m):
+            pacificQ.append((i, 0))
+            pacific[i][0] = True
+        for j in range(n):
+            pacificQ.append((0, j))
+            pacific[0][j] = True
         
-        // Add Atlantic boundaries
-        for(int i = 0; i < m; i++) {
-            atlanticQ.push({i, n-1});
-            atlantic[i][n-1] = true;
-        }
-        for(int j = 0; j < n; j++) {
-            atlanticQ.push({m-1, j});
-            atlantic[m-1][j] = true;
-        }
+        # Add Atlantic boundaries
+        for i in range(m):
+            atlanticQ.append((i, n - 1))
+            atlantic[i][n - 1] = True
+        for j in range(n):
+            atlanticQ.append((m - 1, j))
+            atlantic[m - 1][j] = True
         
-        bfs(heights, pacific, pacificQ);
-        bfs(heights, atlantic, atlanticQ);
+        self.bfs(heights, pacific, pacificQ)
+        self.bfs(heights, atlantic, atlanticQ)
         
-        vector<vector<int>> result;
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                if(pacific[i][j] && atlantic[i][j]) {
-                    result.push_back({i, j});
-                }
-            }
-        }
-        return result;
-    }
-};
+        result = []
+        for i in range(m):
+            for j in range(n):
+                if pacific[i][j] and atlantic[i][j]:
+                    result.append([i, j])
+        return result
 ```
 
 **Time Complexity:** O(m × n)  
 **Space Complexity:** O(m × n)
 
 ### Approach 2: Union-Find
-```cpp
-class Solution {
-private:
-    vector<int> parent;
-    vector<int> rank;
+```python
+class Solution:
+    def find(self, x: int, parent: list[int]) -> int:
+        if parent[x] != x:
+            parent[x] = self.find(parent[x], parent)
+        return parent[x]
     
-    int find(int x) {
-        if(parent[x] != x) {
-            parent[x] = find(parent[x]);
-        }
-        return parent[x];
-    }
-    
-    void unite(int x, int y) {
-        int px = find(x), py = find(y);
-        if(px == py) return;
+    def unite(self, x: int, y: int, parent: list[int], rank: list[int]) -> None:
+        px = self.find(x, parent)
+        py = self.find(y, parent)
+        if px == py:
+            return
         
-        if(rank[px] < rank[py]) {
-            parent[px] = py;
-        } else if(rank[px] > rank[py]) {
-            parent[py] = px;
-        } else {
-            parent[py] = px;
-            rank[px]++;
-        }
-    }
-    
-public:
-    vector<vector<int>> pacificAtlantic(vector<vector<int>>& heights) {
-        int m = heights.size(), n = heights[0].size();
-        int total = m * n;
-        parent.resize(total);
-        rank.resize(total, 0);
-        iota(parent.begin(), parent.end(), 0);
+        if rank[px] < rank[py]:
+            parent[px] = py
+        elif rank[px] > rank[py]:
+            parent[py] = px
+        else:
+            parent[py] = px
+            rank[px] += 1
+
+    def pacificAtlantic(self, heights: list[list[int]]) -> list[list[int]]:
+        m, n = len(heights), len(heights[0])
+        total = m * n
+        parent = list(range(total))
+        rank = [0] * total
         
-        // Connect cells that can flow to each other
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                int curr = i * n + j;
-                if(i > 0 && heights[i][j] >= heights[i-1][j]) {
-                    unite(curr, (i-1) * n + j);
-                }
-                if(j > 0 && heights[i][j] >= heights[i][j-1]) {
-                    unite(curr, i * n + (j-1));
-                }
-            }
-        }
+        # Connect cells that can flow to each other
+        for i in range(m):
+            for j in range(n):
+                curr = i * n + j
+                if i > 0 and heights[i][j] >= heights[i-1][j]:
+                    self.unite(curr, (i-1) * n + j, parent, rank)
+                if j > 0 and heights[i][j] >= heights[i][j-1]:
+                    self.unite(curr, i * n + (j-1), parent, rank)
         
-        // Find cells that can reach both oceans
-        vector<vector<int>> result;
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                int curr = i * n + j;
-                bool canReachPacific = false, canReachAtlantic = false;
+        # Find cells that can reach both oceans
+        result = []
+        for i in range(m):
+            for j in range(n):
+                curr = i * n + j
+                canReachPacific = False
+                canReachAtlantic = False
                 
-                // Check if can reach Pacific
-                for(int k = 0; k < m; k++) {
-                    if(find(curr) == find(k * n + 0)) {
-                        canReachPacific = true;
-                        break;
-                    }
-                }
-                for(int k = 0; k < n; k++) {
-                    if(find(curr) == find(0 * n + k)) {
-                        canReachPacific = true;
-                        break;
-                    }
-                }
+                # Check if can reach Pacific
+                for k in range(m):
+                    if self.find(curr, parent) == self.find(k * n + 0, parent):
+                        canReachPacific = True
+                        break
+                if not canReachPacific:
+                    for k in range(n):
+                        if self.find(curr, parent) == self.find(0 * n + k, parent):
+                            canReachPacific = True
+                            break
                 
-                // Check if can reach Atlantic
-                for(int k = 0; k < m; k++) {
-                    if(find(curr) == find(k * n + (n-1))) {
-                        canReachAtlantic = true;
-                        break;
-                    }
-                }
-                for(int k = 0; k < n; k++) {
-                    if(find(curr) == find((m-1) * n + k)) {
-                        canReachAtlantic = true;
-                        break;
-                    }
-                }
+                # Check if can reach Atlantic
+                for k in range(m):
+                    if self.find(curr, parent) == self.find(k * n + (n-1), parent):
+                        canReachAtlantic = True
+                        break
+                if not canReachAtlantic:
+                    for k in range(n):
+                        if self.find(curr, parent) == self.find((m-1) * n + k, parent):
+                            canReachAtlantic = True
+                            break
                 
-                if(canReachPacific && canReachAtlantic) {
-                    result.push_back({i, j});
-                }
-            }
-        }
+                if canReachPacific and canReachAtlantic:
+                    result.append([i, j])
         
-        return result;
-    }
-};
+        return result
 ```
 
 **Time Complexity:** O(m × n × α(m × n))  

@@ -61,28 +61,26 @@ The key insight is to process both encoded arrays simultaneously using two point
 
 ## Solution
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> findRLEArray(vector<vector<int>>& encoded1, vector<vector<int>>& encoded2) {
-        int i = 0, j = 0;
-        vector<vector<int>> rtn;
-        while(i < (int)encoded1.size() && j < (int)encoded2.size()) {
-            int freq = min(encoded1[i][1], encoded2[j][1]);
-            int val = encoded1[i][0] * encoded2[j][0];
-            encoded1[i][1] -= freq;
-            encoded2[j][1] -= freq;
-            if(!rtn.empty() && rtn.back()[0] == val) {
-                rtn.back()[1] += freq;
-            } else {
-                rtn.push_back({val, freq});
-            }
-            if(encoded1[i][1] == 0) i++;
-            if(encoded2[j][1] == 0) j++;
-        }
-        return rtn;
-    }
-};
+```python
+class Solution:
+
+    def findRLEArray(self, encoded1: list[list[int]], encoded2: list[list[int]]) -> list[list[int]]:
+        i, j = 0, 0
+        result = []
+        while i < len(encoded1) and j < len(encoded2):
+            freq = min(encoded1[i][1], encoded2[j][1])
+            val = encoded1[i][0] * encoded2[j][0]
+            encoded1[i][1] -= freq
+            encoded2[j][1] -= freq
+            if result and result[-1][0] == val:
+                result[-1][1] += freq
+            else:
+                result.append([val, freq])
+            if encoded1[i][1] == 0:
+                i += 1
+            if encoded2[j][1] == 0:
+                j += 1
+        return result
 ```
 
 ## Explanation

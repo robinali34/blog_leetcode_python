@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 1865. Finding Pairs With a Certain Sum"
 date: 2025-10-19 17:38:17 -0700
-categories: leetcode algorithm medium cpp hash-map data-structure problem-solving
+categories: python hash-map data-structure problem-solving
 ---
 
 # [Medium] 1865. Finding Pairs With a Certain Sum
@@ -67,36 +67,27 @@ findSumPairs.count(2);  // return 1. Pair (0,0)
 
 Use a hash map to track the count of each value in nums2, then for each count operation, iterate through nums1 and check if the complement exists in nums2.
 
-```cpp
-class FindSumPairs {
-private:
-    vector<int> nums1, nums2;
-    unordered_map<int, int> cnts;
+```python
+class FindSumPairs:
+    def __init__(self, nums1: list[int], nums2: list[int]):
+        self.nums1 = nums1
+        self.nums2 = nums2
+        self.cnts = {}
+        for num in nums2:
+            self.cnts[num] = self.cnts.get(num, 0) + 1
     
-public:
-    FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
-        this->nums1 = nums1;
-        this->nums2 = nums2;
-        for(auto& num: nums2) cnts[num]++;
-    }
+    def add(self, index: int, val: int) -> None:
+        self.cnts[self.nums2[index]] -= 1
+        self.nums2[index] += val
+        self.cnts[self.nums2[index]] = self.cnts.get(self.nums2[index], 0) + 1
     
-    void add(int index, int val) {
-        cnts[nums2[index]]--;
-        nums2[index] += val;
-        cnts[nums2[index]]++;
-    }
-    
-    int count(int tot) {
-        int cnt = 0;
-        for(int num: nums1) {
-            int rest = tot - num;
-            if(cnts.contains(rest)) {
-                cnt += cnts[rest];
-            }
-        }
-        return cnt;
-    }
-};
+    def count(self, tot: int) -> int:
+        cnt = 0
+        for num in self.nums1:
+            rest = tot - num
+            if rest in self.cnts:
+                cnt += self.cnts[rest]
+        return cnt
 
 /**
  * Your FindSumPairs object will be instantiated and called as such:
@@ -164,11 +155,11 @@ Total count = 0 + 0 + 0 + 0 + 0 + 2 = 2
 ## Algorithm Breakdown
 
 ### Constructor:
-```cpp
-FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
+```python
+FindSumPairs(list[int] nums1, list[int] nums2) {
     this->nums1 = nums1;
     this->nums2 = nums2;
-    for(auto& num: nums2) cnts[num]++;
+    for(auto num: nums2) cnts[num]++;
 }
 ```
 
@@ -178,8 +169,8 @@ FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
 3. **Initialize:** Prepare for add and count operations
 
 ### Add Operation:
-```cpp
-void add(int index, int val) {
+```python
+def add(self, int index, int val) -> void:
     cnts[nums2[index]]--;
     nums2[index] += val;
     cnts[nums2[index]]++;
@@ -192,9 +183,9 @@ void add(int index, int val) {
 3. **Increment new count:** Add new value to count map
 
 ### Count Operation:
-```cpp
-int count(int tot) {
-    int cnt = 0;
+```python
+def count(self, int tot) -> int:
+    cnt = 0
     for(int num: nums1) {
         int rest = tot - num;
         if(cnts.contains(rest)) {
@@ -283,25 +274,25 @@ Total count = 2 + 0 = 2
 ## Alternative Approaches
 
 ### Approach 1: Brute Force
-```cpp
+```python
 class FindSumPairs {
 private:
-    vector<int> nums1, nums2;
+    list[int] nums1, nums2;
     
-public:
-    FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
+
+    FindSumPairs(list[int] nums1, list[int] nums2) {
         this->nums1 = nums1;
         this->nums2 = nums2;
     }
     
-    void add(int index, int val) {
+    def add(self, int index, int val) -> void:
         nums2[index] += val;
     }
     
-    int count(int tot) {
-        int cnt = 0;
-        for(int i = 0; i < nums1.size(); i++) {
-            for(int j = 0; j < nums2.size(); j++) {
+    def count(self, int tot) -> int:
+        cnt = 0
+        for(i = 0 i < nums1len(); i++) {
+            for(j = 0 j < nums2len(); j++) {
                 if(nums1[i] + nums2[j] == tot) {
                     cnt++;
                 }
@@ -316,29 +307,29 @@ public:
 **Space Complexity:** O(1)
 
 ### Approach 2: Two Hash Maps
-```cpp
+```python
 class FindSumPairs {
 private:
-    vector<int> nums1, nums2;
+    list[int] nums1, nums2;
     unordered_map<int, int> cnts1, cnts2;
     
-public:
-    FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
+
+    FindSumPairs(list[int] nums1, list[int] nums2) {
         this->nums1 = nums1;
         this->nums2 = nums2;
-        for(auto& num: nums1) cnts1[num]++;
-        for(auto& num: nums2) cnts2[num]++;
+        for(auto num: nums1) cnts1[num]++;
+        for(auto num: nums2) cnts2[num]++;
     }
     
-    void add(int index, int val) {
+    def add(self, int index, int val) -> void:
         cnts2[nums2[index]]--;
         nums2[index] += val;
         cnts2[nums2[index]]++;
     }
     
-    int count(int tot) {
-        int cnt = 0;
-        for(auto& [num, freq]: cnts1) {
+    def count(self, int tot) -> int:
+        cnt = 0
+        for(auto [num, freq]: cnts1) {
             int rest = tot - num;
             if(cnts2.contains(rest)) {
                 cnt += freq * cnts2[rest];

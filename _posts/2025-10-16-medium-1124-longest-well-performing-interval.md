@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 1124. Longest Well-Performing Interval"
 date: 2025-10-16 15:04:54 -0700
-categories: leetcode algorithm medium cpp hash-map prefix-sum problem-solving
+categories: python hash-map prefix-sum problem-solving
 ---
 
 # [Medium] 1124. Longest Well-Performing Interval
@@ -43,14 +43,14 @@ Explanation: All intervals have more non-tiring days than tiring days.
 
 Use a hash map to track the first occurrence of each prefix sum and find the longest interval where tiring days > non-tiring days.
 
-```cpp
-class Solution {
-public:
-    int longestWPI(vector<int>& hours) {
+```python
+class Solution:
+
+    def longestWPI(self, list[int] hours) -> int:
         unordered_map<int, int> seen;
         int score = 0, res = 0;
         
-        for(int i = 0; i < (int)hours.size(); i++) {
+        for(i = 0 i < (int)hourslen(); i++) {
             if(hours[i] > 8) score++;
             else score--;
             
@@ -112,7 +112,7 @@ Intervals:
 ## Algorithm Breakdown
 
 ### 1. Score Calculation
-```cpp
+```python
 if(hours[i] > 8) score++;
 else score--;
 ```
@@ -122,7 +122,7 @@ else score--;
 - `hours[i] ≤ 8` → `-1` (non-tiring day)
 
 ### 2. Direct Positive Sum Check
-```cpp
+```python
 if(score > 0) res = i + 1;
 ```
 
@@ -131,7 +131,7 @@ if(score > 0) res = i + 1;
 - Length = `i + 1` (0-indexed to 1-indexed conversion)
 
 ### 3. Hash Map Lookup
-```cpp
+```python
 else if (seen.contains(score - 1)) res = max(res, i - seen[score - 1]);
 ```
 
@@ -141,7 +141,7 @@ else if (seen.contains(score - 1)) res = max(res, i - seen[score - 1]);
 - This ensures `prefix[j] - prefix[k-1] = k - (k-1) = 1 > 0`
 
 ### 4. Hash Map Update
-```cpp
+```python
 if(!seen.contains(score)) seen[score] = i;
 ```
 
@@ -153,14 +153,14 @@ if(!seen.contains(score)) seen[score] = i;
 ## Alternative Approaches
 
 ### Approach 1: Brute Force
-```cpp
-class Solution {
-public:
-    int longestWPI(vector<int>& hours) {
-        int n = hours.size();
-        int maxLen = 0;
+```python
+class Solution:
+
+    def longestWPI(self, list[int] hours) -> int:
+        int n = hourslen();
+        maxLen = 0
         
-        for(int i = 0; i < n; i++) {
+        for(i = 0 i < n; i++) {
             int tiring = 0, nonTiring = 0;
             for(int j = i; j < n; j++) {
                 if(hours[j] > 8) tiring++;
@@ -181,19 +181,19 @@ public:
 **Space Complexity:** O(1)
 
 ### Approach 2: Prefix Sum Array
-```cpp
-class Solution {
-public:
-    int longestWPI(vector<int>& hours) {
-        int n = hours.size();
-        vector<int> prefix(n + 1, 0);
+```python
+class Solution:
+
+    def longestWPI(self, list[int] hours) -> int:
+        int n = hourslen();
+        list[int] prefix(n + 1, 0);
         
-        for(int i = 0; i < n; i++) {
+        for(i = 0 i < n; i++) {
             prefix[i + 1] = prefix[i] + (hours[i] > 8 ? 1 : -1);
         }
         
-        int maxLen = 0;
-        for(int i = 0; i < n; i++) {
+        maxLen = 0
+        for(i = 0 i < n; i++) {
             for(int j = i + 1; j <= n; j++) {
                 if(prefix[j] - prefix[i] > 0) {
                     maxLen = max(maxLen, j - i);

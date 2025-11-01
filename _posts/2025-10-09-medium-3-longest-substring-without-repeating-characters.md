@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 3. Longest Substring Without Repeating Characters"
 date: 2025-10-09 21:47:51 -0700
-categories: leetcode algorithm medium cpp sliding-window hash-map string two-pointers problem-solving
+categories: leetcode algorithm medium python sliding-window hash-map string two-pointers problem-solving
 ---
 
 # [Medium] 3. Longest Substring Without Repeating Characters
@@ -45,27 +45,24 @@ Notice that the answer must be a substring, "pwke" is a subsequence and not a su
 
 Use a sliding window approach with a hash map to track character positions and efficiently update the window boundaries.
 
-```cpp
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        int max_len = 0;
-        unordered_map<char, int> hashmap;
-
-        for (int start = 0, end = 0; end < s.length(); end++) {
-            char cur = s[end];
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        max_len = 0
+        hashmap = {}
+        
+        start = 0
+        for end in range(len(s)):
+            cur = s[end]
             
-            // If character exists and is within current window
-            if (hashmap.find(cur) != hashmap.end() && hashmap[cur] >= start) {
-                start = hashmap[cur] + 1;  // Move start past the duplicate
-            }
+            # If character exists and is within current window
+            if cur in hashmap and hashmap[cur] >= start:
+                start = hashmap[cur] + 1  # Move start past the duplicate
             
-            hashmap[cur] = end;  // Update character position
-            max_len = max(max_len, end - start + 1);  // Update max length
-        }
-        return max_len;
-    }
-};
+            hashmap[cur] = end  # Update character position
+            max_len = max(max_len, end - start + 1)  # Update max length
+        
+        return max_len
 ```
 
 ## How the Algorithm Works
@@ -111,57 +108,53 @@ Maximum length: 3
 ## Algorithm Breakdown
 
 ### 1. Initialize Variables
-```cpp
-int max_len = 0;
-unordered_map<char, int> hashmap;
+```python
+max_len = 0
+hashmap = {}  # Dictionary to store character positions
 ```
 
 ### 2. Expand Window
-```cpp
-for (int start = 0, end = 0; end < s.length(); end++) {
-    char cur = s[end];
+```python
+start = 0
+for end in range(len(s)):
+    cur = s[end]
 ```
 
 ### 3. Handle Duplicates
-```cpp
-if (hashmap.find(cur) != hashmap.end() && hashmap[cur] >= start) {
-    start = hashmap[cur] + 1;  // Move start past duplicate
-}
+```python
+if cur in hashmap and hashmap[cur] >= start:
+    start = hashmap[cur] + 1  # Move start past duplicate
 ```
 
 ### 4. Update and Track
-```cpp
-hashmap[cur] = end;  // Update character position
-max_len = max(max_len, end - start + 1);  // Update max length
+```python
+hashmap[cur] = end  # Update character position
+max_len = max(max_len, end - start + 1)  # Update max length
 ```
 
 ## Alternative Approaches
 
 ### Approach 1: Brute Force
-```cpp
-// Check all possible substrings - O(n³)
-for (int i = 0; i < n; i++) {
-    for (int j = i; j < n; j++) {
-        if (isUnique(s, i, j)) {
-            max_len = max(max_len, j - i + 1);
-        }
-    }
-}
+```python
+# Check all possible substrings - O(n³)
+for i in range(n):
+    for j in range(i, n):
+        if isUnique(s, i, j):
+            max_len = max(max_len, j - i + 1)
 ```
 
 ### Approach 2: Sliding Window with Set
-```cpp
-// Use set to track characters in current window
-unordered_set<char> window;
-int start = 0;
-for (int end = 0; end < s.length(); end++) {
-    while (window.count(s[end])) {
-        window.erase(s[start]);
-        start++;
-    }
-    window.insert(s[end]);
-    max_len = max(max_len, end - start + 1);
-}
+```python
+# Use set to track characters in current window
+window = set()
+start = 0
+for end in range(len(s)):
+    while s[end] in window:
+        window.remove(s[start])
+        start += 1
+    window.add(s[end])
+    max_len = max(max_len, end - start + 1)
+```
 ```
 
 ## Complexity Analysis

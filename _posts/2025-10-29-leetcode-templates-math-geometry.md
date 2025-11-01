@@ -14,12 +14,34 @@ tags: [leetcode, templates, math, geometry]
 
 ## Combinatorics (nCk mod P)
 
-```cpp
-const int MOD=1'000'000'007; const int N=200000;
-long long modexp(long long a,long long e){ long long r=1%MOD; while(e){ if(e&1) r=r*a%MOD; a=a*a%MOD; e>>=1; } return r; }
-vector<long long> fact(N+1), invfact(N+1);
-void initComb(){ fact[0]=1; for(int i=1;i<=N;++i) fact[i]=fact[i-1]*i%MOD; invfact[N]=modexp(fact[N], MOD-2); for(int i=N;i>0;--i) invfact[i-1]=invfact[i]*i%MOD; }
-long long nCk(int n,int k){ if(k<0||k>n) return 0; return fact[n]*invfact[k]%MOD*invfact[n-k]%MOD; }
+```python
+MOD = 1_000_000_007
+N = 200000
+
+def modexp(a: int, e: int) -> int:
+    r = 1 % MOD
+    while e:
+        if e & 1:
+            r = (r * a) % MOD
+        a = (a * a) % MOD
+        e >>= 1
+    return r
+
+fact = [0] * (N + 1)
+invfact = [0] * (N + 1)
+
+def init_comb():
+    fact[0] = 1
+    for i in range(1, N + 1):
+        fact[i] = (fact[i-1] * i) % MOD
+    invfact[N] = modexp(fact[N], MOD - 2)
+    for i in range(N, 0, -1):
+        invfact[i-1] = (invfact[i] * i) % MOD
+
+def nCk(n: int, k: int) -> int:
+    if k < 0 or k > n:
+        return 0
+    return (fact[n] * invfact[k] % MOD * invfact[n-k]) % MOD
 ```
 
 | ID | Title | Link |
@@ -29,10 +51,21 @@ long long nCk(int n,int k){ if(k<0||k>n) return 0; return fact[n]*invfact[k]%MOD
 
 ## Geometry Primitives (2D)
 
-```cpp
-struct P{ long long x,y; };
-long long cross(const P& a,const P& b,const P& c){ return (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x); }
-bool onSeg(const P&a,const P&b,const P&c){ return min(a.x,b.x)<=c.x&&c.x<=max(a.x,b.x)&&min(a.y,b.y)<=c.y&&c.y<=max(a.y,b.y) && cross(a,b,c)==0; }
+```python
+from dataclasses import dataclass
+
+@dataclass
+class P:
+    x: int
+    y: int
+
+def cross(a: P, b: P, c: P) -> int:
+    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x)
+
+def on_seg(a: P, b: P, c: P) -> bool:
+    return (min(a.x, b.x) <= c.x <= max(a.x, b.x) and
+            min(a.y, b.y) <= c.y <= max(a.y, b.y) and
+            cross(a, b, c) == 0)
 ```
 
 | ID | Title | Link |

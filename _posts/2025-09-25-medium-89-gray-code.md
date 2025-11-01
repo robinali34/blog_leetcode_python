@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "[Medium] 89. Gray Code"
-categories: leetcode algorithm backtracking data-structures recursion bit-manipulation medium cpp gray-code problem-solving
+categories: python gray-code problem-solving
 ---
 
 # [Medium] 89. Gray Code
@@ -52,35 +52,28 @@ There are several approaches to generate Gray codes:
 
 ## Solution 1: Backtracking Approach
 
-```cpp
-class Solution {
-public:
-    vector<int> grayCode(int n) {
-        vector<int> rtn;
-        rtn.push_back(0);
-        unordered_set<int> isPresent;
-        isPresent.insert(0);
-        getGreyCode(rtn, n, isPresent);
-        return rtn;
-    }
-
-private:
-    bool getGreyCode(vector<int>& rtn, int n, unordered_set<int>& isPresent) {
-        if (rtn.size() == (1 << n)) return true;
-        int current = rtn[rtn.size() - 1];
-        for (int i = 0; i < n; i++) {
-            int next = current ^ (1 << i);
-            if(isPresent.find(next) == isPresent.end()) {
-                isPresent.insert(next);
-                rtn.push_back(next);
-                if (getGreyCode(rtn, n, isPresent)) return true;
-                isPresent.erase(next);
-                rtn.pop_back();
-            }
-        }
-        return false;
-    }
-};
+```python
+class Solution:
+    def grayCode(self, n: int) -> list[int]:
+        result = [0]
+        isPresent = {0}
+        self.getGreyCode(result, n, isPresent)
+        return result
+    
+    def getGreyCode(self, result: list[int], n: int, isPresent: set) -> bool:
+        if len(result) == (1 << n):
+            return True
+        current = result[-1]
+        for i in range(n):
+            next_num = current ^ (1 << i)
+            if next_num not in isPresent:
+                isPresent.add(next_num)
+                result.append(next_num)
+                if self.getGreyCode(result, n, isPresent):
+                    return True
+                isPresent.remove(next_num)
+                result.pop()
+        return False
 ```
 
 **Time Complexity:** O(2^n) - Exponential time due to backtracking
@@ -88,30 +81,22 @@ private:
 
 ## Solution 2: Recursive Mirror Construction
 
-```cpp
-class Solution {
-public:
-    vector<int> grayCode(int n) {
-        vector<int> rtn;
-        getGreyCode(rtn, n);
-        return rtn;
-    }
-
-private:
-    void getGreyCode(vector<int>& rtn, int n) {
-        if (n == 0) {
-            rtn.push_back(0);
-            return;
-        }
-        getGreyCode(rtn, n - 1);
-        int cur = rtn.size();
-        int mask = 1 << (n - 1);
-        for (int i = cur - 1; i >= 0; i--) {
-            rtn.push_back(rtn[i] | mask);
-        }
-        return;
-    }
-};
+```python
+class Solution:
+    def grayCode(self, n: int) -> list[int]:
+        result = []
+        self.getGreyCode(result, n)
+        return result
+    
+    def getGreyCode(self, result: list[int], n: int) -> None:
+        if n == 0:
+            result.append(0)
+            return
+        self.getGreyCode(result, n - 1)
+        cur = len(result)
+        mask = 1 << (n - 1)
+        for i in range(cur - 1, -1, -1):
+            result.append(result[i] | mask)
 ```
 
 **Time Complexity:** O(2^n) - Each recursive call doubles the sequence
@@ -119,22 +104,16 @@ private:
 
 ## Solution 3: Iterative Mirror Construction
 
-```cpp
-class Solution {
-public:
-    vector<int> grayCode(int n) {
-        vector<int> rtn;
-        rtn.push_back(0);
-        for(int i = 1; i <= n; i++) {
-            int pre = rtn.size();
-            int mask = 1 << (i - 1);
-            for (int j = pre - 1; j >= 0; j--) {
-                rtn.push_back(mask | rtn[j]);
-            }
-        }
-        return rtn;
-    }
-};
+```python
+class Solution:
+    def grayCode(self, n: int) -> list[int]:
+        result = [0]
+        for i in range(1, n + 1):
+            pre = len(result)
+            mask = 1 << (i - 1)
+            for j in range(pre - 1, -1, -1):
+                result.append(mask | result[j])
+        return result
 ```
 
 **Time Complexity:** O(2^n) - Builds sequence iteratively
@@ -142,17 +121,13 @@ public:
 
 ## Solution 4: Mathematical Formula Approach
 
-```cpp
-class Solution {
-public:
-    vector<int> grayCode(int n) {
-        vector<int> rtn;
-        for (int i = 0; i < (1 << n); i++) {
-            rtn.push_back(i ^ (i >> 1));
-        }
-        return rtn;
-    }
-};
+```python
+class Solution:
+    def grayCode(self, n: int) -> list[int]:
+        result = []
+        for i in range(1 << n):
+            result.append(i ^ (i >> 1))
+        return result
 ```
 
 **Time Complexity:** O(2^n) - Generate each Gray code number
@@ -160,28 +135,24 @@ public:
 
 ## Solution 5: Alternative Recursive with Global Variable
 
-```cpp
-class Solution {
-public:
-    vector<int> grayCode(int n) {
-        vector<int> rtn;
-        getGreyCode(rtn, n);
-        return rtn;
-    }
-
-private:
-    int nextNum = 0;
-
-    void getGreyCode(vector<int>& rtn, int n) {
-        if(n == 0) {
-            rtn.push_back(nextNum);
-            return;
-        }
-        getGreyCode(rtn, n - 1);
-        nextNum = nextNum ^ (1 << (n - 1));
-        getGreyCode(rtn, n - 1);
-    }
-};
+```python
+class Solution:
+    def __init__(self):
+        self.nextNum = 0
+    
+    def grayCode(self, n: int) -> list[int]:
+        result = []
+        self.nextNum = 0
+        self.getGreyCode(result, n)
+        return result
+    
+    def getGreyCode(self, result: list[int], n: int) -> None:
+        if n == 0:
+            result.append(self.nextNum)
+            return
+        self.getGreyCode(result, n - 1)
+        self.nextNum = self.nextNum ^ (1 << (n - 1))
+        self.getGreyCode(result, n - 1)
 ```
 
 **Time Complexity:** O(2^n) - Recursive construction

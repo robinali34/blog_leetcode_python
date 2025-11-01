@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 33. Search in Rotated Sorted Array"
 date: 2025-09-23 10:00:00 -0000
-categories: leetcode algorithm binary-search data-structures array medium cpp rotated-array search problem-solving
+categories: python rotated-array search problem-solving
 ---
 
 # [Medium] 33. Search in Rotated Sorted Array
@@ -13,60 +13,49 @@ This is a classic binary search problem that requires understanding how to searc
 
 Given a rotated sorted array and a target value, find the index of the target in the array. If the target is not found, return -1.
 
-## Template in C++
+## Template in Python
 
 ### Binary search on answer
 
-```cpp
-int bs_on_answer(int left, int right) {
-    while (left <= right) {
-        int pivot = left + (right - left) / 2;
-        if (condition(pivot)) {
-            right = pivot + 1;
-        } else {
-            left = pivot + 1;
-        }
-    }
-    return -1;
-}
+```python
+def bs_on_answer(self, left: int, right: int) -> int:
+    while left <= right:
+        pivot = left + (right - left) // 2
+        if condition(pivot):
+            right = pivot + 1
+        else:
+            left = pivot + 1
+    return -1
 ```
 
-## Solution in C++
+## Solution in Python
 
-```cpp
-class Solution {
-public:
-    int search(vector<int>& nums, int target) {
-        int left = 0, right = nums.size() - 1;
+```python
+class Solution:
+
+    def search(self, nums: list[int], target: int) -> int:
+        left, right = 0, len(nums) - 1
         
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
+        while left <= right:
+            mid = left + (right - left) // 2
             
-            if (nums[mid] == target) {
-                return mid;
-            }
+            if nums[mid] == target:
+                return mid
             
-            // Subarray on mid's left is sorted
-            if (nums[mid] >= nums[left]) {
-                if (target >= nums[left] && target < nums[mid]) {
-                    right = mid - 1;
-                } else {
-                    left = mid + 1;
-                }
-            }
-            // Subarray on mid's right is sorted
-            else {
-                if (target <= nums[right] && target > nums[mid]) {
-                    left = mid + 1;
-                } else {
-                    right = mid - 1;
-                }
-            }
-        }
+            # Subarray on mid's left is sorted
+            if nums[mid] >= nums[left]:
+                if target >= nums[left] and target < nums[mid]:
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            # Subarray on mid's right is sorted
+            else:
+                if target <= nums[right] and target > nums[mid]:
+                    left = mid + 1
+                else:
+                    right = mid - 1
         
-        return -1;
-    }
-};
+        return -1
 ```
 
 ## Solution in Python

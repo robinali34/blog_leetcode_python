@@ -66,22 +66,17 @@ This is a classic **Dynamic Programming** problem that asks for the minimum numb
 
 ### **Solution: Dynamic Programming (Bottom-Up)**
 
-```cpp
-class Solution {
-public:
-    int coinChange(vector<int>& coins, int amount) {
-        vector<int> dp(amount + 1, amount + 1);
-        dp[0] = 0;
-        for(int i = 1; i <= amount; i++) {
-            for(int j = 0; j < (int)coins.size(); j++) {
-                if(coins[j] <= i) {
-                    dp[i] = min(dp[i], dp[i - coins[j]] + 1);
-                }
-            }
-        }
-        return dp[amount] > amount ? -1: dp[amount];
-    }
-};
+```python
+class Solution:
+
+    def coinChange(self, coins: list[int], amount: int) -> int:
+        dp = [amount + 1] * (amount + 1)
+        dp[0] = 0
+        for i in range(1, amount + 1):
+            for coin in coins:
+                if coin <= i:
+                    dp[i] = min(dp[i], dp[i - coin] + 1)
+        return -1 if dp[amount] > amount else dp[amount]
 ```
 
 ### **Algorithm Explanation:**
@@ -161,33 +156,29 @@ Result: dp[6] = 2 (coins: 3 + 3)
 ## Alternative Approaches
 
 ### **Top-Down DP (Memoization)**
-```cpp
-class Solution {
-public:
-    int coinChange(vector<int>& coins, int amount) {
-        vector<int> memo(amount + 1, -1);
-        int result = dfs(coins, amount, memo);
-        return result == INT_MAX ? -1 : result;
-    }
+```python
+class Solution:
+    def coinChange(self, coins: list[int], amount: int) -> int:
+        memo = [-1] * (amount + 1)
+        result = self.dfs(coins, amount, memo)
+        return -1 if result == float('inf') else result
     
-private:
-    int dfs(vector<int>& coins, int amount, vector<int>& memo) {
-        if (amount == 0) return 0;
-        if (amount < 0) return INT_MAX;
-        if (memo[amount] != -1) return memo[amount];
+    def dfs(self, coins: list[int], amount: int, memo: list[int]) -> int:
+        if amount == 0:
+            return 0
+        if amount < 0:
+            return float('inf')
+        if memo[amount] != -1:
+            return memo[amount]
         
-        int minCoins = INT_MAX;
-        for (int coin : coins) {
-            int result = dfs(coins, amount - coin, memo);
-            if (result != INT_MAX) {
-                minCoins = min(minCoins, result + 1);
-            }
-        }
+        minCoins = float('inf')
+        for coin in coins:
+            result = self.dfs(coins, amount - coin, memo)
+            if result != float('inf'):
+                minCoins = min(minCoins, result + 1)
         
-        memo[amount] = minCoins;
-        return minCoins;
-    }
-};
+        memo[amount] = minCoins
+        return minCoins
 ```
 
 ## Related Problems

@@ -65,25 +65,19 @@ Explanation:
 **Time Complexity:** O(n + 1001) = O(n)  
 **Space Complexity:** O(1001) = O(1)
 
-```cpp
-class Solution {
-public:
-    bool carPooling(vector<vector<int>>& trips, int capacity) {
-        vector<int> timestamp(1001);
-        for(auto& trip: trips) {
-            timestamp[trip[1]] += trip[0];  // Pick up passengers
-            timestamp[trip[2]] -= trip[0];  // Drop off passengers
-        }
-        int usedCapacity = 0;
-        for(int number: timestamp) {
-            usedCapacity += number;
-            if(usedCapacity > capacity) {
-                return false;
-            }
-        }
-        return true;
-    }
-};
+```python
+class Solution:
+    def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
+        timestamp = [0] * 1001
+        for trip in trips:
+            timestamp[trip[1]] += trip[0]  # Pick up passengers
+            timestamp[trip[2]] -= trip[0]  # Drop off passengers
+        usedCapacity = 0
+        for number in timestamp:
+            usedCapacity += number
+            if usedCapacity > capacity:
+                return False
+        return True
 ```
 
 ### Approach 2: Sorting with Events
@@ -97,29 +91,23 @@ public:
 **Time Complexity:** O(n log n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    bool carPooling(vector<vector<int>>& trips, int capacity) {
-        vector<pair<int, int>> events;  // {location, passenger_change}
+```python
+class Solution:
+    def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
+        events = []  # [(location, passenger_change), ...]
         
-        for(auto& trip: trips) {
-            events.push_back({trip[1], trip[0]});   // Pick up
-            events.push_back({trip[2], -trip[0]});  // Drop off
-        }
+        for trip in trips:
+            events.append((trip[1], trip[0]))   # Pick up
+            events.append((trip[2], -trip[0]))  # Drop off
         
-        sort(events.begin(), events.end());
+        events.sort()
         
-        int usedCapacity = 0;
-        for(auto& event: events) {
-            usedCapacity += event.second;
-            if(usedCapacity > capacity) {
-                return false;
-            }
-        }
-        return true;
-    }
-};
+        usedCapacity = 0
+        for location, change in events:
+            usedCapacity += change
+            if usedCapacity > capacity:
+                return False
+        return True
 ```
 
 ### Approach 3: Simulation with Priority Queue
@@ -133,41 +121,32 @@ public:
 **Time Complexity:** O(n log n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    bool carPooling(vector<vector<int>>& trips, int capacity) {
-        sort(trips.begin(), trips.end(), [](const vector<int>& a, const vector<int>& b) {
-            return a[1] < b[1];  // Sort by pickup location
-        });
+```python
+import heapq
+
+class Solution:
+    def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
+        trips.sort(key=lambda x: x[1])  # Sort by pickup location
         
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
-        int usedCapacity = 0;
+        pq = []  # min heap: (dropoff_location, passengers)
+        usedCapacity = 0
         
-        for(auto& trip: trips) {
-            int passengers = trip[0];
-            int pickup = trip[1];
-            int dropoff = trip[2];
+        for trip in trips:
+            passengers, pickup, dropoff = trip[0], trip[1], trip[2]
             
-            // Drop off passengers who have reached their destination
-            while(!pq.empty() && pq.top().first <= pickup) {
-                usedCapacity -= pq.top().second;
-                pq.pop();
-            }
+            # Drop off passengers who have reached their destination
+            while pq and pq[0][0] <= pickup:
+                usedCapacity -= heapq.heappop(pq)[1]
             
-            // Pick up new passengers
-            usedCapacity += passengers;
-            if(usedCapacity > capacity) {
-                return false;
-            }
+            # Pick up new passengers
+            usedCapacity += passengers
+            if usedCapacity > capacity:
+                return False
             
-            // Add drop-off event
-            pq.push({dropoff, passengers});
-        }
+            # Add drop-off event
+            heapq.heappush(pq, (dropoff, passengers))
         
-        return true;
-    }
-};
+        return True
 ```
 
 ## Algorithm Analysis
@@ -190,20 +169,20 @@ public:
 ## Implementation Details
 
 ### Bucket Sort Technique
-```cpp
-// Add passengers at pickup location
-timestamp[trip[1]] += trip[0];
-// Remove passengers at drop-off location  
-timestamp[trip[2]] -= trip[0];
+```python
+# Add passengers at pickup location
+timestamp[trip[1]] += trip[0]
+# Remove passengers at drop-off location  
+timestamp[trip[2]] -= trip[0]
 ```
 
 ### Event Processing
-```cpp
-// Process events in chronological order
-for(int number: timestamp) {
-    usedCapacity += number;
-    if(usedCapacity > capacity) return false;
-}
+```python
+# Process events in chronological order
+for number in timestamp:
+    usedCapacity += number
+    if usedCapacity > capacity:
+        return False
 ```
 
 ## Edge Cases

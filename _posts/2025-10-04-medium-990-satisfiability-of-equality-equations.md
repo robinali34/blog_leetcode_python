@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 990. Satisfiability of Equality Equations"
 date: 2025-10-04 00:00:00 -0000
-categories: leetcode algorithm data-structures union-find graph dfs medium cpp connected-components graph-coloring disjoint-set problem-solving
+categories: python connected-components graph-coloring disjoint-set problem-solving
 ---
 
 # [Medium] 990. Satisfiability of Equality Equations
@@ -62,51 +62,35 @@ The key insight is that variables connected by equality equations must have the 
 
 ## Solution 1: Union-Find (Disjoint Set Union)
 
-```cpp
-class UnionFind{
-private:
-    vector<int>parent;
-public:
-    UnionFind() {
-        parent.resize(26);
-        iota(parent.begin(), parent.end(), 0);
-    }
+```python
+class UnionFind:
+    def __init__(self):
+        self.parent = list(range(26))
 
-    int find(int idx) {
-        if(idx == parent[idx]) {
-            return idx;
-        }
-        parent[idx] = find(parent[idx]);
-        return parent[idx];
-    }
-    void unite(int idx1, int idx2){
-        parent[find(idx1)] = find(idx2);
-    }
-};
+    def find(self, idx: int) -> int:
+        if idx == self.parent[idx]:
+            return idx
+        self.parent[idx] = self.find(self.parent[idx])
+        return self.parent[idx]
+    
+    def unite(self, idx1: int, idx2: int) -> None:
+        self.parent[self.find(idx1)] = self.find(idx2)
 
-class Solution {
-public:
-    bool equationsPossible(vector<string>& equations) {
-        UnionFind uf;
-        for(const string& str: equations) {
-            if(str[1] == '=') {
-                int idx1 = str[0] - 'a';
-                int idx2 = str[3] - 'a';
-                uf.unite(idx1, idx2);
-            }
-        }
-        for(const string& str: equations) {
-            if(str[1] == '!') {
-                int idx1 = str[0] - 'a';
-                int idx2 = str[3] - 'a';
-                if(uf.find(idx1) == uf.find(idx2)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-};
+class Solution:
+    def equationsPossible(self, equations: list[str]) -> bool:
+        uf = UnionFind()
+        for eq in equations:
+            if eq[1] == '=':
+                idx1 = ord(eq[0]) - ord('a')
+                idx2 = ord(eq[3]) - ord('a')
+                uf.unite(idx1, idx2)
+        for eq in equations:
+            if eq[1] == '!':
+                idx1 = ord(eq[0]) - ord('a')
+                idx2 = ord(eq[3]) - ord('a')
+                if uf.find(idx1) == uf.find(idx2):
+                    return False
+        return True
 ```
 
 **Time Complexity:** O(n * α(26)) where α is the inverse Ackermann function (practically constant)
@@ -120,47 +104,36 @@ public:
 
 ## Solution 2: Graph Coloring with DFS
 
-```cpp
-class Solution {
-public:
-    bool equationsPossible(vector<string>& equations) {
-        constexpr int SIZE = 26;
-        vector<vector<int>> graph(SIZE);
-        vector<int> color(SIZE, -1);
+```python
+class Solution:
+    def equationsPossible(self, equations: list[str]) -> bool:
+        SIZE = 26
+        graph = [[] for _ in range(SIZE)]
+        color = [-1] * SIZE
 
-        for(string& eqn : equations) {
-            if(eqn[1] == '=') {
-                int x = eqn[0] - 'a';
-                int y = eqn[3] - 'a';
-                graph[x].push_back(y);
-                graph[y].push_back(x);
-            }
-        }
-        function<void(int,int)> dfs = [&](int node, int c) {
-            if(color[node] == -1) {
-                color[node] = c;
-                for(int nei: graph[node]) {
-                    dfs(nei, c);
-                }
-            }
-        };
+        for eqn in equations:
+            if eqn[1] == '=':
+                x = ord(eqn[0]) - ord('a')
+                y = ord(eqn[3]) - ord('a')
+                graph[x].append(y)
+                graph[y].append(x)
+        
+        def dfs(node: int, c: int) -> None:
+            if color[node] == -1:
+                color[node] = c
+                for nei in graph[node]:
+                    dfs(nei, c)
 
-        for(int i =0; i < SIZE; i++) {
-            dfs(i, i);
-        }
+        for i in range(SIZE):
+            dfs(i, i)
 
-        for(string& eqn : equations) {
-            if(eqn[1] == '!') {
-                int x = eqn[0] - 'a';
-                int y = eqn[3] - 'a';
-                if(color[x] == color[y]) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-};
+        for eqn in equations:
+            if eqn[1] == '!':
+                x = ord(eqn[0]) - ord('a')
+                y = ord(eqn[3]) - ord('a')
+                if color[x] == color[y]:
+                    return False
+        return True
 ```
 
 **Time Complexity:** O(n + 26) = O(n) - process equations + DFS on graph
@@ -174,51 +147,39 @@ public:
 
 ## Solution 3: DFS with Component Tracking
 
-```cpp
-class Solution {
-private:
-    static constexpr int SIZE = 26;
-    void dfs(int node, int id, vector<vector<int>>& adjacency, vector<int>& component) {
-        component[node] = id;
-        for(int neighbor: adjacency[node]) {
-            if(component[neighbor] == -1) {
-                dfs(neighbor, id, adjacency, component);
-            }
-        }
-    }
+```python
+class Solution:
+    SIZE = 26
+    
+    def dfs(self, node: int, comp_id: int, adjacency: list[list[int]], component: list[int]) -> None:
+        component[node] = comp_id
+        for neighbor in adjacency[node]:
+            if component[neighbor] == -1:
+                self.dfs(neighbor, comp_id, adjacency, component)
 
-public:
-    bool equationsPossible(vector<string>& equations) {
-        vector<vector<int>> adjacency(SIZE);
-        vector<int> component(SIZE, -1);
-        for(const string& eq: equations) {
-            if(eq[1] == '=') {
-                int x = eq[0] - 'a';
-                int y = eq[3] - 'a';
-                adjacency[x].push_back(y);
-                adjacency[y].push_back(x);
-            }
-        }
+    def equationsPossible(self, equations: list[str]) -> bool:
+        adjacency = [[] for _ in range(self.SIZE)]
+        component = [-1] * self.SIZE
+        for eq in equations:
+            if eq[1] == '=':
+                x = ord(eq[0]) - ord('a')
+                y = ord(eq[3]) - ord('a')
+                adjacency[x].append(y)
+                adjacency[y].append(x)
+        
+        cur = 0
+        for i in range(self.SIZE):
+            if component[i] == -1 and adjacency[i]:
+                self.dfs(i, cur, adjacency, component)
+                cur += 1
 
-        int cur = 0;
-        for(int i = 0; i < SIZE; i++) {
-            if(component[i] == -1 && !adjacency[i].empty()) {
-                dfs(i, cur++, adjacency, component);
-            }
-        }
-
-        for(const string& eq: equations) {
-            if(eq[1] == '!') {
-                int x = eq[0] - 'a';
-                int y = eq[3] - 'a';
-                if(x == y || (component[x] != -1 && component[x] == component[y])) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-};
+        for eq in equations:
+            if eq[1] == '!':
+                x = ord(eq[0]) - ord('a')
+                y = ord(eq[3]) - ord('a')
+                if x == y or (component[x] != -1 and component[x] == component[y]):
+                    return False
+        return True
 ```
 
 **Time Complexity:** O(n + 26) = O(n)

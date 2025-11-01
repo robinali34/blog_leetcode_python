@@ -76,42 +76,45 @@ The boundary traversal consists of three parts in order:
 **Time Complexity:** O(n)  
 **Space Complexity:** O(h) where h is height of tree
 
-```cpp
-class Solution {
-public:
-    vector<int> boundaryOfBinaryTree(TreeNode* root) {
-        if(!root) return rtn;
-        rtn.push_back(root->val);
-        getleft(root->left);
-        getleaf(root->left);
-        getleaf(root->right);
-        getright(root->right);
-        return rtn;
-    }
-private:
-    vector<int> rtn;
+```python
+class Solution:
+
+    def boundaryOfBinaryTree(self, root: TreeNode) -> list[int]:
+        if not root:
+            return []
+        result = []
+        result.append(root.val)
+        self.getleft(root.left, result)
+        self.getleaf(root.left, result)
+        self.getleaf(root.right, result)
+        self.getright(root.right, result)
+        return result
     
-    void getleft(TreeNode* node) {
-        if(!node || (!node->left && !node->right)) return;
-        rtn.push_back(node->val);
-        if(!node->left) getleft(node->right);
-        else getleft(node->left);
-    }
-
-    void getleaf(TreeNode* node) {
-        if(!node) return;
-        getleaf(node->left);
-        if(!node->left && !node->right) rtn.push_back(node->val);
-        getleaf(node->right);
-    }
-
-    void getright(TreeNode* node) {
-        if(!node || (!node->left && !node->right)) return;
-        if(!node->right) getright(node->left);
-        else getright(node->right);
-        rtn.push_back(node->val);
-    }
-};
+    def getleft(self, node: TreeNode, result: list[int]) -> None:
+        if not node or (not node.left and not node.right):
+            return
+        result.append(node.val)
+        if not node.left:
+            self.getleft(node.right, result)
+        else:
+            self.getleft(node.left, result)
+    
+    def getleaf(self, node: TreeNode, result: list[int]) -> None:
+        if not node:
+            return
+        self.getleaf(node.left, result)
+        if not node.left and not node.right:
+            result.append(node.val)
+        self.getleaf(node.right, result)
+    
+    def getright(self, node: TreeNode, result: list[int]) -> None:
+        if not node or (not node.left and not node.right):
+            return
+        if not node.right:
+            self.getright(node.left, result)
+        else:
+            self.getright(node.right, result)
+        result.append(node.val)
 ```
 
 ### Alternative Approach: Single Pass with Flags
@@ -121,64 +124,59 @@ private:
 2. Traverse the tree once and collect nodes based on flags
 3. Handle special cases for root and single-node trees
 
-```cpp
-class Solution {
-public:
-    vector<int> boundaryOfBinaryTree(TreeNode* root) {
-        vector<int> result;
-        if(!root) return result;
+```python
+class Solution:
+
+    def boundaryOfBinaryTree(self, root: TreeNode) -> list[int]:
+        result = []
+        if not root:
+            return result
         
-        result.push_back(root->val);
+        result.append(root.val)
         
-        // Get left boundary (excluding root and leaves)
-        getLeftBoundary(root->left, result);
+        # Get left boundary (excluding root and leaves)
+        self.getLeftBoundary(root.left, result)
         
-        // Get all leaves
-        getLeaves(root, result);
+        # Get all leaves
+        self.getLeaves(root, result)
         
-        // Get right boundary (excluding root and leaves)
-        getRightBoundary(root->right, result);
+        # Get right boundary (excluding root and leaves)
+        self.getRightBoundary(root.right, result)
         
-        return result;
-    }
+        return result
     
-private:
-    void getLeftBoundary(TreeNode* node, vector<int>& result) {
-        if(!node || (!node->left && !node->right)) return;
+    def getLeftBoundary(self, node: TreeNode, result: list[int]) -> None:
+        if not node or (not node.left and not node.right):
+            return
         
-        result.push_back(node->val);
+        result.append(node.val)
         
-        if(node->left) {
-            getLeftBoundary(node->left, result);
-        } else {
-            getLeftBoundary(node->right, result);
-        }
-    }
+        if node.left:
+            self.getLeftBoundary(node.left, result)
+        else:
+            self.getLeftBoundary(node.right, result)
     
-    void getLeaves(TreeNode* node, vector<int>& result) {
-        if(!node) return;
+    def getLeaves(self, node: TreeNode, result: list[int]) -> None:
+        if not node:
+            return
         
-        if(!node->left && !node->right) {
-            result.push_back(node->val);
-            return;
-        }
+        if not node.left and not node.right:
+            result.append(node.val)
+            return
         
-        getLeaves(node->left, result);
-        getLeaves(node->right, result);
-    }
+        self.getLeaves(node.left, result)
+        self.getLeaves(node.right, result)
     
-    void getRightBoundary(TreeNode* node, vector<int>& result) {
-        if(!node || (!node->left && !node->right)) return;
+    def getRightBoundary(self, node: TreeNode, result: list[int]) -> None:
+        if not node or (not node.left and not node.right):
+            return
         
-        if(node->right) {
-            getRightBoundary(node->right, result);
-        } else {
-            getRightBoundary(node->left, result);
-        }
+        if node.right:
+            self.getRightBoundary(node.right, result)
+        else:
+            self.getRightBoundary(node.left, result)
         
-        result.push_back(node->val);
-    }
-};
+        result.append(node.val)
 ```
 
 ## Detailed Algorithm Breakdown

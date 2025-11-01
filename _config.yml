@@ -1,8 +1,8 @@
 # Site settings
 title: "Robina Li"
-description: "Technical Blog - Exploring algorithms, data structures, and software engineering insights"
-baseurl: "/blog_leetcode" # the subpath of your site, e.g. /blog_leetcode
-url: "https://robinali34.github.io/blog_leetcode/" # the base hostname & protocol for your site
+description: "Technical Blog - Exploring algorithms, data structures, and software engineering insights (Python)"
+baseurl: "/blog_leetcode_python" # the subpath of your site, e.g. /blog_leetcode_python
+url: "https://robinali34.github.io/blog_leetcode_python/" # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown

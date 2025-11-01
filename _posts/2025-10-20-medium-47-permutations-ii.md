@@ -55,55 +55,53 @@ The STL approach works the same as LC 46 because `next_permutation()` automatica
 
 ### Solution 1: Backtracking with Duplicate Handling
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> rtn;
-        sort(nums.begin(), nums.end());  // Sort to group duplicates
-        vector<bool> used(nums.size(), false);
-        vector<int> current;
-        permuteUnique(nums, used, current, rtn);
-        return rtn;
-    }
-private:
-    void permuteUnique(vector<int>& nums, vector<bool>& used, 
-                       vector<int>& current, vector<vector<int>>& rtn) {
-        if(current.size() == nums.size()) {
-            rtn.push_back(current);
-            return;
-        }
+```python
+class Solution:
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        nums.sort()  # Sort to group duplicates
+        used = [False] * len(nums)
+        current = []
+        self.permuteUniqueHelper(nums, used, current, result)
+        return result
+    
+    def permuteUniqueHelper(self, nums: list[int], used: list[bool], 
+                           current: list[int], result: list[list[int]]) -> None:
+        if len(current) == len(nums):
+            result.append(current[:])
+            return
         
-        for(int i = 0; i < (int)nums.size(); i++) {
-            if(used[i]) continue;
-            // Skip duplicates: if current element equals previous element
-            // and previous element is not used, skip current element
-            if(i > 0 && nums[i] == nums[i-1] && !used[i-1]) continue;
+        for i in range(len(nums)):
+            if used[i]:
+                continue
+            # Skip duplicates: if current element equals previous element
+            # and previous element is not used, skip current element
+            if i > 0 and nums[i] == nums[i-1] and not used[i-1]:
+                continue
             
-            used[i] = true;
-            current.push_back(nums[i]);
-            permuteUnique(nums, used, current, rtn);
-            current.pop_back();
-            used[i] = false;
-        }
-    }
-};
+            used[i] = True
+            current.append(nums[i])
+            self.permuteUniqueHelper(nums, used, current, result)
+            current.pop()
+            used[i] = False
 ```
 
 ### Solution 2: STL next_permutation (Same as LC 46)
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> rtn;
-        sort(nums.begin(), nums.end());
-        do{
-            rtn.push_back(nums);
-        } while(next_permutation(nums.begin(), nums.end()));
-        return rtn;
-    }
-};
+```python
+from itertools import permutations
+
+class Solution:
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        nums.sort()
+        result = []
+        seen = set()
+        for perm in permutations(nums):
+            perm_tuple = tuple(perm)
+            if perm_tuple not in seen:
+                seen.add(perm_tuple)
+                result.append(list(perm))
+        return result
 ```
 
 ## Why `current` Array is Essential
@@ -112,20 +110,18 @@ public:
 
 The swapping approach from LC 46 doesn't work well for duplicates because:
 
-```cpp
-// PROBLEMATIC: Swapping approach for duplicates
-void permuteUnique(vector<int>& nums, int idx, vector<vector<int>>& rtn) {
-    if(idx == nums.size()) {
-        rtn.push_back(nums);
-        return;
-    }
-    for(int i = idx; i < nums.size(); i++) {
-        if(i > idx && nums[i] == nums[idx]) continue;  // Still problematic
-        swap(nums[idx], nums[i]);
-        permuteUnique(nums, idx + 1, rtn);
-        swap(nums[idx], nums[i]);
-    }
-}
+```python
+# PROBLEMATIC: Swapping approach for duplicates
+def permuteUnique(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+    if idx == len(nums):
+        result.append(nums[:])
+        return
+    for i in range(idx, len(nums)):
+        if i > idx and nums[i] == nums[idx]:
+            continue  # Still problematic
+        nums[idx], nums[i] = nums[i], nums[idx]
+        self.permuteUnique(nums, idx + 1, result)
+        nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 **Issues:**
@@ -135,10 +131,10 @@ void permuteUnique(vector<int>& nums, int idx, vector<vector<int>>& rtn) {
 
 ### **Why `current` Array Solves the Problem**
 
-```cpp
-// CORRECT: Using current array
-vector<int> current;  // Build permutation incrementally
-vector<bool> used(nums.size(), false);  // Track used elements
+```python
+# CORRECT: Using current array
+current = []  # Build permutation incrementally
+used = [False] * len(nums)  # Track used elements
 ```
 
 **Advantages:**
@@ -186,17 +182,17 @@ used=[F,F,F], current=[]
 ### **Key Benefits of `current` Array**
 
 1. **Clean State Management:**
-   ```cpp
+   ```python
    used[i] = true;           // Mark as used
-   current.push_back(nums[i]); // Add to permutation
+   current.append(nums[i]); // Add to permutation
    // ... recurse ...
-   current.pop_back();       // Remove from permutation
+   current.pop();       // Remove from permutation
    used[i] = false;          // Mark as unused
    ```
 
 2. **Reliable Duplicate Detection:**
-   ```cpp
-   if(i > 0 && nums[i] == nums[i-1] && !used[i-1]) continue;
+   ```python
+   if(i > 0  nums[i] == nums[i-1]  !used[i-1]) continue;
    ```
    - **`nums[i] == nums[i-1]`** - Current equals previous
    - **`!used[i-1]`** - Previous is not used
@@ -210,15 +206,19 @@ used=[F,F,F], current=[]
 ### **When You Can Skip `current`**
 
 **STL Approach (No `current` needed):**
-```cpp
-vector<vector<int>> permuteUnique(vector<int>& nums) {
-    vector<vector<int>> rtn;
-    sort(nums.begin(), nums.end());
-    do{
-        rtn.push_back(nums);  // Directly use nums
-    } while(next_permutation(nums.begin(), nums.end()));
-    return rtn;
-}
+```python
+from itertools import permutations
+
+def permuteUnique(nums: list[int]) -> list[list[int]]:
+    nums.sort()
+    result = []
+    seen = set()
+    for perm in permutations(nums):
+        perm_tuple = tuple(perm)
+        if perm_tuple not in seen:
+            seen.add(perm_tuple)
+            result.append(list(perm))
+    return result
 ```
 
 **Why STL works without `current`:**
@@ -230,32 +230,26 @@ vector<vector<int>> permuteUnique(vector<int>& nums) {
 
 **Yes, you can use a hash set to remove duplicates:**
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
-        permute(nums, 0, result);
+```python
+class Solution:
+
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        self.permute(nums, 0, result)
         
-        // Remove duplicates using set
-        set<vector<int>> unique_perms(result.begin(), result.end());
-        return vector<vector<int>>(unique_perms.begin(), unique_perms.end());
-    }
+        # Remove duplicates using set
+        unique_perms = set(tuple(perm) for perm in result)
+        return [list(perm) for perm in unique_perms]
     
-private:
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& result) {
-        if(idx == nums.size()) {
-            result.push_back(nums);
-            return;
-        }
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
         
-        for(int i = idx; i < nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, result);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 **How it works:**
@@ -265,13 +259,13 @@ private:
 4. **Convert back to vector** - return unique permutations
 
 **Example:**
-```cpp
+```python
 // Input: nums = [1,1,2]
 // Step 1: Generate all permutations
 result = [[1,1,2], [1,2,1], [1,1,2], [1,2,1], [2,1,1], [2,1,1]]
 
 // Step 2: Remove duplicates with set
-set<vector<int>> unique_perms(result.begin(), result.end());
+set<list[int]> unique_perms(result.begin(), result.end());
 // unique_perms = {[1,1,2], [1,2,1], [2,1,1]}
 
 // Step 3: Convert back to vector
@@ -318,190 +312,136 @@ return [[1,1,2], [1,2,1], [2,1,1]]
 
 ### **Hash Set Implementation Details**
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
+```python
+class Solution:
+
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
         permute(nums, 0, result);
         
         // Method 1: Using set (automatic sorting)
-        set<vector<int>> unique_perms(result.begin(), result.end());
-        return vector<vector<int>>(unique_perms.begin(), unique_perms.end());
+        set<list[int]> unique_perms(result.begin(), result.end());
+        return [list(perm) for perm in unique_perms]
         
         // Method 2: Using unordered_set (faster insertion)
-        // unordered_set<vector<int>> unique_perms(result.begin(), result.end());
-        // return vector<vector<int>>(unique_perms.begin(), unique_perms.end());
+        // unordered_set<list[int]> unique_perms(result.begin(), result.end());
+        # return [list(perm) for perm in unique_perms]
         
-        // Method 3: Manual deduplication
-        // sort(result.begin(), result.end());
-        // result.erase(unique(result.begin(), result.end()), result.end());
-        // return result;
-    }
+        # Method 3: Manual deduplication
+        # result.sort()
+        # result = [result[i] for i in range(len(result)) if i == 0 or result[i] != result[i-1]]
+        # return result
     
-private:
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& result) {
-        if(idx == nums.size()) {
-            result.push_back(nums);
-            return;
-        }
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
         
-        for(int i = idx; i < nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, result);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
-**Note:** `unordered_set<vector<int>>` requires a custom hash function for `vector<int>`, so `set<vector<int>>` is simpler to use.
+**Note:** `set[list[int]]` requires tuples (since lists are not hashable), so `set[tuple[int, ...]]` is used instead.
 
 ### **Solution 3: Hash Set Deduplication**
 
-#### **Option 3a: Using `set<vector<int>>` (Simpler)**
+#### **Option 3a: Using `set[tuple[int, ...]]` (Simpler)**
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
-        permute(nums, 0, result);
+```python
+class Solution:
+
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        self.permute(nums, 0, result)
         
-        // Remove duplicates using set
-        set<vector<int>> unique_perms(result.begin(), result.end());
-        return vector<vector<int>>(unique_perms.begin(), unique_perms.end());
-    }
+        # Remove duplicates using set
+        unique_perms = set(tuple(perm) for perm in result)
+        return [list(perm) for perm in unique_perms]
     
-private:
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& result) {
-        if(idx == nums.size()) {
-            result.push_back(nums);
-            return;
-        }
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
         
-        for(int i = idx; i < nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, result);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
-#### **Option 3b: Using `unordered_set<vector<int>>` (Better Performance)**
+#### **Option 3b: Using `set[tuple[int, ...]]` (Equivalent in Python)**
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
+```python
+class Solution:
+
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
         permute(nums, 0, result);
         
-        // Remove duplicates using unordered_set with custom hash
-        unordered_set<vector<int>, VectorHash> unique_perms(result.begin(), result.end());
-        return vector<vector<int>>(unique_perms.begin(), unique_perms.end());
+        # Remove duplicates using set of tuples
+        unique_perms = set(tuple(perm) for perm in result)
+        return [list(perm) for perm in unique_perms]
     }
     
-private:
-    // Custom hash function for vector<int>
-    struct VectorHash {
-        size_t operator()(const vector<int>& v) const {
-            size_t hash = 0;
-            for(int x : v) {
-                hash ^= hash << 13;
-                hash ^= hash >> 17;
-                hash ^= hash << 5;
-                hash ^= x;
-            }
-            return hash;
-        }
-    };
-    
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& result) {
-        if(idx == nums.size()) {
-            result.push_back(nums);
-            return;
-        }
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
         
-        for(int i = idx; i < nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, result);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 ### **Solution 4: Alternative Hash Set Implementations**
 
-```cpp
-// Method 1: Using unordered_set (requires custom hash)
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
-        permute(nums, 0, result);
+```python
+# Method 1: Using set with tuples (Python equivalent)
+class Solution:
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        self.permute(nums, 0, result)
         
-        unordered_set<vector<int>, VectorHash> unique_perms(result.begin(), result.end());
-        return vector<vector<int>>(unique_perms.begin(), unique_perms.end());
-    }
+        # Convert to set of tuples to remove duplicates
+        unique_perms = set(tuple(perm) for perm in result)
+        return [list(perm) for perm in unique_perms]
     
-private:
-    struct VectorHash {
-        size_t operator()(const vector<int>& v) const {
-            size_t hash = 0;
-            for(int x : v) {
-                hash ^= hash << 13;
-                hash ^= hash >> 17;
-                hash ^= hash << 5;
-                hash ^= x;
-            }
-            return hash;
-        }
-    };
-    
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& result) {
-        if(idx == nums.size()) {
-            result.push_back(nums);
-            return;
-        }
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
         
-        for(int i = idx; i < nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, result);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 
-// Method 2: Manual deduplication
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
-        permute(nums, 0, result);
+# Method 2: Manual deduplication
+class Solution:
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        self.permute(nums, 0, result)
         
-        // Sort and remove consecutive duplicates
-        sort(result.begin(), result.end());
-        result.erase(unique(result.begin(), result.end()), result.end());
-        return result;
-    }
+        # Sort and remove consecutive duplicates
+        result.sort()
+        unique_result = []
+        for i, perm in enumerate(result):
+            if i == 0 or perm != result[i - 1]:
+                unique_result.append(perm)
+        return unique_result
     
-private:
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& result) {
-        if(idx == nums.size()) {
-            result.push_back(nums);
-            return;
-        }
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
         
-        for(int i = idx; i < nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, result);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 ## Complete Solution Comparison & Trade-offs
@@ -547,7 +487,7 @@ private:
 
 **When to use:** Production code, performance-critical applications, quick implementation
 
-#### **Solution 3a: Hash Set with `set<vector<int>>`**
+#### **Solution 3a: Hash Set with `set[tuple[int, ...]]`**
 **Pros:**
 - **Simplest logic** - generate all, then deduplicate
 - **Easy to understand** - straightforward approach
@@ -567,7 +507,7 @@ private:
 - **Insert into set:** O(log(n!)) - n! insertions, each is O(log(n!)) for set
 - **Total:** O(n! × n) + O(log(n!)) = O(n! × n) + O(log(n!))
 
-#### **Solution 3b: Hash Set with `unordered_set<vector<int>>`**
+#### **Solution 3b: Hash Set with `set[tuple[int, ...]]` (Python equivalent)**
 **Pros:**
 - **Better time complexity** - O(n! × n) vs O(n! × n) + O(log(n!))
 - **Faster insertion** - O(1) average vs O(log(n!))
@@ -765,71 +705,58 @@ The skip condition `if(i > 0 && nums[i] == nums[i-1] && !used[i-1]) continue;` e
 ## Alternative Approaches
 
 ### Approach 3: Set-based Deduplication
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
-        permute(nums, 0, result);
+```python
+class Solution:
+
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        self.permute(nums, 0, result)
         
-        // Remove duplicates using set
-        set<vector<int>> unique_perms(result.begin(), result.end());
-        return vector<vector<int>>(unique_perms.begin(), unique_perms.end());
-    }
+        # Remove duplicates using set
+        unique_perms = set(tuple(perm) for perm in result)
+        return [list(perm) for perm in unique_perms]
     
-private:
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& result) {
-        if(idx == nums.size()) {
-            result.push_back(nums);
-            return;
-        }
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
         
-        for(int i = idx; i < nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, result);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 ### Approach 4: Frequency-based Backtracking
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permuteUnique(vector<int>& nums) {
-        vector<vector<int>> result;
-        unordered_map<int, int> freq;
+```python
+class Solution:
+
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        freq = {}
         
-        // Count frequency of each number
-        for(int num : nums) {
-            freq[num]++;
-        }
+        # Count frequency of each number
+        for num in nums:
+            freq[num] = freq.get(num, 0) + 1
         
-        vector<int> current;
-        backtrack(freq, current, result, nums.size());
-        return result;
-    }
+        current = []
+        self.backtrack(freq, current, result, len(nums))
+        return result
     
-private:
-    void backtrack(unordered_map<int, int>& freq, vector<int>& current,
-                   vector<vector<int>>& result, int target_size) {
-        if(current.size() == target_size) {
-            result.push_back(current);
-            return;
-        }
+    def backtrack(self, freq: dict[int, int], current: list[int],
+                   result: list[list[int]], target_size: int) -> None:
+        if len(current) == target_size:
+            result.append(current[:])
+            return
         
-        for(auto& pair : freq) {
-            if(pair.second > 0) {
-                pair.second--;
-                current.push_back(pair.first);
-                backtrack(freq, current, result, target_size);
-                current.pop_back();
-                pair.second++;
-            }
-        }
-    }
-};
+        for num, count in freq.items():
+            if count > 0:
+                freq[num] -= 1
+                current.append(num)
+                self.backtrack(freq, current, result, target_size)
+                current.pop()
+                freq[num] += 1
+```
 ```
 
 ## When to Use Each Approach

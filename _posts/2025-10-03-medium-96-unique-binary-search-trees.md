@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 96. Unique Binary Search Trees"
 date: 2025-10-03 00:00:00 -0000
-categories: leetcode algorithm dynamic-programming data-structures math catalan-numbers medium cpp binary-search-trees problem-solving
+categories: python binary-search-trees problem-solving
 ---
 
 # [Medium] 96. Unique Binary Search Trees
@@ -46,23 +46,19 @@ The key insight is that the number of unique BSTs follows the Catalan number seq
 
 ## Solution 1: Dynamic Programming (Initialized with 1s)
 
-```cpp
-class Solution {
-public:
-    int numTrees(int n) {
-        vector<int> cache(n + 1, 1);
-        for(int i = 2; i <= n; i++) {
-            int sum = 0;
-            for(int j = 1; j <= i; j++) {
-                int left = j - 1;
-                int right = i - j;
-                sum += cache[left] * cache[right];
-            }
-            cache[i] = sum;
-        }
-        return cache[n];
-    }
-};
+```python
+class Solution:
+
+    def numTrees(self, n: int) -> int:
+        cache = [1] * (n + 1)
+        for i in range(2, n + 1):
+            total = 0
+            for j in range(1, i + 1):
+                left = j - 1
+                right = i - j
+                total += cache[left] * cache[right]
+            cache[i] = total
+        return cache[n]
 ```
 
 **Time Complexity:** O(n²) - Nested loops
@@ -70,21 +66,17 @@ public:
 
 ## Solution 2: Dynamic Programming (Explicit Base Cases)
 
-```cpp
-class Solution {
-public:
-    int numTrees(int n) {
-        vector<int> cache(n + 1, 0);
-        cache[0] = 1;
-        cache[1] = 1;
-        for(int i = 2; i <= n; i++) {
-            for(int j = 1; j <= i; j++) {
-                cache[i] += cache[j - 1] * cache[i - j];
-            }
-        }
-        return cache[n];
-    }
-};
+```python
+class Solution:
+
+    def numTrees(self, n: int) -> int:
+        cache = [0] * (n + 1)
+        cache[0] = 1
+        cache[1] = 1
+        for i in range(2, n + 1):
+            for j in range(1, i + 1):
+                cache[i] += cache[j - 1] * cache[i - j]
+        return cache[n]
 ```
 
 **Time Complexity:** O(n²) - Nested loops
@@ -92,17 +84,14 @@ public:
 
 ## Solution 3: Catalan Numbers Formula
 
-```cpp
-class Solution {
-public:
-    int numTrees(int n) {
-        long long rtn = 1;
-        for(int i = 0; i < n; i++) {
-            rtn = rtn * 2 * (2 * i + 1) / (i + 2);
-        }
-        return (int)rtn;
-    }
-};
+```python
+class Solution:
+
+    def numTrees(self, n: int) -> int:
+        result = 1
+        for i in range(n):
+            result = result * 2 * (2 * i + 1) // (i + 2)
+        return int(result)
 ```
 
 **Time Complexity:** O(n) - Single loop

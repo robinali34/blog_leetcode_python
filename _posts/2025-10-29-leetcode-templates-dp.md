@@ -16,14 +16,13 @@ tags: [leetcode, templates, dp]
 
 ## 1D DP (knapsack/linear)
 
-```cpp
-int knap01(vector<int>& wt, vector<int>& val, int W){
-    vector<int> dp(W+1, 0);
-    for (int i=0;i<(int)wt.size();++i)
-        for (int w=W; w>=wt[i]; --w)
-            dp[w] = max(dp[w], dp[w-wt[i]] + val[i]);
-    return dp[W];
-}
+```python
+def knap01(wt: list[int], val: list[int], W: int) -> int:
+    dp = [0] * (W + 1)
+    for i in range(len(wt)):
+        for w in range(W, wt[i] - 1, -1):
+            dp[w] = max(dp[w], dp[w - wt[i]] + val[i])
+    return dp[W]
 ```
 
 | ID | Title | Link |
@@ -33,18 +32,23 @@ int knap01(vector<int>& wt, vector<int>& val, int W){
 
 ## 2D DP (grid/path)
 
-```cpp
-int uniquePaths(vector<vector<int>>& g){
-    int m=g.size(), n=g[0].size();
-    vector<vector<int>> dp(m, vector<int>(n, 0));
-    if (g[0][0]==1) return 0; dp[0][0]=1;
-    for (int i=0;i<m;++i) for(int j=0;j<n;++j){
-        if (g[i][j]==1){ dp[i][j]=0; continue; }
-        if (i) dp[i][j]+=dp[i-1][j];
-        if (j) dp[i][j]+=dp[i][j-1];
-    }
-    return dp[m-1][n-1];
-}
+```python
+def unique_paths(g: list[list[int]]) -> int:
+    m, n = len(g), len(g[0])
+    dp = [[0] * n for _ in range(m)]
+    if g[0][0] == 1:
+        return 0
+    dp[0][0] = 1
+    for i in range(m):
+        for j in range(n):
+            if g[i][j] == 1:
+                dp[i][j] = 0
+                continue
+            if i > 0:
+                dp[i][j] += dp[i-1][j]
+            if j > 0:
+                dp[i][j] += dp[i][j-1]
+    return dp[m-1][n-1]
 ```
 
 | ID | Title | Link |
@@ -55,12 +59,26 @@ int uniquePaths(vector<vector<int>>& g){
 
 ## Digit DP (count numbers with property)
 
-```cpp
-long long dp[20][11][2][2]; string sN;
-long long dfsDP(int i,int prev,bool tight,bool started){ if(i==(int)sN.size()) return started?1:0; auto &res=dp[i][prev+1][tight][started]; if(res!=-1) return res; res=0; int lim=tight?(sN[i]-'0'):9;
-    for(int d=0; d<=lim; ++d){ bool nt=tight && d==lim; bool ns=started||d!=0; if(!ns || prev==-1 || d!=prev) res+=dfsDP(i+1, ns?d:prev, nt, ns); }
-    return res; }
-long long solveDP(long long N){ sN=to_string(N); memset(dp,-1,sizeof dp); return dfsDP(0,-1,1,0); }
+```python
+from functools import lru_cache
+
+@lru_cache(maxsize=None)
+def dfs_dp(i: int, prev: int, tight: bool, started: bool, s_n: str) -> int:
+    if i == len(s_n):
+        return 1 if started else 0
+    res = 0
+    lim = int(s_n[i]) if tight else 9
+    for d in range(lim + 1):
+        nt = tight and d == lim
+        ns = started or d != 0
+        if not ns or prev == -1 or d != prev:
+            res += dfs_dp(i + 1, d if ns else prev, nt, ns, s_n)
+    return res
+
+def solve_dp(N: int) -> int:
+    s_n = str(N)
+    dfs_dp.cache_clear()
+    return dfs_dp(0, -1, True, False, s_n)
 ```
 
 | ID | Title | Link |
@@ -71,12 +89,20 @@ long long solveDP(long long N){ sN=to_string(N); memset(dp,-1,sizeof dp); return
 
 ## Bitmask DP (TSP / subsets)
 
-```cpp
-int tsp(const vector<vector<int>>& w){
-    int n=w.size(); const int INF=1e9; vector<vector<int>> dp(1<<n, vector<int>(n, INF));
-    dp[1][0]=0; for(int mask=1; mask<(1<<n); ++mask){ for(int u=0; u<n; ++u) if(dp[mask][u]<INF){ for(int v=0; v<n; ++v) if(!(mask&(1<<v))) dp[mask|1<<v][v] = min(dp[mask|1<<v][v], dp[mask][u]+w[u][v]); } }
-    return *min_element(dp.back().begin(), dp.back().end());
-}
+```python
+def tsp(w: list[list[int]]) -> int:
+    n = len(w)
+    INF = 10**9
+    dp = [[INF] * n for _ in range(1 << n)]
+    dp[1][0] = 0
+    for mask in range(1, 1 << n):
+        for u in range(n):
+            if dp[mask][u] < INF:
+                for v in range(n):
+                    if not (mask & (1 << v)):
+                        new_mask = mask | (1 << v)
+                        dp[new_mask][v] = min(dp[new_mask][v], dp[mask][u] + w[u][v])
+    return min(dp[(1 << n) - 1])
 ```
 
 | ID | Title | Link |

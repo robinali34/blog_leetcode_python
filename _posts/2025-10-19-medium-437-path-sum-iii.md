@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 437. Path Sum III"
 date: 2025-10-19 17:25:53 -0700
-categories: leetcode algorithm medium cpp tree dfs recursion problem-solving
+categories: python tree dfs recursion problem-solving
 ---
 
 # [Medium] 437. Path Sum III
@@ -46,18 +46,18 @@ Explanation: The paths that sum to 22 are:
 
 Use DFS to explore all possible paths starting from each node, checking if the path sum equals the target.
 
-```cpp
-class Solution {
+```python
+class Solution:
 private:
-    int dfs(TreeNode* node, int targetSum) {
+    def dfs(self, TreeNode* node, int targetSum) -> int:
         if(!node) return 0;
-        int cnt = 0;
+        cnt = 0
         if(targetSum == node->val) cnt++;
         return cnt + dfs(node->left, targetSum - node->val) + dfs(node->right, targetSum - node->val);
     }
     
-public:
-    int pathSum(TreeNode* root, int targetSum) {
+
+    def pathSum(self, TreeNode* root, int targetSum) -> int:
         if(!root) return 0;
         return dfs(root, targetSum) + pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
     }
@@ -108,10 +108,10 @@ public:
 ## Algorithm Breakdown
 
 ### DFS Function:
-```cpp
-int dfs(TreeNode* node, int targetSum) {
+```python
+def dfs(self, TreeNode* node, int targetSum) -> int:
     if(!node) return 0;
-    int cnt = 0;
+    cnt = 0
     if(targetSum == node->val) cnt++;
     return cnt + dfs(node->left, targetSum - node->val) + dfs(node->right, targetSum - node->val);
 }
@@ -124,8 +124,8 @@ int dfs(TreeNode* node, int targetSum) {
 4. **Return total count** from current node and subtrees
 
 ### Main Function:
-```cpp
-int pathSum(TreeNode* root, int targetSum) {
+```python
+def pathSum(self, TreeNode* root, int targetSum) -> int:
     if(!root) return 0;
     return dfs(root, targetSum) + pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
 }
@@ -203,10 +203,10 @@ Where n is the number of nodes and h is the height of the tree.
 ## Alternative Approaches
 
 ### Approach 1: Prefix Sum with Hash Map
-```cpp
-class Solution {
+```python
+class Solution:
 private:
-    int dfs(TreeNode* node, int targetSum, unordered_map<long, int>& prefixSum, long currentSum) {
+    def dfs(self, TreeNode* node, int targetSum, unordered_map<long, int> prefixSum, long currentSum) -> int:
         if(!node) return 0;
         
         currentSum += node->val;
@@ -220,8 +220,8 @@ private:
         return count;
     }
     
-public:
-    int pathSum(TreeNode* root, int targetSum) {
+
+    def pathSum(self, TreeNode* root, int targetSum) -> int:
         unordered_map<long, int> prefixSum;
         prefixSum[0] = 1;
         return dfs(root, targetSum, prefixSum, 0);
@@ -233,17 +233,17 @@ public:
 **Space Complexity:** O(n)
 
 ### Approach 2: Iterative DFS
-```cpp
-class Solution {
-public:
-    int pathSum(TreeNode* root, int targetSum) {
+```python
+class Solution:
+
+    def pathSum(self, TreeNode* root, int targetSum) -> int:
         if(!root) return 0;
         
         stack<TreeNode*> stk;
         stk.push(root);
-        int count = 0;
+        count = 0
         
-        while(!stk.empty()) {
+        while(!stknot ) {
             TreeNode* node = stk.top();
             stk.pop();
             
@@ -257,9 +257,9 @@ public:
     }
     
 private:
-    int dfs(TreeNode* node, int targetSum) {
+    def dfs(self, TreeNode* node, int targetSum) -> int:
         if(!node) return 0;
-        int cnt = 0;
+        cnt = 0
         if(targetSum == node->val) cnt++;
         return cnt + dfs(node->left, targetSum - node->val) + dfs(node->right, targetSum - node->val);
     }

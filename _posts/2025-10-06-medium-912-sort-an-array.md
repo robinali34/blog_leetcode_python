@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 912. Sort an Array"
 date: 2025-10-06 00:00:00 -0000
-categories: leetcode algorithm medium cpp sorting merge-sort heap-sort counting-sort data-structures divide-conquer problem-solving
+categories: python sorting merge-sort heap-sort counting-sort data-structures divide-conquer problem-solving
 ---
 
 # [Medium] 912. Sort an Array
@@ -37,64 +37,54 @@ Output: [0,0,1,1,2,5]
 
 Merge sort is a divide-and-conquer algorithm that divides the array into two halves, sorts them recursively, and then merges the sorted halves.
 
-```cpp
-class Solution {
-public:
-    vector<int> sortArray(vector<int>& nums) {
-        vector<int> cache(nums.size());
-        mergeSort(nums, 0, nums.size() - 1, cache);
-        return nums;
-    }
+```python
+class Solution:
 
-private:
-    void merge(vector<int>& arr, int left, int pivot, int right, vector<int>& cache){
-        int start1 = left;
-        int start2 = pivot + 1;
-        int n1 = pivot - left + 1;
-        int n2 = right - pivot;
+    def sortArray(self, nums: list[int]) -> list[int]:
+        cache = [0] * len(nums)
+        self.mergeSort(nums, 0, len(nums) - 1, cache)
+        return nums
+    
+    def merge(self, arr: list[int], left: int, pivot: int, right: int, cache: list[int]) -> None:
+        start1 = left
+        start2 = pivot + 1
+        n1 = pivot - left + 1
+        n2 = right - pivot
 
-        // Copy both halves to cache
-        for(int i = 0; i < n1; i++) {
-            cache[start1 + i] = arr[start1 + i];
-        }
-        for(int i = 0; i < n2; i++) {
-            cache[start2 + i] = arr[start2 + i];
-        }
+        # Copy both halves to cache
+        for i in range(n1):
+            cache[start1 + i] = arr[start1 + i]
+        for i in range(n2):
+            cache[start2 + i] = arr[start2 + i]
         
-        // Merge the two halves back into arr
-        int i = 0, j = 0, k = left;
-        while(i < n1 && j < n2) {
-            if(cache[start1 + i] <= cache[start2 + j]) {
-                arr[k] = cache[start1 + i];
-                i++;
-            } else {
-                arr[k] = cache[start2 + j];
-                j++;
-            }
-            k++;
-        }
+        # Merge the two halves back into arr
+        i, j, k = 0, 0, left
+        while i < n1 and j < n2:
+            if cache[start1 + i] <= cache[start2 + j]:
+                arr[k] = cache[start1 + i]
+                i += 1
+            else:
+                arr[k] = cache[start2 + j]
+                j += 1
+            k += 1
         
-        // Copy remaining elements
-        while(i < n1) {
-            arr[k] = cache[start1 + i];
-            i++;
-            k++;
-        }
-        while(j < n2) {
-            arr[k] = cache[start2 + j];
-            j++;
-            k++;
-        }
-    }
-
-    void mergeSort(vector<int>& arr, int left, int right, vector<int>& cache) {
-        if(left >= right) return;
-        int pivot = left + (right - left) / 2;
-        mergeSort(arr, left, pivot, cache);
-        mergeSort(arr, pivot + 1, right, cache);
-        merge(arr, left, pivot, right, cache);
-    }
-};
+        # Copy remaining elements
+        while i < n1:
+            arr[k] = cache[start1 + i]
+            i += 1
+            k += 1
+        while j < n2:
+            arr[k] = cache[start2 + j]
+            j += 1
+            k += 1
+    
+    def mergeSort(self, arr: list[int], left: int, right: int, cache: list[int]) -> None:
+        if left >= right:
+            return
+        pivot = left + (right - left) // 2
+        self.mergeSort(arr, left, pivot, cache)
+        self.mergeSort(arr, pivot + 1, right, cache)
+        self.merge(arr, left, pivot, right, cache)
 ```
 
 ### How Merge Sort Works:
@@ -112,48 +102,39 @@ The merge operation compares elements from both halves and places them in the co
 
 Heap sort uses a max-heap to sort the array in-place.
 
-```cpp
-class Solution {
-private:
-    void heapify(vector<int>& arr, int n, int i) {
-        int largest = i, left = 2 * i + 1, right = 2 * i + 2;
+```python
+class Solution:
+    def heapify(self, arr: list[int], n: int, i: int) -> None:
+        largest = i
+        left = 2 * i + 1
+        right = 2 * i + 2
         
-        // Find the largest among root and children
-        if(left < n && arr[left] > arr[largest]) {
-            largest = left;
-        }
-        if(right < n && arr[right] > arr[largest]) {
-            largest = right;
-        }
+        # Find the largest among root and children
+        if left < n and arr[left] > arr[largest]:
+            largest = left
+        if right < n and arr[right] > arr[largest]:
+            largest = right
         
-        // If largest is not root, swap and heapify
-        if(largest != i) {
-            swap(arr[i], arr[largest]);
-            heapify(arr, n, largest);
-        }
-    }
+        # If largest is not root, swap and heapify
+        if largest != i:
+            arr[i], arr[largest] = arr[largest], arr[i]
+            self.heapify(arr, n, largest)
     
-    void heapSort(vector<int>& arr) {
-        int n = arr.size();
+    def heapSort(self, arr: list[int]) -> None:
+        n = len(arr)
         
-        // Build max heap
-        for(int i = n / 2 - 1; i >= 0; i--) {
-            heapify(arr, n, i);
-        }
+        # Build max heap
+        for i in range(n // 2 - 1, -1, -1):
+            self.heapify(arr, n, i)
         
-        // Extract elements from heap one by one
-        for(int i = n - 1; i >= 0; i--) {
-            swap(arr[0], arr[i]);  // Move max to end
-            heapify(arr, i, 0);    // Heapify reduced heap
-        }
-    }
-
-public:
-    vector<int> sortArray(vector<int>& nums) {
-        heapSort(nums);
-        return nums;
-    }
-};
+        # Extract elements from heap one by one
+        for i in range(n - 1, 0, -1):
+            arr[0], arr[i] = arr[i], arr[0]  # Move max to end
+            self.heapify(arr, i, 0)  # Heapify reduced heap
+    
+    def sortArray(self, nums: list[int]) -> list[int]:
+        self.heapSort(nums)
+        return nums
 ```
 
 ### How Heap Sort Works:
@@ -169,36 +150,31 @@ public:
 
 Counting sort works well when the range of numbers is small.
 
-```cpp
-class Solution {
-private:    
-    void countSort(vector<int>& arr) {
-        unordered_map<int, int> counts;
-        int minVal = *min_element(arr.begin(), arr.end());
-        int maxVal = *max_element(arr.begin(), arr.end());
+```python
+class Solution:
+    def countSort(self, arr: list[int]) -> None:
+        from collections import defaultdict
+        counts = defaultdict(int)
+        minVal = min(arr)
+        maxVal = max(arr)
         
-        // Count frequency of each element
-        for(auto& val: arr) counts[val]++;
+        # Count frequency of each element
+        for val in arr:
+            counts[val] += 1
         
-        // Reconstruct sorted array
-        int idx = 0;
-        for(int val = minVal; val <= maxVal; val++) {
-            if(counts.find(val) != counts.end()) {
-                while(counts[val] > 0) {
-                    arr[idx] = val;
-                    idx++;
-                    counts[val] -= 1;
-                }
-            }
-        }
-    }
+        # Reconstruct sorted array
+        idx = 0
+        for val in range(minVal, maxVal + 1):
+            if val in counts:
+                while counts[val] > 0:
+                    arr[idx] = val
+                    idx += 1
+                    counts[val] -= 1
 
-public:
-    vector<int> sortArray(vector<int>& nums) {
-        countSort(nums);
-        return nums;
-    }
-};
+
+    def sortArray(self, nums: list[int]) -> list[int]:
+        self.countSort(nums)
+        return nums
 ```
 
 ### How Counting Sort Works:

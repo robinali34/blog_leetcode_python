@@ -19,18 +19,19 @@ tags: [leetcode, templates, data-structures]
 
 ## Monotonic Stack (next greater / histogram)
 
-```cpp
-vector<int> nextGreater(vector<int>& a){
-    int n = a.size(); vector<int> ans(n, -1); vector<int> st;
-    for (int i = 0; i < 2*n; ++i){
-        int idx = i % n;
-        while (!st.empty() && a[st.back()] < a[idx]){
-            ans[st.back()] = a[idx]; st.pop_back();
-        }
-        if (i < n) st.push_back(idx);
-    }
-    return ans;
-}
+```python
+def next_greater(a: list[int]) -> list[int]:
+    n = len(a)
+    ans = [-1] * n
+    st = []
+    for i in range(2 * n):
+        idx = i % n
+        while st and a[st[-1]] < a[idx]:
+            ans[st[-1]] = a[idx]
+            st.pop()
+        if i < n:
+            st.append(idx)
+    return ans
 ```
 
 | ID | Title | Link |
@@ -41,17 +42,21 @@ vector<int> nextGreater(vector<int>& a){
 
 ## Monotonic Queue (sliding window extrema)
 
-```cpp
-vector<int> maxWindow(const vector<int>& a, int k){
-    deque<int> dq; vector<int> out;
-    for (int i=0;i<(int)a.size();++i){
-        while(!dq.empty() && a[dq.back()]<=a[i]) dq.pop_back();
-        dq.push_back(i);
-        if (dq.front() <= i-k) dq.pop_front();
-        if (i>=k-1) out.push_back(a[dq.front()]);
-    }
-    return out;
-}
+```python
+from collections import deque
+
+def max_window(a: list[int], k: int) -> list[int]:
+    dq = deque()
+    out = []
+    for i in range(len(a)):
+        while dq and a[dq[-1]] <= a[i]:
+            dq.pop()
+        dq.append(i)
+        if dq[0] <= i - k:
+            dq.popleft()
+        if i >= k - 1:
+            out.append(a[dq[0]])
+    return out
 ```
 
 | ID | Title | Link |
@@ -61,18 +66,22 @@ vector<int> maxWindow(const vector<int>& a, int k){
 
 ## Heap / K-way Merge
 
-```cpp
-vector<int> mergeK(vector<vector<int>>& lists){
-    using T = tuple<int,int,int>; // val, list idx, pos
-    priority_queue<T, vector<T>, greater<T>> pq;
-    for (int i=0;i<(int)lists.size();++i) if (!lists[i].empty()) pq.emplace(lists[i][0], i, 0);
-    vector<int> out;
-    while(!pq.empty()){
-        auto [v,i,j]=pq.top(); pq.pop(); out.push_back(v);
-        if (j+1 < (int)lists[i].size()) pq.emplace(lists[i][j+1], i, j+1);
-    }
-    return out;
-}
+```python
+import heapq
+
+def merge_k(lists: list[list[int]]) -> list[int]:
+    # pq: (val, list_idx, pos)
+    pq = []
+    for i, lst in enumerate(lists):
+        if lst:
+            heapq.heappush(pq, (lst[0], i, 0))
+    out = []
+    while pq:
+        v, i, j = heapq.heappop(pq)
+        out.append(v)
+        if j + 1 < len(lists[i]):
+            heapq.heappush(pq, (lists[i][j + 1], i, j + 1))
+    return out
 ```
 
 | ID | Title | Link |
@@ -82,12 +91,28 @@ vector<int> mergeK(vector<vector<int>>& lists){
 
 ## Union-Find (Disjoint Set Union)
 
-```cpp
-struct DSU{
-    vector<int> p, r; DSU(int n): p(n), r(n,0){ iota(p.begin(), p.end(), 0);} 
-    int find(int x){ return p[x]==x?x:p[x]=find(p[x]); }
-    bool unite(int a,int b){ a=find(a); b=find(b); if(a==b) return false; if(r[a]<r[b]) swap(a,b); p[b]=a; if(r[a]==r[b]) ++r[a]; return true; }
-};
+```python
+class DSU:
+    def __init__(self, n: int):
+        self.p = list(range(n))
+        self.r = [0] * n
+    
+    def find(self, x: int) -> int:
+        if self.p[x] != x:
+            self.p[x] = self.find(self.p[x])
+        return self.p[x]
+    
+    def unite(self, a: int, b: int) -> bool:
+        a = self.find(a)
+        b = self.find(b)
+        if a == b:
+            return False
+        if self.r[a] < self.r[b]:
+            a, b = b, a
+        self.p[b] = a
+        if self.r[a] == self.r[b]:
+            self.r[a] += 1
+        return True
 ```
 
 | ID | Title | Link |
@@ -98,13 +123,31 @@ struct DSU{
 
 ## Trie (Prefix Tree)
 
-```cpp
-struct Trie{
-    struct Node{ int nxt[26]; bool end; Node(){ memset(nxt,-1,sizeof nxt); end=false; } };
-    vector<Node> t{1};
-    void insert(const string& s){ int u=0; for(char c:s){ int i=c-'a'; if(t[u].nxt[i]==-1){ t[u].nxt[i]=t.size(); t.emplace_back(); } u=t[u].nxt[i]; } t[u].end=true; }
-    bool search(const string& s){ int u=0; for(char c:s){ int i=c-'a'; if((u=t[u].nxt[i])==-1) return false; } return t[u].end; }
-};
+```python
+class Trie:
+    def __init__(self):
+        self.t = [{}]  # list of dicts: [{char -> next_idx}, ...]
+        self.end = [False]  # end[i] = True if node i marks end of word
+    
+    def insert(self, s: str):
+        u = 0
+        for c in s:
+            i = ord(c) - ord('a')
+            if i not in self.t[u]:
+                self.t[u][i] = len(self.t)
+                self.t.append({})
+                self.end.append(False)
+            u = self.t[u][i]
+        self.end[u] = True
+    
+    def search(self, s: str) -> bool:
+        u = 0
+        for c in s:
+            i = ord(c) - ord('a')
+            if i not in self.t[u]:
+                return False
+            u = self.t[u][i]
+        return self.end[u]
 ```
 
 | ID | Title | Link |
@@ -115,14 +158,34 @@ struct Trie{
 
 ## Segment Tree (range query / point update)
 
-```cpp
-struct Seg{ int n; vector<long long> st; Seg(int n):n(n),st(4*n,0){}
-    void upd(int p,long long v,int i,int l,int r){ if(l==r){ st[i]=v; return; }
-        int m=(l+r)/2; if(p<=m) upd(p,v,2*i,l,m); else upd(p,v,2*i+1,m+1,r);
-        st[i]=st[2*i]+st[2*i+1]; }
-    long long qry(int ql,int qr,int i,int l,int r){ if(qr<l||r<ql) return 0; if(ql<=l&&r<=qr) return st[i];
-        int m=(l+r)/2; return qry(ql,qr,2*i,l,m)+qry(ql,qr,2*i+1,m+1,r); }
-};
+```python
+class SegTree:
+    def __init__(self, n: int):
+        self.n = n
+        self.st = [0] * (4 * n)
+    
+    def update(self, p: int, v: int, i: int = 0, l: int = 0, r: int = None):
+        if r is None:
+            r = self.n - 1
+        if l == r:
+            self.st[i] = v
+            return
+        m = (l + r) // 2
+        if p <= m:
+            self.update(p, v, 2 * i + 1, l, m)
+        else:
+            self.update(p, v, 2 * i + 2, m + 1, r)
+        self.st[i] = self.st[2 * i + 1] + self.st[2 * i + 2]
+    
+    def query(self, ql: int, qr: int, i: int = 0, l: int = 0, r: int = None) -> int:
+        if r is None:
+            r = self.n - 1
+        if qr < l or r < ql:
+            return 0
+        if ql <= l and r <= qr:
+            return self.st[i]
+        m = (l + r) // 2
+        return self.query(ql, qr, 2 * i + 1, l, m) + self.query(ql, qr, 2 * i + 2, m + 1, r)
 ```
 
 | ID | Title | Link |
@@ -132,11 +195,23 @@ struct Seg{ int n; vector<long long> st; Seg(int n):n(n),st(4*n,0){}
 
 ## Fenwick Tree (Binary Indexed Tree)
 
-```cpp
-struct BIT{ int n; vector<long long> f; BIT(int n):n(n),f(n+1,0){}
-    void add(int i,long long v){ for(; i<=n; i+=i&-i) f[i]+=v; }
-    long long sum(int i){ long long s=0; for(; i>0; i-=i&-i) s+=f[i]; return s; }
-};
+```python
+class BIT:
+    def __init__(self, n: int):
+        self.n = n
+        self.f = [0] * (n + 1)
+    
+    def add(self, i: int, v: int):
+        while i <= self.n:
+            self.f[i] += v
+            i += i & -i
+    
+    def sum(self, i: int) -> int:
+        s = 0
+        while i > 0:
+            s += self.f[i]
+            i -= i & -i
+        return s
 ```
 
 | ID | Title | Link |

@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 406. Queue Reconstruction by Height"
 date: 2025-10-19 11:16:19 -0700
-categories: leetcode algorithm medium cpp greedy sorting list problem-solving
+categories: python greedy sorting list problem-solving
 ---
 
 # [Medium] 406. Queue Reconstruction by Height
@@ -53,31 +53,20 @@ Person 5 has height 6 with no one taller or equal in front of them.
 
 Sort people by height (descending) and k-value (ascending), then insert each person at the k-th position using a list for efficient insertion.
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
-        /*
-        1. Sort by height (descending), then by k-value (ascending)
-        2. Insert each person at the k-th position
-        3. Use list for efficient insertion at arbitrary positions
-        */
-
-        sort(people.begin(), people.end(), [](const vector<int> & a, const vector<int>& b) {
-            if(a[0] == b[0]) return a[1] < b[1];  // Same height: sort by k-value
-            return a[0] > b[0];                    // Different height: sort by height
-        });
-
-        list<vector<int>> rtn;
-        for(auto& person: people) {
-            auto it = rtn.begin();
-            advance(it, person[1]);  // Move iterator to k-th position
-            rtn.insert(it, person);
-        }
+```python
+class Solution:
+    def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
+        # 1. Sort by height (descending), then by k-value (ascending)
+        # 2. Insert each person at the k-th position
+        # 3. Use list for efficient insertion at arbitrary positions
         
-        return vector<vector<int>>(rtn.begin(), rtn.end());
-    }
-};
+        people.sort(key=lambda x: (-x[0], x[1]))
+        
+        result = []
+        for person in people:
+            result.insert(person[1], person)
+        
+        return result
 ```
 
 ## How the Algorithm Works
@@ -118,8 +107,8 @@ Sorted:   [[7,0],[7,1],[6,1],[5,0],[5,2],[4,4]]
 ## Algorithm Breakdown
 
 ### Sorting Logic:
-```cpp
-sort(people.begin(), people.end(), [](const vector<int> & a, const vector<int>& b) {
+```python
+sort(people.begin(), people.end(), [](list[int]  a, list[int] b) {
     if(a[0] == b[0]) return a[1] < b[1];  // Same height: sort by k-value
     return a[0] > b[0];                    // Different height: sort by height
 });
@@ -131,12 +120,9 @@ sort(people.begin(), people.end(), [](const vector<int> & a, const vector<int>& 
 3. **Result:** Tallest people first, then by k-value
 
 ### Insertion Logic:
-```cpp
-for(auto& person: people) {
-    auto it = rtn.begin();
-    advance(it, person[1]);  // Move iterator to k-th position
-    rtn.insert(it, person);
-}
+```python
+for person in people:
+    result.insert(person[1], person)
 ```
 
 **Process:**
@@ -201,49 +187,40 @@ Sorted:   [[6,0],[5,0],[4,0],[3,2],[2,2],[1,4]]
 
 ## Alternative Approaches
 
-### Approach 1: Vector with Insertion
-```cpp
-class Solution {
-public:
-    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
-        sort(people.begin(), people.end(), [](const vector<int>& a, const vector<int>& b) {
-            if(a[0] == b[0]) return a[1] < b[1];
-            return a[0] > b[0];
-        });
+### Approach 1: List with Insertion
+```python
+class Solution:
+    def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
+        people.sort(key=lambda x: (-x[0], x[1]))
         
-        vector<vector<int>> result;
-        for(auto& person: people) {
-            result.insert(result.begin() + person[1], person);
-        }
+        result = []
+        for person in people:
+            result.insert(person[1], person)
         
-        return result;
-    }
-};
+        return result
 ```
 
 **Time Complexity:** O(n²)  
 **Space Complexity:** O(n)
 
 ### Approach 2: Priority Queue
-```cpp
-class Solution {
-public:
-    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
-        priority_queue<pair<int, int>> pq;
-        for(auto& person: people) {
-            pq.push({person[0], person[1]});
-        }
+```python
+import heapq
+
+class Solution:
+    def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
+        # Max heap: negate height for max heap behavior
+        pq = []
+        for person in people:
+            heapq.heappush(pq, (-person[0], person[1]))
         
-        vector<vector<int>> result;
-        while(!pq.empty()) {
-            auto [h, k] = pq.top();
-            pq.pop();
-            result.insert(result.begin() + k, {h, k});
-        }
+        result = []
+        while pq:
+            neg_h, k = heapq.heappop(pq)
+            h = -neg_h
+            result.insert(k, [h, k])
         
-        return result;
-    }
-};
+        return result
 ```
 
 **Time Complexity:** O(n²)  

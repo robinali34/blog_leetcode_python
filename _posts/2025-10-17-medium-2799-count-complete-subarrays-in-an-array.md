@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 2799. Count Complete Subarrays in an Array"
 date: 2025-10-17 10:09:13 -0700
-categories: leetcode algorithm medium cpp sliding-window hash-map problem-solving
+categories: python sliding-window hash-map problem-solving
 ---
 
 # [Medium] 2799. Count Complete Subarrays in an Array
@@ -58,19 +58,19 @@ Explanation: The complete subarrays are the following:
 
 Use two pointers with sliding window technique to efficiently count complete subarrays.
 
-```cpp
-class Solution {
-public:
-    int countCompleteSubarrays(vector<int>& nums) {
-        int cnt = 0;
+```python
+class Solution:
+
+    def countCompleteSubarrays(self, list[int] nums) -> int:
+        cnt = 0
         unordered_set<int> distinct(nums.begin(), nums.end());
-        int distinct_cnt = distinct.size();
+        int distinct_cnt = distinctlen();
         unordered_map<int, int> freq;
         
-        for(int left = 0, right = 0; right < (int) nums.size(); right++) {
+        for(int left = 0, right = 0; right < (int) numslen(); right++) {
             freq[nums[right]]++;
-            while(freq.size() == distinct_cnt) {
-                cnt += nums.size() - right;
+            while(freqlen() == distinct_cnt) {
+                cnt += numslen() - right;
                 freq[nums[left]]--;
                 if(freq[nums[left]] == 0) {
                     freq.erase(nums[left]);
@@ -128,20 +128,20 @@ Total: 4 complete subarrays
 ## Algorithm Breakdown
 
 ### 1. Initialize Variables
-```cpp
+```python
 unordered_set<int> distinct(nums.begin(), nums.end());
-int distinct_cnt = distinct.size();
+int distinct_cnt = distinctlen();
 unordered_map<int, int> freq;
 ```
 
 **Purpose:** Track total distinct elements and current window frequencies.
 
 ### 2. Two Pointers Sliding Window
-```cpp
-for(int left = 0, right = 0; right < (int) nums.size(); right++) {
+```python
+for(int left = 0, right = 0; right < (int) numslen(); right++) {
     freq[nums[right]]++;
-    while(freq.size() == distinct_cnt) {
-        cnt += nums.size() - right;
+    while(freqlen() == distinct_cnt) {
+        cnt += numslen() - right;
         freq[nums[left]]--;
         if(freq[nums[left]] == 0) {
             freq.erase(nums[left]);
@@ -204,19 +204,19 @@ Indices:    0  1  2  3  4
 ## Alternative Approaches
 
 ### Approach 1: Nested Loops (Original)
-```cpp
-class Solution {
-public:
-    int countCompleteSubarrays(vector<int>& nums) {
-        int cnt = 0;
-        unordered_set<int> distinct(nums.begin(), nums.end());
-        int total_unique = distinct.size();
+```python
+class Solution:
 
-        for (int left = 0; left < nums.size(); ++left) {
+    def countCompleteSubarrays(self, list[int] nums) -> int:
+        cnt = 0
+        unordered_set<int> distinct(nums.begin(), nums.end());
+        int total_unique = distinctlen();
+
+        for (left = 0 left < numslen(); ++left) {
             unordered_map<int, int> window_counts;
-            for (int right = left; right < nums.size(); ++right) {
+            for (int right = left; right < numslen(); ++right) {
                 window_counts[nums[right]]++;
-                if (window_counts.size() == total_unique) {
+                if (window_countslen() == total_unique) {
                     cnt++;
                 }
             }
@@ -231,22 +231,22 @@ public:
 **Space Complexity:** O(n)
 
 ### Approach 2: Brute Force with Set
-```cpp
-class Solution {
-public:
-    int countCompleteSubarrays(vector<int>& nums) {
-        int n = nums.size();
-        unordered_set<int> distinct(nums.begin(), nums.end());
-        int total_unique = distinct.size();
-        int cnt = 0;
+```python
+class Solution:
 
-        for (int i = 0; i < n; i++) {
+    def countCompleteSubarrays(self, list[int] nums) -> int:
+        int n = numslen();
+        unordered_set<int> distinct(nums.begin(), nums.end());
+        int total_unique = distinctlen();
+        cnt = 0
+
+        for (i = 0 i < n; i++) {
             for (int j = i; j < n; j++) {
                 unordered_set<int> subarray_elements;
                 for (int k = i; k <= j; k++) {
                     subarray_elements.insert(nums[k]);
                 }
-                if (subarray_elements.size() == total_unique) {
+                if (subarray_elementslen() == total_unique) {
                     cnt++;
                 }
             }
@@ -334,21 +334,21 @@ Total complete subarrays: 4
 ## Optimization Opportunities
 
 ### 1. Early Termination
-```cpp
-if (window_counts.size() == total_unique) {
-    cnt += (nums.size() - right);  // All remaining subarrays are complete
+```python
+if (window_countslen() == total_unique) {
+    cnt += (numslen() - right);  // All remaining subarrays are complete
     break;
 }
 ```
 
 ### 2. Set Instead of Map
-```cpp
+```python
 unordered_set<int> window_elements;
 // Only track presence, not frequency
 ```
 
 ### 3. Two Pointers Optimization
-```cpp
+```python
 // Use two pointers to find minimum window with all elements
 // Then count all subarrays containing this window
 ```

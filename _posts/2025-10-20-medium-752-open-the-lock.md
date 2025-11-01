@@ -75,39 +75,34 @@ This is a **shortest path problem** that can be solved using **BFS**. We need to
 
 ### **Solution: BFS Shortest Path**
 
-```cpp
-class Solution {
-public:
-    int openLock(vector<string>& deadends, string target) {
-        unordered_set<string> deads (deadends.begin(), deadends.end());
-        unordered_set<string> visited;
-        if(deads.contains("0000")) return -1;
-        queue<string> q;
-        q.push("0000");
-        visited.insert("0000");
-        int steps = 0;
-        while(!q.empty()) {
-            int size = q.size();
-            while(size--) {
-                string curr = q.front();
-                q.pop();
-                if(curr == target) return steps;
-                for(int i = 0; i < 4; i++) {
-                    for(int dir = -1; dir <=1; dir+=2) {
-                        string next = curr;
-                        next[i] = (curr[i] - '0' + dir + 10) % 10 + '0';
-                        if(!deads.contains(next) && !visited.contains(next)) {
-                            q.push(next);
-                            visited.insert(next);
-                        }
-                    }
-                }
-            }
-            steps++;
-        }   
-        return -1;
-    }
-};
+```python
+from collections import deque
+
+class Solution:
+    def openLock(self, deadends: list[str], target: str) -> int:
+        deads = set(deadends)
+        visited = set()
+        if "0000" in deads:
+            return -1
+        q = deque(["0000"])
+        visited.add("0000")
+        steps = 0
+        while q:
+            size = len(q)
+            for _ in range(size):
+                curr = q.popleft()
+                if curr == target:
+                    return steps
+                for i in range(4):
+                    for dir in [-1, 1]:
+                        next_state = list(curr)
+                        next_state[i] = str((int(curr[i]) + dir + 10) % 10)
+                        next_str = ''.join(next_state)
+                        if next_str not in deads and next_str not in visited:
+                            q.append(next_str)
+                            visited.add(next_str)
+                steps += 1
+        return -1
 ```
 
 ### **Algorithm Explanation:**
@@ -138,7 +133,7 @@ Path: "0000" → "1000" → "1100" → "1200" → "1201" → "1202" → "0202"
 
 ### **Key Implementation Details:**
 
-```cpp
+```python
 // Circular wrapping for digits
 next[i] = (curr[i] - '0' + dir + 10) % 10 + '0';
 
@@ -172,43 +167,40 @@ next[i] = (curr[i] - '0' + dir + 10) % 10 + '0';
 ## Alternative Approaches
 
 ### **Bidirectional BFS**
-```cpp
-class Solution {
-public:
-    int openLock(vector<string>& deadends, string target) {
-        unordered_set<string> deads(deadends.begin(), deadends.end());
-        if(deads.contains("0000") || deads.contains(target)) return -1;
+```python
+class Solution:
+
+    def openLock(self, deadends: list[str], target: str) -> int:
+        deads = set(deadends)
+        if "0000" in deads or target in deads:
+            return -1
         
-        unordered_set<string> begin, end, visited;
-        begin.insert("0000");
-        end.insert(target);
-        int steps = 0;
+        begin, end, visited = {"0000"}, {target}, set()
+        steps = 0
         
-        while(!begin.empty() && !end.empty()) {
-            if(begin.size() > end.size()) swap(begin, end);
+        while begin and end:
+            if len(begin) > len(end):
+                begin, end = end, begin
             
-            unordered_set<string> next;
-            for(string curr : begin) {
-                if(end.contains(curr)) return steps;
-                if(deads.contains(curr) || visited.contains(curr)) continue;
+            next_level = set()
+            for curr in begin:
+                if curr in end:
+                    return steps
+                if curr in deads or curr in visited:
+                    continue
                 
-                visited.insert(curr);
-                for(int i = 0; i < 4; i++) {
-                    for(int dir = -1; dir <= 1; dir += 2) {
-                        string next_state = curr;
-                        next_state[i] = (curr[i] - '0' + dir + 10) % 10 + '0';
-                        if(!deads.contains(next_state) && !visited.contains(next_state)) {
-                            next.insert(next_state);
-                        }
-                    }
-                }
-            }
-            begin = next;
-            steps++;
-        }
-        return -1;
-    }
-};
+                visited.add(curr)
+                curr_list = list(curr)
+                for i in range(4):
+                    for dir in [-1, 1]:
+                        next_state = curr_list[:]
+                        next_state[i] = str((int(curr[i]) + dir + 10) % 10)
+                        next_str = ''.join(next_state)
+                        if next_str not in deads and next_str not in visited:
+                            next_level.add(next_str)
+            begin = next_level
+            steps += 1
+        return -1
 ```
 
 ## Related Problems

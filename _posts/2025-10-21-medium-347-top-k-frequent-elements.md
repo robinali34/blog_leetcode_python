@@ -51,28 +51,25 @@ Output: [1]
 **Time Complexity:** O(n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> freq;
-        for(auto& num: nums) freq[num]++;
+```python
+class Solution:
+    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+        freq = {}
+        for num in nums:
+            freq[num] = freq.get(num, 0) + 1
 
-        int n = nums.size();
-        vector<vector<int>> buckets(n + 1);
-        for(auto& [num, count]: freq) {
-            buckets[count].push_back(num);
-        }
-        vector<int> rtn;
-        for(int i = n; i >= 0 && rtn.size() < k; i--) {
-            for(int num: buckets[i]) {
-                rtn.push_back(num);
-                if(rtn.size() == k) break;
-            }
-        }
-        return rtn;
-    }
-};
+        n = len(nums)
+        buckets = [[] for _ in range(n + 1)]
+        for num, count in freq.items():
+            buckets[count].append(num)
+        
+        result = []
+        for i in range(n, -1, -1):
+            for num in buckets[i]:
+                result.append(num)
+                if len(result) == k:
+                    return result
+        return result
 ```
 
 ### Approach 2: Quickselect
@@ -86,55 +83,43 @@ public:
 **Time Complexity:** O(n) average, O(n²) worst case  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    vector<int> topKFrequent(vector<int>& nums, int k) {
-        for(int n : nums) {
-            count_map[n] += 1;
-        }
-        int n = count_map.size();
-        for(pair<int, int> p: count_map) {
-            unique.push_back(p.first);
-        }
-        quickselect(0, n - 1, n - k);
-        vector<int> top_k_frequent(k);
-        copy(unique.begin() + n - k, unique.end(), top_k_frequent.begin());
-        return top_k_frequent;
-    }
+```python
+import random
 
-private:
-    vector<int> unique;
-    map<int, int> count_map;
+class Solution:
+    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+        count_map = {}
+        for n in nums:
+            count_map[n] = count_map.get(n, 0) + 1
+        
+        unique = list(count_map.keys())
+        n = len(unique)
+        self.quickselect(unique, count_map, 0, n - 1, n - k)
+        return unique[n - k:]
+    
+    def partition(self, unique: list[int], count_map: dict, left: int, right: int, pivot: int) -> int:
+        pivot_freq = count_map[unique[pivot]]
+        unique[pivot], unique[right] = unique[right], unique[pivot]
 
-    int partition(int left, int right, int pivot) {
-        int pivot_freq = count_map[unique[pivot]];
-        swap(unique[pivot], unique[right]);
+        store_idx = left
+        for i in range(left, right):
+            if count_map[unique[i]] < pivot_freq:
+                unique[store_idx], unique[i] = unique[i], unique[store_idx]
+                store_idx += 1
+        unique[right], unique[store_idx] = unique[store_idx], unique[right]
+        return store_idx
 
-        int store_idx = left;
-        for(int i = left; i < right; i++) {
-            if(count_map[unique[i]] < pivot_freq) {
-                swap(unique[store_idx], unique[i]);
-                store_idx += 1;
-            }
-        }
-        swap(unique[right], unique[store_idx]);
-        return store_idx;
-    }
-
-    void quickselect(int left, int right, int k_smallest){
-        if(left == right) return;
-        int pivot = left + rand() % (right - left + 1);
-        pivot = partition(left, right, pivot);
-        if(k_smallest == pivot) {
-            return;
-        } else if(k_smallest < pivot) {
-            quickselect(left, pivot - 1, k_smallest);
-        } else {
-            quickselect(pivot + 1, right, k_smallest);
-        }
-    }
-};
+    def quickselect(self, unique: list[int], count_map: dict, left: int, right: int, k_smallest: int) -> None:
+        if left == right:
+            return
+        pivot = left + random.randint(0, right - left)
+        pivot = self.partition(unique, count_map, left, right, pivot)
+        if k_smallest == pivot:
+            return
+        elif k_smallest < pivot:
+            self.quickselect(unique, count_map, left, pivot - 1, k_smallest)
+        else:
+            self.quickselect(unique, count_map, pivot + 1, right, k_smallest)
 ```
 
 ### Approach 3: Min Heap
@@ -148,34 +133,28 @@ private:
 **Time Complexity:** O(n log k)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> freq;
-        for(int num : nums) {
-            freq[num]++;
-        }
+```python
+import heapq
+
+class Solution:
+    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+        freq = {}
+        for num in nums:
+            freq[num] = freq.get(num, 0) + 1
         
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
+        minHeap = []
         
-        for(auto& [num, count] : freq) {
-            if(minHeap.size() < k) {
-                minHeap.push({count, num});
-            } else if(count > minHeap.top().first) {
-                minHeap.pop();
-                minHeap.push({count, num});
-            }
-        }
+        for num, count in freq.items():
+            if len(minHeap) < k:
+                heapq.heappush(minHeap, (count, num))
+            elif count > minHeap[0][0]:
+                heapq.heappop(minHeap)
+                heapq.heappush(minHeap, (count, num))
         
-        vector<int> result;
-        while(!minHeap.empty()) {
-            result.push_back(minHeap.top().second);
-            minHeap.pop();
-        }
-        return result;
-    }
-};
+        result = []
+        while minHeap:
+            result.append(heapq.heappop(minHeap)[1])
+        return result
 ```
 
 ### Approach 4: Max Heap
@@ -188,28 +167,24 @@ public:
 **Time Complexity:** O(n log n)  
 **Space Complexity:** O(n)
 
-```cpp
-class Solution {
-public:
-    vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> freq;
-        for(int num : nums) {
-            freq[num]++;
-        }
+```python
+import heapq
+
+class Solution:
+    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+        freq = {}
+        for num in nums:
+            freq[num] = freq.get(num, 0) + 1
         
-        priority_queue<pair<int, int>> maxHeap;
-        for(auto& [num, count] : freq) {
-            maxHeap.push({count, num});
-        }
+        # Max heap: use negative count for max heap behavior
+        maxHeap = []
+        for num, count in freq.items():
+            heapq.heappush(maxHeap, (-count, num))
         
-        vector<int> result;
-        for(int i = 0; i < k; i++) {
-            result.push_back(maxHeap.top().second);
-            maxHeap.pop();
-        }
-        return result;
-    }
-};
+        result = []
+        for _ in range(k):
+            result.append(heapq.heappop(maxHeap)[1])
+        return result
 ```
 
 ## Complexity Analysis

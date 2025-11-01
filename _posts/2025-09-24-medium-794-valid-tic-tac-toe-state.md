@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 794. Valid Tic-Tac-Toe State"
 date: 2025-09-24 17:00:00 -0000
-categories: leetcode algorithm simulation data-structures game-logic validation medium cpp tic-tac-toe game-validation problem-solving
+categories: python tic-tac-toe game-validation problem-solving
 ---
 
 # [Medium] 794. Valid Tic-Tac-Toe State
@@ -58,50 +58,50 @@ The solution involves checking several conditions:
    - If O wins, X and O should have equal counts
    - Both players cannot win simultaneously
 
-## Solution in C++
+## Solution in Python
 
 **Time Complexity:** O(1) - Constant time since board is always 3x3  
 **Space Complexity:** O(1) - Only using constant extra space
 
-```cpp
-class Solution {
-public:
-    bool validTicTacToe(vector<string>& board) {
+```python
+class Solution:
+
+    def validTicTacToe(self, list[string] board) -> bool:
         int x_cnt = 0, o_cnt = 0;
-        for (int i= 0; i < board.size(); i++) {
-            for (auto& c : board[i]) {
+        for (i = 0 i < boardlen(); i++) {
+            for (auto c : board[i]) {
                 if (c == 'X') x_cnt++;
                 if (c == 'O') o_cnt++;
             }
         }
-        if (x_cnt != o_cnt + 1 && x_cnt != o_cnt) return false;
+        if (x_cnt != o_cnt + 1  x_cnt != o_cnt) return false;
         bool x_win = this->win(board, 'X');
         bool o_win = this->win(board, 'O'); 
-        if (x_win && o_cnt + 1 != x_cnt) return false;
-        if (o_win && o_cnt != x_cnt) return false;
-        if (x_win && o_win) return false;
+        if (x_win  o_cnt + 1 != x_cnt) return false;
+        if (o_win  o_cnt != x_cnt) return false;
+        if (x_win  o_win) return false;
         return true; 
     }
 private:
-    bool win(vector<string>& board, char P) {
-        int n = board.size();
-        int cnt = 0;
-        for (int i = 0; i< n; i++) {
+    def win(self, list[string] board, char P) -> bool:
+        int n = boardlen();
+        cnt = 0
+        for (i = 0 i< n; i++) {
             cnt = 0;
-            for (int j = 0; j < n; j++) {
+            for (j = 0 j < n; j++) {
                 if(board[i][j]== P) cnt++;
             }
             if (cnt == n) return true;
             
             cnt = 0;
-            for (int j = 0; j < n; j++) {
+            for (j = 0 j < n; j++) {
                 if(board[j][i] == P) cnt++;
             }
             if (cnt == n) return true;
         }
 
         cnt = 0;
-        for (int i = 0; i< n; i++) {
+        for (i = 0 i< n; i++) {
             if(board[i][i] == P) cnt++;
         }
         if (cnt == n) return true;

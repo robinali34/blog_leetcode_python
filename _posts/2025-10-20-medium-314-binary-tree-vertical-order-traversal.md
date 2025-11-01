@@ -58,7 +58,7 @@ This problem requires traversing a binary tree in **vertical order** (column by 
 ### Algorithm:
 
 1. **BFS with column tracking**: Use queue to store `(node, column)` pairs
-2. **Column mapping**: Use `map<int, vector<int>>` to group nodes by column
+2. **Column mapping**: Use `dict[int, list[int]]` to group nodes by column
 3. **Level-by-level**: Process nodes level by level to maintain top-to-bottom order
 4. **Result construction**: Convert map to result vector in column order
 
@@ -66,43 +66,39 @@ This problem requires traversing a binary tree in **vertical order** (column by 
 
 ### **Solution: BFS with Column Tracking**
 
-```cpp
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
-class Solution {
-public:
-    vector<vector<int>> verticalOrder(TreeNode* root) {
-        vector<vector<int>> rtn;
-        if(!root) return rtn;
-        map<int, vector<int>> map;
-        queue<pair<TreeNode*, int>> q;
-        q.push({root, 0});
-        while(!q.empty()) {
-            int size = q.size();
-            for(int i = 0; i < (int)q.size(); i++) {
-                TreeNode* curr = q.front().first;
-                int dir = q.front().second;
-                q.pop();
-                map[dir].push_back(curr->val);
-                if(curr->left) q.push({curr->left, dir - 1});
-                if(curr->right) q.push({curr->right, dir + 1});
-            }
-        }
-        for(auto& [node, vals]: map) {
-            rtn.push_back(vals);
-        }
-        return rtn;
-    }
-};
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+from collections import deque
+
+class Solution:
+    def verticalOrder(self, root: TreeNode) -> list[list[int]]:
+        if not root:
+            return []
+        
+        column_map = {}
+        q = deque([(root, 0)])
+        
+        while q:
+            size = len(q)
+            for _ in range(size):
+                curr, col = q.popleft()
+                if col not in column_map:
+                    column_map[col] = []
+                column_map[col].append(curr.val)
+                
+                if curr.left:
+                    q.append((curr.left, col - 1))
+                if curr.right:
+                    q.append((curr.right, col + 1))
+        
+        result = [column_map[col] for col in sorted(column_map.keys())]
+        return result
 ```
 
 ### **Algorithm Explanation:**
@@ -170,33 +166,28 @@ Result: [[9], [3,15], [20], [7]]
 ## Alternative Approaches
 
 ### **DFS Approach (Not Recommended)**
-```cpp
-class Solution {
-public:
-    vector<vector<int>> verticalOrder(TreeNode* root) {
-        map<int, vector<pair<int, int>>> map; // column -> [(row, val)]
-        dfs(root, 0, 0, map);
+```python
+class Solution:
+    def verticalOrder(self, root: TreeNode) -> list[list[int]]:
+        column_map = {}  # column -> [(row, val)]
+        self.dfs(root, 0, 0, column_map)
         
-        vector<vector<int>> result;
-        for(auto& [col, nodes] : map) {
-            sort(nodes.begin(), nodes.end()); // Sort by row, then by val
-            vector<int> vals;
-            for(auto& [row, val] : nodes) {
-                vals.push_back(val);
-            }
-            result.push_back(vals);
-        }
-        return result;
-    }
+        result = []
+        for col in sorted(column_map.keys()):
+            nodes = column_map[col]
+            nodes.sort()  # Sort by row, then by val
+            vals = [val for row, val in nodes]
+            result.append(vals)
+        return result
     
-private:
-    void dfs(TreeNode* node, int row, int col, map<int, vector<pair<int, int>>>& map) {
-        if(!node) return;
-        map[col].push_back({row, node->val});
-        dfs(node->left, row + 1, col - 1, map);
-        dfs(node->right, row + 1, col + 1, map);
-    }
-};
+    def dfs(self, node: TreeNode, row: int, col: int, column_map: dict) -> None:
+        if not node:
+            return
+        if col not in column_map:
+            column_map[col] = []
+        column_map[col].append((row, node.val))
+        self.dfs(node.left, row + 1, col - 1, column_map)
+        self.dfs(node.right, row + 1, col + 1, column_map)
 ```
 
 **Why BFS is better:**

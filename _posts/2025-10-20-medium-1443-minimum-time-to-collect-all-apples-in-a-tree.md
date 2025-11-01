@@ -68,73 +68,63 @@ This problem can be solved using either **DFS** or **BFS** approaches. The key i
 
 ### Approach 1: DFS (Optimal)
 
-```cpp
-class Solution {
-private:
-    int dfs(vector<vector<int>>& adj, vector<bool>& hasApple, int node, int parent) {
-        int totalTime = 0;
-        for(auto& child: adj[node]) {
-            if(child == parent) continue;
-            int childTime = dfs(adj, hasApple, child, node);
-            if(childTime > 0 || hasApple[child]) totalTime += childTime + 2;
-        }
-        return totalTime;
-    }
-public:
-    int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
-        vector<vector<int>> adj(n);
-        for(auto& edge: edges) {
-            adj[edge[0]].push_back(edge[1]);
-            adj[edge[1]].push_back(edge[0]);
-        }
-        return dfs(adj, hasApple, 0, -1);
-    }
-};
+```python
+class Solution:
+    def dfs(self, adj: list[list[int]], hasApple: list[bool], node: int, parent: int) -> int:
+        totalTime = 0
+        for child in adj[node]:
+            if child == parent:
+                continue
+            childTime = self.dfs(adj, hasApple, child, node)
+            if childTime > 0 or hasApple[child]:
+                totalTime += childTime + 2
+        return totalTime
+
+    def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
+        adj = [[] for _ in range(n)]
+        for edge in edges:
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+        return self.dfs(adj, hasApple, 0, -1)
 ```
 
 ### Approach 2: BFS with Path Tracing
 
-```cpp
-class Solution {
-public:
-    int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
-        vector<vector<int>> adj(n);
-        for(auto& e: edges) {
-            adj[e[0]].push_back(e[1]);
-            adj[e[1]].push_back(e[0]);
-        }
+```python
+class Solution:
 
-        vector<int> parent(n, -1);
-        queue<int> q;
-        q.push(0);
-        vector<bool> visited(n, false);
-        visited[0] = true;
-        while(!q.empty()) {
-            int node = q.front();
-            q.pop();
-            for(int neighbor : adj[node]) {
-                if(!visited[neighbor]) {
-                    visited[neighbor] = true;
-                    parent[neighbor] = node;
-                    q.push(neighbor);
-                }
-            }
-        }
-
-        unordered_set<int> visitedNodes;
-        int time = 0;
-        for(int i = 0; i < n; i++) {
-            if(!hasApple[i]) continue;
-            int curr = i;
-            while(curr != 0 && !visitedNodes.contains(curr)) {
-                visitedNodes.insert(curr);
-                time += 2;
-                curr = parent[curr];
-            }
-        }
-        return time;
-    }
-};
+    def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
+        from collections import deque
+        
+        adj = [[] for _ in range(n)]
+        for e in edges:
+            adj[e[0]].append(e[1])
+            adj[e[1]].append(e[0])
+        
+        parent = [-1] * n
+        q = deque([0])
+        visited = [False] * n
+        visited[0] = True
+        
+        while q:
+            node = q.popleft()
+            for neighbor in adj[node]:
+                if not visited[neighbor]:
+                    visited[neighbor] = True
+                    parent[neighbor] = node
+                    q.append(neighbor)
+        
+        visitedNodes = set()
+        time = 0
+        for i in range(n):
+            if not hasApple[i]:
+                continue
+            curr = i
+            while curr != 0 and curr not in visitedNodes:
+                visitedNodes.add(curr)
+                time += 2
+                curr = parent[curr]
+        return time
 ```
 
 ## Explanation
@@ -212,32 +202,25 @@ For `n=7, edges=[[0,1],[0,2],[1,4],[1,5],[2,3],[2,6]], hasApple=[false,false,tru
 ## Alternative Approaches
 
 ### Iterative DFS:
-```cpp
-int minTime(int n, vector<vector<int>>& edges, vector<bool>& hasApple) {
-    vector<vector<int>> adj(n);
-    for(auto& edge: edges) {
-        adj[edge[0]].push_back(edge[1]);
-        adj[edge[1]].push_back(edge[0]);
-    }
+```python
+def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
+    adj = [[] for _ in range(n)]
+    for edge in edges:
+        adj[edge[0]].append(edge[1])
+        adj[edge[1]].append(edge[0])
     
-    stack<pair<int, int>> stk; // {node, parent}
-    stk.push({0, -1});
-    vector<int> subtreeTime(n, 0);
+    stk = [(0, -1)]  # (node, parent)
+    subtreeTime = [0] * n
     
-    while(!stk.empty()) {
-        auto [node, parent] = stk.top();
-        stk.pop();
+    while stk:
+        node, parent = stk.pop()
         
-        // Process children
-        for(int child : adj[node]) {
-            if(child != parent) {
-                stk.push({child, node});
-            }
-        }
-    }
+        # Process children
+        for child in adj[node]:
+            if child != parent:
+                stk.append((child, node))
     
-    return subtreeTime[0];
-}
+    return subtreeTime[0]
 ```
 
 The **DFS approach is the most optimal** solution for this problem, providing the best balance of time complexity, space efficiency, and code clarity.

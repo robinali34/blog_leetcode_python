@@ -2,7 +2,7 @@
 layout: post
 title: "[Medium] 62. Unique Paths"
 date: 2025-09-24 23:30:00 -0000
-categories: leetcode algorithm dynamic-programming data-structures grid combinatorics medium cpp unique-paths problem-solving
+categories: python unique-paths problem-solving
 ---
 
 # [Medium] 62. Unique Paths
@@ -57,24 +57,19 @@ The solution uses dynamic programming with the following key insights:
 2. **Recurrence Relation**: `dp[i][j] = dp[i-1][j] + dp[i][j-1]`
 3. **Bottom-up DP**: Build the solution from smaller subproblems to larger ones
 
-## Solution in C++
+## Solution in Python
 
 **Time Complexity:** O(m × n) - We fill each cell once  
 **Space Complexity:** O(m × n) - For the DP table
 
-```cpp
-class Solution {
-public:
-    int uniquePaths(int m, int n) {
-        vector<vector<int>> dp(m, vector<int>(n, 1));
-        for (int row = 1; row < m; row++) {
-            for (int col = 1; col < n; col++) {
-                dp[row][col] = dp[row][col - 1] + dp[row - 1][col];
-            }
-        }
-        return dp[m- 1][n -1];
-    }
-};
+```python
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        dp = [[1] * n for _ in range(m)]
+        for row in range(1, m):
+            for col in range(1, n):
+                dp[row][col] = dp[row][col - 1] + dp[row - 1][col]
+        return dp[m - 1][n - 1]
 ```
 
 ## Step-by-Step Example
@@ -113,10 +108,10 @@ Let's trace through the solution with m = 3, n = 3:
 ## Alternative Approaches
 
 ### Mathematical Solution (Combinatorics)
-```cpp
-int uniquePaths(int m, int n) {
+```python
+def uniquePaths(self, int m, int n) -> int:
     long long result = 1;
-    for (int i = 0; i < min(m-1, n-1); i++) {
+    for (i = 0 i < min(m-1, n-1); i++) {
         result = result * (m + n - 2 - i) / (i + 1);
     }
     return (int)result;
@@ -124,16 +119,13 @@ int uniquePaths(int m, int n) {
 ```
 
 ### Space-Optimized DP
-```cpp
-int uniquePaths(int m, int n) {
-    vector<int> dp(n, 1);
-    for (int i = 1; i < m; i++) {
-        for (int j = 1; j < n; j++) {
-            dp[j] += dp[j-1];
-        }
-    }
-    return dp[n-1];
-}
+```python
+def uniquePaths(self, m: int, n: int) -> int:
+    dp = [1] * n
+    for i in range(1, m):
+        for j in range(1, n):
+            dp[j] += dp[j - 1]
+    return dp[n - 1]
 ```
 
 ## Visual Representation

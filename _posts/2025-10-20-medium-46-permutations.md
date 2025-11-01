@@ -46,7 +46,7 @@ Output: [[1]]
 This is a classic **backtracking** problem that requires generating all possible permutations of a given array. There are two main approaches:
 
 1. **Backtracking with Swapping:** Generate permutations by swapping elements in-place
-2. **STL next_permutation:** Use C++ STL's built-in permutation generator
+2. **STL next_permutation:** Use Python STL's built-in permutation generator
 
 ### Algorithm 1: Backtracking with Swapping
 1. **Start from index 0** and try each element at current position
@@ -65,43 +65,31 @@ This is a classic **backtracking** problem that requires generating all possible
 
 ### Solution 1: Backtracking with Swapping
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> rtn;
-        permute(nums, 0, rtn);
-        return rtn;
-    }
-private:
-    void permute(vector<int>& nums, int idx, vector<vector<int>>& rtn) {
-        if(idx == nums.size()) {
-            rtn.push_back(nums);
-            return;
-        }
-        for(int i = idx; i < (int)nums.size(); i++) {
-            swap(nums[idx], nums[i]);
-            permute(nums, idx + 1, rtn);
-            swap(nums[idx], nums[i]);
-        }
-    }
-};
+```python
+class Solution:
+    def permute(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        self.permuteHelper(nums, 0, result)
+        return result
+    
+    def permuteHelper(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])  # Create a copy
+            return
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]  # Swap
+            self.permuteHelper(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]  # Backtrack
 ```
 
 ### Solution 2: STL next_permutation
 
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> rtn;
-        sort(nums.begin(), nums.end());
-        do{
-            rtn.push_back(nums);
-        } while(next_permutation(nums.begin(), nums.end()));
-        return rtn;
-    }
-};
+```python
+from itertools import permutations
+
+class Solution:
+    def permute(self, nums: list[int]) -> list[list[int]]:
+        return list(permutations(nums))
 ```
 
 ## Explanation
@@ -199,68 +187,52 @@ Sorted: [1,2,3]
 ## Alternative Approaches
 
 ### Approach 3: Backtracking with Visited Array
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> result;
-        vector<int> current;
-        vector<bool> used(nums.size(), false);
-        backtrack(nums, current, used, result);
-        return result;
-    }
+```python
+class Solution:
+    def permute(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        current = []
+        used = [False] * len(nums)
+        self.backtrack(nums, current, used, result)
+        return result
     
-private:
-    void backtrack(vector<int>& nums, vector<int>& current, 
-                   vector<bool>& used, vector<vector<int>>& result) {
-        if(current.size() == nums.size()) {
-            result.push_back(current);
-            return;
-        }
+    def backtrack(self, nums: list[int], current: list[int], 
+                  used: list[bool], result: list[list[int]]) -> None:
+        if len(current) == len(nums):
+            result.append(current[:])
+            return
         
-        for(int i = 0; i < nums.size(); i++) {
-            if(used[i]) continue;
+        for i in range(len(nums)):
+            if used[i]:
+                continue
             
-            used[i] = true;
-            current.push_back(nums[i]);
-            backtrack(nums, current, used, result);
-            current.pop_back();
-            used[i] = false;
-        }
-    }
-};
+            used[i] = True
+            current.append(nums[i])
+            self.backtrack(nums, current, used, result)
+            current.pop()
+            used[i] = False
 ```
 
 ### Approach 4: Iterative with Stack
-```cpp
-class Solution {
-public:
-    vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> result;
-        stack<vector<int>> stk;
-        stk.push({});
+```python
+class Solution:
+    def permute(self, nums: list[int]) -> list[list[int]]:
+        result = []
+        stack = [[]]
         
-        while(!stk.empty()) {
-            vector<int> current = stk.top();
-            stk.pop();
+        while stack:
+            current = stack.pop()
             
-            if(current.size() == nums.size()) {
-                result.push_back(current);
-                continue;
-            }
+            if len(current) == len(nums):
+                result.append(current)
+                continue
             
-            for(int num : nums) {
-                if(find(current.begin(), current.end(), num) == current.end()) {
-                    vector<int> next = current;
-                    next.push_back(num);
-                    stk.push(next);
-                }
-            }
-        }
+            for num in nums:
+                if num not in current:
+                    next_perm = current + [num]
+                    stack.append(next_perm)
         
-        return result;
-    }
-};
+        return result
 ```
 
 ## When to Use Each Approach
