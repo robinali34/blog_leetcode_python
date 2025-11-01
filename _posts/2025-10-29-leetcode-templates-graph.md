@@ -44,7 +44,7 @@ def bfs_grid(g: list[str], s: tuple[int, int], t: tuple[int, int]) -> int:
 | ID | Title | Link |
 |---|---|---|
 | 200 | Number of Islands | [Number of Islands](https://leetcode.com/problems/number-of-islands/) |
-| 417 | [Pacific Atlantic Water Flow](https://robinali34.github.io/blog_leetcode/posts/2025-10-19-medium-417-pacific-atlantic-water-flow/) | [Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/) |
+| 417 | [Pacific Atlantic Water Flow](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-19-medium-417-pacific-atlantic-water-flow/) | [Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/) |
 | 542 | 01 Matrix | [01 Matrix](https://leetcode.com/problems/01-matrix/) |
 
 ## Multi-source BFS (grids/graphs)

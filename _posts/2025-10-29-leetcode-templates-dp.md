@@ -27,7 +27,7 @@ def knap01(wt: list[int], val: list[int], W: int) -> int:
 
 | ID | Title | Link |
 |---|---|---|
-| 322 | [Coin Change](https://robinali34.github.io/blog_leetcode/posts/2025-10-20-medium-322-coin-change/) | [Coin Change](https://leetcode.com/problems/coin-change/) |
+| 322 | [Coin Change](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-20-medium-322-coin-change/) | [Coin Change](https://leetcode.com/problems/coin-change/) |
 | 139 | Word Break | [Word Break](https://leetcode.com/problems/word-break/) |
 
 ## 2D DP (grid/path)

@@ -37,7 +37,7 @@ def next_greater(a: list[int]) -> list[int]:
 | ID | Title | Link |
 |---|---|---|
 | 739 | Daily Temperatures | [Daily Temperatures](https://leetcode.com/problems/daily-temperatures/) |
-| 84 | [Largest Rectangle in Histogram](https://robinali34.github.io/blog_leetcode/posts/2025-10-20-hard-84-largest-rectangle-in-histogram/) | [Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/) |
+| 84 | [Largest Rectangle in Histogram](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-20-hard-84-largest-rectangle-in-histogram/) | [Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/) |
 | 503 | Next Greater Element II | [Next Greater Element II](https://leetcode.com/problems/next-greater-element-ii/) |
 
 ## Monotonic Queue (sliding window extrema)

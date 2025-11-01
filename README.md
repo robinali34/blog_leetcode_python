@@ -50,8 +50,8 @@ A technical blog focused on algorithms, data structures, and software engineerin
 
 This blog is automatically deployed to GitHub Pages when you push changes to the `main` branch. The deployment is handled by GitHub Actions.
 
-**Repository**: `blog_leetcode`  
-**Live URL**: `https://robinali34.github.io/blog_leetcode/`
+**Repository**: `blog_leetcode_python`  
+**Live URL**: `https://robinali34.github.io/blog_leetcode_python/`
 
 ## Customization
 

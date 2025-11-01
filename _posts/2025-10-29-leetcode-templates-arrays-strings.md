@@ -43,7 +43,7 @@ def longest_no_repeat(s: str) -> int:
 
 | ID | Title | Link |
 |---|---|---|
-| 3 | [Longest Substring Without Repeating Characters](https://robinali34.github.io/blog_leetcode/posts/2025-10-09-medium-3-longest-substring-without-repeating-characters/) | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | /posts/2025-10-09-medium-3-longest-substring-without-repeating-characters/ |
+| 3 | [Longest Substring Without Repeating Characters](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-09-medium-3-longest-substring-without-repeating-characters/) | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | /posts/2025-10-09-medium-3-longest-substring-without-repeating-characters/ |
 | 76 | Minimum Window Substring | [Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/) | - |
 | 424 | Longest Repeating Character Replacement | [Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/) | - |
 
