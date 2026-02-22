@@ -59,17 +59,12 @@ Explanation: The value -3 has 3 occurrences, 0 has 2 occurrences, 1 has 4 occurr
 
 ```python
 class Solution:
-
-    def uniqueOccurrences(self, list[int] arr) -> bool:
-        unordered_map<int, int> freqs;
-        unordered_set<int> occurs;
-        for(int num: arr) freqs[num]++;
-
-        for(auto [num, freq]: freqs)
-            occurs.insert(freq);
-        return occurslen() == freqslen();
-    }
-};
+def uniqueOccurrences(self, arr: list[int]) -> bool:
+freqs = :
+for num in arr:
+freqs[num] = freqs.get(num, 0) + 1
+occurs = set(freqs.values())
+return len(occurs) == len(freqs)
 ```
 
 ### Approach 2: Early Termination Optimization
@@ -84,18 +79,16 @@ class Solution:
 
 ```python
 class Solution:
-
-    def uniqueOccurrences(self, list[int] arr) -> bool:
-        unordered_map<int, int> freqs;
-        unordered_set<int> occurs;
-        for(int num: arr) freqs[num]++;
-
-        for(auto [_, freq]: freqs)
-            if(!occurs.insert(freq).second) return false;
-
-        return occurslen() == freqslen();
-    }
-};
+def uniqueOccurrences(self, arr: list[int]) -> bool:
+freqs = :
+for num in arr:
+freqs[num] = freqs.get(num, 0) + 1
+occurs = set()
+for freq in freqs.values():
+if freq in occurs:
+return False
+occurs.add(freq)
+return True
 ```
 
 ### Approach 3: Array-Based Counting
@@ -110,27 +103,17 @@ class Solution:
 
 ```python
 class Solution:
-
-    def uniqueOccurrences(self, list[int] arr) -> bool:
-        int freq[2001] = {0};  // Offset by 1000 for negative numbers
-        int count[1001] = {0}; // Max frequency is 1000
-        
-        // Count frequencies
-        for(int num : arr) {
-            freq[num + 1000]++;
-        }
-        
-        // Count frequency counts
-        for(i = 0 i < 2001; i++) {
-            if(freq[i] > 0) {
-                count[freq[i]]++;
-                if(count[freq[i]] > 1) return false;
-            }
-        }
-        
-        return true;
-    }
-};
+def uniqueOccurrences(self, arr: list[int]) -> bool:
+freq = [0]  2001  # Offset by 1000 for negative numbers
+count = [0]  1001  # Max frequency is 1000
+for num in arr:
+freq[num + 1000] += 1
+for f in freq:
+if f > 0:
+count[f] += 1
+if count[f] > 1:
+return False
+return True
 ```
 
 ## Algorithm Analysis
@@ -155,14 +138,14 @@ class Solution:
 ### Hash Set Insert Behavior
 ```python
 // insert() returns pair<iterator, bool>
-// second is true if insertion successful (no duplicate)
-if(!occurs.insert(freq).second) return false;
+// second is True if insertion successful (no duplicate)
+if(not occurs.insert(freq).second) return False
 ```
 
 ### Array Offset Technique
 ```python
 // Offset by 1000 to handle negative numbers
-freq[num + 1000]++;
+freq[num + 1000]++
 ```
 
 ## Edge Cases

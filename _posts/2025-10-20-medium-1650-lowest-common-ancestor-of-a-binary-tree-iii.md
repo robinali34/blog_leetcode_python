@@ -65,12 +65,12 @@ This approach ensures both pointers travel the same total distance, making them 
 
 ```python
 class Solution:
-    def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
-        a, b = p, q
-        while a != b:
-            a = q if a is None else a.parent
-            b = p if b is None else b.parent
-        return a
+def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
+a, b = p, q
+while a != b:
+a = q if a is None else a.parent
+b = p if b is None else b.parent
+return a
 ```
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 read_file
@@ -142,51 +142,44 @@ If `p = G` and `q = F`:
 ### Approach 1: Path Collection
 ```python
 def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
-    path = set()
-    
-    # Collect path from p to root
-    curr = p
-    while curr:
-        path.add(curr)
-        curr = curr.parent
-    
-    # Find first common node in path from q to root
-    curr = q
-    while curr:
-        if curr in path:
-            return curr
-        curr = curr.parent
-    
-    return None
+path = set()
+# Collect path from p to root
+curr = p
+while curr:
+path.add(curr)
+curr = curr.parent
+# Find first common node in path from q to root
+curr = q
+while curr:
+if curr in path:
+return curr
+curr = curr.parent
+return None
 ```
 
 ### Approach 2: Depth Calculation
 ```python
 def getDepth(self, node: 'Node') -> int:
-    depth = 0
-    while node:
-        depth += 1
-        node = node.parent
-    return depth
-
+depth = 0
+while node:
+depth += 1
+node = node.parent
+return depth
 def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
-    depthP = self.getDepth(p)
-    depthQ = self.getDepth(q)
-    
-    # Move deeper node up to same level
-    while depthP > depthQ:
-        p = p.parent
-        depthP -= 1
-    while depthQ > depthP:
-        q = q.parent
-        depthQ -= 1
-    
-    # Move both up until they meet
-    while p != q:
-        p = p.parent
-        q = q.parent
-    
-    return p
+depthP = self.getDepth(p)
+depthQ = self.getDepth(q)
+# Move deeper node up to same level
+while depthP > depthQ:
+p = p.parent
+depthP -= 1
+while depthQ > depthP:
+q = q.parent
+depthQ -= 1
+# Move both up until they meet
+while p != q:
+p = p.parent
+q = q.parent
+return p
 ```
 
 ## Comparison of Approaches

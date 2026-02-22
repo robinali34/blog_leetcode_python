@@ -14,15 +14,15 @@ categories: python data-structures reference cheat-sheet programming containers 
 ### ✅ Strings
 
 ```python
-len(s)                    # Length of the string
+len(s)                    # Length of the str
 s[i]                      # Access character at index
 s[pos:pos+len]            # Substring
 s.find("abc")             # Find position of substring (-1 if not found)
 s.replace(old, new)       # Replace substring
-s[start:end]              # Slice string
+s[start:end]              # Slice str
 s += "abc"                # Append
-str(x)                    # Convert int to string
-int(s)                    # Convert string to int
+str(x)                    # Convert to str
+int(s)                    # Convert str to int
 ```
 
 ---
@@ -50,7 +50,7 @@ v.reverse()               # Reverse in place
 ### ✅ Arrays (using lists)
 
 ```python
-arr = [0] * 100           # Array of 100 zeros
+arr = [0]  100           # Array of 100 zeros
 arr = [1, 2, 3, 4, 5]     # Initialize array
 ```
 
@@ -65,7 +65,7 @@ s.remove(x)               # Remove element (raises KeyError if not found)
 s.discard(x)              # Remove element (no error if not found)
 x in s                    # Check membership
 len(s)                    # Size
-# Note: Sets don't have lower_bound/upper_bound like C++
+# Note: Sets don't have lower_bound/upper_bound like C += 1
 # Use sorted(set) for ordered operations
 ```
 
@@ -74,7 +74,7 @@ len(s)                    # Size
 ### ✅ Dictionaries (Maps)
 
 ```python
-m = {}                    # Empty dict
+m = :                    # Empty dict
 m = dict()                # Empty dict
 m[key] = val              # Assign value
 m.get(key, default)       # Get value with default
@@ -83,7 +83,7 @@ m.keys()                  # Iterate keys
 m.values()                # Iterate values
 m.items()                 # Iterate (key, value) pairs
 for k, v in m.items():    # Iterate key-value pairs
-    pass
+pass
 ```
 
 ---
@@ -97,7 +97,6 @@ sorted(lst)                        # Return sorted list
 lst.sort()                         # Sort in place
 lst.sort(reverse=True)             # Sort descending
 lst.reverse()                      # Reverse in place
-
 import bisect
 bisect.bisect_left(lst, x)         # Lower bound (first pos >= x)
 bisect.bisect_right(lst, x)        # Upper bound (first pos > x)
@@ -188,8 +187,8 @@ max_val = -heapq.heappop(heap)    # Pop and negate back
 ```python
 bin(x).count('1')                 # Count 1-bits
 x.bit_length()                    # Number of bits
-x & (x - 1)                       # Remove lowest 1-bit
-x & -x                            # Isolate lowest 1-bit
+x  (x - 1)                       # Remove lowest 1-bit
+x  -x                            # Isolate lowest 1-bit
 x >> 1                            # Right shift
 x << 1                            # Left shift
 ```
@@ -218,15 +217,13 @@ x << 1                            # Left shift
 
 ```python
 n = int(input())                  # Read integer
-s = input()                       # Read line as string
+s = input()                       # Read line as str
 s = input().strip()               # Read and strip whitespace
-
 # Fast reading (multiple integers on one line)
 nums = list(map(int, input().split()))
-
 # File I/O
 with open('input.txt', 'r') as f:
-    data = f.read()
+data = f.read()
 ```
 
 ---

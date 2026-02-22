@@ -56,22 +56,21 @@ The solution uses backtracking (DFS) with the following strategy:
 
 ```python
 class Solution:
-    def combine(self, n: int, k: int) -> list[list[int]]:
-        result = []
-        path = []
-        self.dfs(n, k, result, path, 1)
-        return result
-
-    def dfs(self, n: int, k: int, result: list[list[int]], path: list[int], first_num: int) -> None:
-        if len(path) == k:
-            result.append(path[:])
-            return
-        if len(path) + (n - first_num + 1) < k:
-            return
-        for i in range(first_num, n + 1):
-            path.append(i)
-            self.dfs(n, k, result, path, i + 1)
-            path.pop()
+def combine(self, n: int, k: int) -> list[list[int]]:
+result = []
+path = []
+self.dfs(n, k, result, path, 1)
+return result
+def dfs(self, n: int, k: int, result: list[list[int]], path: list[int], first_num: int) -> None:
+if len(path) == k:
+result.append(path[:])
+return
+if len(path) + (n - first_num + 1) < k:
+return
+for i in range(first_num, n + 1):
+path.append(i)
+self.dfs(n, k, result, path, i + 1)
+path.pop()
 ```
 
 ## Step-by-Step Example
@@ -122,19 +121,16 @@ This problem follows the classic backtracking template:
 
 ```python
 def backtrack(self, parameters) -> None:
-    if base_case:
-        # Process result
-        return
-    
-    for choice in choices:
-        # Make choice
-        make_choice(choice)
-        
-        # Recurse
-        backtrack(updated_parameters)
-        
-        # Undo choice (backtrack)
-        undo_choice(choice)
+if base_case:
+# Process result
+return
+for choice in choices:
+# Make choice
+make_choice(choice)
+# Recurse
+backtrack(updated_parameters)
+# Undo choice (backtrack)
+undo_choice(choice)
 ```
 
 ## Alternative Approaches
@@ -142,31 +138,26 @@ def backtrack(self, parameters) -> None:
 ### Iterative Solution
 ```python
 def combine(self, n: int, k: int) -> list[list[int]]:
-    result = []
-    combination = list(range(1, k + 1))
-    
-    while True:
-        result.append(combination[:])
-        
-        i = k - 1
-        while i >= 0 and combination[i] == n - k + i + 1:
-            i -= 1
-        
-        if i < 0:
-            break
-        
-        combination[i] += 1
-        for j in range(i + 1, k):
-            combination[j] = combination[j - 1] + 1
-    
-    return result
+result = []
+combination = list(range(1, k + 1))
+while True:
+result.append(combination[:])
+i = k - 1
+while i >= 0 and combination[i] == n - k + i + 1:
+i -= 1
+if i < 0:
+break
+combination[i] += 1
+for j in range(i + 1, k):
+combination[j] = combination[j - 1] + 1
+return result
 ```
 
 ### Mathematical Approach (Using Next Permutation)
 ```python
 def combine(self, n: int, k: int) -> list[list[int]]:
-    from itertools import combinations
-    return list(combinations(range(1, n + 1), k))
+from itertools import combinations
+return list(combinations(range(1, n + 1), k))
 ```
 
 ## Optimization Techniques
@@ -174,18 +165,16 @@ def combine(self, n: int, k: int) -> list[list[int]]:
 ### Early Termination
 ```python
 def dfs(self, n: int, k: int, result: list[list[int]], path: list[int], start: int) -> None:
-    # Early termination: not enough numbers left
-    if len(path) + (n - start + 1) < k:
-        return
-    
-    if len(path) == k:
-        result.append(path[:])
-        return
-    
-    for i in range(start, n + 1):
-        path.append(i)
-        self.dfs(n, k, result, path, i + 1)
-        path.pop()
+# Early termination: not enough numbers left
+if len(path) + (n - start + 1) < k:
+return
+if len(path) == k:
+result.append(path[:])
+return
+for i in range(start, n + 1):
+path.append(i)
+self.dfs(n, k, result, path, i + 1)
+path.pop()
 ```
 
 ## Common Mistakes

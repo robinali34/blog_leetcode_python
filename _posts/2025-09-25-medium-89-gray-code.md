@@ -54,26 +54,25 @@ There are several approaches to generate Gray codes:
 
 ```python
 class Solution:
-    def grayCode(self, n: int) -> list[int]:
-        result = [0]
-        isPresent = {0}
-        self.getGreyCode(result, n, isPresent)
-        return result
-    
-    def getGreyCode(self, result: list[int], n: int, isPresent: set) -> bool:
-        if len(result) == (1 << n):
-            return True
-        current = result[-1]
-        for i in range(n):
-            next_num = current ^ (1 << i)
-            if next_num not in isPresent:
-                isPresent.add(next_num)
-                result.append(next_num)
-                if self.getGreyCode(result, n, isPresent):
-                    return True
-                isPresent.remove(next_num)
-                result.pop()
-        return False
+def grayCode(self, n: int) -> list[int]:
+result = [0]
+isPresent = :0
+self.getGreyCode(result, n, isPresent)
+return result
+def getGreyCode(self, result: list[int], n: int, isPresent: set) -> bool:
+if len(result) == (1 << n):
+return True
+current = result[-1]
+for i in range(n):
+next_num = current ^ (1 << i)
+if next_num not in isPresent:
+isPresent.add(next_num)
+result.append(next_num)
+if self.getGreyCode(result, n, isPresent):
+return True
+isPresent.remove(next_num)
+result.pop()
+return False
 ```
 
 **Time Complexity:** O(2^n) - Exponential time due to backtracking
@@ -83,20 +82,19 @@ class Solution:
 
 ```python
 class Solution:
-    def grayCode(self, n: int) -> list[int]:
-        result = []
-        self.getGreyCode(result, n)
-        return result
-    
-    def getGreyCode(self, result: list[int], n: int) -> None:
-        if n == 0:
-            result.append(0)
-            return
-        self.getGreyCode(result, n - 1)
-        cur = len(result)
-        mask = 1 << (n - 1)
-        for i in range(cur - 1, -1, -1):
-            result.append(result[i] | mask)
+def grayCode(self, n: int) -> list[int]:
+result = []
+self.getGreyCode(result, n)
+return result
+def getGreyCode(self, result: list[int], n: int) -> None:
+if n == 0:
+result.append(0)
+return
+self.getGreyCode(result, n - 1)
+cur = len(result)
+mask = 1 << (n - 1)
+for i in range(cur - 1, -1, -1):
+result.append(result[i] | mask)
 ```
 
 **Time Complexity:** O(2^n) - Each recursive call doubles the sequence
@@ -106,14 +104,14 @@ class Solution:
 
 ```python
 class Solution:
-    def grayCode(self, n: int) -> list[int]:
-        result = [0]
-        for i in range(1, n + 1):
-            pre = len(result)
-            mask = 1 << (i - 1)
-            for j in range(pre - 1, -1, -1):
-                result.append(mask | result[j])
-        return result
+def grayCode(self, n: int) -> list[int]:
+result = [0]
+for i in range(1, n + 1):
+pre = len(result)
+mask = 1 << (i - 1)
+for j in range(pre - 1, -1, -1):
+result.append(mask | result[j])
+return result
 ```
 
 **Time Complexity:** O(2^n) - Builds sequence iteratively
@@ -123,11 +121,11 @@ class Solution:
 
 ```python
 class Solution:
-    def grayCode(self, n: int) -> list[int]:
-        result = []
-        for i in range(1 << n):
-            result.append(i ^ (i >> 1))
-        return result
+def grayCode(self, n: int) -> list[int]:
+result = []
+for i in range(1 << n):
+result.append(i ^ (i >> 1))
+return result
 ```
 
 **Time Complexity:** O(2^n) - Generate each Gray code number
@@ -137,22 +135,20 @@ class Solution:
 
 ```python
 class Solution:
-    def __init__(self):
-        self.nextNum = 0
-    
-    def grayCode(self, n: int) -> list[int]:
-        result = []
-        self.nextNum = 0
-        self.getGreyCode(result, n)
-        return result
-    
-    def getGreyCode(self, result: list[int], n: int) -> None:
-        if n == 0:
-            result.append(self.nextNum)
-            return
-        self.getGreyCode(result, n - 1)
-        self.nextNum = self.nextNum ^ (1 << (n - 1))
-        self.getGreyCode(result, n - 1)
+def __init__(self):
+self.nextNum = 0
+def grayCode(self, n: int) -> list[int]:
+result = []
+self.nextNum = 0
+self.getGreyCode(result, n)
+return result
+def getGreyCode(self, result: list[int], n: int) -> None:
+if n == 0:
+result.append(self.nextNum)
+return
+self.getGreyCode(result, n - 1)
+self.nextNum = self.nextNum ^ (1 << (n - 1))
+self.getGreyCode(result, n - 1)
 ```
 
 **Time Complexity:** O(2^n) - Recursive construction

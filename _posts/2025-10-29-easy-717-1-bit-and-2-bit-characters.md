@@ -28,13 +28,13 @@ Walk the array from left to right. If we see `1`, we must consume two bits (`10`
 
 ```python
 class Solution:
-    def isOneBitCharacter(self, bits: list[int]) -> bool:
-        n = len(bits)
-        i = 0
-        # Parse until we reach or pass the last index
-        while i < n - 1:
-            i += 2 if bits[i] == 1 else 1
-        return i == n - 1
+def isOneBitCharacter(self, bits: list[int]) -> bool:
+n = len(bits)
+i = 0
+# Parse until we reach or pass the last index
+while i < n - 1:
+i += 2 if bits[i] == 1 else 1
+return i == n - 1
 ```
 
 ## Complexity

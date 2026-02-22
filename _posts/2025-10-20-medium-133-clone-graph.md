@@ -65,7 +65,7 @@ This problem requires creating a **deep copy** of a graph, meaning we need to cr
 
 ### Algorithm:
 
-1. **Create node mapping**: `unordered_map<Node*, Node*>` to track cloned nodes
+1. **Create node mapping**: `dict[Node, Node]` to track cloned nodes
 2. **Traverse graph**: Visit all nodes using BFS or DFS
 3. **Clone nodes**: Create new nodes with same values
 4. **Build relationships**: Connect cloned nodes based on original relationships
@@ -76,55 +76,50 @@ This problem requires creating a **deep copy** of a graph, meaning we need to cr
 ### **Solution 1: BFS (Iterative)**
 
 ```python
-/*
+/
 // Definition for a Node.
-class Node {
-
+class Node:
     # val = 0
     # neighbors = []
     # def __init__(self, val=0, neighbors=None):
     #     self.val = val
     #     self.neighbors = neighbors if neighbors is not None else []
-*/
-
-from collections import deque
-
-class Solution:
+    /
+    from collections import deque
+    class Solution:
     def cloneGraph(self, node: 'Node') -> 'Node':
-        if not node:
-            return None
-        visited = {}
-        q = deque([node])
-        visited[node] = Node(node.val)
-        while q:
-            curr = q.popleft()
-            for neighbor in curr.neighbors:
-                if neighbor not in visited:
-                    visited[neighbor] = Node(neighbor.val)
-                    q.append(neighbor)
-                visited[curr].neighbors.append(visited[neighbor])
-        return visited[node]
+    if not node:
+    return None
+    visited = :
+q = deque([node])
+visited[node] = Node(node.val)
+while q:
+curr = q.popleft()
+for neighbor in curr.neighbors:
+if neighbor not in visited:
+visited[neighbor] = Node(neighbor.val)
+q.append(neighbor)
+visited[curr].neighbors.append(visited[neighbor])
+return visited[node]
 ```
 
 ### **Solution 2: DFS (Recursive)**
 
 ```python
 class Solution:
-    def dfs(self, node: 'Node', visited: dict) -> 'Node':
-        if node in visited:
-            return visited[node]
-        
-        clone = Node(node.val)
-        visited[node] = clone
-        for neighbor in node.neighbors:
-            clone.neighbors.append(self.dfs(neighbor, visited))
-        return clone
-    
-    def cloneGraph(self, node: 'Node') -> 'Node':
-        if node is None:
-            return None
-        visited = {}
-        return self.dfs(node, visited)
+def dfs(self, node: 'Node', visited: dict) -> 'Node':
+if node in visited:
+return visited[node]
+clone = Node(node.val)
+visited[node] = clone
+for neighbor in node.neighbors:
+clone.neighbors.append(self.dfs(neighbor, visited))
+return clone
+def cloneGraph(self, node: 'Node') -> 'Node':
+if node is None:
+return None
+visited = :
+return self.dfs(node, visited)
 ```
 
 ### **Algorithm Explanation:**
@@ -203,23 +198,20 @@ Final cloned graph has same structure as original.
 ### **DFS Iterative (Stack)**
 ```python
 class Solution:
-    def cloneGraph(self, node: 'Node') -> 'Node':
-        if not node:
-            return None
-        visited = {}
-        stk = [node]
-        visited[node] = Node(node.val)
-        
-        while stk:
-            curr = stk.pop()
-            
-            for neighbor in curr.neighbors:
-                if neighbor not in visited:
-                    visited[neighbor] = Node(neighbor.val)
-                    stk.append(neighbor)
-                visited[curr].neighbors.append(visited[neighbor])
-        
-        return visited[node]
+def cloneGraph(self, node: 'Node') -> 'Node':
+if not node:
+return None
+visited = :
+stk = [node]
+visited[node] = Node(node.val)
+while stk:
+curr = stk.pop()
+for neighbor in curr.neighbors:
+if neighbor not in visited:
+visited[neighbor] = Node(neighbor.val)
+stk.append(neighbor)
+visited[curr].neighbors.append(visited[neighbor])
+return visited[node]
 ```
 
 ## Related Problems

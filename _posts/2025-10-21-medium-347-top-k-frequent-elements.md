@@ -53,23 +53,21 @@ Output: [1]
 
 ```python
 class Solution:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        freq = {}
-        for num in nums:
-            freq[num] = freq.get(num, 0) + 1
-
-        n = len(nums)
-        buckets = [[] for _ in range(n + 1)]
-        for num, count in freq.items():
-            buckets[count].append(num)
-        
-        result = []
-        for i in range(n, -1, -1):
-            for num in buckets[i]:
-                result.append(num)
-                if len(result) == k:
-                    return result
-        return result
+def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+freq = :
+for num in nums:
+freq[num] = freq.get(num, 0) + 1
+n = len(nums)
+buckets = [[] for _ in range(n + 1)]
+for num, count in freq.items():
+buckets[count].append(num)
+result = []
+for i in range(n, -1, -1):
+for num in buckets[i]:
+result.append(num)
+if len(result) == k:
+return result
+return result
 ```
 
 ### Approach 2: Quickselect
@@ -85,41 +83,36 @@ class Solution:
 
 ```python
 import random
-
 class Solution:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        count_map = {}
-        for n in nums:
-            count_map[n] = count_map.get(n, 0) + 1
-        
-        unique = list(count_map.keys())
-        n = len(unique)
-        self.quickselect(unique, count_map, 0, n - 1, n - k)
-        return unique[n - k:]
-    
-    def partition(self, unique: list[int], count_map: dict, left: int, right: int, pivot: int) -> int:
-        pivot_freq = count_map[unique[pivot]]
-        unique[pivot], unique[right] = unique[right], unique[pivot]
-
-        store_idx = left
-        for i in range(left, right):
-            if count_map[unique[i]] < pivot_freq:
-                unique[store_idx], unique[i] = unique[i], unique[store_idx]
-                store_idx += 1
-        unique[right], unique[store_idx] = unique[store_idx], unique[right]
-        return store_idx
-
-    def quickselect(self, unique: list[int], count_map: dict, left: int, right: int, k_smallest: int) -> None:
-        if left == right:
-            return
-        pivot = left + random.randint(0, right - left)
-        pivot = self.partition(unique, count_map, left, right, pivot)
-        if k_smallest == pivot:
-            return
-        elif k_smallest < pivot:
-            self.quickselect(unique, count_map, left, pivot - 1, k_smallest)
-        else:
-            self.quickselect(unique, count_map, pivot + 1, right, k_smallest)
+def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+count_map = :
+for n in nums:
+count_map[n] = count_map.get(n, 0) + 1
+unique = list(count_map.keys())
+n = len(unique)
+self.quickselect(unique, count_map, 0, n - 1, n - k)
+return unique[n - k:]
+def partition(self, unique: list[int], count_map: dict, left: int, right: int, pivot: int) -> int:
+pivot_freq = count_map[unique[pivot]]
+unique[pivot], unique[right] = unique[right], unique[pivot]
+store_idx = left
+for i in range(left, right):
+if count_map[unique[i]] < pivot_freq:
+unique[store_idx], unique[i] = unique[i], unique[store_idx]
+store_idx += 1
+unique[right], unique[store_idx] = unique[store_idx], unique[right]
+return store_idx
+def quickselect(self, unique: list[int], count_map: dict, left: int, right: int, k_smallest: int) -> None:
+if left == right:
+return
+pivot = left + random.randint(0, right - left)
+pivot = self.partition(unique, count_map, left, right, pivot)
+if k_smallest == pivot:
+return
+elif k_smallest < pivot:
+self.quickselect(unique, count_map, left, pivot - 1, k_smallest)
+else:
+self.quickselect(unique, count_map, pivot + 1, right, k_smallest)
 ```
 
 ### Approach 3: Min Heap
@@ -135,26 +128,22 @@ class Solution:
 
 ```python
 import heapq
-
 class Solution:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        freq = {}
-        for num in nums:
-            freq[num] = freq.get(num, 0) + 1
-        
-        minHeap = []
-        
-        for num, count in freq.items():
-            if len(minHeap) < k:
-                heapq.heappush(minHeap, (count, num))
-            elif count > minHeap[0][0]:
-                heapq.heappop(minHeap)
-                heapq.heappush(minHeap, (count, num))
-        
-        result = []
-        while minHeap:
-            result.append(heapq.heappop(minHeap)[1])
-        return result
+def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+freq = :
+for num in nums:
+freq[num] = freq.get(num, 0) + 1
+minHeap = []
+for num, count in freq.items():
+if len(minHeap) < k:
+heapq.heappush(minHeap, (count, num))
+elif count > minHeap[0][0]:
+heapq.heappop(minHeap)
+heapq.heappush(minHeap, (count, num))
+result = []
+while minHeap:
+result.append(heapq.heappop(minHeap)[1])
+return result
 ```
 
 ### Approach 4: Max Heap
@@ -169,22 +158,19 @@ class Solution:
 
 ```python
 import heapq
-
 class Solution:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        freq = {}
-        for num in nums:
-            freq[num] = freq.get(num, 0) + 1
-        
-        # Max heap: use negative count for max heap behavior
-        maxHeap = []
-        for num, count in freq.items():
-            heapq.heappush(maxHeap, (-count, num))
-        
-        result = []
-        for _ in range(k):
-            result.append(heapq.heappop(maxHeap)[1])
-        return result
+def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+freq = :
+for num in nums:
+freq[num] = freq.get(num, 0) + 1
+# Max heap: use negative count for max heap behavior
+maxHeap = []
+for num, count in freq.items():
+heapq.heappush(maxHeap, (-count, num))
+result = []
+for _ in range(k):
+result.append(heapq.heappop(maxHeap)[1])
+return result
 ```
 
 ## Complexity Analysis

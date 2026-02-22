@@ -46,15 +46,15 @@ There are two main approaches to solve this problem:
 
 ```python
 class Solution:
-    def rotate(self, matrix: list[list[int]]) -> None:
-        n = len(matrix)
-        for i in range((n + 1) // 2):
-            for j in range(n // 2):
-                temp = matrix[i][j]
-                matrix[i][j] = matrix[n - 1 - j][i]
-                matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j]
-                matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i]
-                matrix[j][n - 1 - i] = temp
+def rotate(self, matrix: list[list[int]]) -> None:
+n = len(matrix)
+for i in range((n + 1) // 2):
+for j in range(n // 2):
+temp = matrix[i][j]
+matrix[i][j] = matrix[n - 1 - j][i]
+matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j]
+matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i]
+matrix[j][n - 1 - i] = temp
 ```
 
 ## Solution 2: Transpose + Reflect
@@ -64,19 +64,17 @@ class Solution:
 
 ```python
 class Solution:
-    def rotate(self, matrix: list[list[int]]) -> None:
-        self.transpose(matrix)
-        self.reflect(matrix)
-    
-    def transpose(self, matrix: list[list[int]]) -> None:
-        n = len(matrix)
-        for i in range(n):
-            for j in range(i + 1, n):
-                matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
-    
-    def reflect(self, matrix: list[list[int]]) -> None:
-        for row in matrix:
-            row.reverse()
+def rotate(self, matrix: list[list[int]]) -> None:
+self.transpose(matrix)
+self.reflect(matrix)
+def transpose(self, matrix: list[list[int]]) -> None:
+n = len(matrix)
+for i in range(n):
+for j in range(i + 1, n):
+matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
+def reflect(self, matrix: list[list[int]]) -> None:
+for row in matrix:
+row.reverse()
 ```
 
 ## Step-by-Step Example

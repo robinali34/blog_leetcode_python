@@ -71,70 +71,28 @@ The solution involves:
 **Space Complexity:** O(n) for storing visited URLs and results
 
 ```python
-/**
- * // This is the HtmlParser's API interface.
- * // You should not implement it, or speculate about its implementation
- * class HtmlParser {
- *   
- *     list[string] getUrls(string url);
- * };
- */
 class Solution:
-
-    list[string] crawl(string startUrl, HtmlParser htmlParser) {
-        StUrl = getStartUrl(startUrl);
-        q.push(startUrl);
-        auto eUrl = []() {
-            while(true) {
-                mtxq.lock();
-                if(!qlen()) {
-                    mtxq.unlock();
-                    this_thread::sleep_for(chrono::milliseconds(20));
-                    mtxq.lock();
-                    if(!qlen()) {mtxq.unlock(); return;}
-                }
-                string t=q.front();
-                q.pop();
-                if(getStartUrl(t)!=StUrl) {mtxq.unlock(); continue;}
-                mtxm.lock();
-                if(m.count(t)) {mtxm.unlock();mtxq.unlock(); continue;}
-                m[t] = true;
-                mtxa.lock();
-                rtn.emplace_back(t);
-                mtxa.unlock();
-                mtxm.unlock();
-                mtxq.unlock();
-                list[string] vec(htmlParser.getUrls(t));
-                mtxq.lock();
-                for(auto s:vec) {q.push(s);}
-                mtxq.unlock();
-            }
-            return;
-        };
-        while(n--) pool.emplace_back(thread(eUrl));
-        for(auto t:pool) t.join();
-        return rtn;
-    }
-private:
-    list[string] rtn;
-    unordered_map<string, bool> m;
-    mutex mtxq, mtxm, mtxa;
-    string StUrl;
-    int n = thread::hardware_concurrency();
-    list[thread] pool;
-    queue<string> q;
-
-    def getStartUrl(self, string s) -> string:
-        t = 3
-        string rtn="";
-        for (char c: s){
-            if(c== '/') t--;
-            if(!t) return rtn;
-            rtn.append(c);
-        }
-        return rtn;
-    }
-};
+def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> list[str]:
+from threading import Lock
+from concurrent.futures import ThreadPoolExecutor
+def host(u: str) -> str:
+return u.split('/')[2]
+base = host(startUrl)
+visited = :startUrl
+lock = Lock()
+def worker(url: str):
+for nxt in htmlParser.getUrls(url):
+if host(nxt) != base:
+continue
+with lock:
+if nxt in visited:
+continue
+visited.add(nxt)
+pool.submit(worker, nxt)
+with ThreadPoolExecutor(max_workers=8) as pool:
+pool.submit(worker, startUrl)
+pool.shutdown(wait=True)
+return list(visited)
 ```
 
 ## Solution in Python
@@ -145,36 +103,31 @@ private:
 ```python
 from threading import Lock
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
-
 class Solution:
-    def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> List[str]:
-        def host(u: str) -> str:
-            return u.split('/')[2]
-        
-        base = host(startUrl)
-        visited = set([startUrl])
-        lock = Lock()
-
-        def worker(url: str) -> List[str]:
-            next_urls = []
-            for u in htmlParser.getUrls(url):
-                if host(u) == base:
-                    with lock:
-                        if u in visited:
-                            continue
-                        visited.add(u)
-                    next_urls.append(u)
-            return next_urls
-        
-        with ThreadPoolExecutor(max_workers=32) as ex:
-            pending = {ex.submit(worker, startUrl)}
-            while pending:
-                done, pending = wait(pending, return_when=FIRST_COMPLETED)
-                for fut in done:
-                    for nxt in fut.result():
-                        pending.add(ex.submit(worker, nxt))
-        
-        return list(visited)
+def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> List[str]:
+def host(u: str) -> str:
+return u.split('/')[2]
+base = host(startUrl)
+visited = set([startUrl])
+lock = Lock()
+def worker(url: str) -> List[str]:
+next_urls = []
+for u in htmlParser.getUrls(url):
+if host(u) == base:
+with lock:
+if u in visited:
+continue
+visited.add(u)
+next_urls.append(u)
+return next_urls
+with ThreadPoolExecutor(max_workers=32) as ex:
+pending = :ex.submit(worker, startUrl)
+while pending:
+done, pending = wait(pending, return_when=FIRST_COMPLETED)
+for fut in done:
+for nxt in fut.result():
+pending.add(ex.submit(worker, nxt))
+return list(visited)
 ```
 
 ## Step-by-Step Example

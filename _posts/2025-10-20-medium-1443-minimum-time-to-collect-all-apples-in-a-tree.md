@@ -70,61 +70,55 @@ This problem can be solved using either **DFS** or **BFS** approaches. The key i
 
 ```python
 class Solution:
-    def dfs(self, adj: list[list[int]], hasApple: list[bool], node: int, parent: int) -> int:
-        totalTime = 0
-        for child in adj[node]:
-            if child == parent:
-                continue
-            childTime = self.dfs(adj, hasApple, child, node)
-            if childTime > 0 or hasApple[child]:
-                totalTime += childTime + 2
-        return totalTime
-
-    def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
-        adj = [[] for _ in range(n)]
-        for edge in edges:
-            adj[edge[0]].append(edge[1])
-            adj[edge[1]].append(edge[0])
-        return self.dfs(adj, hasApple, 0, -1)
+def dfs(self, adj: list[list[int]], hasApple: list[bool], node: int, parent: int) -> int:
+totalTime = 0
+for child in adj[node]:
+if child == parent:
+continue
+childTime = self.dfs(adj, hasApple, child, node)
+if childTime > 0 or hasApple[child]:
+totalTime += childTime + 2
+return totalTime
+def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
+adj = [[] for _ in range(n)]
+for edge in edges:
+adj[edge[0]].append(edge[1])
+adj[edge[1]].append(edge[0])
+return self.dfs(adj, hasApple, 0, -1)
 ```
 
 ### Approach 2: BFS with Path Tracing
 
 ```python
 class Solution:
-
-    def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
-        from collections import deque
-        
-        adj = [[] for _ in range(n)]
-        for e in edges:
-            adj[e[0]].append(e[1])
-            adj[e[1]].append(e[0])
-        
-        parent = [-1] * n
-        q = deque([0])
-        visited = [False] * n
-        visited[0] = True
-        
-        while q:
-            node = q.popleft()
-            for neighbor in adj[node]:
-                if not visited[neighbor]:
-                    visited[neighbor] = True
-                    parent[neighbor] = node
-                    q.append(neighbor)
-        
-        visitedNodes = set()
-        time = 0
-        for i in range(n):
-            if not hasApple[i]:
-                continue
-            curr = i
-            while curr != 0 and curr not in visitedNodes:
-                visitedNodes.add(curr)
-                time += 2
-                curr = parent[curr]
-        return time
+def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
+from collections import deque
+adj = [[] for _ in range(n)]
+for e in edges:
+adj[e[0]].append(e[1])
+adj[e[1]].append(e[0])
+parent = [-1]  n
+q = deque([0])
+visited = [False]  n
+visited[0] = True
+while q:
+node = q.popleft()
+for neighbor in adj[node]:
+if not visited[neighbor]:
+visited[neighbor] = True
+parent[neighbor] = node
+q.append(neighbor)
+visitedNodes = set()
+time = 0
+for i in range(n):
+if not hasApple[i]:
+continue
+curr = i
+while curr != 0 and curr not in visitedNodes:
+visitedNodes.add(curr)
+time += 2
+curr = parent[curr]
+return time
 ```
 
 ## Explanation
@@ -204,23 +198,19 @@ For `n=7, edges=[[0,1],[0,2],[1,4],[1,5],[2,3],[2,6]], hasApple=[false,false,tru
 ### Iterative DFS:
 ```python
 def minTime(self, n: int, edges: list[list[int]], hasApple: list[bool]) -> int:
-    adj = [[] for _ in range(n)]
-    for edge in edges:
-        adj[edge[0]].append(edge[1])
-        adj[edge[1]].append(edge[0])
-    
-    stk = [(0, -1)]  # (node, parent)
-    subtreeTime = [0] * n
-    
-    while stk:
-        node, parent = stk.pop()
-        
-        # Process children
-        for child in adj[node]:
-            if child != parent:
-                stk.append((child, node))
-    
-    return subtreeTime[0]
+adj = [[] for _ in range(n)]
+for edge in edges:
+adj[edge[0]].append(edge[1])
+adj[edge[1]].append(edge[0])
+stk = [(0, -1)]  # (node, parent)
+subtreeTime = [0]  n
+while stk:
+node, parent = stk.pop()
+# Process children
+for child in adj[node]:
+if child != parent:
+stk.append((child, node))
+return subtreeTime[0]
 ```
 
 The **DFS approach is the most optimal** solution for this problem, providing the best balance of time complexity, space efficiency, and code clarity.

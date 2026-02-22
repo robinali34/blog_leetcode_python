@@ -69,32 +69,29 @@ Use a hash map to track the count of each value in nums2, then for each count op
 
 ```python
 class FindSumPairs:
-    def __init__(self, nums1: list[int], nums2: list[int]):
-        self.nums1 = nums1
-        self.nums2 = nums2
-        self.cnts = {}
-        for num in nums2:
-            self.cnts[num] = self.cnts.get(num, 0) + 1
-    
-    def add(self, index: int, val: int) -> None:
-        self.cnts[self.nums2[index]] -= 1
-        self.nums2[index] += val
-        self.cnts[self.nums2[index]] = self.cnts.get(self.nums2[index], 0) + 1
-    
-    def count(self, tot: int) -> int:
-        cnt = 0
-        for num in self.nums1:
-            rest = tot - num
-            if rest in self.cnts:
-                cnt += self.cnts[rest]
-        return cnt
-
-/**
- * Your FindSumPairs object will be instantiated and called as such:
- * FindSumPairs* obj = new FindSumPairs(nums1, nums2);
- * obj->add(index,val);
- * int param_2 = obj->count(tot);
- */
+def __init__(self, nums1: list[int], nums2: list[int]):
+self.nums1 = nums1
+self.nums2 = nums2
+self.cnts = :
+for num in nums2:
+self.cnts[num] = self.cnts.get(num, 0) + 1
+def add(self, index: int, val: int) -> None:
+self.cnts[self.nums2[index]] -= 1
+self.nums2[index] += val
+self.cnts[self.nums2[index]] = self.cnts.get(self.nums2[index], 0) + 1
+def count(self, tot: int) -> int:
+cnt = 0
+for num in self.nums1:
+rest = tot - num
+if rest in self.cnts:
+cnt += self.cnts[rest]
+return cnt
+/
+ Your FindSumPairs object will be instantiated and called as such:
+ FindSumPairs obj = new FindSumPairs(nums1, nums2)
+ obj->add(index,val)
+ param_2 = obj->count(tot)
+/
 ```
 
 ## How the Algorithm Works
@@ -156,11 +153,11 @@ Total count = 0 + 0 + 0 + 0 + 0 + 2 = 2
 
 ### Constructor:
 ```python
-FindSumPairs(list[int] nums1, list[int] nums2) {
-    this->nums1 = nums1;
-    this->nums2 = nums2;
-    for(auto num: nums2) cnts[num]++;
-}
+def __init__(self, nums1: list[int], nums2: list[int]):
+self.nums1 = nums1
+self.nums2 = nums2
+for num in nums2:
+cnts[num] = cnts.get(num, 0) + 1
 ```
 
 **Process:**
@@ -170,11 +167,10 @@ FindSumPairs(list[int] nums1, list[int] nums2) {
 
 ### Add Operation:
 ```python
-def add(self, int index, int val) -> void:
-    cnts[nums2[index]]--;
-    nums2[index] += val;
-    cnts[nums2[index]]++;
-}
+def add(self, index: int, val: int) -> None:
+cnts[nums2[index]] -= 1
+nums2[index] += val
+cnts[nums2[index]] = cnts.get(nums2[index], 0) + 1
 ```
 
 **Process:**
@@ -184,16 +180,13 @@ def add(self, int index, int val) -> void:
 
 ### Count Operation:
 ```python
-def count(self, int tot) -> int:
-    cnt = 0
-    for(int num: nums1) {
-        int rest = tot - num;
-        if(cnts.contains(rest)) {
-            cnt += cnts[rest];
-        }
-    }
-    return cnt;
-}
+def count(self, tot: int) -> int:
+cnt = 0
+for num in nums1:
+rest = tot - num
+if rest in cnts:
+cnt += cnts[rest]
+return cnt
 ```
 
 **Process:**
@@ -275,32 +268,19 @@ Total count = 2 + 0 = 2
 
 ### Approach 1: Brute Force
 ```python
-class FindSumPairs {
-private:
-    list[int] nums1, nums2;
-    
-
-    FindSumPairs(list[int] nums1, list[int] nums2) {
-        this->nums1 = nums1;
-        this->nums2 = nums2;
-    }
-    
-    def add(self, int index, int val) -> void:
-        nums2[index] += val;
-    }
-    
-    def count(self, int tot) -> int:
-        cnt = 0
-        for(i = 0 i < nums1len(); i++) {
-            for(j = 0 j < nums2len(); j++) {
-                if(nums1[i] + nums2[j] == tot) {
-                    cnt++;
-                }
-            }
-        }
-        return cnt;
-    }
-};
+class FindSumPairs:
+def __init__(self, nums1: list[int], nums2: list[int]):
+self.nums1 = nums1
+self.nums2 = nums2
+def add(self, index: int, val: int) -> None:
+self.nums2[index] += val
+def count(self, tot: int) -> int:
+cnt = 0
+for num1 in self.nums1:
+for num2 in self.nums2:
+if num1 + num2 == tot:
+cnt += 1
+return cnt
 ```
 
 **Time Complexity:** O(m × n) for count operation  
@@ -308,36 +288,24 @@ private:
 
 ### Approach 2: Two Hash Maps
 ```python
-class FindSumPairs {
-private:
-    list[int] nums1, nums2;
-    unordered_map<int, int> cnts1, cnts2;
-    
-
-    FindSumPairs(list[int] nums1, list[int] nums2) {
-        this->nums1 = nums1;
-        this->nums2 = nums2;
-        for(auto num: nums1) cnts1[num]++;
-        for(auto num: nums2) cnts2[num]++;
-    }
-    
-    def add(self, int index, int val) -> void:
-        cnts2[nums2[index]]--;
-        nums2[index] += val;
-        cnts2[nums2[index]]++;
-    }
-    
-    def count(self, int tot) -> int:
-        cnt = 0
-        for(auto [num, freq]: cnts1) {
-            int rest = tot - num;
-            if(cnts2.contains(rest)) {
-                cnt += freq * cnts2[rest];
-            }
-        }
-        return cnt;
-    }
-};
+from collections import Counter
+class FindSumPairs:
+def __init__(self, nums1: list[int], nums2: list[int]):
+self.nums1 = nums1
+self.nums2 = nums2
+self.cnts1 = Counter(nums1)
+self.cnts2 = Counter(nums2)
+def add(self, index: int, val: int) -> None:
+old_num = self.nums2[index]
+self.cnts2[old_num] -= 1
+self.nums2[index] += val
+self.cnts2[self.nums2[index]] += 1
+def count(self, tot: int) -> int:
+cnt = 0
+for num, freq in self.cnts1.items():
+rest = tot - num
+cnt += freq  self.cnts2.get(rest, 0)
+return cnt
 ```
 
 **Time Complexity:** O(k) for count operation where k is unique values in nums1  

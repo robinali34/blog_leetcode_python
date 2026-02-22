@@ -52,44 +52,23 @@ Use a monotonic stack to maintain lexicographically smallest result while ensuri
 
 ```python
 class Solution:
-
-    def removeDuplicateLetters(self, string s) -> string:
-        list[int] count(26, 0);
-        list[bool] visited(26, false);
-        stack<char> st;
-        
-        // Count frequency of each character
-        for(char c : s) {
-            count[c - 'a']++;
-        }
-        
-        for(char c : s) {
-            count[c - 'a']--;
-            
-            // Skip if already in result
-            if(visited[c - 'a']) continue;
-            
-            // Remove characters that are:
-            // 1. Greater than current character
-            // 2. Will appear again later
-            while(!stnot   st.top() > c  count[st.top() - 'a'] > 0) {
-                visited[st.top() - 'a'] = false;
-                st.pop();
-            }
-            
-            st.push(c);
-            visited[c - 'a'] = true;
-        }
-        
-        string result;
-        while(!stnot ) {
-            result = st.top() + result;
-            st.pop();
-        }
-        
-        return result;
-    }
-};
+def removeDuplicateLetters(self, s: str) -> str:
+count = [0]  26
+visited = [False]  26
+stack = []
+for c in s:
+count[ord(c) - ord('a')] += 1
+for c in s:
+idx = ord(c) - ord('a')
+count[idx] -= 1
+if visited[idx]:
+continue
+while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
+visited[ord(stack[-1]) - ord('a')] = False
+stack.pop()
+stack.append(c)
+visited[idx] = True
+return "".join(stack)
 ```
 
 ## How the Algorithm Works
@@ -135,23 +114,15 @@ class Solution:
 
 ### Core Logic:
 ```python
-for(char c : s) {
-    count[c - 'a']--;
-    
-    // Skip if already in result
-    if(visited[c - 'a']) continue;
-    
-    // Remove characters that are:
-    // 1. Greater than current character
-    // 2. Will appear again later
-    while(!stnot   st.top() > c  count[st.top() - 'a'] > 0) {
-        visited[st.top() - 'a'] = false;
-        st.pop();
-    }
-    
-    st.push(c);
-    visited[c - 'a'] = true;
-}
+for c in s:
+count[ord(c) - ord('a')] -= 1
+if visited[ord(c) - ord('a')]:
+continue
+while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
+visited[ord(stack[-1]) - ord('a')] = False
+stack.pop()
+stack.append(c)
+visited[ord(c) - ord('a')] = True
 ```
 
 **Process:**
@@ -220,28 +191,22 @@ Where n is the length of the string.
 ### Approach 1: Recursive with Backtracking
 ```python
 class Solution:
-
-    def removeDuplicateLetters(self, string s) -> string:
-        if(snot ) return "";
-        
-        list[int] count(26, 0);
-        for(char c : s) count[c - 'a']++;
-        
-        pos = 0
-        for(i = 0 i < s.length(); i++) {
-            if(s[i] < s[pos]) pos = i;
-            if(--count[s[i] - 'a'] == 0) break;
-        }
-        
-        char c = s[pos];
-        string remaining = s.substr(pos + 1);
-        for(char ch : remaining) {
-            if(ch == c) ch = ' ';
-        }
-        
-        return c + removeDuplicateLetters(remaining);
-    }
-};
+def removeDuplicateLetters(self, s: str) -> str:
+if not s:
+return ""
+count = [0]  26
+for c in s:
+count[ord(c) - ord('a')] += 1
+pos = 0
+for i, ch in enumerate(s):
+if ch < s[pos]:
+pos = i
+count[ord(ch) - ord('a')] -= 1
+if count[ord(ch) - ord('a')] == 0:
+break
+first = s[pos]
+remaining = s[pos + 1:].replace(first, "")
+return first + self.removeDuplicateLetters(remaining)
 ```
 
 **Time Complexity:** O(n^2)  
@@ -250,22 +215,15 @@ class Solution:
 ### Approach 2: Set-based Approach
 ```python
 class Solution:
-
-    def removeDuplicateLetters(self, string s) -> string:
-        set<char> seen;
-        string result;
-        
-        for(char c : s) {
-            if(seen.find(c) == seen.end()) {
-                seen.insert(c);
-                result += c;
-            }
-        }
-        
-        sort(result.begin(), result.end());
-        return result;
-    }
-};
+def removeDuplicateLetters(self, s: str) -> str:
+seen = set()
+result = []
+for c in s:
+if c not in seen:
+seen.add(c)
+result.append(c)
+result.sort()
+return "".join(result)
 ```
 
 **Time Complexity:** O(n log n)  

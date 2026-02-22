@@ -19,19 +19,15 @@ tags: [leetcode, templates, advanced]
 
 ```python
 from bisect import bisect_left
-
 class Compressor:
-    def __init__(self):
-        self.vals = []
-    
-    def add(self, items):
-        self.vals.extend(items)
-    
-    def build(self):
-        self.vals = sorted(set(self.vals))
-    
-    def get(self, x):
-        return bisect_left(self.vals, x)
+def __init__(self):
+self.vals = []
+def add(self, items):
+self.vals.extend(items)
+def build(self):
+self.vals = sorted(set(self.vals))
+def get(self, x):
+return bisect_left(self.vals, x)
 ```
 
 | ID | Title | Link |
@@ -43,30 +39,27 @@ class Compressor:
 
 ```python
 from bisect import bisect_left, bisect_right
-
 def count_subsets(a: list[int], T: int) -> int:
-    n = len(a)
-    m = n // 2
-    L, R = [], []
-    
-    def go(l: int, r: int, out: list):
-        k = r - l
-        for mask in range(1 << k):
-            s = 0
-            for i in range(k):
-                if mask >> i & 1:
-                    s += a[l + i]
-            out.append(s)
-    
-    go(0, m, L)
-    go(m, n, R)
-    R.sort()
-    ans = 0
-    for x in L:
-        left = bisect_left(R, T - x)
-        right = bisect_right(R, T - x)
-        ans += right - left
-    return ans
+n = len(a)
+m = n // 2
+L, R = [], []
+def go(l: int, r: int, out: list):
+k = r - l
+for mask in range(1 << k):
+s = 0
+for i in range(k):
+if mask >> i  1:
+s += a[l + i]
+out.append(s)
+go(0, m, L)
+go(m, n, R)
+R.sort()
+ans = 0
+for x in L:
+left = bisect_left(R, T - x)
+right = bisect_right(R, T - x)
+ans += right - left
+return ans
 ```
 
 | ID | Title | Link |
@@ -78,24 +71,24 @@ def count_subsets(a: list[int], T: int) -> int:
 
 ```python
 def manacher(s: str) -> str:
-    t = "|" + "|".join(s) + "|"
-    n = len(t)
-    p = [0] * n
-    c = r = best = center = 0
-    for i in range(n):
-        mir = 2 * c - i
-        if i < r:
-            p[i] = min(r - i, p[mir])
-        while i - 1 - p[i] >= 0 and i + 1 + p[i] < n and t[i - 1 - p[i]] == t[i + 1 + p[i]]:
-            p[i] += 1
-        if i + p[i] > r:
-            c = i
-            r = i + p[i]
-        if p[i] > best:
-            best = p[i]
-            center = i
-    start = (center - best) // 2
-    return s[start:start + best]
+t = "|" + "|".join(s) + "|"
+n = len(t)
+p = [0]  n
+c = r = best = center = 0
+for i in range(n):
+mir = 2  c - i
+if i < r:
+p[i] = min(r - i, p[mir])
+while i - 1 - p[i] >= 0 and i + 1 + p[i] < n and t[i - 1 - p[i]] == t[i + 1 + p[i]]:
+p[i] += 1
+if i + p[i] > r:
+c = i
+r = i + p[i]
+if p[i] > best:
+best = p[i]
+center = i
+start = (center - best) // 2
+return s[start:start + best]
 ```
 
 | ID | Title | Link |
@@ -106,18 +99,18 @@ def manacher(s: str) -> str:
 
 ```python
 def z_func(s: str) -> list[int]:
-    n = len(s)
-    z = [0] * n
-    l = r = 0
-    for i in range(1, n):
-        if i <= r:
-            z[i] = min(r - i + 1, z[i - l])
-        while i + z[i] < n and s[z[i]] == s[i + z[i]]:
-            z[i] += 1
-        if i + z[i] - 1 > r:
-            l = i
-            r = i + z[i] - 1
-    return z
+n = len(s)
+z = [0]  n
+l = r = 0
+for i in range(1, n):
+if i <= r:
+z[i] = min(r - i + 1, z[i - l])
+while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+z[i] += 1
+if i + z[i] - 1 > r:
+l = i
+r = i + z[i] - 1
+return z
 ```
 
 | ID | Title | Link |
@@ -128,34 +121,31 @@ def z_func(s: str) -> list[int]:
 
 ```python
 class BitTrie:
-    class Node:
-        def __init__(self):
-            self.ch = [-1, -1]
-    
-    def __init__(self):
-        self.t = [self.Node()]
-    
-    def insert(self, x: int):
-        u = 0
-        for b in range(31, -1, -1):
-            bit = (x >> b) & 1
-            if self.t[u].ch[bit] == -1:
-                self.t[u].ch[bit] = len(self.t)
-                self.t.append(self.Node())
-            u = self.t[u].ch[bit]
-    
-    def max_xor(self, x: int) -> int:
-        u = 0
-        ans = 0
-        for b in range(31, -1, -1):
-            bit = (x >> b) & 1
-            want = bit ^ 1
-            if self.t[u].ch[want] != -1:
-                ans |= 1 << b
-                u = self.t[u].ch[want]
-            else:
-                u = self.t[u].ch[bit]
-        return ans
+class Node:
+def __init__(self):
+self.ch = [-1, -1]
+def __init__(self):
+self.t = [self.Node()]
+def insert(self, x: int):
+u = 0
+for b in range(31, -1, -1):
+bit = (x >> b)  1
+if self.t[u].ch[bit] == -1:
+self.t[u].ch[bit] = len(self.t)
+self.t.append(self.Node())
+u = self.t[u].ch[bit]
+def max_xor(self, x: int) -> int:
+u = 0
+ans = 0
+for b in range(31, -1, -1):
+bit = (x >> b)  1
+want = bit ^ 1
+if self.t[u].ch[want] != -1:
+ans |= 1 << b
+u = self.t[u].ch[want]
+else:
+u = self.t[u].ch[bit]
+return ans
 ```
 
 | ID | Title | Link |

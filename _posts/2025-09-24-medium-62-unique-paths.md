@@ -64,12 +64,12 @@ The solution uses dynamic programming with the following key insights:
 
 ```python
 class Solution:
-    def uniquePaths(self, m: int, n: int) -> int:
-        dp = [[1] * n for _ in range(m)]
-        for row in range(1, m):
-            for col in range(1, n):
-                dp[row][col] = dp[row][col - 1] + dp[row - 1][col]
-        return dp[m - 1][n - 1]
+def uniquePaths(self, m: int, n: int) -> int:
+dp = [[1]  n for _ in range(m)]
+for row in range(1, m):
+for col in range(1, n):
+dp[row][col] = dp[row][col - 1] + dp[row - 1][col]
+return dp[m - 1][n - 1]
 ```
 
 ## Step-by-Step Example
@@ -109,23 +109,21 @@ Let's trace through the solution with m = 3, n = 3:
 
 ### Mathematical Solution (Combinatorics)
 ```python
-def uniquePaths(self, int m, int n) -> int:
-    long long result = 1;
-    for (i = 0 i < min(m-1, n-1); i++) {
-        result = result * (m + n - 2 - i) / (i + 1);
-    }
-    return (int)result;
-}
+def uniquePaths(self, m: int, n: int) -> int:
+result = 1
+for i in range(min(m - 1, n - 1)):
+result = result  (m + n - 2 - i) // (i + 1)
+return result
 ```
 
 ### Space-Optimized DP
 ```python
 def uniquePaths(self, m: int, n: int) -> int:
-    dp = [1] * n
-    for i in range(1, m):
-        for j in range(1, n):
-            dp[j] += dp[j - 1]
-    return dp[n - 1]
+dp = [1]  n
+for i in range(1, m):
+for j in range(1, n):
+dp[j] += dp[j - 1]
+return dp[n - 1]
 ```
 
 ## Visual Representation

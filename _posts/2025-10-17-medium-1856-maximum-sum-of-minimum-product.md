@@ -65,42 +65,27 @@ Use monotonic stack to find the range where each element is minimum, then calcul
 
 ```python
 class Solution:
-
-    def maxSumMinProduct(self, list[int] nums) -> int:
-        int n = numslen();
-        vector<long long> prefix(n + 1, 0);
-        
-        // Build prefix sum array
-        for(i = 0 i < n; i++) {
-            prefix[i + 1] = prefix[i] + nums[i];
-        }
-        
-        list[int] left(n, -1), right(n, n);
-        stack<int> s;
-        
-        // Find boundaries in single pass
-        for(i = 0 i < n; i++) {
-            // Find right boundaries for elements in stack
-            while(!snot   nums[s.top()] >= nums[i]) {
-                right[s.top()] = i;
-                s.pop();
-            }
-            // Set left boundary for current element
-            if(!snot ) left[i] = s.top();
-            s.push(i);
-        }
-        
-        long long maxProduct = 0;
-        
-        // Calculate maximum product for each element as minimum
-        for(i = 0 i < n; i++) {
-            long long totalSum = prefix[right[i]] - prefix[left[i] + 1];
-            maxProduct = max(maxProduct, totalSum * nums[i]);
-        }
-        
-        return (int)(maxProduct % 1000000007);
-    }
-};
+def maxSumMinProduct(self, nums: list[int]) -> int:
+MOD = 109 + 7
+n = len(nums)
+prefix = [0]  (n + 1)
+for i in range(n):
+prefix[i + 1] = prefix[i] + nums[i]
+left = [-1]  n
+right = [n]  n
+stack = []
+for i in range(n):
+while stack and nums[stack[-1]] >= nums[i]:
+right[stack[-1]] = i
+stack.pop()
+if stack:
+left[i] = stack[-1]
+stack.append(i)
+max_product = 0
+for i in range(n):
+total_sum = prefix[right[i]] - prefix[left[i] + 1]
+max_product = max(max_product, total_sum  nums[i])
+return max_product % MOD
 ```
 
 ## How the Algorithm Works
@@ -155,16 +140,13 @@ right = [4, 3, 4, 4]
 
 ### Single Pass Boundary Finding:
 ```python
-for(i = 0 i < n; i++) {
-    // Find right boundaries for elements in stack
-    while(!snot   nums[s.top()] >= nums[i]) {
-        right[s.top()] = i;
-        s.pop();
-    }
-    // Set left boundary for current element
-    if(!snot ) left[i] = s.top();
-    s.push(i);
-}
+for i in range(n):
+while stack and nums[stack[-1]] >= nums[i]:
+right[stack[-1]] = i
+stack.pop()
+if stack:
+left[i] = stack[-1]
+stack.append(i)
 ```
 
 **Process:**
@@ -175,10 +157,9 @@ for(i = 0 i < n; i++) {
 
 ### Product Calculation:
 ```python
-for(i = 0 i < n; i++) {
-    long long totalSum = prefix[right[i]] - prefix[left[i] + 1];
-    maxProduct = max(maxProduct, totalSum * nums[i]);
-}
+for i in range(n):
+total_sum = prefix[right[i]] - prefix[left[i] + 1]
+max_product = max(max_product, total_sum  nums[i])
 ```
 
 **Process:**
@@ -261,22 +242,18 @@ right = [3, 3, 3, 5, 5]
 ### Approach 1: Brute Force
 ```python
 class Solution:
-
-    def maxSumMinProduct(self, list[int] nums) -> int:
-        long long maxProduct = 0;
-        int n = numslen();
-        
-        for(i = 0 i < n; i++) {
-            for(int j = i; j < n; j++) {
-                int minVal = *min_element(nums.begin() + i, nums.begin() + j + 1);
-                long long sum = accumulate(nums.begin() + i, nums.begin() + j + 1, 0LL);
-                maxProduct = max(maxProduct, minVal * sum);
-            }
-        }
-        
-        return (int)(maxProduct % 1000000007);
-    }
-};
+def maxSumMinProduct(self, nums: list[int]) -> int:
+MOD = 109 + 7
+max_product = 0
+n = len(nums)
+for i in range(n):
+min_val = nums[i]
+total = 0
+for j in range(i, n):
+min_val = min(min_val, nums[j])
+total += nums[j]
+max_product = max(max_product, min_val  total)
+return max_product % MOD
 ```
 
 **Time Complexity:** O(n^3)  
@@ -285,23 +262,21 @@ class Solution:
 ### Approach 2: Divide and Conquer
 ```python
 class Solution:
-private:
-    long def maxProduct(self, list[int] nums, int left, int right) -> long:
-        if(left > right) return 0;
-        if(left == right) return (long long)nums[left] * nums[left];
-        
-        int minIdx = min_element(nums.begin() + left, nums.begin() + right + 1) - nums.begin();
-        long long sum = accumulate(nums.begin() + left, nums.begin() + right + 1, 0LL);
-        long long product = (long long)nums[minIdx] * sum;
-        
-        return max({product, maxProduct(nums, left, minIdx - 1), maxProduct(nums, minIdx + 1, right)});
-    }
-    
-
-    def maxSumMinProduct(self, list[int] nums) -> int:
-        return (int)(maxProduct(nums, 0, numslen() - 1) % 1000000007);
-    }
-};
+def _maxProduct(self, nums: list[int], left: int, right: int) -> int:
+if left > right:
+return 0
+if left == right:
+return nums[left]  nums[left]
+min_idx = min(range(left, right + 1), key=lambda i: nums[i])
+total = sum(nums[left:right + 1])
+product = nums[min_idx]  total
+return max(
+product,
+self._maxProduct(nums, left, min_idx - 1),
+self._maxProduct(nums, min_idx + 1, right),
+)
+def maxSumMinProduct(self, nums: list[int]) -> int:
+return self._maxProduct(nums, 0, len(nums) - 1) % (109 + 7)
 ```
 
 **Time Complexity:** O(n log n)  

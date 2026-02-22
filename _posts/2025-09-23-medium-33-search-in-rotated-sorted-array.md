@@ -19,72 +19,63 @@ Given a rotated sorted array and a target value, find the index of the target in
 
 ```python
 def bs_on_answer(self, left: int, right: int) -> int:
-    while left <= right:
-        pivot = left + (right - left) // 2
-        if condition(pivot):
-            right = pivot + 1
-        else:
-            left = pivot + 1
-    return -1
+while left <= right:
+pivot = left + (right - left) // 2
+if condition(pivot):
+right = pivot + 1
+else:
+left = pivot + 1
+return -1
 ```
 
 ## Solution in Python
 
 ```python
 class Solution:
-
-    def search(self, nums: list[int], target: int) -> int:
-        left, right = 0, len(nums) - 1
-        
-        while left <= right:
-            mid = left + (right - left) // 2
-            
-            if nums[mid] == target:
-                return mid
-            
-            # Subarray on mid's left is sorted
-            if nums[mid] >= nums[left]:
-                if target >= nums[left] and target < nums[mid]:
-                    right = mid - 1
-                else:
-                    left = mid + 1
-            # Subarray on mid's right is sorted
-            else:
-                if target <= nums[right] and target > nums[mid]:
-                    left = mid + 1
-                else:
-                    right = mid - 1
-        
-        return -1
+def search(self, nums: list[int], target: int) -> int:
+left, right = 0, len(nums) - 1
+while left <= right:
+mid = left + (right - left) // 2
+if nums[mid] == target:
+return mid
+# Subarray on mid's left is sorted
+if nums[mid] >= nums[left]:
+if target >= nums[left] and target < nums[mid]:
+right = mid - 1
+else:
+left = mid + 1
+# Subarray on mid's right is sorted
+else:
+if target <= nums[right] and target > nums[mid]:
+left = mid + 1
+else:
+right = mid - 1
+return -1
 ```
 
 ## Solution in Python
 
 ```python
 class Solution:
-    def search(self, nums: List[int], target: int) -> int:
-        left, right = 0, len(nums) - 1
-        
-        while left <= right:
-            mid = left + (right - left) // 2
-            
-            if nums[mid] == target:
-                return mid
-            
-            # Subarray on mid's left is sorted
-            elif nums[mid] >= nums[left]:
-                if target >= nums[left] and target < nums[mid]:
-                    right = mid - 1
-                else:
-                    left = mid + 1
-            # Subarray on mid's right is sorted
-            else:
-                if target <= nums[right] and target > nums[mid]:
-                    left = mid + 1
-                else:
-                    right = mid - 1
-        
-        return -1
+def search(self, nums: List[int], target: int) -> int:
+left, right = 0, len(nums) - 1
+while left <= right:
+mid = left + (right - left) // 2
+if nums[mid] == target:
+return mid
+# Subarray on mid's left is sorted
+elif nums[mid] >= nums[left]:
+if target >= nums[left] and target < nums[mid]:
+right = mid - 1
+else:
+left = mid + 1
+# Subarray on mid's right is sorted
+else:
+if target <= nums[right] and target > nums[mid]:
+left = mid + 1
+else:
+right = mid - 1
+return -1
 ```
 
 ## Algorithm Explanation

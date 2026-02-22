@@ -66,9 +66,9 @@ Since we're finding the distance to the origin `(0, 0)`, we can simplify the dis
 
 ```python
 class Solution:
-    def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
-        points.sort(key=lambda p: p[0] * p[0] + p[1] * p[1])
-        return points[:k]
+def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
+points.sort(key=lambda p: p[0]  p[0] + p[1]  p[1])
+return points[:k]
 ```
 
 ### Approach 2: Max Heap
@@ -83,22 +83,19 @@ class Solution:
 
 ```python
 import heapq
-
 class Solution:
-    def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
-        # Use negative distance for max heap (Python has min heap)
-        maxHeap = []
-        
-        for point in points:
-            dist = point[0] * point[0] + point[1] * point[1]
-            if len(maxHeap) < k:
-                heapq.heappush(maxHeap, (-dist, point))
-            elif dist < -maxHeap[0][0]:
-                heapq.heappop(maxHeap)
-                heapq.heappush(maxHeap, (-dist, point))
-        
-        result = [point for _, point in maxHeap]
-        return result
+def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
+# Use negative distance for max heap (Python has min heap)
+maxHeap = []
+for point in points:
+dist = point[0]  point[0] + point[1]  point[1]
+if len(maxHeap) < k:
+heapq.heappush(maxHeap, (-dist, point))
+elif dist < -maxHeap[0][0]:
+heapq.heappop(maxHeap)
+heapq.heappush(maxHeap, (-dist, point))
+result = [point for _, point in maxHeap]
+return result
 ```
 
 ### Approach 3: Quickselect (Optimal for Large k)
@@ -113,33 +110,28 @@ class Solution:
 
 ```python
 class Solution:
-    def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
-        left, right = 0, len(points) - 1
-        
-        while left <= right:
-            pivotIndex = self.partition(points, left, right)
-            if pivotIndex == k:
-                break
-            elif pivotIndex < k:
-                left = pivotIndex + 1
-            else:
-                right = pivotIndex - 1
-        
-        return points[:k]
-    
-    def partition(self, points: list[list[int]], left: int, right: int) -> int:
-        def getDistance(point):
-            return point[0] * point[0] + point[1] * point[1]
-        
-        pivotDist = getDistance(points[right])
-        i = left
-        
-        for j in range(left, right):
-            if getDistance(points[j]) <= pivotDist:
-                points[i], points[j] = points[j], points[i]
-                i += 1
-        points[i], points[right] = points[right], points[i]
-        return i
+def kClosest(self, points: list[list[int]], k: int) -> list[list[int]]:
+left, right = 0, len(points) - 1
+while left <= right:
+pivotIndex = self.partition(points, left, right)
+if pivotIndex == k:
+break
+elif pivotIndex < k:
+left = pivotIndex + 1
+else:
+right = pivotIndex - 1
+return points[:k]
+def partition(self, points: list[list[int]], left: int, right: int) -> int:
+def getDistance(point):
+return point[0]  point[0] + point[1]  point[1]
+pivotDist = getDistance(points[right])
+i = left
+for j in range(left, right):
+if getDistance(points[j]) <= pivotDist:
+points[i], points[j] = points[j], points[i]
+i += 1
+points[i], points[right] = points[right], points[i]
+return i
 ```
 
 ## Complexity Analysis

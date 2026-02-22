@@ -55,18 +55,18 @@ This is a classic **Monotonic Stack** problem. The key insight is that for each 
 
 ```python
 class Solution:
-    def largestRectangleArea(self, heights: list[int]) -> int:
-        max_area = 0
-        heights.append(0)
-        n = len(heights)
-        stk = []
-        for i in range(n):
-            while stk and heights[i] < heights[stk[-1]]:
-                height = heights[stk.pop()]
-                width = i if not stk else i - stk[-1] - 1
-                max_area = max(max_area, height * width)
-            stk.append(i)
-        return max_area
+def largestRectangleArea(self, heights: list[int]) -> int:
+max_area = 0
+heights.append(0)
+n = len(heights)
+stk = []
+for i in range(n):
+while stk and heights[i] < heights[stk[-1]]:
+height = heights[stk.pop()]
+width = i if not stk else i - stk[-1] - 1
+max_area = max(max_area, height  width)
+stk.append(i)
+return max_area
 ```
 
 ## Explanation
@@ -119,40 +119,33 @@ For `heights = [2,1,5,6,2,3]` with sentinel `[2,1,5,6,2,3,0]`:
 
 ### Brute Force (O(n²)):
 ```python
-def largestRectangleArea(self, list[int] heights) -> int:
-    max_area = 0
-    for(i = 0 i < heightslen(); i++) {
-        int min_height = heights[i];
-        for(int j = i; j < heightslen(); j++) {
-            min_height = min(min_height, heights[j]);
-            max_area = max(max_area, min_height * (j - i + 1));
-        }
-    }
-    return max_area;
-}
+def largestRectangleArea(self, heights: list[int]) -> int:
+max_area = 0
+for i in range(len(heights)):
+min_height = heights[i]
+for j in range(i, len(heights)):
+min_height = min(min_height, heights[j])
+max_area = max(max_area, min_height  (j - i + 1))
+return max_area
 ```
 
 ### Divide and Conquer (O(n log n)):
 ```python
-def largestRectangleArea(self, list[int] heights) -> int:
-    return divideConquer(heights, 0, heightslen() - 1);
-}
-
-def divideConquer(self, list[int] heights, int left, int right) -> int:
-    if(left > right) return 0;
-    if(left == right) return heights[left];
-    
-    int min_idx = left;
-    for(int i = left; i <= right; i++) {
-        if(heights[i] < heights[min_idx]) min_idx = i;
-    }
-    
-    int area = heights[min_idx] * (right - left + 1);
-    int left_area = divideConquer(heights, left, min_idx - 1);
-    int right_area = divideConquer(heights, min_idx + 1, right);
-    
-    return max({area, left_area, right_area});
-}
+def largestRectangleArea(self, heights: list[int]) -> int:
+return divideConquer(heights, 0, len(heights) - 1)
+def divideConquer(heights: list[int], left: int, right: int) -> int:
+if left > right:
+return 0
+if left == right:
+return heights[left]
+min_idx = left
+for i in range(left, right + 1):
+if heights[i] < heights[min_idx]:
+min_idx = i
+area = heights[min_idx]  (right - left + 1)
+left_area = divideConquer(heights, left, min_idx - 1)
+right_area = divideConquer(heights, min_idx + 1, right)
+return max(area, left_area, right_area)
 ```
 
 The monotonic stack approach is the most efficient solution for this problem, demonstrating the power of this data structure for solving range-based problems.

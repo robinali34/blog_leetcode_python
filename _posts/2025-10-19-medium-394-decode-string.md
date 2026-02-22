@@ -64,29 +64,26 @@ Use two stacks to handle nested encoded strings: one for counts and one for stri
 
 ```python
 class Solution:
-
-    def decodeString(self, s: str) -> str:
-        counts = []
-        strings = []
-        curr = ""
-        k = 0
-        
-        for ch in s:
-            if ch.isdigit():
-                k = k * 10 + int(ch)
-            elif ch == '[':
-                counts.append(k)
-                strings.append(curr)
-                curr = ""
-                k = 0
-            elif ch == ']':
-                decode = strings.pop()
-                count = counts.pop()
-                curr = decode + curr * count
-            else:
-                curr += ch
-        
-        return curr
+def decodeString(self, s: str) -> str:
+counts = []
+strings = []
+curr = ""
+k = 0
+for ch in s:
+if ch.isdigit():
+k = k  10 + int(ch)
+elif ch == '[':
+counts.append(k)
+strings.append(curr)
+curr = ""
+k = 0
+elif ch == ']':
+decode = strings.pop()
+count = counts.pop()
+curr = decode + curr  count
+else:
+curr += ch
+return curr
 ```
 
 ## How the Algorithm Works
@@ -123,19 +120,19 @@ class Solution:
 ### Character Processing:
 ```python
 for ch in s:
-    if ch.isdigit():
-        k = k * 10 + int(ch)
-    elif ch == '[':
-        counts.append(k)
-        strings.append(curr)
-        curr = ""
-        k = 0
-    elif ch == ']':
-        decode = strings.pop()
-        count = counts.pop()
-        curr = decode + curr * count
-    else:
-        curr += ch
+if ch.isdigit():
+k = k  10 + int(ch)
+elif ch == '[':
+counts.append(k)
+strings.append(curr)
+curr = ""
+k = 0
+elif ch == ']':
+decode = strings.pop()
+count = counts.pop()
+curr = decode + curr  count
+else:
+curr += ch
 ```
 
 **Process:**
@@ -148,20 +145,20 @@ for ch in s:
 
 **Push Operation (on '['):**
 ```python
-counts.push(k);
-strings.push(curr);
-curr = "";
-k = 0;
+counts.push(k)
+strings.push(curr)
+curr = ""
+k = 0
 ```
 
 **Pop Operation (on ']'):**
 ```python
-string decode = strings.top();
-strings.pop();
-int count = counts.top();
-while(count--) decode += curr;
-counts.pop();
-curr = decode;
+str decode = strings.top()
+strings.pop()
+count = counts.top()
+while(count -= 1) decode += curr
+counts.pop()
+curr = decode
 ```
 
 ## Complexity Analysis
@@ -223,25 +220,24 @@ Where n is the input length and m is the decoded string length.
 ### Approach 1: Recursive Solution
 ```python
 class Solution:
-    def decodeString(self, s: str, i: list[int]) -> str:
-        result = ""
-        while i[0] < len(s) and s[i[0]] != ']':
-            if s[i[0]].isdigit():
-                k = 0
-                while i[0] < len(s) and s[i[0]].isdigit():
-                    k = k * 10 + int(s[i[0]])
-                    i[0] += 1
-                i[0] += 1  # skip '['
-                decoded = self.decodeString(s, i)
-                i[0] += 1  # skip ']'
-                result += decoded * k
-            else:
-                result += s[i[0]]
-                i[0] += 1
-        return result
-    
-    def decodeString(self, s: str) -> str:
-        return self.decodeString(s, [0])
+def decodeString(self, s: str, i: list[int]) -> str:
+result = ""
+while i[0] < len(s) and s[i[0]] != ']':
+if s[i[0]].isdigit():
+k = 0
+while i[0] < len(s) and s[i[0]].isdigit():
+k = k  10 + int(s[i[0]])
+i[0] += 1
+i[0] += 1  # skip '['
+decoded = self.decodeString(s, i)
+i[0] += 1  # skip ']'
+result += decoded  k
+else:
+result += s[i[0]]
+i[0] += 1
+return result
+def decodeString(self, s: str) -> str:
+return self.decodeString(s, [0])
 ```
 
 **Time Complexity:** O(n + m)  
@@ -250,28 +246,26 @@ class Solution:
 ### Approach 2: Iterative with Single Stack
 ```python
 class Solution:
-
-    def decodeString(self, s: str) -> str:
-        st = []
-        curr = ""
-        k = 0
-        
-        for c in s:
-            if c.isdigit():
-                k = k * 10 + int(c)
-            elif c == '[':
-                st.append(str(k))
-                st.append(curr)
-                curr = ""
-                k = 0
-            elif c == ']':
-                prev = st.pop()
-                count = int(st.pop())
-                temp = curr * count
-                curr = prev + temp
-            else:
-                curr += c
-        return curr
+def decodeString(self, s: str) -> str:
+st = []
+curr = ""
+k = 0
+for c in s:
+if c.isdigit():
+k = k  10 + int(c)
+elif c == '[':
+st.append(str(k))
+st.append(curr)
+curr = ""
+k = 0
+elif c == ']':
+prev = st.pop()
+count = int(st.pop())
+temp = curr  count
+curr = prev + temp
+else:
+curr += c
+return curr
 ```
 
 **Time Complexity:** O(n + m)  

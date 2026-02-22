@@ -48,20 +48,23 @@ Use DFS to explore all possible paths starting from each node, checking if the p
 
 ```python
 class Solution:
-private:
-    def dfs(self, TreeNode* node, int targetSum) -> int:
-        if(!node) return 0;
-        cnt = 0
-        if(targetSum == node->val) cnt++;
-        return cnt + dfs(node->left, targetSum - node->val) + dfs(node->right, targetSum - node->val);
-    }
-    
-
-    def pathSum(self, TreeNode* root, int targetSum) -> int:
-        if(!root) return 0;
-        return dfs(root, targetSum) + pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
-    }
-};
+def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
+if not node:
+return 0
+cnt = 1 if targetSum == node.val else 0
+return (
+cnt
++ self.dfs(node.left, targetSum - node.val)
++ self.dfs(node.right, targetSum - node.val)
+)
+def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+if not root:
+return 0
+return (
+self.dfs(root, targetSum)
++ self.pathSum(root.left, targetSum)
++ self.pathSum(root.right, targetSum)
+)
 ```
 
 ## How the Algorithm Works
@@ -109,12 +112,11 @@ private:
 
 ### DFS Function:
 ```python
-def dfs(self, TreeNode* node, int targetSum) -> int:
-    if(!node) return 0;
-    cnt = 0
-    if(targetSum == node->val) cnt++;
-    return cnt + dfs(node->left, targetSum - node->val) + dfs(node->right, targetSum - node->val);
-}
+def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
+if not node:
+return 0
+cnt = 1 if targetSum == node.val else 0
+return cnt + dfs(self, node.left, targetSum - node.val) + dfs(self, node.right, targetSum - node.val)
 ```
 
 **Process:**
@@ -125,10 +127,10 @@ def dfs(self, TreeNode* node, int targetSum) -> int:
 
 ### Main Function:
 ```python
-def pathSum(self, TreeNode* root, int targetSum) -> int:
-    if(!root) return 0;
-    return dfs(root, targetSum) + pathSum(root->left, targetSum) + pathSum(root->right, targetSum);
-}
+def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+if not root:
+return 0
+return dfs(self, root, targetSum) + pathSum(self, root.left, targetSum) + pathSum(self, root.right, targetSum)
 ```
 
 **Process:**
@@ -205,28 +207,19 @@ Where n is the number of nodes and h is the height of the tree.
 ### Approach 1: Prefix Sum with Hash Map
 ```python
 class Solution:
-private:
-    def dfs(self, TreeNode* node, int targetSum, unordered_map<long, int> prefixSum, long currentSum) -> int:
-        if(!node) return 0;
-        
-        currentSum += node->val;
-        int count = prefixSum[currentSum - targetSum];
-        prefixSum[currentSum]++;
-        
-        count += dfs(node->left, targetSum, prefixSum, currentSum);
-        count += dfs(node->right, targetSum, prefixSum, currentSum);
-        
-        prefixSum[currentSum]--;
-        return count;
-    }
-    
-
-    def pathSum(self, TreeNode* root, int targetSum) -> int:
-        unordered_map<long, int> prefixSum;
-        prefixSum[0] = 1;
-        return dfs(root, targetSum, prefixSum, 0);
-    }
-};
+def dfs(self, node: 'TreeNode | None', targetSum: int, prefixSum: dict[int, int], currentSum: int) -> int:
+if not node:
+return 0
+currentSum += node.val
+count = prefixSum.get(currentSum - targetSum, 0)
+prefixSum[currentSum] = prefixSum.get(currentSum, 0) + 1
+count += self.dfs(node.left, targetSum, prefixSum, currentSum)
+count += self.dfs(node.right, targetSum, prefixSum, currentSum)
+prefixSum[currentSum] -= 1
+return count
+def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+prefixSum = :0: 1
+return self.dfs(root, targetSum, prefixSum, 0)
 ```
 
 **Time Complexity:** O(n)  
@@ -235,35 +228,28 @@ private:
 ### Approach 2: Iterative DFS
 ```python
 class Solution:
-
-    def pathSum(self, TreeNode* root, int targetSum) -> int:
-        if(!root) return 0;
-        
-        stack<TreeNode*> stk;
-        stk.push(root);
-        count = 0
-        
-        while(!stknot ) {
-            TreeNode* node = stk.top();
-            stk.pop();
-            
-            count += dfs(node, targetSum);
-            
-            if(node->left) stk.push(node->left);
-            if(node->right) stk.push(node->right);
-        }
-        
-        return count;
-    }
-    
-private:
-    def dfs(self, TreeNode* node, int targetSum) -> int:
-        if(!node) return 0;
-        cnt = 0
-        if(targetSum == node->val) cnt++;
-        return cnt + dfs(node->left, targetSum - node->val) + dfs(node->right, targetSum - node->val);
-    }
-};
+def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+if not root:
+return 0
+stk = [root]
+count = 0
+while stk:
+node = stk.pop()
+count += self.dfs(node, targetSum)
+if node.left:
+stk.append(node.left)
+if node.right:
+stk.append(node.right)
+return count
+def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
+if not node:
+return 0
+cnt = 1 if targetSum == node.val else 0
+return (
+cnt
++ self.dfs(node.left, targetSum - node.val)
++ self.dfs(node.right, targetSum - node.val)
+)
 ```
 
 **Time Complexity:** O(n²)  

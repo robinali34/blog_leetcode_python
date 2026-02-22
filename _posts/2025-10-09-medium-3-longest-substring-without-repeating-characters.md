@@ -47,22 +47,18 @@ Use a sliding window approach with a hash map to track character positions and e
 
 ```python
 class Solution:
-    def lengthOfLongestSubstring(self, s: str) -> int:
-        max_len = 0
-        hashmap = {}
-        
-        start = 0
-        for end in range(len(s)):
-            cur = s[end]
-            
-            # If character exists and is within current window
-            if cur in hashmap and hashmap[cur] >= start:
-                start = hashmap[cur] + 1  # Move start past the duplicate
-            
-            hashmap[cur] = end  # Update character position
-            max_len = max(max_len, end - start + 1)  # Update max length
-        
-        return max_len
+def lengthOfLongestSubstring(self, s: str) -> int:
+max_len = 0
+hashmap = :
+start = 0
+for end in range(len(s)):
+cur = s[end]
+# If character exists and is within current window
+if cur in hashmap and hashmap[cur] >= start:
+start = hashmap[cur] + 1  # Move start past the duplicate
+hashmap[cur] = end  # Update character position
+max_len = max(max_len, end - start + 1)  # Update max length
+return max_len
 ```
 
 ## How the Algorithm Works
@@ -110,20 +106,20 @@ Maximum length: 3
 ### 1. Initialize Variables
 ```python
 max_len = 0
-hashmap = {}  # Dictionary to store character positions
+hashmap = :  # Dictionary to store character positions
 ```
 
 ### 2. Expand Window
 ```python
 start = 0
 for end in range(len(s)):
-    cur = s[end]
+cur = s[end]
 ```
 
 ### 3. Handle Duplicates
 ```python
 if cur in hashmap and hashmap[cur] >= start:
-    start = hashmap[cur] + 1  # Move start past duplicate
+start = hashmap[cur] + 1  # Move start past duplicate
 ```
 
 ### 4. Update and Track
@@ -138,9 +134,9 @@ max_len = max(max_len, end - start + 1)  # Update max length
 ```python
 # Check all possible substrings - O(n³)
 for i in range(n):
-    for j in range(i, n):
-        if isUnique(s, i, j):
-            max_len = max(max_len, j - i + 1)
+for j in range(i, n):
+if isUnique(s, i, j):
+max_len = max(max_len, j - i + 1)
 ```
 
 ### Approach 2: Sliding Window with Set
@@ -149,11 +145,11 @@ for i in range(n):
 window = set()
 start = 0
 for end in range(len(s)):
-    while s[end] in window:
-        window.remove(s[start])
-        start += 1
-    window.add(s[end])
-    max_len = max(max_len, end - start + 1)
+while s[end] in window:
+window.remove(s[start])
+start += 1
+window.add(s[end])
+max_len = max(max_len, end - start + 1)
 ```
 ```
 

@@ -57,46 +57,37 @@ The solution uses a recursive approach:
 **Space Complexity:** O(n/k) - Recursion stack depth
 
 ```python
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     # val = 0
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+/
+ Definition for singly-linked list.
+ struct ListNode :
+     # val = 0
+     ListNode next
+     ListNode() : val(0), next(None) :
+     ListNode(x) : val(x), next(None) :
+     ListNode(x, ListNode next) : val(x), next(next) :
+/
 class Solution:
-
-    ListNode* reverseKGroup(ListNode* head, int k) {
-        count = 0
-        ListNode* ptr = head;
-        while(count < k  ptr != nullptr) {
-            ptr = ptr->next;
-            count++;
-        }
-        if(count == k) {
-            ListNode* reversedHead = this->reverseLinkedList(head, k);
-            head->next = this->reverseKGroup(ptr, k);
-            return reversedHead;
-        }
-        return head;        
-    }
-private:
-    ListNode* reverseLinkedList(ListNode* head, int k){
-        ListNode* new_head = nullptr;
-        ListNode* ptr = head;
-        while(k > 0) {
-            ListNode* next_node = ptr->next;
-            ptr->next = new_head;
-            new_head = ptr;
-            ptr = next_node;
-            k--;
-        }
-        return new_head;
-    }
-};
+def reverseKGroup(self, head: 'ListNode | None', k: int) -> 'ListNode | None':
+count = 0
+ptr = head
+while count < k and ptr is not None:
+ptr = ptr.next
+count += 1
+if count == k:
+reversedHead = self.reverseLinkedList(head, k)
+head.next = self.reverseKGroup(ptr, k)
+return reversedHead
+return head
+def reverseLinkedList(self, head: 'ListNode | None', k: int) -> 'ListNode | None':
+new_head = None
+ptr = head
+while k > 0 and ptr is not None:
+next_node = ptr.next
+ptr.next = new_head
+new_head = ptr
+ptr = next_node
+k -= 1
+return new_head
 ```
 
 ## Step-by-Step Example

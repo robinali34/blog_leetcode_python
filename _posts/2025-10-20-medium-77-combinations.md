@@ -59,20 +59,19 @@ This problem asks for all possible combinations of `k` numbers from `[1, n]`. Si
 
 ```python
 class Solution:
-    def combine(self, n: int, k: int) -> list[list[int]]:
-        result = []
-        path = []
-        self.dfs(n, k, path, 1, result)
-        return result
-    
-    def dfs(self, n: int, k: int, path: list[int], first_num: int, result: list[list[int]]) -> None:
-        if len(path) == k:
-            result.append(path[:])
-            return
-        for i in range(first_num, n + 1):
-            path.append(i)
-            self.dfs(n, k, path, i + 1, result)
-            path.pop()
+def combine(self, n: int, k: int) -> list[list[int]]:
+result = []
+path = []
+self.dfs(n, k, path, 1, result)
+return result
+def dfs(self, n: int, k: int, path: list[int], first_num: int, result: list[list[int]]) -> None:
+if len(path) == k:
+result.append(path[:])
+return
+for i in range(first_num, n + 1):
+path.append(i)
+self.dfs(n, k, path, i + 1, result)
+path.pop()
 ```
 
 ### **Algorithm Explanation:**

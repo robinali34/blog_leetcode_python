@@ -43,9 +43,9 @@ Output: [1]
 
 ```python
 class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
+def __init__(self, val=0, next=None):
+self.val = val
+self.next = next
 ```
 Typical LeetCode template includes:
 
@@ -78,16 +78,15 @@ The recursive approach works by:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
-
 class Solution:
-    def swapPairs(self, head: ListNode) -> ListNode:
-        if not head or not head.next:
-            return head
-        first = head
-        second = head.next
-        first.next = self.swapPairs(second.next)
-        second.next = first
-        return second
+def swapPairs(self, head: ListNode) -> ListNode:
+if not head or not head.next:
+return head
+first = head
+second = head.next
+first.next = self.swapPairs(second.next)
+second.next = first
+return second
 ```
 
 ### Iterative Approach
@@ -107,21 +106,20 @@ The iterative approach works by:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
-
 class Solution:
-    def swapPairs(self, head: ListNode) -> ListNode:
-        dummy = ListNode(-1)
-        dummy.next = head
-        pre = dummy
-        while head and head.next:
-            first = head
-            second = head.next
-            pre.next = second
-            first.next = second.next
-            second.next = first
-            pre = first
-            head = first.next
-        return dummy.next
+def swapPairs(self, head: ListNode) -> ListNode:
+dummy = ListNode(-1)
+dummy.next = head
+pre = dummy
+while head and head.next:
+first = head
+second = head.next
+pre.next = second
+first.next = second.next
+second.next = first
+pre = first
+head = first.next
+return dummy.next
 ```
 
 ## Step-by-Step Example

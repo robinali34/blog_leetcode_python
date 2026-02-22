@@ -65,55 +65,32 @@ The solution involves checking several conditions:
 
 ```python
 class Solution:
-
-    def validTicTacToe(self, list[string] board) -> bool:
-        int x_cnt = 0, o_cnt = 0;
-        for (i = 0 i < boardlen(); i++) {
-            for (auto c : board[i]) {
-                if (c == 'X') x_cnt++;
-                if (c == 'O') o_cnt++;
-            }
-        }
-        if (x_cnt != o_cnt + 1  x_cnt != o_cnt) return false;
-        bool x_win = this->win(board, 'X');
-        bool o_win = this->win(board, 'O'); 
-        if (x_win  o_cnt + 1 != x_cnt) return false;
-        if (o_win  o_cnt != x_cnt) return false;
-        if (x_win  o_win) return false;
-        return true; 
-    }
-private:
-    def win(self, list[string] board, char P) -> bool:
-        int n = boardlen();
-        cnt = 0
-        for (i = 0 i< n; i++) {
-            cnt = 0;
-            for (j = 0 j < n; j++) {
-                if(board[i][j]== P) cnt++;
-            }
-            if (cnt == n) return true;
-            
-            cnt = 0;
-            for (j = 0 j < n; j++) {
-                if(board[j][i] == P) cnt++;
-            }
-            if (cnt == n) return true;
-        }
-
-        cnt = 0;
-        for (i = 0 i< n; i++) {
-            if(board[i][i] == P) cnt++;
-        }
-        if (cnt == n) return true;
-
-        cnt = 0;
-        for (int i = n - 1; i >= 0; i--) {
-            if(board[i][n - i - 1] == P) cnt++;
-        }
-        if (cnt == n) return true;
-        return false;
-    }
-};
+def validTicTacToe(self, board: list[str]) -> bool:
+x_cnt = sum(row.count('X') for row in board)
+o_cnt = sum(row.count('O') for row in board)
+if x_cnt not in (o_cnt, o_cnt + 1):
+return False
+x_win = self.win(board, 'X')
+o_win = self.win(board, 'O')
+if x_win and x_cnt != o_cnt + 1:
+return False
+if o_win and x_cnt != o_cnt:
+return False
+if x_win and o_win:
+return False
+return True
+def win(self, board: list[str], p: str) -> bool:
+n = len(board)
+for i in range(n):
+if all(board[i][j] == p for j in range(n)):
+return True
+if all(board[j][i] == p for j in range(n)):
+return True
+if all(board[i][i] == p for i in range(n)):
+return True
+if all(board[i][n - 1 - i] == p for i in range(n)):
+return True
+return False
 ```
 
 ## Step-by-Step Example

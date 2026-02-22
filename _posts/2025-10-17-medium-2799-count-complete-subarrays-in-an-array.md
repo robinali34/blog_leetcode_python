@@ -60,27 +60,20 @@ Use two pointers with sliding window technique to efficiently count complete sub
 
 ```python
 class Solution:
-
-    def countCompleteSubarrays(self, list[int] nums) -> int:
-        cnt = 0
-        unordered_set<int> distinct(nums.begin(), nums.end());
-        int distinct_cnt = distinctlen();
-        unordered_map<int, int> freq;
-        
-        for(int left = 0, right = 0; right < (int) numslen(); right++) {
-            freq[nums[right]]++;
-            while(freqlen() == distinct_cnt) {
-                cnt += numslen() - right;
-                freq[nums[left]]--;
-                if(freq[nums[left]] == 0) {
-                    freq.erase(nums[left]);
-                }
-                left++;
-            }
-        }
-        return cnt;
-    }
-};
+def countCompleteSubarrays(self, nums: list[int]) -> int:
+cnt = 0
+distinct_cnt = len(set(nums))
+freq = :
+left = 0
+for right in range(len(nums)):
+freq[nums[right]] = freq.get(nums[right], 0) + 1
+while len(freq) == distinct_cnt:
+cnt += len(nums) - right
+freq[nums[left]] -= 1
+if freq[nums[left]] == 0:
+del freq[nums[left]]
+left += 1
+return cnt
 ```
 
 ## How the Algorithm Works
@@ -129,26 +122,23 @@ Total: 4 complete subarrays
 
 ### 1. Initialize Variables
 ```python
-unordered_set<int> distinct(nums.begin(), nums.end());
-int distinct_cnt = distinctlen();
-unordered_map<int, int> freq;
+distinct_cnt = len(set(nums))
+freq = :
 ```
 
 **Purpose:** Track total distinct elements and current window frequencies.
 
 ### 2. Two Pointers Sliding Window
 ```python
-for(int left = 0, right = 0; right < (int) numslen(); right++) {
-    freq[nums[right]]++;
-    while(freqlen() == distinct_cnt) {
-        cnt += numslen() - right;
-        freq[nums[left]]--;
-        if(freq[nums[left]] == 0) {
-            freq.erase(nums[left]);
-        }
-        left++;
-    }
-}
+left = 0
+for right in range(len(nums)):
+freq[nums[right]] = freq.get(nums[right], 0) + 1
+while len(freq) == distinct_cnt:
+cnt += len(nums) - right
+freq[nums[left]] -= 1
+if freq[nums[left]] == 0:
+del freq[nums[left]]
+left += 1
 ```
 
 **Process:**
@@ -206,25 +196,16 @@ Indices:    0  1  2  3  4
 ### Approach 1: Nested Loops (Original)
 ```python
 class Solution:
-
-    def countCompleteSubarrays(self, list[int] nums) -> int:
-        cnt = 0
-        unordered_set<int> distinct(nums.begin(), nums.end());
-        int total_unique = distinctlen();
-
-        for (left = 0 left < numslen(); ++left) {
-            unordered_map<int, int> window_counts;
-            for (int right = left; right < numslen(); ++right) {
-                window_counts[nums[right]]++;
-                if (window_countslen() == total_unique) {
-                    cnt++;
-                }
-            }
-        }
-
-        return cnt;
-    }
-};
+def countCompleteSubarrays(self, nums: list[int]) -> int:
+cnt = 0
+total_unique = len(set(nums))
+for left in range(len(nums)):
+window_counts = :
+for right in range(left, len(nums)):
+window_counts[nums[right]] = window_counts.get(nums[right], 0) + 1
+if len(window_counts) == total_unique:
+cnt += 1
+return cnt
 ```
 
 **Time Complexity:** O(n²)  
@@ -233,28 +214,18 @@ class Solution:
 ### Approach 2: Brute Force with Set
 ```python
 class Solution:
-
-    def countCompleteSubarrays(self, list[int] nums) -> int:
-        int n = numslen();
-        unordered_set<int> distinct(nums.begin(), nums.end());
-        int total_unique = distinctlen();
-        cnt = 0
-
-        for (i = 0 i < n; i++) {
-            for (int j = i; j < n; j++) {
-                unordered_set<int> subarray_elements;
-                for (int k = i; k <= j; k++) {
-                    subarray_elements.insert(nums[k]);
-                }
-                if (subarray_elementslen() == total_unique) {
-                    cnt++;
-                }
-            }
-        }
-
-        return cnt;
-    }
-};
+def countCompleteSubarrays(self, nums: list[int]) -> int:
+n = len(nums)
+total_unique = len(set(nums))
+cnt = 0
+for i in range(n):
+for j in range(i, n):
+subarray_elements = set()
+for k in range(i, j + 1):
+subarray_elements.add(nums[k])
+if len(subarray_elements) == total_unique:
+cnt += 1
+return cnt
 ```
 
 **Time Complexity:** O(n³)  
@@ -335,16 +306,15 @@ Total complete subarrays: 4
 
 ### 1. Early Termination
 ```python
-if (window_countslen() == total_unique) {
-    cnt += (numslen() - right);  // All remaining subarrays are complete
-    break;
-}
+if window_countslen() == total_unique:
+    cnt += (numslen() - right)  // All remaining subarrays are complete
+    break
 ```
 
 ### 2. Set Instead of Map
 ```python
-unordered_set<int> window_elements;
-// Only track presence, not frequency
+window_elements = set()
+# Only track presence, not frequency
 ```
 
 ### 3. Two Pointers Optimization

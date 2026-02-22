@@ -68,20 +68,20 @@ Explanation: An empty string is also valid.
 
 ```python
 class Solution:
-    def minRemoveToMakeValid(self, s: str) -> str:
-        stack = []
-        for idx, char in enumerate(s):
-            if char == '(':
-                stack.append(idx)
-            elif char == ')':
-                if stack and s[stack[-1]] == '(':
-                    stack.pop()
-                else:
-                    stack.append(idx)
-        result = list(s)
-        while stack:
-            result[stack.pop()] = ''
-        return ''.join(result)
+def minRemoveToMakeValid(self, s: str) -> str:
+stack = []
+for idx, char in enumerate(s):
+if char == '(':
+stack.append(idx)
+elif char == ')':
+if stack and s[stack[-1]] == '(':
+stack.pop()
+else:
+stack.append(idx)
+result = list(s)
+while stack:
+result[stack.pop()] = ''
+return ''.join(result)
 ```
 
 ### Approach 2: Two-Pass String Building
@@ -96,39 +96,37 @@ class Solution:
 
 ```python
 class Solution:
-    def minRemoveToMakeValid(self, s: str) -> str:
-        # First pass: remove unmatched ')'
-        result = ""
-        balance = 0
-        for c in s:
-            if c == '(':
-                balance += 1
-                result += c
-            elif c == ')':
-                if balance > 0:
-                    balance -= 1
-                    result += c
-                # Skip unmatched ')'
-            else:
-                result += c
-        
-        # Second pass: remove unmatched '('
-        final_result = ""
-        balance = 0
-        for i in range(len(result) - 1, -1, -1):
-            c = result[i]
-            if c == ')':
-                balance += 1
-                final_result = c + final_result
-            elif c == '(':
-                if balance > 0:
-                    balance -= 1
-                    final_result = c + final_result
-                # Skip unmatched '('
-            else:
-                final_result = c + final_result
-        
-        return final_result
+def minRemoveToMakeValid(self, s: str) -> str:
+# First pass: remove unmatched ')'
+result = ""
+balance = 0
+for c in s:
+if c == '(':
+balance += 1
+result += c
+elif c == ')':
+if balance > 0:
+balance -= 1
+result += c
+# Skip unmatched ')'
+else:
+result += c
+# Second pass: remove unmatched '('
+final_result = ""
+balance = 0
+for i in range(len(result) - 1, -1, -1):
+c = result[i]
+if c == ')':
+balance += 1
+final_result = c + final_result
+elif c == '(':
+if balance > 0:
+balance -= 1
+final_result = c + final_result
+# Skip unmatched '('
+else:
+final_result = c + final_result
+return final_result
 ```
 
 ### Approach 3: Set-Based Tracking
@@ -143,32 +141,27 @@ class Solution:
 
 ```python
 class Solution:
-
-    def minRemoveToMakeValid(self, s: str) -> str:
-        to_remove = set()
-        stk = []
-        
-        # Find unmatched parentheses
-        for i in range(len(s)):
-            if s[i] == '(':
-                stk.append(i)
-            elif s[i] == ')':
-                if not stk:
-                    to_remove.add(i)
-                else:
-                    stk.pop()
-        
-        # Add remaining unmatched '(' to removal set
-        while stk:
-            to_remove.add(stk.pop())
-        
-        # Build result string
-        result = ""
-        for i in range(len(s)):
-            if i not in to_remove:
-                result += s[i]
-        
-        return result
+def minRemoveToMakeValid(self, s: str) -> str:
+to_remove = set()
+stk = []
+# Find unmatched parentheses
+for i in range(len(s)):
+if s[i] == '(':
+stk.append(i)
+elif s[i] == ')':
+if not stk:
+to_remove.add(i)
+else:
+stk.pop()
+# Add remaining unmatched '(' to removal set
+while stk:
+to_remove.add(stk.pop())
+# Build result str
+result = ""
+for i in range(len(s)):
+if i not in to_remove:
+result += s[i]
+return result
 ```
 
 ## Algorithm Analysis
@@ -193,22 +186,20 @@ class Solution:
 ### Stack-Based Approach
 ```python
 // Track indices of unmatched parentheses
-if(s[idx] == '(') stk.push(idx);
-if(s[idx] == ')') {
-    if(!stknot   s[stk.top()] == '(') {
-        stk.pop();  // Match found
-    } else {
-        stk.push(idx);  // Unmatched ')'
-    }
-}
+if s[idx] == '(') stk.push(idx:
+if s[idx] == ')':
+    if not stknot   s[stk.top()] == '(':
+        stk.pop()  // Match found
+         else :
+        stk.push(idx)  // Unmatched ')'
 ```
 
 ### String Modification
 ```python
-# Remove unmatched parentheses from string
+# Remove unmatched parentheses from str
 result = list(s)
 while stk:
-    result[stk.pop()] = ''
+result[stk.pop()] = ''
 result = ''.join(result)
 ```
 
