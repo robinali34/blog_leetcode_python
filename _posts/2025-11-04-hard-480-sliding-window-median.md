@@ -97,13 +97,13 @@ getMedian = []() . double :
 if(k % 2 == 0) return ((double)prev(lo.end()) + hi.begin()) / 2.0
 else return prev(lo.end())
 for(i = 0 i < len(nums) i += 1) :
-// Insert new element
+# Insert new element
 if not lo  or  nums[i] <= *prev(lo.end()):
 lo.insert(nums[i])
 else:
 hi.insert(nums[i])
 balance()
-// Remove element leaving window
+# Remove element leaving window
 if i >= k:
     out = nums[i - k]
     if lo.find(out) != lo.end():
@@ -111,10 +111,11 @@ if i >= k:
 else:
 hi.erase(hi.find(out))
 balance()
-// Calculate median when window is complete
+# Calculate median when window is complete
 if i >= k - 1:
 res.append(getMedian())
 return res
+
 ```
 
 ## How Solution 1 Works
@@ -180,19 +181,20 @@ def medianSlidingWindow(self, nums, k):
     multiset<int> window(nums.begin(), nums.begin() + k)
     mid = next(window.begin(), k / 2)
     for (i = k i += 1) :
-    // Calculate median
+    # Calculate median
     medians.append(((double)(mid) + next(mid, k % 2 - 1))  0.5)
     if i == len(nums):
     break
-    // Insert new element
+    # Insert new element
     window.insert(nums[i])
     if nums[i] < *mid:
-    mid -= 1  // Median moved left
-    // Remove element leaving window
+    mid -= 1  # Median moved left
+    # Remove element leaving window
     if nums[i - k] <= *mid:
-    mid += 1  // Median moved right
+    mid += 1  # Median moved right
     window.erase(window.lower_bound(nums[i - k]))
 return medians
+
 ```
 
 ## How Solution 2 Works
@@ -222,6 +224,7 @@ return medians
 
 ```python
 medians.append(((double)(mid) + next(mid, k % 2 - 1))  0.5)
+
 ```
 
 - **k is odd**: `k % 2 - 1 = 0` → `*mid` (use same element twice, divide by 2)
@@ -234,6 +237,7 @@ if k % 2 == 1:
 medians.append(mid)
 else:
 medians.append(((double)(mid) + prev(mid))  0.5)
+
 ```
 
 ## Algorithm Breakdown
@@ -246,6 +250,7 @@ if not lo  or  nums[i] <= *prev(lo.end()):
 lo.insert(nums[i])
 else:
 hi.insert(nums[i])
+
 ```
 - Insert into appropriate multiset based on comparison with max of `lo`
 
@@ -258,6 +263,7 @@ while len(lo) > len(hi) + 1:
 while len(lo) < len(hi):
     lo.insert(hi.begin())
     hi.erase(hi.begin())
+
 ```
 - Maintain: `lo.size() == hi.size()` (even k) or `lo.size() == hi.size() + 1` (odd k)
 
@@ -266,10 +272,12 @@ while len(lo) < len(hi):
 if i >= k:
     out = nums[i - k]
     if lo.find(out) != lo.end():
-    lo.erase(lo.find(out))
-else:
-hi.erase(hi.find(out))
-balance()
+        lo.erase(lo.find(out))
+    else:
+        hi.erase(hi.find(out))
+        balance()
+
+
 ```
 - Find and remove element from appropriate multiset
 
@@ -280,6 +288,7 @@ if k % 2 == 0:
 return ((double)prev(lo.end()) + hi.begin()) / 2.0
 else:
 return prev(lo.end())
+
 ```
 
 ### Solution 2: Single Multiset with Iterator
@@ -288,6 +297,10 @@ return prev(lo.end())
 ```python
 multiset<int> window(nums.begin(), nums.begin() + k)
 mid = next(window.begin(), k / 2)
+
+
+
+
 ```
 - Create multiset with first k elements
 - Set `mid` to point to median position
@@ -296,7 +309,8 @@ mid = next(window.begin(), k / 2)
 ```python
 window.insert(nums[i])
 if nums[i] < *mid:
-mid -= 1  // New element is smaller, median moved left
+mid -= 1  # New element is smaller, median moved left
+
 ```
 - Insert new element
 - Adjust median iterator if needed
@@ -304,8 +318,9 @@ mid -= 1  // New element is smaller, median moved left
 #### 3. Remove and Adjust
 ```python
 if nums[i - k] <= *mid:
-mid += 1  // Removed element was <= median, median moved right
+mid += 1  # Removed element was <= median, median moved right
 window.erase(window.lower_bound(nums[i - k]))
+
 ```
 - Adjust median iterator before removal
 - Remove element using `lower_bound` to handle duplicates
@@ -364,22 +379,23 @@ def medianSlidingWindow(self, nums, k):
     multiset<int> window(nums.begin(), nums.begin() + k)
     mid = next(window.begin(), k / 2)
     for (i = k i += 1) :
-    // Calculate median
+    # Calculate median
     if k % 2 == 1:
         medians.append(mid)
          else :
         medians.append(((double)(mid) + prev(mid))  0.5)
     if i == len(nums):
     break
-    // Insert new element
+    # Insert new element
     window.insert(nums[i])
     if nums[i] < *mid:
     mid -= 1
-    // Remove element leaving window
+    # Remove element leaving window
     if nums[i - k] <= *mid:
     mid += 1
     window.erase(window.lower_bound(nums[i - k]))
 return medians
+
 ```
 
 ## Related Problems
@@ -413,13 +429,15 @@ This problem demonstrates the **Two-Heaps/Multisets Pattern**:
 ### Solution 1: Pre-allocate Result
 ```python
 list[double> res
-res.reserve(len(nums) - k + 1)  // Pre-allocate space
+res.reserve(len(nums) - k + 1)  # Pre-allocate space
+
 ```
 
 ### Solution 2: Early Exit
 ```python
 if k == 1:
     return list[double>(nums.begin(), nums.end())
+
 ```
 
 ### Memory Optimization

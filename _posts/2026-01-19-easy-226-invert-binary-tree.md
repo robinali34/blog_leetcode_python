@@ -121,6 +121,7 @@ def invertTree(self, root):
     root.left = invertTree(root.right)
     root.right = invertTree(tmp)
     return root
+
 ```
 
 ### Algorithm Explanation:
@@ -225,6 +226,7 @@ def invertTree(self, root):
     root.left = right
     root.right = left
     return root
+
 ```
 
 **Key Difference**: More explicit - invert subtrees first, then swap
@@ -242,14 +244,15 @@ def invertTree(self, root):
     while not not st:
         TreeNode node = st.top()
         st.pop()
-        // Swap children
+        # Swap children
         TreeNode tmp = node.left
         node.left = node.right
         node.right = tmp
-        // Push children to stack
+        # Push children to stack
         if node.left) st.push(node.left:
         if node.right) st.push(node.right:
     return root
+
 ```
 
 **Complexity**: 
@@ -267,14 +270,15 @@ def invertTree(self, root):
     while not not q:
         TreeNode node = q[0]
         q.pop()
-        // Swap children
+        # Swap children
         TreeNode tmp = node.left
         node.left = node.right
         node.right = tmp
-        // Enqueue children
+        # Enqueue children
         if node.left) q.push(node.left:
         if node.right) q.push(node.right:
     return root
+
 ```
 
 **Complexity**: 

@@ -56,6 +56,7 @@ def canAttendMeetings(self, intervals):
     if intervals[i][0] < intervals[i - 1][1]:
         return False
 return True
+
 ```
 
 - **Time:** O(n log n) — sort dominates.

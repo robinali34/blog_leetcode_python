@@ -101,6 +101,7 @@ def findMaxConsecutiveOnes(self, nums):
              else :
             cnt = 0
     return maxCnt
+
 ```
 
 ## How the Algorithm Works
@@ -142,6 +143,7 @@ Maximum streak: 1 → 2 → 2 → 2 → 2 → 3
 ### 1. Initialize Variables
 ```python
 maxCnt = 0, cnt = 0
+
 ```
 - `maxCnt`: Tracks the maximum consecutive ones seen so far
 - `cnt`: Tracks the current consecutive ones streak
@@ -149,6 +151,7 @@ maxCnt = 0, cnt = 0
 ### 2. Iterate Through Array
 ```python
 for n in nums:
+
 ```
 Process each element in the array.
 
@@ -157,6 +160,10 @@ Process each element in the array.
 if n == 1:
     cnt += 1
     maxCnt = max(maxCnt, cnt)
+
+
+
+
 ```
 - Increment current streak counter
 - Update maximum if current streak is longer
@@ -165,6 +172,7 @@ if n == 1:
 ```python
 else:
     cnt = 0
+
 ```
 Reset the current streak counter to 0.
 
@@ -196,10 +204,11 @@ def findMaxConsecutiveOnes(self, nums):
     left = 0
     for(right = 0 right < len(nums) right += 1) :
     if nums[right] == 0:
-        left = right + 1  // Reset window start
+        left = right + 1  # Reset window start
          else :
         maxCnt = max(maxCnt, right - left + 1)
 return maxCnt
+
 ```
 
 **Time Complexity:** O(n)  
@@ -215,6 +224,7 @@ def findMaxConsecutiveOnes(self, nums):
         (cnt + 1 if             cnt = (n == 1)  else 0)
         maxCnt = max(maxCnt, cnt)
     return maxCnt
+
 ```
 
 ## Why This Solution is Optimal
@@ -244,6 +254,7 @@ def findMaxConsecutiveOnes(self, nums):
         (cnt + 1 if         cnt = (n == 1)  else 0)
         maxCnt = max(maxCnt, cnt)
     return maxCnt
+
 ```
 
 ## Related Problems

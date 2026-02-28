@@ -68,7 +68,7 @@ Explanation: Insert 0 between 1 (tail) and 1 (head), wrapping around.
 
 ```python
 /
-// Definition for a Node.
+# Definition for a Node.
 class Node:
 def __init__(self, _val: int = 0, _next: 'Node | None' = None):
 self.val = _val
@@ -104,6 +104,7 @@ break
 newNode = Node(insertVal, curr.next)
 curr.next = newNode
 return head
+
 ```
 
 ### Approach 2: Two-Pass with Preprocessing
@@ -118,30 +119,34 @@ return head
 
 ```python
 class Solution:
-def insert(self, head: 'Node', insertVal: int) -> 'Node':
-if not head:
-newNode = Node(insertVal)
-newNode.next = newNode
-return newNode
-# Find the maximum node
-maxNode = head
-curr = head.next
-while curr != head:
-if curr.val >= maxNode.val:
-maxNode = curr
-curr = curr.next
-# Insert at the end if value is too large
-if insertVal >= maxNode.val or insertVal <= maxNode.next.val:
-newNode = Node(insertVal, maxNode.next)
-maxNode.next = newNode
-return head
-# Find the correct insertion point
-curr = maxNode.next
-while curr.next.val < insertVal:
-curr = curr.next
-newNode = Node(insertVal, curr.next)
-curr.next = newNode
-return head
+    def insert(self, head: 'Node', insertVal: int) -> 'Node':
+        if not head:
+            newNode = Node(insertVal)
+            newNode.next = newNode
+            return newNode
+            # Find the maximum node
+            maxNode = head
+            curr = head.next
+            while curr != head:
+                if curr.val >= maxNode.val:
+                    maxNode = curr
+                    curr = curr.next
+                    # Insert at the end if value is too large
+                    if insertVal >= maxNode.val or insertVal <= maxNode.next.val:
+                        newNode = Node(insertVal, maxNode.next)
+                        maxNode.next = newNode
+                        return head
+                        # Find the correct insertion point
+                        curr = maxNode.next
+                        while curr.next.val < insertVal:
+                            curr = curr.next
+                            newNode = Node(insertVal, curr.next)
+                            curr.next = newNode
+                            return head
+
+
+
+
 ```
 
 ### Approach 3: Simplified Logic
@@ -150,21 +155,25 @@ return head
 
 ```python
 class Solution:
-def insert(self, head: 'Node', insertVal: int) -> 'Node':
-newNode = Node(insertVal)
-if not head:
-newNode.next = newNode
-return newNode
-curr = head
-while curr.next != head:
-if curr.val <= insertVal <= curr.next.val:
-break
-if curr.val > curr.next.val and (insertVal >= curr.val or insertVal <= curr.next.val):
-break
-curr = curr.next
-newNode.next = curr.next
-curr.next = newNode
-return head
+    def insert(self, head: 'Node', insertVal: int) -> 'Node':
+        newNode = Node(insertVal)
+        if not head:
+            newNode.next = newNode
+            return newNode
+            curr = head
+            while curr.next != head:
+                if curr.val <= insertVal <= curr.next.val:
+                    break
+                    if curr.val > curr.next.val and (insertVal >= curr.val or insertVal <= curr.next.val):
+                        break
+                        curr = curr.next
+                        newNode.next = curr.next
+                        curr.next = newNode
+                        return head
+
+
+
+
 ```
 
 ## Algorithm Analysis
@@ -193,27 +202,39 @@ When curr = 4, curr->next = 1:
 ### Empty List Handling
 ```python
 if not head:
-new_node = Node(insertVal)
-new_node.next = new_node  # Self-referencing
-return new_node
+    new_node = Node(insertVal)
+    new_node.next = new_node  # Self-referencing
+    return new_node
+
+
+
+
 ```
 
 ### Normal Insertion Case
 ```python
 # Insert between curr and curr.next
 if curr.val <= insertVal <= curr.next.val:
-new_node = Node(insertVal, curr.next)
-curr.next = new_node
-return head
+    new_node = Node(insertVal, curr.next)
+    curr.next = new_node
+    return head
+
+
+
+
 ```
 
 ### Wrap-Around Insertion Case
 ```python
 # At the wrap point (largest to smallest)
 if curr.next.val < curr.val:
-# Insert if value is larger than max OR smaller than min
-if insertVal >= curr.val or insertVal <= curr.next.val:
-pass  # Insert here
+    # Insert if value is larger than max OR smaller than min
+    if insertVal >= curr.val or insertVal <= curr.next.val:
+        pass  # Insert here
+
+
+
+
 ```
 
 ## Edge Cases

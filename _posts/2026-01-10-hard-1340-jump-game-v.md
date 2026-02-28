@@ -123,14 +123,15 @@ def dfs(self, arr, id, d):
         return
     dp[id] = 1
     N = len(arr)
-    // Check left:
+    # Check left:
     for(i = id - 1 i >= 0  and  id - i <= d  and  arr[id] > arr[i] i -= 1) :
     dfs(arr, i, d)
     dp[id] = max(dp[id], dp[i] + 1)
-// Check right:
+# Check right:
 for(i = id + 1 i < N  and  i - id <= d  and  arr[id] > arr[i] i += 1) :
 dfs(arr, i, d)
 dp[id] = max(dp[id], dp[i] + 1)
+
 ```
 
 ### **Algorithm Explanation:**
@@ -267,6 +268,7 @@ The loop conditions elegantly handle all constraints:
 
 ```python
 for(i = id - 1 i >= 0  and  id - i <= d  and  arr[id] > arr[i] i -= 1)
+
 ```
 
 - `i >= 0`: Stay within array bounds (left)

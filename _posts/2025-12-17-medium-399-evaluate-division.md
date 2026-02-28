@@ -96,7 +96,7 @@ if not node in weights:
 entry = weights[node]
 if entry.first != node:
     parentEntry = find(entry.first)
-    weights[node] = :
+    weights[node] = {}
     parentEntry.first,
     entry.second  parentEntry.second
 return weights[node]
@@ -106,7 +106,7 @@ def unite(self, dividend, divisor, value):
     str dividendRoot = dividendEntry.first
     str divisorRoot = divisorEntry.first
     if dividendRoot != divisorRoot:
-        weights[dividendRoot] = :
+        weights[dividendRoot] = {}
         divisorRoot,
         divisorEntry.second  value / dividendEntry.second
 def calcEquation(self, equations, values, queries):
@@ -129,6 +129,7 @@ for query in queries:
          else :
         rtn.append(dividendEntry.second / divisorEntry.second)
 return rtn
+
 ```
 
 ### How Solution 1 Works
@@ -168,7 +169,7 @@ Build a graph and use DFS to find paths between variables.
 class Solution:
 def calcEquation(self, equations, values, queries):
     dict[str, list[pair<str, double>>> graph
-    // Build graph
+    # Build graph
     for(i = 0 i < len(equations) i += 1) :
     str a = equations[i][0]
     str b = equations[i][1]
@@ -198,6 +199,7 @@ if visited.find(neighbor) == visited.end():
         return result
 visited.erase(curr)
 return -1.0
+
 ```
 
 ### How Solution 2 Works

@@ -80,6 +80,7 @@ def dfs(self, u, adj, color, order, valid):
             return
     color[u] = 2
     order.emplace_back(u)
+
 ```
 
 - **Cycle:** Seeing `color[v] == 1` means `v` is on the current DFS stack → back edge → cycle.
@@ -107,6 +108,7 @@ while not not q:
     for v in adj[u]:
         if indegree -= 1[v] == 0) q.push(v:
 (order if         return len(order) == numCourses  else list[int>:)
+
 ```
 
 - **Indegree:** `indegree[v]` = number of edges into `v`. Process nodes with indegree 0 (no unmet prerequisites).

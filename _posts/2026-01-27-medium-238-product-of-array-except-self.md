@@ -95,13 +95,14 @@ def productExceptSelf(self, nums):
     list[int> answer(len)
     L[0] = 1
     for (i = 1 i < len i += 1) :
-    L[i] = nums[i - 1]  L[i - 1]
+    L[i] = nums[i - 1] * L[i - 1]
 R[len - 1] = 1
 for (i = len - 2 i >= 0 i -= 1) :
-R[i] = nums[i + 1]  R[i + 1]
+R[i] = nums[i + 1] * R[i + 1]
 for (i = 0 i < len i += 1):
-answer[i] = L[i]  R[i]
+answer[i] = L[i] * R[i]
 return answer
+
 ```
 
 ### Algorithm Explanation:
@@ -111,7 +112,8 @@ return answer
 ```python
 L[0] = 1
 for (i = 1 i < len i += 1) :
-L[i] = nums[i - 1]  L[i - 1]
+L[i] = nums[i - 1] * L[i - 1]
+
 ```
 
 - `L[i]` = product of all elements to the left of index `i`
@@ -126,7 +128,8 @@ L[i] = nums[i - 1]  L[i - 1]
 ```python
 R[len - 1] = 1
 for (i = len - 2 i >= 0 i -= 1) :
-R[i] = nums[i + 1]  R[i + 1]
+R[i] = nums[i + 1] * R[i + 1]
+
 ```
 
 - `R[i]` = product of all elements to the right of index `i`
@@ -140,7 +143,8 @@ R[i] = nums[i + 1]  R[i + 1]
 
 ```python
 for (i = 0 i < len i += 1):
-answer[i] = L[i]  R[i]
+answer[i] = L[i] * R[i]
+
 ```
 
 - For each index `i`, multiply left product and right product
@@ -202,15 +206,16 @@ class Solution:
 def productExceptSelf(self, nums):
     len = len(nums)
     list[int> answer(len, 1)
-    // Build left products in answer array
+    # Build left products in answer array
     for (i = 1 i < len i += 1) :
-    answer[i] = nums[i - 1]  answer[i - 1]
-// Build right products on the fly and multiply
+    answer[i] = nums[i - 1] * answer[i - 1]
+# Build right products on the fly and multiply
 right = 1
 for (i = len - 1 i >= 0 i -= 1) :
 answer[i] = right
 right = nums[i]
 return answer
+
 ```
 
 **Space Complexity:** O(1) extra space (excluding output array)

@@ -90,6 +90,7 @@ def intersection(self, nums1, nums2):
             rtn.emplace_back(num)
             seen.erase(num)
     return rtn
+
 ```
 
 ### Algorithm Explanation:
@@ -199,12 +200,13 @@ def intersection(self, nums1, nums2):
              else if (nums1[i] > nums2[j]) :
             j += 1
              else :
-            // Found intersection
+            # Found intersection
             if not result  or  result[-1] != nums1[i]:
                 result.append(nums1[i])
             i += 1
             j += 1
     return result
+
 ```
 
 **Complexity:**
@@ -226,8 +228,9 @@ list[int> result
 for num in nums2:
     if present[num]:
         result.append(num)
-        present[num] = False // Mark as added
+        present[num] = False # Mark as added
 return result
+
 ```
 
 **Complexity:**
@@ -249,6 +252,7 @@ def intersection(self, nums1, nums2):
         if set2.count(num):
             result.append(num)
     return result
+
 ```
 
 **Complexity:**

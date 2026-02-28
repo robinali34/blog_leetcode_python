@@ -66,6 +66,7 @@ def minEatingSpeed(self, piles, h):
             if (hourSpend > h) break
         if (hourSpend <= h) return speed
         else speed += 1
+
 ```
 
 - **Time:** O(n × max(piles)) in the worst case — too slow for large piles.
@@ -87,6 +88,7 @@ def minEatingSpeed(self, piles, h):
         if (hourSpend <= h) right = mid
         else left = mid + 1
     return right
+
 ```
 
 - **Invariant:** `right` is always feasible; we look for the smallest feasible `k`, which is `right` when `left == right`.

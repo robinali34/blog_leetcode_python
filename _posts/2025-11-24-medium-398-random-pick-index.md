@@ -95,13 +95,14 @@ The key insight is to preprocess the array once during construction, storing all
 class Solution:
 dict[int, list[int>> pos
 Solution(list[int> nums) :
-// Preprocess: store all indices for each value
+# Preprocess: store all indices for each value
 for(i = 0 i < (int)len(nums) i += 1) :
 pos[nums[i]].append(i)
 def pick(self, target):
     indices = pos[target]
-    // Randomly select one index from the stored indices
+    # Randomly select one index from the stored indices
     return indices[rand() % len(indices)]
+
 ```
 
 ## How the Algorithm Works
@@ -163,6 +164,7 @@ pick(3): Randomly select from [2, 3, 4]
 Solution(list[int> nums) :
 for(i = 0 i < (int)len(nums) i += 1) :
 pos[nums[i]].append(i)
+
 ```
 
 **Why:**
@@ -176,6 +178,7 @@ pos[nums[i]].append(i)
 def pick(self, target):
     indices = pos[target]
     return indices[rand() % len(indices)]
+
 ```
 
 **Why:**
@@ -199,6 +202,7 @@ def pick(self, target):
         if rand() % cnt == 0:
             rtn = i
 return rtn
+
 ```
 
 **Time Complexity:** O(n) per `pick()` call  
@@ -248,10 +252,11 @@ def pick(self, target):
     for(i = 0 i < (int)len(nums) i += 1) :
     if nums[i] == target:
         count += 1
-        // With probability 1/count, select current index
+        # With probability 1/count, select current index
         if rand() % count == 0:
             result = i
 return result
+
 ```
 
 **How Reservoir Sampling Works:**
@@ -272,13 +277,14 @@ class Solution:
 list[int> nums
 Solution(list[int> nums) : nums(nums) :
 def pick(self, target):
-    // First pass: collect all indices
+    # First pass: collect all indices
     list[int> indices
     for(i = 0 i < len(nums) i += 1) :
     if nums[i] == target:
         indices.append(i)
-// Second pass: random selection
+# Second pass: random selection
 return indices[rand() % len(indices)]
+
 ```
 
 **Why not optimal:**
@@ -313,6 +319,10 @@ Reservoir Sampling:
 
 ```python
 rand() % len(indices)
+
+
+
+
 ```
 
 **Why this works:**
@@ -327,6 +337,7 @@ std.random_device rd
 std.mt19937 gen(rd())
 std.uniform_int_distribution<> dis(0, len(indices) - 1)
 return indices[dis(gen)]
+
 ```
 
 ## Common Mistakes

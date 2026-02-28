@@ -93,6 +93,7 @@ with ThreadPoolExecutor(max_workers=8) as pool:
 pool.submit(worker, startUrl)
 pool.shutdown(wait=True)
 return list(visited)
+
 ```
 
 ## Solution in Python
@@ -128,6 +129,7 @@ for fut in done:
 for nxt in fut.result():
 pending.add(ex.submit(worker, nxt))
 return list(visited)
+
 ```
 
 ## Step-by-Step Example

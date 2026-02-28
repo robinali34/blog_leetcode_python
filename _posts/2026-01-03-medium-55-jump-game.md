@@ -124,6 +124,7 @@ def canJump(self, nums):
         rightMost = max(rightMost, i + nums[i])
         if(rightMost >= N - 1) return True
 return False
+
 ```
 
 ### **Algorithm Explanation:**

@@ -67,17 +67,21 @@ Explanation:
 
 ```python
 class Solution:
-def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
-timestamp = [0]  1001
-for trip in trips:
-timestamp[trip[1]] += trip[0]  # Pick up passengers
-timestamp[trip[2]] -= trip[0]  # Drop off passengers
-usedCapacity = 0
-for number in timestamp:
-usedCapacity += number
-if usedCapacity > capacity:
-return False
-return True
+    def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
+        timestamp = [0] * 1001
+        for trip in trips:
+            timestamp[trip[1]] += trip[0]  # Pick up passengers
+            timestamp[trip[2]] -= trip[0]  # Drop off passengers
+            usedCapacity = 0
+            for number in timestamp:
+                usedCapacity += number
+                if usedCapacity > capacity:
+                    return False
+                    return True
+
+
+
+
 ```
 
 ### Approach 2: Sorting with Events
@@ -93,18 +97,20 @@ return True
 
 ```python
 class Solution:
-def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
-events = []  # [(location, passenger_change), ...]
-for trip in trips:
-events.append((trip[1], trip[0]))   # Pick up
-events.append((trip[2], -trip[0]))  # Drop off
-events.sort()
-usedCapacity = 0
-for location, change in events:
-usedCapacity += change
-if usedCapacity > capacity:
-return False
-return True
+    def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
+        events = []  # [(location, passenger_change), ...]
+        for trip in trips:
+            events.append((trip[1], trip[0]))   # Pick up
+            events.append((trip[2], -trip[0]))  # Drop off
+            events.sort()
+            usedCapacity = 0
+            for location, change in events:
+                usedCapacity += change
+                if usedCapacity > capacity:
+                    return False
+                    return True
+
+
 ```
 
 ### Approach 3: Simulation with Priority Queue
@@ -121,22 +127,26 @@ return True
 ```python
 import heapq
 class Solution:
-def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
-trips.sort(key=lambda x: x[1])  # Sort by pickup location
-pq = []  # min heap: (dropoff_location, passengers)
-usedCapacity = 0
-for trip in trips:
-passengers, pickup, dropoff = trip[0], trip[1], trip[2]
-# Drop off passengers who have reached their destination
-while pq and pq[0][0] <= pickup:
-usedCapacity -= heapq.heappop(pq)[1]
-# Pick up new passengers
-usedCapacity += passengers
-if usedCapacity > capacity:
-return False
-# Add drop-off event
-heapq.heappush(pq, (dropoff, passengers))
-return True
+    def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
+        trips.sort(key=lambda x: x[1])  # Sort by pickup location
+        pq = []  # min heap: (dropoff_location, passengers)
+        usedCapacity = 0
+        for trip in trips:
+            passengers, pickup, dropoff = trip[0], trip[1], trip[2]
+            # Drop off passengers who have reached their destination
+            while pq and pq[0][0] <= pickup:
+                usedCapacity -= heapq.heappop(pq)[1]
+                # Pick up new passengers
+                usedCapacity += passengers
+                if usedCapacity > capacity:
+                    return False
+                    # Add drop-off event
+                    heapq.heappush(pq, (dropoff, passengers))
+                    return True
+
+
+
+
 ```
 
 ## Algorithm Analysis
@@ -164,15 +174,23 @@ return True
 timestamp[trip[1]] += trip[0]
 # Remove passengers at drop-off location
 timestamp[trip[2]] -= trip[0]
+
+
+
+
 ```
 
 ### Event Processing
 ```python
 # Process events in chronological order
 for number in timestamp:
-usedCapacity += number
-if usedCapacity > capacity:
-return False
+    usedCapacity += number
+    if usedCapacity > capacity:
+        return False
+
+
+
+
 ```
 
 ## Edge Cases

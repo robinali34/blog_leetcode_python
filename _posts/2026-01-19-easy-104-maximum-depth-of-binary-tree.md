@@ -99,6 +99,7 @@ def maxDepth(self, root):
 def dfs(self, node, maxDepth):
     if(not node) return maxDepth
     return max(dfs(node.left, maxDepth + 1), dfs(node.right, maxDepth + 1))
+
 ```
 
 ### Algorithm Explanation:
@@ -176,6 +177,7 @@ def maxDepth(self, root):
     leftDepth = maxDepth(root.left)
     rightDepth = maxDepth(root.right)
     return max(leftDepth, rightDepth) + 1
+
 ```
 
 **Key Difference**: 
@@ -203,6 +205,7 @@ def maxDepth(self, root):
         if node.left) q.push(node.left:
         if node.right) q.push(node.right:
 return depth
+
 ```
 
 **Algorithm**:
@@ -231,6 +234,7 @@ def maxDepth(self, root):
         if node.right) st.push({node.right, depth + 1}:
         if node.left) st.push({node.left, depth + 1}:
     return maxDepth
+
 ```
 
 **Complexity**: Same as recursive DFS

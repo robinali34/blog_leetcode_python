@@ -94,6 +94,7 @@ def next(self, val):
  MovingAverage obj = new MovingAverage(size)
  double param_1 = obj.next(val)
 /
+
 ```
 
 ### How Solution 1 Works
@@ -151,6 +152,7 @@ def next(self, val):
         windowSum += val
         head = (head + 1) % windowSize
     return (double) windowSum / count
+
 ```
 
 ### How Solution 2 Works
@@ -188,6 +190,7 @@ def next(self, val):
         windowSum -= dq[0]
         dq.pop_front()
     return (double) windowSum / len(dq)
+
 ```
 
 ## Comparison of Approaches

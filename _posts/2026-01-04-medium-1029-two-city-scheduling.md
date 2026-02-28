@@ -115,6 +115,7 @@ def twoCitySchedCost(self, costs):
     for(i = 0 i < N i += 1) :
     total += costs[i][0] + costs[i + N][1]
 return total
+
 ```
 
 ### **Algorithm Explanation:**

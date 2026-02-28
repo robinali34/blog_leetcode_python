@@ -119,6 +119,7 @@ def maxVacationDays(self, flights, days):
         temp[cur_city] = max(days[dest_city][week] + dp[dest_city], temp[cur_city])
 dp = move(temp)
 return dp[0]
+
 ```
 
 ### **Algorithm Explanation:**

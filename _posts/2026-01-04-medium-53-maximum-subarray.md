@@ -128,6 +128,7 @@ def maxSubArray(self, nums):
     currSum = max(nums[i], currSum + nums[i])
     maxSum = max(maxSum, currSum)
 return maxSum
+
 ```
 
 ### **Algorithm Explanation:**
@@ -324,6 +325,7 @@ def maxSubArray(self, nums):
     dp[i] = max(nums[i], dp[i-1] + nums[i])
     maxSum = max(maxSum, dp[i])
 return maxSum
+
 ```
 
 ### **Approach 3: Divide and Conquer**
@@ -385,7 +387,8 @@ def maxSubArrayIndices(self, nums):
         maxSum = currSum
         start = currStart
         end = i
-return :start, end  // Return indices of maximum subarray
+return :start, end  # Return indices of maximum subarray
+
 ```
 
 ## Tags

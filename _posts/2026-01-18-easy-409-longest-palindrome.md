@@ -100,8 +100,8 @@ This problem asks us to find the longest palindrome we can construct from the gi
 ```python
 class Solution:
 def longestPalindrome(self, s):
-    maskl = 0 //[a - z]
-    maskU = 0 //[A - Z]
+    maskl = 0  # [a - z]
+    maskU = 0  # [A - Z]
     rtn = 0
     for c in s:
         if 'a' <= c  and  c <= 'z':
@@ -115,6 +115,7 @@ def longestPalindrome(self, s):
                 rtn += 2
             maskU ^= bit
     (rtn + 1 if         return (maskl  or  maskU)  else rtn)
+
 ```
 
 ### Algorithm Explanation:
@@ -208,10 +209,11 @@ def longestPalindrome(self, s):
     result = 0
     bool hasOdd = False
     for([ch, freq]: count) :
-    result += (freq / 2)  2  // Add pairs
+    result += (freq / 2)  2  # Add pairs
     if freq % 2 == 1:
         hasOdd = True
 (result + 1 if         return hasOdd  else result)
+
 ```
 
 ### Algorithm Explanation:
@@ -235,7 +237,7 @@ def longestPalindrome(self, s):
 ```python
 class Solution:
 def longestPalindrome(self, s):
-    count[128] = :  // ASCII covers all characters
+    count[128] = :  # ASCII covers all characters
     for c in s:
         count[c]++
     result = 0
@@ -245,6 +247,7 @@ def longestPalindrome(self, s):
     if count[i] % 2 == 1:
         hasOdd = True
 (result + 1 if         return hasOdd  else result)
+
 ```
 
 **Pros**: Simple, direct array access  

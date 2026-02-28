@@ -108,6 +108,7 @@ def isMirror(self, a, b):
     if(a.val != b.val) return False
     return isMirror(a.left, b.right)  and
     isMirror(a.right, b.left)
+
 ```
 
 ### Algorithm Explanation:
@@ -252,6 +253,7 @@ def isMirror(self, a, b):
     return a.val == b.val  and
     isMirror(a.left, b.right)  and
     isMirror(a.right, b.left)
+
 ```
 
 **Key Difference**: Combines value check with recursive calls using AND
@@ -275,6 +277,7 @@ def isSymmetric(self, root):
         st.push(:a.right, b.left)
         st.push(:a.left, b.right)
     return True
+
 ```
 
 **Complexity**: 
@@ -298,6 +301,7 @@ def isSymmetric(self, root):
         q.push(:a.left, b.right)
         q.push(:a.right, b.left)
     return True
+
 ```
 
 **Complexity**: 

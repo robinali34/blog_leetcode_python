@@ -79,41 +79,42 @@ class Solution:
 def rectangleArea(self, rectangles):
     OPEN = 1, CLOSE = -1, MOD = 1E9 + 7
     list[int> xCoords
-    list[array<int, 4>> events // :y, type, x1, x2
+    list[array<int, 4>> events # :y, type, x1, x2
 for rec in rectangles:
     xCoords.append(rec[0])
     xCoords.append(rec[2])
     events.append(:rec[1], OPEN, rec[0], rec[2])
     events.append(:rec[3], CLOSE, rec[0], rec[2])
-// Coordinate compression
+# Coordinate compression
 xCoords.sort()
 xCoords.erase(unique(xCoords.begin(), xCoords.end()), xCoords.end())
 dict[int, int> xIdx
 for(i = 0 i < len(xCoords) i += 1) :
 xIdx[xCoords[i]] = i
-// Sort events by y-coordinate (process OPEN before CLOSE at same y)
+# Sort events by y-coordinate (process OPEN before CLOSE at same y)
 sort(events.begin(), events.end(), [](a, b):
 if(a[0] != b[0]) return a[0] < b[0]
 return a[1] > b[1]
 )
 n = len(xCoords)
-list[int> count(n, 0)  // Coverage count for each x-segment
+list[int> count(n, 0)  # Coverage count for each x-segment
 long long rtn = 0
 curY = events[0][0]
 for e in events:
     y = e[0], type = e[1], x1 = e[2], x2 = e[3]
-    // Calculate total covered length
+    # Calculate total covered length
     long long coveredLen = 0
     for(i = 0 i < n - 1 i += 1) :
     if count[i] > 0:
         coveredLen += xCoords[i + 1] - xCoords[i]
 rtn = (rtn + coveredLen  (y - curY)) % MOD
-// Update coverage counts
+# Update coverage counts
 idx1 = xIdx[x1], idx2 = xIdx[x2]
 for(i = idx1 i < idx2 i += 1) :
 count[i] += type
 curY = y
 return (int)rtn
+
 ```
 
 ### How Solution 1 Works
@@ -151,17 +152,17 @@ This solution uses a segment tree for O(log n) range updates and queries, signif
 ```python
 class Solution:
 list[int> xCoords
-list[int> counts      // Coverage count at each node
-list[long long> total // Total covered length in range
+list[int> counts      # Coverage count at each node
+list[long long> total # Total covered length in range
 def update(self, node, lo, hi, left, right, delta):
-    if(right <= lo  or  hi <= left) return  // No overlap
+    if(right <= lo  or  hi <= left) return  # No overlap
     if left <= lo  and  hi <= right:
         counts[node] += delta
          else :
         mid = (lo + hi) / 2
         update(2  node, lo, mid, left, right, delta)
         update(2  node + 1, mid, hi, left, right, delta)
-    // Update total covered length
+    # Update total covered length
     if counts[node] > 0:
         total[node] = xCoords[hi] - xCoords[lo]
          else if(hi - lo == 1) :
@@ -192,12 +193,13 @@ long long rtn = 0
 curY = events[0][0]
 for e in events:
     [y, type, x1, x2] = e
-    // Add area since last event
-    rtn = (rtn + total[1]  (y - curY)) % MOD
-    // Update segment tree
+    # Add area since last event
+    rtn = (rtn + total[1] * (y - curY)) % MOD
+    # Update segment tree
     update(1, 0, n - 1, xIdx[x1], xIdx[x2], type)
     curY = y
 return (int)rtn
+
 ```
 
 ### How Solution 2 Works

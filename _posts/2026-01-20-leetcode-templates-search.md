@@ -50,6 +50,7 @@ def searchRange(self, nums, target):
     first = lower_bound(nums, target)
     if (first == (int)len(nums)  or  nums[first] != target) return :-1, -1
 return :first, upper_bound(nums, target) - 1
+
 ```
 
 | ID | Title | Link | Solution |
@@ -70,10 +71,10 @@ def search_rotated(self, nums, target):
         mid = lo + (hi - lo) / 2
         if (nums[mid] == target) return mid
         if nums[mid] >= nums[lo]:
-            if (target >= nums[lo]  and  target < nums[mid]) hi = mid - 1
+            if (target >= nums[lo] * and  target < nums[mid]) hi = mid - 1
             else lo = mid + 1
              else :
-            if (target > nums[mid]  and  target <= nums[hi]) lo = mid + 1
+            if (target > nums[mid] * and  target <= nums[hi]) lo = mid + 1
             else hi = mid - 1
     return -1
 def findMin_rotated(self, nums):
@@ -83,6 +84,7 @@ def findMin_rotated(self, nums):
         if (nums[mid] > nums[hi]) lo = mid + 1
         else hi = mid
     return nums[lo]
+
 ```
 
 | ID | Title | Link | Solution |
@@ -109,7 +111,7 @@ def maxValid(self, lo, hi):
         if (valid(mid)) lo = mid
         else hi = mid - 1
     return lo
-// Example: Koko Eating Bananas (875)
+# Example: Koko Eating Bananas (875)
 def minEatingSpeed(self, piles, h):
     lo = 1, hi = max_element(piles.begin(), piles.end())
     while lo < hi:
@@ -119,6 +121,7 @@ def minEatingSpeed(self, piles, h):
         if (hours <= h) hi = mid
         else lo = mid + 1
     return lo
+
 ```
 
 | ID | Title | Link | Solution |
@@ -150,6 +153,7 @@ def search2D_flat(self, mat, target):
         if (v < target) lo = mid + 1
         else hi = mid - 1
     return False
+
 ```
 
 | ID | Title | Link | Solution |

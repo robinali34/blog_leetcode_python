@@ -108,6 +108,7 @@ while not not q  and  preSum[q[-1]] >= curSum:
     q.pop()
 q.append(i)
 (-1 if         return rtn == INT_MAX else rtn)
+
 ```
 
 ### Algorithm Explanation:
@@ -118,6 +119,7 @@ q.append(i)
 list[long> preSum(N + 1)
 for(i = 0 i < N i += 1) :
 preSum[i + 1] = preSum[i] + nums[i]
+
 ```
 
 - `preSum[i]` = sum of elements from index `0` to `i-1`
@@ -131,17 +133,18 @@ preSum[i + 1] = preSum[i] + nums[i]
 #### **Step 2: Maintain Monotonic Deque**
 
 ```python
-deque<int> q  // Stores indices of prefix sums
+deque<int> q  # Stores indices of prefix sums
 for(i = 0 i <= N i += 1) :
 long curSum = preSum[i]
-// Check if we can form a valid subarray ending at i
+# Check if we can form a valid subarray ending at i
 while not not q  and  curSum - preSum[q[0]] >= k:
     rtn = min(rtn, i - q[0])
     q.pop_front()
-// Maintain monotonic property: remove larger prefix sums
+# Maintain monotonic property: remove larger prefix sums
 while not not q  and  preSum[q[-1]] >= curSum:
     q.pop()
 q.append(i)
+
 ```
 
 **Key Operations:**

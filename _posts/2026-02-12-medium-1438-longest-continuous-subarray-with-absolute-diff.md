@@ -73,6 +73,7 @@ def longestSubarray(self, nums, limit):
         left += 1
     rtn = max(rtn, right - left + 1)
 return rtn
+
 ```
 {% endraw %}
 
@@ -82,23 +83,24 @@ return rtn
 ```python
 class Solution:
 def longestSubarray(self, nums, limit):
-    deque<int> increase, decrease // store values (or indices)
+    deque<int> increase, decrease # store values (or indices)
     left = 0, rtn = 0
     for (right = 0 right < (int)len(nums) right += 1) :
     val = nums[right]
-    // maintain increasing deque for min
+    # maintain increasing deque for min
     while not not increase  and  increase[-1] > val) increase.pop(:
     increase.append(val)
-    // maintain decreasing deque for max
+    # maintain decreasing deque for max
     while not not decrease  and  decrease[-1] < val) decrease.pop(:
     decrease.append(val)
-    // shrink window while invalid
+    # shrink window while invalid
     while decrease[0] - increase[0] > limit:
         if nums[left] == decrease[0]) decrease.pop_front(:
         if nums[left] == increase[0]) increase.pop_front(:
         left += 1
     rtn = max(rtn, right - left + 1)
 return rtn
+
 ```
 {% endraw %}
 

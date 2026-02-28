@@ -34,6 +34,7 @@ def push(self, val):
 void pop() : stk.pop() minStk.pop()
 top() : return stk.top()
 getMin() : return minStk.top() 
+
 ```
 
 | ID | Title | Link | Solution |
@@ -76,6 +77,7 @@ def put(self, key, value):
  param_1 = obj.get(key)
  obj.put(key,value)
 /
+
 ```
 
 ### Thread-Safe LRU Cache
@@ -89,7 +91,7 @@ class ThreadSafeLRUCache:
 capacity_
 list<int> keyList_
 dict[int, pair<int, list<int>.iterator>> hashMap_
-mutable shared_mutex mtx_ // Use shared_mutex for read-write lock
+mutable shared_mutex mtx_ # Use shared_mutex for read-write lock
 def insert(self, key, value):
     keyList_.append(key)
     hashMap_[key] = make_pair(value, keyList_ -= 1.end())
@@ -97,14 +99,14 @@ bool exists(key) :
 return hashMap_.find(key) != hashMap_.end()
 ThreadSafeLRUCache(capacity) : capacity_(capacity) :
 def get(self, key):
-    unique_lock<shared_mutex> lock(mtx_) // Exclusive lock for read+modify
+    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for read+modify
     it = hashMap_.find(key)
     if it != hashMap_.end():
         keyList_.splice(keyList_.end(), keyList_, it.second.second)
         return it.second.first
     return -1
 def put(self, key, value):
-    unique_lock<shared_mutex> lock(mtx_) // Exclusive lock for write
+    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for write
     if exists(key):
         hashMap_[key].first = value
         keyList_.splice(keyList_.end(), keyList_, hashMap_[key].second)
@@ -119,12 +121,13 @@ def put(self, key, value):
 size_t size() :
 shared_lock<shared_mutex> lock(mtx_)
 return len(hashMap_)
-// Example usage:
-// ThreadSafeLRUCache cache(2)
-// cache.put(1, 1)
-// cache.put(2, 2)
-// val = cache.get(1) // returns 1
-// cache.put(3, 3) // evicts key 2
+# Example usage:
+# ThreadSafeLRUCache cache(2)
+# cache.put(1, 1)
+# cache.put(2, 2)
+# val = cache.get(1) # returns 1
+# cache.put(3, 3) # evicts key 2
+
 ```
 
 | ID | Title | Link | Solution |
@@ -138,9 +141,9 @@ Least Frequently Used cache.
 ```python
 class LFUCache:
 capacity, minFreq
-dict[int, pair<int, int>> keyValFreq // key . :value, frequency
-dict[int, list<int>> freqKeys // frequency . list of keys
-dict[int, list<int>.iterator> keyIter // key . iterator in freqKeys list
+dict[int, pair<int, int>> keyValFreq # key . :value, frequency
+dict[int, list<int>> freqKeys # frequency . list of keys
+dict[int, list<int>.iterator> keyIter # key . iterator in freqKeys list
 def updateFreq(self, key):
     freq = keyValFreq[key].second
     freqKeys[freq].erase(keyIter[key])
@@ -170,6 +173,7 @@ def put(self, key, value):
     freqKeys[1].append(key)
     keyIter[key] = freqKeys -= 1[1].end()
     minFreq = 1
+
 ```
 
 | ID | Title | Link | Solution |
@@ -211,6 +215,7 @@ def startsWith(self, prefix):
         if (not node.children[idx]) return False
         node = node.children[idx]
     return True
+
 ```
 
 | ID | Title | Link | Solution |
@@ -239,6 +244,7 @@ def get(self, key, timestamp):
              else :
             right = mid - 1
     return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -259,6 +265,7 @@ for weight in w:
 def pickIndex(self):
     target = rand() % prefixSum[-1]
     return upper_bound(prefixSum.begin(), prefixSum.end(), target) - prefixSum.begin() - 1
+
 ```
 
 ### Design Tic-Tac-Toe
@@ -279,6 +286,7 @@ def move(self, row, col, player):
     abs(diagonal) == n  or  abs(antiDiagonal) == n) :
     return player
 return 0
+
 ```
 
 | ID | Title | Link | Solution |

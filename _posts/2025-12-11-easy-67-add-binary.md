@@ -107,6 +107,7 @@ def addBinary(self, a, b):
 if carry == 1) rtn.append('1':
 rtn.reverse()
 return rtn
+
 ```
 
 ### How Solution 1 Works
@@ -154,6 +155,7 @@ def addBinary(self, a, b):
         carry = sum / 2
     result.reverse()
     return result
+
 ```
 
 ### How Solution 2 Works
@@ -175,10 +177,10 @@ This approach uses language built-ins to convert, add, and convert back. Not rec
 ```python
 class Solution:
 def addBinary(self, a, b):
-    // Convert binary strings to integers
+    # Convert binary strings to integers
     long long num1 = stoll(a, None, 2)
     long long num2 = stoll(b, None, 2)
-    // Add and convert back to binary
+    # Add and convert back to binary
     long long sum = num1 + num2
     if (sum == 0) return "0"
     str result
@@ -187,6 +189,7 @@ def addBinary(self, a, b):
         sum /= 2
     result.reverse()
     return result
+
 ```
 
 **Note:** This approach has limitations:
@@ -211,10 +214,11 @@ def addBinary(self, a, b):
         ((a[i -= 1] - '0') if             bit1 = (i >= 0)  else 0)
         ((b[j -= 1] - '0') if             bit2 = (j >= 0)  else 0)
         sum = bit1 + bit2 + carry
-        result.append((sum  1) + '0')  // sum % 2 using bitwise AND
-        carry = sum >> 1  // sum / 2 using right shift
+        result.append((sum  1) + '0')  # sum % 2 using bitwise AND
+        carry = sum >> 1  # sum / 2 using right shift
     result.reverse()
     return result
+
 ```
 
 ### Key Differences

@@ -108,6 +108,7 @@ def sumNumbers(self, root):
     rootToLeaf = 0
     preorder(root, 0, rootToLeaf)
     return rootToLeaf
+
 ```
 
 **Key Points:**
@@ -141,19 +142,19 @@ def sumNumbers(self, root):
     TreeNode predecessor
     while root != None:
         if root.left != None:
-            // Find the inorder predecessor
+            # Find the inorder predecessor
             predecessor = root.left
             steps = 1
             while predecessor.right != None  and  predecessor.right != root:
                 predecessor = predecessor.right
                 steps += 1
             if predecessor.right == None:
-                // Make current node the right child of its predecessor
+                # Make current node the right child of its predecessor
                 currNum = currNum  10 + root.val
                 predecessor.right = root
                 root = root.left
                  else :
-                // Revert the changes made in the 'if' part to restore the original tree
+                # Revert the changes made in the 'if' part to restore the original tree
                 if predecessor.left == None:
                     rootToLeaf += currNum
                 for (i = 0 i < steps i += 1) :
@@ -166,6 +167,7 @@ def sumNumbers(self, root):
             rootToLeaf += currNum
         root = root.right
 return rootToLeaf
+
 ```
 
 **How Morris Traversal Works:**
@@ -290,12 +292,14 @@ Final: 495 + 491 + 40 = 1026
 ```python
 def preorder(self, node, currNum, rootToLeaf):
     if (node == None) return
+
 ```
 
 **Why:** Handle null nodes gracefully. Return early if node is null.
 
 ```python
 currNum = currNum  10 + node.val
+
 ```
 
 **Why:** Build the current path number by:
@@ -305,6 +309,10 @@ currNum = currNum  10 + node.val
 ```python
 if node.left == None  and  node.right == None:
     rootToLeaf += currNum
+
+
+
+
 ```
 
 **Why:** Leaf node reached. Add the complete path number to the total sum.
@@ -312,6 +320,10 @@ if node.left == None  and  node.right == None:
 ```python
 preorder(node.left, currNum, rootToLeaf)
 preorder(node.right, currNum, rootToLeaf)
+
+
+
+
 ```
 
 **Why:** Continue traversal to both subtrees. `currNum` is passed by value, so each recursive call gets its own copy.
@@ -323,6 +335,10 @@ def sumNumbers(self, root):
     rootToLeaf = 0
     preorder(root, 0, rootToLeaf)
     return rootToLeaf
+
+
+
+
 ```
 
 **Why:** Initialize sum to 0, start preorder traversal from root, return accumulated sum.
@@ -343,6 +359,10 @@ steps = 1
 while predecessor.right != None  and  predecessor.right != root:
     predecessor = predecessor.right
     steps += 1
+
+
+
+
 ```
 - Find the rightmost node in the left subtree
 - Track number of steps for backtracking
@@ -351,8 +371,9 @@ while predecessor.right != None  and  predecessor.right != root:
 ```python
 if predecessor.right == None:
     currNum = currNum  10 + root.val
-    predecessor.right = root  // Create link
+    predecessor.right = root  # Create link
     root = root.left
+
 ```
 - Create temporary link from predecessor to current node
 - This allows us to return to current node later
@@ -363,9 +384,10 @@ else:
     if predecessor.left == None:
         rootToLeaf += currNum
     for (i = 0 i < steps i += 1) :
-    currNum /= 10  // Backtrack number
-predecessor.right = None  // Remove link
+    currNum /= 10  # Backtrack number
+predecessor.right = None  # Remove link
 root = root.right
+
 ```
 - When we return via temporary link, we've finished left subtree
 - Backtrack `currNum` by dividing by 10 for each step
@@ -405,6 +427,7 @@ def sumNumbers(self, root):
             if node.left != None:
                 stk.push(:node.left, sum)
     return totalSum
+
 ```
 
 **Pros:**
@@ -439,6 +462,7 @@ def sumNumbers(self, root):
             if node.right != None:
                 q.push(:node.right, sum)
     return totalSum
+
 ```
 
 **Pros:**
@@ -476,6 +500,10 @@ Multiplying by 10 shifts digits left, making room for the new digit.
 
 ```python
 return dfs(node.left, sum) + dfs(node.right, sum)
+
+
+
+
 ```
 
 **Breakdown:**

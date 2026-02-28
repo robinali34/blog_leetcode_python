@@ -132,6 +132,7 @@ def imageSmoother(self, img):
         sum += img[x][y]
 rtn[i][j] = sum / num
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -205,6 +206,10 @@ The algorithm handles boundaries correctly by checking bounds before accessing:
 if x >= 0  and  x < m  and  y >= 0  and  y < n:
     num += 1
     sum += img[x][y]
+
+
+
+
 ```
 
 This ensures:

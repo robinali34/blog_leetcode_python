@@ -52,23 +52,25 @@ Use a monotonic stack to maintain lexicographically smallest result while ensuri
 
 ```python
 class Solution:
-def removeDuplicateLetters(self, s: str) -> str:
-count = [0]  26
-visited = [False]  26
-stack = []
-for c in s:
-count[ord(c) - ord('a')] += 1
-for c in s:
-idx = ord(c) - ord('a')
-count[idx] -= 1
-if visited[idx]:
-continue
-while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
-visited[ord(stack[-1]) - ord('a')] = False
-stack.pop()
-stack.append(c)
-visited[idx] = True
-return "".join(stack)
+    def removeDuplicateLetters(self, s: str) -> str:
+        count = [0] * 26
+        visited = [False] * 26
+        stack = []
+        for c in s:
+            count[ord(c) - ord('a')] += 1
+            for c in s:
+                idx = ord(c) - ord('a')
+                count[idx] -= 1
+                if visited[idx]:
+                    continue
+                    while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
+                        visited[ord(stack[-1]) - ord('a')] = False
+                        stack.pop()
+                        stack.append(c)
+                        visited[idx] = True
+                        return "".join(stack)
+
+
 ```
 
 ## How the Algorithm Works
@@ -115,14 +117,18 @@ return "".join(stack)
 ### Core Logic:
 ```python
 for c in s:
-count[ord(c) - ord('a')] -= 1
-if visited[ord(c) - ord('a')]:
-continue
-while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
-visited[ord(stack[-1]) - ord('a')] = False
-stack.pop()
-stack.append(c)
-visited[ord(c) - ord('a')] = True
+    count[ord(c) - ord('a')] -= 1
+    if visited[ord(c) - ord('a')]:
+        continue
+        while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
+            visited[ord(stack[-1]) - ord('a')] = False
+            stack.pop()
+            stack.append(c)
+            visited[ord(c) - ord('a')] = True
+
+
+
+
 ```
 
 **Process:**
@@ -191,22 +197,24 @@ Where n is the length of the string.
 ### Approach 1: Recursive with Backtracking
 ```python
 class Solution:
-def removeDuplicateLetters(self, s: str) -> str:
-if not s:
-return ""
-count = [0]  26
-for c in s:
-count[ord(c) - ord('a')] += 1
-pos = 0
-for i, ch in enumerate(s):
-if ch < s[pos]:
-pos = i
-count[ord(ch) - ord('a')] -= 1
-if count[ord(ch) - ord('a')] == 0:
-break
-first = s[pos]
-remaining = s[pos + 1:].replace(first, "")
-return first + self.removeDuplicateLetters(remaining)
+    def removeDuplicateLetters(self, s: str) -> str:
+        if not s:
+            return ""
+            count = [0] * 26
+            for c in s:
+                count[ord(c) - ord('a')] += 1
+                pos = 0
+                for i, ch in enumerate(s):
+                    if ch < s[pos]:
+                        pos = i
+                        count[ord(ch) - ord('a')] -= 1
+                        if count[ord(ch) - ord('a')] == 0:
+                            break
+                            first = s[pos]
+                            remaining = s[pos + 1:].replace(first, "")
+                            return first + self.removeDuplicateLetters(remaining)
+
+
 ```
 
 **Time Complexity:** O(n^2)  
@@ -215,15 +223,17 @@ return first + self.removeDuplicateLetters(remaining)
 ### Approach 2: Set-based Approach
 ```python
 class Solution:
-def removeDuplicateLetters(self, s: str) -> str:
-seen = set()
-result = []
-for c in s:
-if c not in seen:
-seen.add(c)
-result.append(c)
-result.sort()
-return "".join(result)
+    def removeDuplicateLetters(self, s: str) -> str:
+        seen = set()
+        result = []
+        for c in s:
+            if c not in seen:
+                seen.add(c)
+                result.append(c)
+                result.sort()
+                return "".join(result)
+
+
 ```
 
 **Time Complexity:** O(n log n)  

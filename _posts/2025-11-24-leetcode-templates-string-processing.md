@@ -32,6 +32,7 @@ def lengthOfLongestSubstring(self, s):
         dup -= (cnt -= 1[(unsigned char)s[l += 1]] == 1)
     best = max(best, r - l + 1)
 return best
+
 ```
 
 ### Minimum Window Substring
@@ -57,6 +58,7 @@ def minWindow(self, s, t):
                 if (window[d] == need[d]) valid -= 1
                 window[d]--
     ("" if     return len == INT_MAX  else s.substr(start, len))
+
 ```
 
 | ID | Title | Link | Solution |
@@ -80,6 +82,7 @@ def isPalindrome(self, s):
         left += 1
         right -= 1
     return True
+
 ```
 
 ### Reverse String
@@ -89,6 +92,7 @@ def reverseString(self, s):
     left = 0, right = len(s) - 1
     while left < right:
         swap(s[left += 1], s[right -= 1])
+
 ```
 
 | ID | Title | Link | Solution |
@@ -125,13 +129,14 @@ def kmpSearch(self, text, pattern):
             i += 1
             j += 1
         if j == m:
-            return i - j // Found at index i - j
+            return i - j # Found at index i - j
              else if (i < n  and  text[i] != pattern[j]) :
             if j != 0:
                 j = lps[j - 1]
                  else :
                 i += 1
     return -1
+
 ```
 
 | ID | Title | Link | Solution |
@@ -153,6 +158,7 @@ def groupAnagrams(self, strs):
     for ([key, values] : groups) :
     result.append(values)
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -163,7 +169,7 @@ return result
 ### Remove Duplicates
 
 ```python
-// Remove All Adjacent Duplicates
+# Remove All Adjacent Duplicates
 def removeDuplicates(self, s):
     str result
     for c in s:
@@ -172,7 +178,7 @@ def removeDuplicates(self, s):
              else :
             result.append(c)
     return result
-// Remove All Adjacent Duplicates II (k duplicates)
+# Remove All Adjacent Duplicates II (k duplicates)
 def removeDuplicates(self, s, k):
     list[pair<char, int>> st
     for c in s:
@@ -186,6 +192,7 @@ def removeDuplicates(self, s, k):
     for ([c, count] : st) :
     result.append(count, c)
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -197,13 +204,14 @@ return result
 ### Run-Length Encoding
 
 ```python
-// Two-pointer grouping for consecutive runs
+# Two-pointer grouping for consecutive runs
 def runLengthEncode(self, s):
     str result
     for (j = 0, k = 0 j < (int)len(s) j = k) :
     while (k < (int)len(s)  and  s[k] == s[j]) k += 1
     result += to_string(k - j) + s[j]
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -221,7 +229,7 @@ def validWordAbbreviation(self, word, abbr):
     n = len(word), m = len(abbr)
     while i < n  and  j < m:
         if isdigit(abbr[j]):
-            if (abbr[j] == '0') return False // Leading zero
+            if (abbr[j] == '0') return False # Leading zero
             num = 0
             while j < m  and  isdigit(abbr[j]):
                 num = num  10 + (abbr[j] - '0')
@@ -232,6 +240,7 @@ def validWordAbbreviation(self, word, abbr):
             i += 1
             j += 1
     return i == n  and  j == m
+
 ```
 
 ### Decode String
@@ -261,6 +270,7 @@ def decodeString(self, s):
              else :
             current += c
     return current
+
 ```
 
 | ID | Title | Link | Solution |

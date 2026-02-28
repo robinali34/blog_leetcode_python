@@ -117,6 +117,7 @@ def safe(self, x, graph, color):
         if(not safe(y, graph, color)) return False
     color[x] = 2
     return True
+
 ```
 
 ### **Algorithm Explanation:**
@@ -234,31 +235,32 @@ Reverse the graph and use topological sort (Kahn's algorithm) starting from term
 class Solution:
 def eventualSafeNodes(self, graph):
     N = len(graph)
-    // Reverse graph: edge v . u means u can reach v in original graph
+    # Reverse graph: edge v . u means u can reach v in original graph
     list[list[int>> reverseGraph(N)
     list[int> outDegree(N)
     for(u = 0 u < N u += 1) :
     for v in graph[u]:
         reverseGraph[v].emplace_back(u)
     outDegree[u]= graph[u].__len__()
-// Start with terminal nodes (outDegree == 0)
+# Start with terminal nodes (outDegree == 0)
 deque[int> q
 for(i = 0 i < N i += 1) :
 if outDegree[i] == 0:
     q.push(i)
-// Kahn's algorithm on reverse graph
+# Kahn's algorithm on reverse graph
 while not not q:
     safe = q[0]
     q.pop()
     for prev in reverseGraph[safe]:
         if outDegree -= 1[prev] == 0:
             q.push(prev)
-// Nodes with outDegree == 0 are eventually safe
+# Nodes with outDegree == 0 are eventually safe
 list[int> rtn
 for(i = 0 i < N i += 1) :
 if outDegree[i] == 0:
     rtn.emplace_back(i)
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**

@@ -141,6 +141,7 @@ def lemonadeChange(self, bills):
                  else :
                 return False
     return True
+
 ```
 
 ### **Algorithm Explanation:**

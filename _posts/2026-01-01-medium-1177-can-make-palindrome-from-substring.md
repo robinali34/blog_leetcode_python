@@ -114,6 +114,7 @@ for query in queries:
         bits += 1
     rtn.append(bits <= k  2 + 1)
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -249,8 +250,10 @@ Counting set bits efficiently:
 ```python
 bits = 0
 while x > 0:
-    x = x - 1  // Clear rightmost set bit
+    x = x - 1  # Clear rightmost set bit
     bits += 1
+
+
 ```
 
 Time: O(number of set bits) instead of O(32)

@@ -112,6 +112,7 @@ def isSameTree(self, p, q):
     if(not p  and  not q) return True
     if(not p  or  not q  or  p.val != q.val) return False
     return isSameTree(p.left, q.left)  and  isSameTree(p.right, q.right)
+
 ```
 
 ### Algorithm Explanation:
@@ -233,6 +234,7 @@ def isSameTree(self, p, q):
     if (p.val != q.val) return False
     return isSameTree(p.left, q.left)  and
     isSameTree(p.right, q.right)
+
 ```
 
 **Key Difference**: Separates null checks and value check for clarity
@@ -255,6 +257,7 @@ def isSameTree(self, p, q):
         st.push(:node1.right, node2.right)
         st.push(:node1.left, node2.left)
     return True
+
 ```
 
 **Complexity**: 
@@ -277,6 +280,7 @@ def isSameTree(self, p, q):
         q_nodes.push(:node1.left, node2.left)
         q_nodes.push(:node1.right, node2.right)
     return True
+
 ```
 
 **Complexity**: 

@@ -125,6 +125,7 @@ def isCommonAncestor(self, node, p, q):
     if(node == p  or  node == q) return node
     if(left  and  right) return node
     (left if         return left  else right)
+
 ```
 
 ### Algorithm Explanation:
@@ -269,6 +270,7 @@ def findPath(self, root, target, path):
     return True
 path.pop()
 return False
+
 ```
 
 **Complexity**: 
@@ -284,7 +286,7 @@ def lowestCommonAncestor(self, root, p, q):
     list[TreeNode> st
     parent[root] = None
     st.push(root)
-    // Build parent map
+    # Build parent map
     while not parent.count(p)  or  not parent.count(q):
         TreeNode node = st.top()
         st.pop()
@@ -294,19 +296,20 @@ def lowestCommonAncestor(self, root, p, q):
         if node.right:
             parent[node.right] = node
             st.push(node.right)
-    // Find path from p to root
+    # Find path from p to root
     set<TreeNode> ancestors
     TreeNode curr = p
     while curr:
         ancestors.insert(curr)
         curr = parent[curr]
-    // Find first common ancestor from q
+    # Find first common ancestor from q
     curr = q
     while curr:
         if ancestors.count(curr):
             return curr
         curr = parent[curr]
     return None
+
 ```
 
 **Complexity**: 

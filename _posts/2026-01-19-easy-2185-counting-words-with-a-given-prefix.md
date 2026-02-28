@@ -93,13 +93,17 @@ This is a straightforward **simulation** problem. We need to:
 
 ```python
 class Solution:
-def prefixCount(self, words, pref):
-    cnt = 0
-    prel = pref.length()
-    for word in words:
-        if word.substr(0, prel) == pref:
-            cnt += 1
-    return cnt
+    def prefixCount(self, words, pref):
+        cnt = 0
+        prel = pref.length()
+        for word in words:
+            if word.substr(0, prel) == pref:
+                cnt += 1
+                return cnt
+
+
+
+
 ```
 
 ### Algorithm Explanation:
@@ -186,6 +190,7 @@ def prefixCount(self, words, pref):
             break
     if(match) cnt += 1
 return cnt
+
 ```
 
 **Pros**: More explicit, avoids substring creation  
@@ -195,12 +200,16 @@ return cnt
 
 ```python
 class Solution:
-def prefixCount(self, words, pref):
-    cnt = 0
-    for word in words:
-        if word.find(pref) == 0:
-            cnt += 1
-    return cnt
+    def prefixCount(self, words, pref):
+        cnt = 0
+        for word in words:
+            if word.find(pref) == 0:
+                cnt += 1
+                return cnt
+
+
+
+
 ```
 
 **Pros**: Very concise  
@@ -210,12 +219,16 @@ def prefixCount(self, words, pref):
 
 ```python
 class Solution:
-def prefixCount(self, words, pref):
-    cnt = 0
-    for word in words:
-        if word.starts_with(pref):
-            cnt += 1
-    return cnt
+    def prefixCount(self, words, pref):
+        cnt = 0
+        for word in words:
+            if word.starts_with(pref):
+                cnt += 1
+                return cnt
+
+
+
+
 ```
 
 **Pros**: Most semantic, clearly expresses intent  

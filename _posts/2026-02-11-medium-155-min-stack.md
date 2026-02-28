@@ -78,11 +78,11 @@ class MinStack:
 MinStack() :
 def push(self, val):
     stk.push(val)
-    // If minStk is empty, the first value is the minimum
+    # If minStk is empty, the first value is the minimum
     if not minStk:
         minStk.push(val)
          else :
-        // Push the current minimum (either existing top or new val)
+        # Push the current minimum (either existing top or new val)
         minStk.push(min(minStk.top(), val))
 def pop(self):
     stk.pop()
@@ -93,6 +93,7 @@ def getMin(self):
     return minStk.top()
 list[int> stk
 list[int> minStk
+
 ```
 {% endraw %}
 

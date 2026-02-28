@@ -94,8 +94,8 @@ This is an interactive problem that requires an elimination strategy. The key in
 
 ```python
 /
- // This is the Master's API interface.
- // You should not implement it, or speculate about its implementation
+ # This is the Master's API interface.
+ # You should not implement it, or speculate about its implementation
  class Master:
      guess(str word)
 /
@@ -116,6 +116,7 @@ def match(self, a, b):
     for(i = 0 i < 6 i += 1) :
     cnt += (a[i] == b[i])
 return cnt
+
 ```
 
 ### Algorithm Breakdown:
@@ -250,7 +251,7 @@ class Solution:
 def findSecretWord(self, words, master):
     list[str> cand = words
     while not not cand:
-        // Pick word that minimizes maximum remaining candidates
+        # Pick word that minimizes maximum remaining candidates
         str guess = cand[0]
         minMax = len(cand)
         for word in cand:
@@ -263,7 +264,7 @@ def findSecretWord(self, words, master):
                 guess = word
         matches = master.guess(guess)
         if(matches == 6) return
-        // Filter candidates
+        # Filter candidates
         list[str> newCand
         for word in cand:
             if match(word, guess) == matches:
@@ -274,6 +275,7 @@ def match(self, a, b):
     for(i = 0 i < 6 i += 1) :
     cnt += (a[i] == b[i])
 return cnt
+
 ```
 
 This strategy picks the word that, in the worst case, leaves the fewest remaining candidates, leading to faster convergence.

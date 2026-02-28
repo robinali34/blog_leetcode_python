@@ -115,6 +115,7 @@ def reverseList(self, head):
     curr.val = values[i]
     curr = curr.next
 return head
+
 ```
 
 **Note**: This approach modifies node values instead of pointers, which is not ideal for interview purposes.
@@ -137,11 +138,12 @@ def reverseList(self, head):
     ListNode prev = None
     ListNode curr = head
     while curr != None:
-        ListNode next = curr.next  // Save next node
-        curr.next = prev             // Reverse link
-        prev = curr                   // Move prev forward
-        curr = next                   // Move curr forward
-    return prev  // prev is now the new head
+        ListNode next = curr.next  # Save next node
+        curr.next = prev             # Reverse link
+        prev = curr                   # Move prev forward
+        curr = next                   # Move curr forward
+    return prev  # prev is now the new head
+
 ```
 
 ### Solution 2: Recursive Approach (Python20 Optimized)
@@ -150,15 +152,16 @@ def reverseList(self, head):
 using namespace std
 class Solution:
 def reverseList(self, head):
-    // Base case: empty list or single node
+    # Base case: empty list or single node
     if head == None  or  head.next == None:
         return head
-    // Recursively reverse the rest of the list
+    # Recursively reverse the rest of the list
     ListNode newHead = reverseList(head.next)
-    // Reverse the link: head.next now points to head
+    # Reverse the link: head.next now points to head
     head.next.next = head
     head.next = None
     return newHead
+
 ```
 
 ### Solution 3: Iterative with Explicit Null Checks
@@ -177,6 +180,7 @@ def reverseList(self, head):
         prev = curr
         curr = next
     return prev
+
 ```
 
 ## How the Iterative Algorithm Works
@@ -319,14 +323,15 @@ head (now tail)
 
 ```python
 def reverseList(self, head):
-    ListNode prev = None  // Previous node (initially null)
-    ListNode curr = head       // Current node
+    ListNode prev = None  # Previous node (initially null)
+    ListNode curr = head       # Current node
     while curr != None:
-        ListNode next = curr.next  // Save next before reversing
-        curr.next = prev            // Reverse the link
-        prev = curr                  // Move prev forward
-        curr = next                  // Move curr forward
-    return prev  // prev is the new head
+        ListNode next = curr.next  # Save next before reversing
+        curr.next = prev            # Reverse the link
+        prev = curr                  # Move prev forward
+        curr = next                  # Move curr forward
+    return prev  # prev is the new head
+
 ```
 
 **Key Steps**:
@@ -338,15 +343,16 @@ def reverseList(self, head):
 
 ```python
 def reverseList(self, head):
-    // Base case
+    # Base case
     if head == None  or  head.next == None:
         return head
-    // Recursively reverse rest
+    # Recursively reverse rest
     ListNode newHead = reverseList(head.next)
-    // Reverse current link
-    head.next.next = head  // Reverse the link
-    head.next = None     // Break old link
+    # Reverse current link
+    head.next.next = head  # Reverse the link
+    head.next = None     # Break old link
     return newHead
+
 ```
 
 **Key Steps**:

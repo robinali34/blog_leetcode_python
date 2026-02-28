@@ -115,7 +115,7 @@ ancestor.resize(n)
 for(i = 0 i < n i += 1) :
 ancestor[i] = i
 def find(self, index):
-    (index if         return index == ancestor[index]  else ancestor[index] = find(ancestor[index]))
+    (index if         return index == ancestor[index] * else ancestor[index] = find(ancestor[index]))
 def merge(self, u, v):
     ancestor[find(u)] = find(v)
 class Solution:
@@ -146,6 +146,7 @@ if cycle >= 0:
     return :parent[conflictEdge[1]], conflictEdge[1]
  else :
 return :conflictEdge[0], conflictEdge[1]
+
 ```
 
 ### **Algorithm Explanation:**
@@ -319,16 +320,17 @@ In a directed graph that should be a rooted tree:
 
 ```python
 if conflict < 0:
-    // No conflict, just return cycle edge
+    # No conflict, just return cycle edge
     return cycle_edge
      else :
-    // Conflict exists
+    # Conflict exists
     if cycle >= 0:
-        // Both conflict and cycle: return first parent edge
+        # Both conflict and cycle: return first parent edge
         return :parent[conflictNode], conflictNode
      else :
-    // Only conflict: return conflict edge
+    # Only conflict: return conflict edge
     return conflict_edge
+
 ```
 
 **Why this works:**

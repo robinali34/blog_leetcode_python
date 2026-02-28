@@ -68,14 +68,16 @@ This is a classic **Dynamic Programming** problem that asks for the minimum numb
 
 ```python
 class Solution:
-def coinChange(self, coins: list[int], amount: int) -> int:
-dp = [amount + 1]  (amount + 1)
-dp[0] = 0
-for i in range(1, amount + 1):
-for coin in coins:
-if coin <= i:
-dp[i] = min(dp[i], dp[i - coin] + 1)
-return -1 if dp[amount] > amount else dp[amount]
+    def coinChange(self, coins: list[int], amount: int) -> int:
+        dp = [amount + 1] * (amount + 1)
+        dp[0] = 0
+        for i in range(1, amount + 1):
+            for coin in coins:
+                if coin <= i:
+                    dp[i] = min(dp[i], dp[i - coin] + 1)
+                    return -1 if dp[amount] > amount else dp[amount]
+
+
 ```
 
 ### **Algorithm Explanation:**
@@ -157,24 +159,26 @@ Result: dp[6] = 2 (coins: 3 + 3)
 ### **Top-Down DP (Memoization)**
 ```python
 class Solution:
-def coinChange(self, coins: list[int], amount: int) -> int:
-memo = [-1]  (amount + 1)
-result = self.dfs(coins, amount, memo)
-return -1 if result == float('inf') else result
-def dfs(self, coins: list[int], amount: int, memo: list[int]) -> int:
-if amount == 0:
-return 0
-if amount < 0:
-return float('inf')
-if memo[amount] != -1:
-return memo[amount]
-minCoins = float('inf')
-for coin in coins:
-result = self.dfs(coins, amount - coin, memo)
-if result != float('inf'):
-minCoins = min(minCoins, result + 1)
-memo[amount] = minCoins
-return minCoins
+    def coinChange(self, coins: list[int], amount: int) -> int:
+        memo = [-1] * (amount + 1)
+        result = self.dfs(coins, amount, memo)
+        return -1 if result == float('inf') else result
+    def dfs(self, coins: list[int], amount: int, memo: list[int]) -> int:
+        if amount == 0:
+            return 0
+            if amount < 0:
+                return float('inf')
+                if memo[amount] != -1:
+                    return memo[amount]
+                    minCoins = float('inf')
+                    for coin in coins:
+                        result = self.dfs(coins, amount - coin, memo)
+                        if result != float('inf'):
+                            minCoins = min(minCoins, result + 1)
+                            memo[amount] = minCoins
+                            return minCoins
+
+
 ```
 
 ## Related Problems

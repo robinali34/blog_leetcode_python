@@ -86,6 +86,7 @@ def numSpecialEquivGroups(self, words):
     odd.sort()
     groups.insert(even + "|" + odd)
 return len(groups)
+
 ```
 {% endraw %}
 
@@ -112,6 +113,7 @@ for (i = 0 i < 26 i += 1) key += to_string(even[i]) + "#"
 for (i = 0 i < 26 i += 1) key += to_string(odd[i]) + "#"
 groups.insert(key)
 return len(groups)
+
 ```
 {% endraw %}
 

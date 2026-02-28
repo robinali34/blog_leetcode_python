@@ -147,6 +147,7 @@ for email in emails:
     account.emplace_back(email)
 merged.emplace_back(account)
 return merged
+
 ```
 
 ### **Algorithm Explanation:**
@@ -288,14 +289,14 @@ class Solution:
 def accountsMerge(self, accounts):
     dict[str, list[str>> graph
     dict[str, str> emailToName
-    // Build graph
+    # Build graph
     for account in accounts:
         str name = account[0]
         for(i = 1 i < len(account) i += 1) :
         graph[account[1]].append(account[i])
         graph[account[i]].append(account[1])
         emailToName[account[i]] = name
-// DFS to find connected components
+# DFS to find connected components
 list[list[str>> result
 set[str> visited
 for([email, _]: graph) :
@@ -314,6 +315,7 @@ component.append(email)
 for neighbor in graph[email]:
     if not visited.count(neighbor):
         dfs(graph, neighbor, visited, component)
+
 ```
 
 **Time Complexity:** O(n × k × log(n × k))  

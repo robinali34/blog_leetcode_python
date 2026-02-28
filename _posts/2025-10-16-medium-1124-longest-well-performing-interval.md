@@ -45,19 +45,21 @@ Use a hash map to track the first occurrence of each prefix sum and find the lon
 
 ```python
 class Solution:
-def longestWPI(self, hours: list[int]) -> int:
-seen = :
-score = 0
-res = 0
-for i, h in enumerate(hours):
-score += 1 if h > 8 else -1
-if score > 0:
-res = i + 1
-elif score - 1 in seen:
-res = max(res, i - seen[score - 1])
-if score not in seen:
-seen[score] = i
-return res
+    def longestWPI(self, hours: list[int]) -> int:
+        seen = {}
+        score = 0
+        res = 0
+        for i, h in enumerate(hours):
+            score += 1 if h > 8 else -1
+            if score > 0:
+                res = i + 1
+            elif score - 1 in seen:
+                res = max(res, i - seen[score - 1])
+                if score not in seen:
+                    seen[score] = i
+                    return res
+
+
 ```
 
 ## How the Algorithm Works
@@ -110,6 +112,7 @@ Intervals:
 ```python
 if(hours[i] > 8) score += 1
 else score -= 1
+
 ```
 
 **Transformation:**
@@ -119,6 +122,7 @@ else score -= 1
 ### 2. Direct Positive Sum Check
 ```python
 if(score > 0) res = i + 1
+
 ```
 
 **Why this works:**
@@ -129,6 +133,7 @@ if(score > 0) res = i + 1
 ```python
 elif score - 1 in seen:
 res = max(res, i - seen[score - 1])
+
 ```
 
 **Mathematical reasoning:**
@@ -139,7 +144,11 @@ res = max(res, i - seen[score - 1])
 ### 4. Hash Map Update
 ```python
 if score not in seen:
-seen[score] = i
+    seen[score] = i
+
+
+
+
 ```
 
 **Why only store first occurrence:**
@@ -152,20 +161,22 @@ seen[score] = i
 ### Approach 1: Brute Force
 ```python
 class Solution:
-def longestWPI(self, hours: list[int]) -> int:
-n = len(hours)
-maxLen = 0
-for i in range(n):
-tiring = 0
-non_tiring = 0
-for j in range(i, n):
-if hours[j] > 8:
-tiring += 1
-else:
-non_tiring += 1
-if tiring > non_tiring:
-maxLen = max(maxLen, j - i + 1)
-return maxLen
+    def longestWPI(self, hours: list[int]) -> int:
+        n = len(hours)
+        maxLen = 0
+        for i in range(n):
+            tiring = 0
+            non_tiring = 0
+            for j in range(i, n):
+                if hours[j] > 8:
+                    tiring += 1
+                else:
+                    non_tiring += 1
+                    if tiring > non_tiring:
+                        maxLen = max(maxLen, j - i + 1)
+                        return maxLen
+
+
 ```
 
 **Time Complexity:** O(n²)  
@@ -174,17 +185,19 @@ return maxLen
 ### Approach 2: Prefix Sum Array
 ```python
 class Solution:
-def longestWPI(self, hours: list[int]) -> int:
-n = len(hours)
-prefix = [0]  (n + 1)
-for i in range(n):
-prefix[i + 1] = prefix[i] + (1 if hours[i] > 8 else -1)
-maxLen = 0
-for i in range(n):
-for j in range(i + 1, n + 1):
-if prefix[j] - prefix[i] > 0:
-maxLen = max(maxLen, j - i)
-return maxLen
+    def longestWPI(self, hours: list[int]) -> int:
+        n = len(hours)
+        prefix = [0] * (n + 1)
+        for i in range(n):
+            prefix[i + 1] = prefix[i] + (1 if hours[i] > 8 else -1)
+            maxLen = 0
+            for i in range(n):
+                for j in range(i + 1, n + 1):
+                    if prefix[j] - prefix[i] > 0:
+                        maxLen = max(maxLen, j - i)
+                        return maxLen
+
+
 ```
 
 **Time Complexity:** O(n²)  

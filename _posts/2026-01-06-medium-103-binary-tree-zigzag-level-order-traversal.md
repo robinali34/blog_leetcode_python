@@ -130,6 +130,7 @@ def zigzagLevelOrder(self, root):
     rtn.append(level)
     leftToRight = not leftToRight
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -230,6 +231,7 @@ def zigzagLevelOrder(self, root):
     result.append(level)
     leftToRight = not leftToRight
 return result
+
 ```
 
 **Advantages:**

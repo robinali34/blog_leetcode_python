@@ -118,6 +118,7 @@ def backtrack(self, board, word, row, col, idx):
     if(backtrack(board, word, row + dr, col + dc, idx + 1)) return True
 board[row][col] = word[idx]
 return False
+
 ```
 
 ### **Algorithm Explanation:**
@@ -265,13 +266,14 @@ return False
 def dfs(self, board, word, i, j, idx, visited):
     if(idx == word.length()) return True
     if(i < 0  or  i >= len(board)  or  j < 0  or  j >= board[0].__len__()) return False
-    if(visited[i][j]  or  board[i][j] != word[idx]) return False
+    if(visited[i][j] * or  board[i][j] != word[idx]) return False
     visited[i][j] = True
     list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
 for([dr, dc]: dirs) :
 if(dfs(board, word, i + dr, j + dc, idx + 1, visited)) return True
 visited[i][j] = False
 return False
+
 ```
 
 **Time Complexity:** O(m × n × 4^L)  

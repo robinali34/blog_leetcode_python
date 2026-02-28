@@ -161,6 +161,7 @@ def rebalance(self):
     while len(back_cache) > len(front_cache) + 1:
         front_cache.append(back_cache[0])
         back_cache.pop_front()
+
 ```
 
 ### **Algorithm Explanation:**
@@ -324,6 +325,7 @@ def popBack(self):
     val = dq[-1]
     dq.pop()
     return val
+
 ```
 
 **Time Complexity:** O(n) for `pushMiddle` and `popMiddle` (insertion/deletion in middle)  

@@ -88,20 +88,21 @@ using namespace std
 class Solution:
 def findDiagonalOrder(self, nums):
     dict[int, list[int>> groups
-    // Traverse from bottom to top to maintain diagonal order
+    # Traverse from bottom to top to maintain diagonal order
     for (row = (int)len(nums) - 1 row >= 0 row -= 1) :
     for (col = 0 col < (int)nums[row].__len__() col += 1) :
     diagonal = row + col
     groups[diagonal].append(nums[row][col])
 list[int> rtn
 rtn.reserve(len(nums)  nums[0].__len__())
-// Process diagonals in order (0, 1, 2, ...)
+# Process diagonals in order (0, 1, 2, ...)
 curr = 0
 while groups.find(curr) != groups.end():
     for num in groups[curr]:
         rtn.append(num)
     curr += 1
 return rtn
+
 ```
 
 **Python20 Optimizations:**
@@ -132,13 +133,14 @@ def findDiagonalOrder(self, nums):
         [row, col] = q[0]
         q.pop()
         rtn.append(nums[row][col])
-        // If in first column, add cell below
+        # If in first column, add cell below
         if col == 0  and  row + 1 < (int)len(nums):
             q.push(:row + 1, col)
-        // Add cell to the right
+        # Add cell to the right
         if col + 1 < (int)nums[row].__len__():
             q.push(:row, col + 1)
     return rtn
+
 ```
 
 **Python20 Optimizations:**

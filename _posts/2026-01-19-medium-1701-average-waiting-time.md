@@ -105,6 +105,7 @@ def averageWaitingTime(self, customers):
         totalTime += order
         t += order
     return (double) totalTime / len(customers)
+
 ```
 
 ### Algorithm Explanation:
@@ -171,6 +172,7 @@ def averageWaitingTime(self, customers):
         t = max(t, (long long)arrival) + order
         totalTime += t - arrival
     return (double) totalTime / len(customers)
+
 ```
 
 ### Algorithm Explanation:

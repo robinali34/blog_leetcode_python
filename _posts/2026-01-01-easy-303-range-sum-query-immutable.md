@@ -106,6 +106,7 @@ list[int> sums
  NumArray obj = new NumArray(nums)
  param_1 = obj.sumRange(left,right)
 /
+
 ```
 
 ### **Algorithm Explanation:**

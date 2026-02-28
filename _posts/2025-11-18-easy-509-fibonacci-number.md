@@ -120,6 +120,7 @@ def fib(self, n):
     for(i = 2 i <= n i += 1) :
     cache[i] = cache[i - 1] + cache[i - 2]
 return cache[n]
+
 ```
 
 ## How the Algorithm Works
@@ -172,18 +173,19 @@ Sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
 
 ```python
 def fib(self, n):
-    // Create cache array for memoization
+    # Create cache array for memoization
     list[int> cache(n + 1, 0)
-    // Handle base cases
+    # Handle base cases
     if(n <= 0) return 0
     if(n == 1) return 1
-    // Initialize base values
+    # Initialize base values
     cache[0] = 0
     cache[1] = 1
-    // Build solution bottom-up
+    # Build solution bottom-up
     for(i = 2 i <= n i += 1) :
     cache[i] = cache[i - 1] + cache[i - 2]
 return cache[n]
+
 ```
 
 ## Edge Cases
@@ -207,13 +209,14 @@ class Solution:
 def fib(self, n):
     if(n <= 0) return 0
     if(n == 1) return 1
-    prev2 = 0  // F(0)
-    prev1 = 1  // F(1)
+    prev2 = 0  # F(0)
+    prev1 = 1  # F(1)
     for(i = 2 i <= n i += 1) :
     curr = prev1 + prev2
     prev2 = prev1
     prev1 = curr
 return prev1
+
 ```
 
 **Pros:**
@@ -240,6 +243,7 @@ def fibHelper(self, n, memo):
     if(memo[n] != -1) return memo[n]
     memo[n] = fibHelper(n - 1, memo) + fibHelper(n - 2, memo)
     return memo[n]
+
 ```
 
 **Pros:**
@@ -261,6 +265,7 @@ def fib(self, n):
     if(n <= 0) return 0
     if(n == 1) return 1
     return fib(n - 1) + fib(n - 2)
+
 ```
 
 **Why not recommended:**
@@ -280,8 +285,8 @@ class Solution:
 def fib(self, n):
     if(n <= 0) return 0
     if(n == 1) return 1
-    // Matrix: [F(n+1) F(n)  ] = [1 1]^n
-    //         [F(n)   F(n-1)]   [1 0]
+    # Matrix: [F(n+1) F(n)  ] = [1 1]^n
+    #         [F(n)   F(n-1)]   [1 0]
     list[list[int>> base = \:\:1, 1\, \:1, 0\\
 list[list[int>> result = matrixPower(base, n)
 return result[0][1]
@@ -296,6 +301,7 @@ def matrixMultiply(self, a, b):
     return :
     :a[0][0]b[0][0] + a[0][1]b[1][0], a[0][0]b[0][1] + a[0][1]b[1][1],
     :a[1][0]b[0][0] + a[1][1]b[1][0], a[1][0]b[0][1] + a[1][1]b[1][1]
+
 ```
 
 **Pros:**
@@ -322,6 +328,7 @@ def matrixMultiply(self, a, b):
 
 ```python
 list[int> cache(n + 1, 0)
+
 ```
 
 Creates an array of size `n + 1` initialized to 0. This allows indexing from 0 to n.
@@ -331,6 +338,7 @@ Creates an array of size `n + 1` initialized to 0. This allows indexing from 0 t
 ```python
 if(n <= 0) return 0
 if(n == 1) return 1
+
 ```
 
 Early returns for base cases avoid unnecessary computation and array access.
@@ -340,6 +348,7 @@ Early returns for base cases avoid unnecessary computation and array access.
 ```python
 for(i = 2 i <= n i += 1) :
 cache[i] = cache[i - 1] + cache[i - 2]
+
 ```
 
 Builds Fibonacci numbers sequentially from F(2) to F(n).

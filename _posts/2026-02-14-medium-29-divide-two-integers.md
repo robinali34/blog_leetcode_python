@@ -86,6 +86,10 @@ Use XOR to detect result sign:
 
 ```python
 negative = (dividend > 0) ^ (divisor > 0)
+
+
+
+
 ```
 
 ### Step 3: Main Loop
@@ -119,7 +123,7 @@ Each bit of the quotient is determined from most significant to least significan
 ```python
 class Solution:
 def divide(self, dividend, divisor):
-    // Handle overflow case
+    # Handle overflow case
     if (dividend == INT_MIN  and  divisor == -1) return INT_MAX
     bool negative = (dividend < 0) ^ (divisor < 0)
     long long dvd = llabs((long long)dividend)
@@ -131,6 +135,7 @@ def divide(self, dividend, divisor):
         dvd -= (dvs << i)
 if (negative) rtn = -rtn
 return (int)rtn
+
 ```
 {% endraw %}
 
@@ -165,6 +170,7 @@ def divide(self, dividend, divisor):
         a -= temp
         result += multiple
     (-(int)result if         return negative  else (int)result)
+
 ```
 {% endraw %}
 

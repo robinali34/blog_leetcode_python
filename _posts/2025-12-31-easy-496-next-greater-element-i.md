@@ -135,6 +135,7 @@ list[int> rtn(len(nums1))
 for(i = 0 i < (int)len(nums1) i += 1) :
 rtn[i] = hashmap[nums1[i]]
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -264,17 +265,18 @@ def nextGreaterElement(self, nums):
     n = len(nums)
     list[int> result(n, -1)
     list[int> stk
-    // Traverse from right to left
+    # Traverse from right to left
     for(i = n - 1 i >= 0 i -= 1) :
-    // Pop elements that can't be next greater
+    # Pop elements that can't be next greater
     while not not stk  and  nums[i] >= stk.top():
         stk.pop()
-    // Top of stack is next greater element
+    # Top of stack is next greater element
     if not not stk:
         result[i] = stk.top()
-    // Push current element
+    # Push current element
     stk.push(nums[i])
 return result
+
 ```
 
 ### **Key Template Components:**

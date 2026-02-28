@@ -110,6 +110,7 @@ def pancakeSort(self, arr):
     rtn.append(valueToSort)
     flip(arr, valueToSort)
 return rtn
+
 ```
 
 ## How the Algorithm Works
@@ -182,20 +183,21 @@ Final: [1, 2, 3, 4] ✓
 ```python
 def pancakeSort(self, arr):
     list[int> rtn
-    // Process from largest to smallest value
+    # Process from largest to smallest value
     for(valueToSort = len(arr) valueToSort > 0 valueToSort -= 1) :
-    // Find current position of valueToSort
+    # Find current position of valueToSort
     idx = find(arr, valueToSort)
-    // If already in correct position, skip
+    # If already in correct position, skip
     if(idx == valueToSort - 1) continue
-    // Step 1: Bring to front (if not already there)
+    # Step 1: Bring to front (if not already there)
     if idx != 0:
-        rtn.append(idx + 1)  // k is 1-indexed
-        flip(arr, idx + 1)      // Reverse first (idx+1) elements
-    // Step 2: Move to correct position
-    rtn.append(valueToSort)  // k = valueToSort
-    flip(arr, valueToSort)      // Reverse first valueToSort elements
+        rtn.append(idx + 1)  # k is 1-indexed
+        flip(arr, idx + 1)      # Reverse first (idx+1) elements
+    # Step 2: Move to correct position
+    rtn.append(valueToSort)  # k = valueToSort
+    flip(arr, valueToSort)      # Reverse first valueToSort elements
 return rtn
+
 ```
 
 ### Helper Functions
@@ -207,6 +209,10 @@ def flip(self, subarr, k):
     while i < k / 2:
         swap(subarr[i], subarr[k - i - 1])
         i += 1
+
+
+
+
 ```
 
 Reverses the first `k` elements by swapping elements from both ends.
@@ -216,7 +222,8 @@ Reverses the first `k` elements by swapping elements from both ends.
 def find(self, arr, target):
     for(i = 0 i < len(arr) i += 1) :
     if(arr[i] == target) return i
-return -1  // Should never happen given constraints
+return -1  # Should never happen given constraints
+
 ```
 
 Linear search to find the index of target value.
@@ -241,17 +248,18 @@ class Solution:
 def pancakeSort(self, arr):
     list[int> result
     for(size = len(arr) size > 1 size -= 1) :
-    // Find index of maximum in unsorted portion
+    # Find index of maximum in unsorted portion
     maxIdx = max_element(arr.begin(), arr.begin() + size) - arr.begin()
-    if(maxIdx == size - 1) continue  // Already in place
-    // Bring max to front
+    if(maxIdx == size - 1) continue  # Already in place
+    # Bring max to front
     if maxIdx > 0:
         result.append(maxIdx + 1)
         reverse(arr.begin(), arr.begin() + maxIdx + 1)
-    // Move max to correct position
+    # Move max to correct position
     result.append(size)
     reverse(arr.begin(), arr.begin() + size)
 return result
+
 ```
 
 **Pros:**
@@ -273,7 +281,7 @@ class Solution:
 def pancakeSort(self, arr):
     list[int> result
     n = len(arr)
-    // Create position map: value . index
+    # Create position map: value . index
     list[int> pos(n + 1)
     for(i = 0 i < n i += 1) :
     pos[arr[i]] = i
@@ -291,6 +299,7 @@ def flip(self, arr, k, pos):
     swap(arr[i], arr[k - 1 - i])
     pos[arr[i]] = i
     pos[arr[k - 1 - i]] = k - 1 - i
+
 ```
 
 **Pros:**
@@ -319,6 +328,10 @@ def flip(self, subarr, k):
     while i < k / 2:
         swap(subarr[i], subarr[k - i - 1])
         i += 1
+
+
+
+
 ```
 
 **Why `k / 2`?**
@@ -329,7 +342,9 @@ def flip(self, subarr, k):
 ### Index Conversion
 
 ```python
-rtn.append(idx + 1)  // Convert 0-indexed to 1-indexed
+rtn.append(idx + 1)  # Convert 0-indexed to 1-indexed
+
+
 ```
 
 The problem uses 1-indexed `k` (flip first k elements), but arrays are 0-indexed.
@@ -338,6 +353,7 @@ The problem uses 1-indexed `k` (flip first k elements), but arrays are 0-indexed
 
 ```python
 if(idx == valueToSort - 1) continue
+
 ```
 
 If element is already in correct position, skip both flips to optimize.

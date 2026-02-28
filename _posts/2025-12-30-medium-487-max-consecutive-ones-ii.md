@@ -133,6 +133,7 @@ def findMaxConsecutiveOnes(self, nums):
         dp0 = 0
     rtn = max(rtn, max(dp0, dp1))
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -216,13 +217,14 @@ The solution uses two states to track different scenarios:
 
 ```python
 if nums[i] == 1:
-    // Both states can extend
-    dp1 += 1  // Continue with/without flip
-    dp0 += 1  // Continue without flip
+    # Both states can extend
+    dp1 += 1  # Continue with/without flip
+    dp0 += 1  # Continue without flip
      else :
-    // nums[i] == 0
-    dp1 = dp0 + 1  // Flip this 0, use previous sequence
-    dp0 = 0        // Can't extend without flip
+    # nums[i] == 0
+    dp1 = dp0 + 1  # Flip this 0, use previous sequence
+    dp0 = 0        # Can't extend without flip
+
 ```
 
 ### **Why This Works**

@@ -83,18 +83,19 @@ def maxSlidingWindow(self, nums, k):
     list[int> rtn
     deque<int> q
     for(i = 0 i < (int)len(nums) i += 1) :
-    // Remove indices outside the current window
+    # Remove indices outside the current window
     while not not q  and  q[0] < i - k + 1:
         q.pop_front()
-    // Remove indices whose values are smaller than current element
-    // (they can never be the maximum)
+    # Remove indices whose values are smaller than current element
+    # (they can never be the maximum)
     while not not q  and  nums[q[-1]] < nums[i]:
         q.pop()
     q.append(i)
-    // Add maximum when window is complete
+    # Add maximum when window is complete
     if i >= k - 1:
         rtn.append(nums[q[0]])
 return rtn
+
 ```
 
 ## How the Algorithm Works
@@ -159,6 +160,7 @@ Step 7: [7:7]           (removed 6, max = 7)
 ```python
 list[int> rtn
 deque<int> q
+
 ```
 - `rtn`: Result array to store maximums
 - `q`: Deque storing indices in decreasing order of values
@@ -167,6 +169,10 @@ deque<int> q
 ```python
 while not not q  and  q[0] < i - k + 1:
     q.pop_front()
+
+
+
+
 ```
 - Window starts at `i - k + 1`
 - Remove indices that are before the window start
@@ -175,6 +181,10 @@ while not not q  and  q[0] < i - k + 1:
 ```python
 while not not q  and  nums[q[-1]] < nums[i]:
     q.pop()
+
+
+
+
 ```
 - Remove indices whose values are smaller than `nums[i]`
 - These elements can never be the maximum in any future window
@@ -183,6 +193,10 @@ while not not q  and  nums[q[-1]] < nums[i]:
 ### 4. Add Current Index
 ```python
 q.append(i)
+
+
+
+
 ```
 - Add current index to deque
 
@@ -190,6 +204,10 @@ q.append(i)
 ```python
 if i >= k - 1:
     rtn.append(nums[q[0]])
+
+
+
+
 ```
 - When window is complete (i >= k - 1), add maximum to result
 - Maximum is always at `q.front()`
@@ -220,6 +238,7 @@ def maxSlidingWindow(self, nums, k):
     maxVal = max(maxVal, nums[j])
 rtn.append(maxVal)
 return rtn
+
 ```
 
 **Time Complexity:** O(n×k)  
@@ -230,15 +249,16 @@ return rtn
 ```python
 def maxSlidingWindow(self, nums, k):
     list[int> rtn
-    heapq[pair<int, int>> pq  // :value, index
+    heapq[pair<int, int>> pq  # :value, index
 for(i = 0 i < (int)len(nums) i += 1) :
 pq.push(:nums[i], i)
-// Remove elements outside window
+# Remove elements outside window
 while pq.top().second <= i - k:
     pq.pop()
 if i >= k - 1:
     rtn.append(pq.top().first)
 return rtn
+
 ```
 
 **Time Complexity:** O(n log n) - Heap operations  
@@ -253,9 +273,10 @@ def maxSlidingWindow(self, nums, k):
     for(i = 0 i < (int)len(nums) i += 1) :
     window.insert(nums[i])
     if i >= k - 1:
-        rtn.append(window.rbegin())  // Maximum element
-        window.erase(window.find(nums[i - k + 1]))  // Remove leftmost
+        rtn.append(window.rbegin())  # Maximum element
+        window.erase(window.find(nums[i - k + 1]))  # Remove leftmost
 return rtn
+
 ```
 
 **Time Complexity:** O(n log k) - Multiset operations  
@@ -296,11 +317,12 @@ return rtn
 
 ### Early Termination Check
 ```python
-// Optional: If k == 1, just return the array
+# Optional: If k == 1, just return the array
 if(k == 1) return nums
-// Optional: If k == len(nums), return max element
+# Optional: If k == len(nums), return max element
 if k == len(nums):
     return :max_element(nums.begin(), nums.end())
+
 ```
 
 ### Memory Optimization

@@ -111,6 +111,7 @@ def minCostToMoveChips(self, position):
              else :
             even += 1
     return min(odd, even)
+
 ```
 
 ### **Algorithm Explanation:**

@@ -90,37 +90,38 @@ class LRUCache:
 capacity_
 dict[int, list<pair<int, int>>.iterator> cache_
 list<pair<int, int>> lru_list_
-// Helper to move node to front (most recently used)
+# Helper to move node to front (most recently used)
 def moveToFront(self, list<pair<int, it):
     if it != lru_list_.begin():
         lru_list_.splice(lru_list_.begin(), lru_list_, it)
 explicit LRUCache(capacity)
 : capacity_(capacity)
 :
-cache_.reserve(capacity_)  // Pre-allocate hash map
+cache_.reserve(capacity_)  # Pre-allocate hash map
 def get(self, key):
     it = cache_.find(key)
     if it == cache_.end():
         return -1
-    // Move to front (most recently used)
+    # Move to front (most recently used)
     moveToFront(it.second)
     return it.second.second
 def put(self, key, value):
     it = cache_.find(key)
     if it != cache_.end():
-        // Update existing key
+        # Update existing key
         it.second.second = value
         moveToFront(it.second)
          else :
-        // Add new key
+        # Add new key
         if len(cache_) >= capacity_:
-            // Evict least recently used (back of list)
+            # Evict least recently used (back of list)
             [lru_key, _] = lru_list_[-1]
             cache_.erase(lru_key)
             lru_list_.pop()
-        // Insert at front
+        # Insert at front
         lru_list_.emplace_front(key, value)
         cache_[key] = lru_list_.begin()
+
 ```
 
 ### Solution 2: Custom Doubly Linked List (Python20 Optimized)
@@ -137,21 +138,21 @@ Node(k, v)
 : key(k), value(v), next(None), prev(None) :
 capacity_
 dict[int, Node> cache_
-// Dummy head and tail for easier list manipulation
+# Dummy head and tail for easier list manipulation
 unique_ptr<Node> head_
 unique_ptr<Node> tail_
-// Add node right before tail (most recently used)
+# Add node right before tail (most recently used)
 def addNode(self, node):
     Node prev_end = tail_.prev
     prev_end.next = node
     node.prev = prev_end
     node.next = tail_.get()
     tail_.prev = node
-// Remove node from list
+# Remove node from list
 def removeNode(self, node):
     node.prev.next = node.next
     node.next.prev = node.prev
-// Move node to end (most recently used)
+# Move node to end (most recently used)
 def moveToEnd(self, node):
     removeNode(node)
     addNode(node)
@@ -164,13 +165,13 @@ head_.next = tail_.get()
 tail_.prev = head_.get()
 cache_.reserve(capacity_)
 ~LRUCache() :
-// Clean up nodes
+# Clean up nodes
 Node current = head_.next
 while current != tail_.get():
     Node next = current.next
     delete current
     current = next
-// Delete copy constructor and assignment
+# Delete copy constructor and assignment
 LRUCache(LRUCache) = delete
 LRUCache operator=(LRUCache) = delete
 def get(self, key):
@@ -183,14 +184,14 @@ def get(self, key):
 def put(self, key, value):
     it = cache_.find(key)
     if it != cache_.end():
-        // Update existing
+        # Update existing
         Node node = it.second
         node.value = value
         moveToEnd(node)
          else :
-        // Add new
+        # Add new
         if len(cache_) >= capacity_:
-            // Evict least recently used (head.next)
+            # Evict least recently used (head.next)
             Node lru = head_.next
             removeNode(lru)
             cache_.erase(lru.key)
@@ -198,6 +199,7 @@ def put(self, key, value):
         Node newNode = Node(key, value)
         addNode(newNode)
         cache_[key] = newNode
+
 ```
 
 ### Solution 3: Most Optimized with Move Semantics
@@ -218,24 +220,25 @@ cache_.reserve(capacity_)
 it = cache_.find(key)
 if it == cache_.end():
     return -1
-// Move to front using splice (O(1))
+# Move to front using splice (O(1))
 lru_list_.splice(lru_list_.begin(), lru_list_, it.second)
 return it.second.second
 def put(self, key, value):
     it = cache_.find(key)
     if it != cache_.end():
-        // Update and move to front
+        # Update and move to front
         it.second.second = value
         lru_list_.splice(lru_list_.begin(), lru_list_, it.second)
          else :
-        // Check capacity
+        # Check capacity
         if len(cache_) >= capacity_:
-            // Evict LRU (back of list)
+            # Evict LRU (back of list)
             cache_.erase(lru_list_[-1].first)
             lru_list_.pop()
-        // Insert at front
+        # Insert at front
         lru_list_.emplace_front(key, value)
         cache_[key] = lru_list_.begin()
+
 ```
 
 ## Key Optimizations (Python20)

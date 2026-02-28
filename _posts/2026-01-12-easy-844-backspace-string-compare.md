@@ -131,7 +131,7 @@ The two-pointer approach is more space-efficient and processes strings in revers
 class Solution:
 def backspaceCompare(self, s, t):
     // 1. str construct: ab#c backwards construct: ca
-    // Request: O(n) time O(1) space . in space update.
+    # Request: O(n) time O(1) space . in space update.
     // 2. backwars, 2 pointers: if # move 2 backwards,  then compare
     i = s.length() -1, j = t.length() - 1
     skipS = 0, skipT = 0
@@ -148,6 +148,7 @@ if(i >= 0  and  j>= 0  and  s[i] != t[j]) return False
 i -= 1
 j -= 1
 return i == j
+
 ```
 
 ### **Algorithm Explanation:**
@@ -250,6 +251,7 @@ def buildString(self, str):
              else :
             result.append(c)
     return result
+
 ```
 
 **Time Complexity:** O(n + m)  

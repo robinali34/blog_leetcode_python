@@ -100,11 +100,11 @@ This problem requires finding the center(s) of a tree. The key insight is that *
 ```python
 class Solution:
 def findMinHeightTrees(self, n, edges):
-    // Essentially it is to find the path with max length, return its central node(s)
+    # Essentially it is to find the path with max length, return its central node(s)
     list[int> rtn
     if(n == 0) return rtn
     if(n == 1) return :0
-// Build the adj list
+# Build the adj list
 list[list[int>> adj(n)
 list[int> inDegree(n, 0)
 for edge in edges:
@@ -113,12 +113,12 @@ for edge in edges:
     adj[v].emplace_back(u)
     inDegree[u]++
     inDegree[v]++
-// Init leaves
+# Init leaves
 deque[int> leaves
 for(i = 0 i < n i += 1) :
 if inDegree[i] == 1:
     leaves.push(i)
-// Trim leaves until <= 2 nodes remain
+# Trim leaves until <= 2 nodes remain
 remainingNodes = n
 while remainingNodes > 2:
     leavesSize = len(leaves)
@@ -126,16 +126,17 @@ while remainingNodes > 2:
     for(i = 0 i < leavesSize i += 1) :
     leaf = leaves[0]
     leaves.pop()
-    // The leaf has only one neighbor
+    # The leaf has only one neighbor
     for neighbor in adj[leaf]:
         inDegree[neighbor]--
         if inDegree[neighbor] == 1:
             leaves.push(neighbor)
-// Remaining nodes are roots of MHTs
+# Remaining nodes are roots of MHTs
 while not not leaves:
     rtn.emplace_back(leaves[0])
     leaves.pop()
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -297,11 +298,11 @@ list[list[int>> adj(n)
 for e in edges:
     adj[e[0]].append(e[1])
     adj[e[1]].append(e[0])
-// First BFS: Find one end of diameter
+# First BFS: Find one end of diameter
 u = bfs(adj, 0, n).first
-// Second BFS: Find other end and path
+# Second BFS: Find other end and path
 [v, parent] = bfs(adj, u, n)
-// Find middle node(s) of diameter
+# Find middle node(s) of diameter
 list[int> path
 curr = v
 while curr != -1:
@@ -329,6 +330,7 @@ while not not q:
             parent[v] = u
             q.push(v)
 return :farthest, parent
+
 ```
 
 **Time Complexity:** O(n) - Two BFS passes  
@@ -346,25 +348,25 @@ list[list[int>> adj(n)
 for e in edges:
     adj[e[0]].append(e[1])
     adj[e[1]].append(e[0])
-// First DFS: Find one end of diameter
+# First DFS: Find one end of diameter
 farthestNode = 0
 maxDist = 0
 list[int> parent1(n, -1)
 dfs(adj, 0, -1, 0, farthestNode, maxDist, parent1)
 u = farthestNode
-// Second DFS: Find other end and path
+# Second DFS: Find other end and path
 farthestNode = u
 maxDist = 0
 list[int> parent2(n, -1)
 dfs(adj, u, -1, 0, farthestNode, maxDist, parent2)
 v = farthestNode
-// Reconstruct path from u to v
+# Reconstruct path from u to v
 list[int> path
 curr = v
 while curr != -1:
     path.append(curr)
     curr = parent2[curr]
-// Find middle node(s) of diameter
+# Find middle node(s) of diameter
 len = len(path)
 if len % 2 == 0:
     return :path[len/2 - 1], path[len/2]
@@ -379,6 +381,7 @@ if dist > maxDist:
 for v in adj[u]:
     if(v == parent) continue
     dfs(adj, v, u, dist + 1, farthestNode, maxDist, parentArr)
+
 ```
 
 **Time Complexity:** O(n) - Two DFS passes  
@@ -408,7 +411,7 @@ for e in edges:
     adj[e[1]].append(e[0])
 minHeight = INT_MAX
 list[int> result
-// Try each node as root
+# Try each node as root
 for(root = 0 root < n root += 1) :
 height = dfs(adj, root, -1)
 if height < minHeight:
@@ -423,6 +426,7 @@ def dfs(self, adj, u, parent):
         if(v == parent) continue
         maxHeight = max(maxHeight, dfs(adj, v, u))
     return maxHeight + 1
+
 ```
 
 **Time Complexity:** O(n²) - For each node, DFS takes O(n)  

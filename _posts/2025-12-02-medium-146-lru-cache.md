@@ -114,6 +114,7 @@ dict[int, pair<int, list<int>.iterator>> hashMap_
  param_1 = obj.get(key)
  obj.put(key,value)
 /
+
 ```
 
 ### Key Points
@@ -139,17 +140,17 @@ Thread-safe version using mutex for concurrent access.
 class ThreadSafeLRUCache:
 ThreadSafeLRUCache(capacity) : capacity_(capacity) :
 def get(self, key):
-    unique_lock<shared_mutex> lock(mtx_) // Exclusive lock for read+modify
+    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for read+modify
     it = hashMap_.find(key)
     if it != hashMap_.end():
         keyList_.splice(keyList_.end(), keyList_, it.second.second)
         return it.second.first
     return -1
 def put(self, key, value):
-    unique_lock<shared_mutex> lock(mtx_) // Exclusive lock for write
+    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for write
     it = hashMap_.find(key)
     if it != hashMap_.end():
-        // Key exists, update value and move to end
+        # Key exists, update value and move to end
         hashMap_[key].first = value
         keyList_.splice(keyList_.end(), keyList_, it.second.second)
         return
@@ -165,13 +166,14 @@ return len(hashMap_)
 capacity_
 list<int> keyList_
 dict[int, pair<int, list<int>.iterator>> hashMap_
-mutable shared_mutex mtx_ // Use shared_mutex for read-write lock
-// Example usage:
-// ThreadSafeLRUCache cache(2)
-// cache.put(1, 1)
-// cache.put(2, 2)
-// val = cache.get(1) // returns 1
-// cache.put(3, 3) // evicts key 2
+mutable shared_mutex mtx_ # Use shared_mutex for read-write lock
+# Example usage:
+# ThreadSafeLRUCache cache(2)
+# cache.put(1, 1)
+# cache.put(2, 2)
+# val = cache.get(1) # returns 1
+# cache.put(3, 3) # evicts key 2
+
 ```
 
 ### Thread-Safe Implementation Details

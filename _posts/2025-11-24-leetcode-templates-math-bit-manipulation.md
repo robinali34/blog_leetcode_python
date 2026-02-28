@@ -24,60 +24,63 @@ Minimal, copy-paste C++ for bit operations, fast exponentiation, GCD/LCM, primes
 ### Basic Operations
 
 ```python
-// Set bit at position i
+# Set bit at position i
 def setBit(self, num, i):
     return num | (1 << i)
-// Clear bit at position i
+# Clear bit at position i
 def clearBit(self, num, i):
     return num  ~(1 << i)
-// Toggle bit at position i
+# Toggle bit at position i
 def toggleBit(self, num, i):
     return num ^ (1 << i)
-// Check if bit is set
+# Check if bit is set
 def isBitSet(self, num, i):
     return (num >> i)  1
-// Count set bits
+# Count set bits
 def countSetBits(self, num):
     count = 0
     while num:
         count += num  1
         num >>= 1
     return count
-// Count set bits (Brian Kernighan's algorithm)
+# Count set bits (Brian Kernighan's algorithm)
 def countSetBitsFast(self, num):
     count = 0
     while num:
         num = (num - 1)
         count += 1
     return count
+
 ```
 
 ### Common Bit Tricks
 
 ```python
-// Get lowest set bit
+# Get lowest set bit
 def lowestSetBit(self, num):
     return num  (-num)
-// Clear lowest set bit
-def clearLowestSetBit(self, num):
-    return num  (num - 1)
-// Check if power of 2
-def isPowerOfTwo(self, num):
-    return num > 0  and  (num  (num - 1)) == 0
-// Get next power of 2
-def nextPowerOfTwo(self, num):
-    num -= 1
-    num |= num >> 1
-    num |= num >> 2
-    num |= num >> 4
-    num |= num >> 8
-    num |= num >> 16
-    return num + 1
-// Swap two numbers
-def swap(self, a, b):
-    a ^= b
-    b ^= a
-    a ^= b
+    # Clear lowest set bit
+    def clearLowestSetBit(self, num):
+        return num  (num - 1)
+        # Check if power of 2
+    def isPowerOfTwo(self, num):
+        return num > 0  and  (num  (num - 1)) == 0
+        # Get next power of 2
+    def nextPowerOfTwo(self, num):
+        num -= 1
+        num |= num >> 1
+        num |= num >> 2
+        num |= num >> 4
+        num |= num >> 8
+        num |= num >> 16
+        return num + 1
+        # Swap two numbers
+    def swap(self, a, b):
+        a ^= b
+        b ^= a
+        a ^= b
+
+
 ```
 
 | ID | Title | Link | Solution |
@@ -97,19 +100,20 @@ def swap(self, a, b):
 ### Single Number
 
 ```python
-// Single Number (all appear twice except one)
+# Single Number (all appear twice except one)
 def singleNumber(self, nums):
     result = 0
     for num in nums:
         result ^= num
     return result
-// Single Number II (all appear three times except one)
+# Single Number II (all appear three times except one)
 def singleNumberII(self, nums):
     ones = 0, twos = 0
     for num in nums:
         ones = (ones ^ num)  ~twos
         twos = (twos ^ num)  ~ones
     return ones
+
 ```
 
 ### Gray Code
@@ -120,6 +124,7 @@ def grayCode(self, n):
     for (i = 0 i < (1 << n) i += 1) :
     result.append(i ^ (i >> 1))
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -133,7 +138,7 @@ return result
 ### Power Function
 
 ```python
-// Fast exponentiation: x^n
+# Fast exponentiation: x^n
 def myPow(self, x, n):
     long long N = n
     if N < 0:
@@ -147,6 +152,7 @@ def myPow(self, x, n):
         current = current
         N /= 2
     return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -156,19 +162,20 @@ def myPow(self, x, n):
 ## GCD and LCM
 
 ```python
-// Greatest Common Divisor (Euclidean algorithm)
+# Greatest Common Divisor (Euclidean algorithm)
 def gcd(self, a, b):
     while b != 0:
         temp = b
         b = a % b
         a = temp
     return a
-// Recursive GCD
+# Recursive GCD
 def gcdRecursive(self, a, b):
     (a if     return b == 0  else gcdRecursive(b, a % b))
-// Least Common Multiple
+# Least Common Multiple
 def lcm(self, a, b):
     return a / gcd(a, b)  b
+
 ```
 
 ## Prime Numbers
@@ -183,6 +190,7 @@ def isPrime(self, n):
     for (i = 3 i  i <= n i += 2) :
     if (n % i == 0) return False
 return True
+
 ```
 
 ### Sieve of Eratosthenes
@@ -196,6 +204,7 @@ def sieveOfEratosthenes(self, n):
         for (j = i  i j <= n j += i) :
         isPrime[j] = False
 return isPrime
+
 ```
 
 ## Number Theory
@@ -208,7 +217,11 @@ def trailingZeroes(self, n):
     while n > 0:
         n /= 5
         count += n
-    return count
+        return count
+
+
+
+
 ```
 
 ### Reverse Integer
@@ -222,6 +235,7 @@ def reverse(self, x):
         result = result  10 + x % 10
         x /= 10
     return result
+
 ```
 
 | ID | Title | Link | Solution |

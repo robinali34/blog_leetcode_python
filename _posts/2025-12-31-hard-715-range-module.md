@@ -171,7 +171,7 @@ intervals = merged
 RangeModule() :
 def addRange(self, left, right):
     intervals.append(:left, right)
-    mergeIntervals()  // O(n log n) + O(n)
+    mergeIntervals()  # O(n log n) + O(n)
 def queryRange(self, left, right):
     for ([l, r] : intervals) :
     if (l <= left  and  right <= r) return True
@@ -185,6 +185,7 @@ def removeRange(self, left, right):
         if l < left) newIntervals.append({l, left}:
         if r > right) newIntervals.append({right, r}:
 intervals = newIntervals
+
 ```
 
 **Note**: This approach is inefficient due to O(n) operations and O(n^2) worst case merging.
@@ -198,7 +199,7 @@ Maintain sorted intervals using a vector with binary search for finding position
 
 ```python
 class RangeModule:
-list[pair<int, int>> intervals  // Kept sorted
+list[pair<int, int>> intervals  # Kept sorted
 def findInsertPos(self, left):
     low = 0, high = len(intervals)
     while low < high:
@@ -210,18 +211,18 @@ def findInsertPos(self, left):
     return low
 RangeModule() :
 def addRange(self, left, right):
-    pos = findInsertPos(left)  // O(log n)
-    intervals.insert(intervals.begin() + pos, :left, right)  // O(n)
-    // Merge overlapping intervals - O(n)
+    pos = findInsertPos(left)  # O(log n)
+    intervals.insert(intervals.begin() + pos, :left, right)  # O(n)
+    # Merge overlapping intervals - O(n)
     mergeIntervals()
 def queryRange(self, left, right):
-    pos = findInsertPos(left)  // O(log n)
+    pos = findInsertPos(left)  # O(log n)
     if pos > 0:
         prev = intervals[pos - 1]
         if (prev.first <= left  and  right <= prev.second) return True
     return False
 def removeRange(self, left, right):
-    // Find and remove/split intervals - O(n)
+    # Find and remove/split intervals - O(n)
     list[pair<int, int>> newIntervals
     for ([l, r] : intervals) :
     if r <= left  or  l >= right:
@@ -240,6 +241,7 @@ def mergeIntervals(self):
          else :
         merged.append(intervals[i])
 intervals = merged
+
 ```
 
 **Note**: Better than brute-force with O(log n) search, but still O(n) for insertions/deletions.
@@ -292,6 +294,7 @@ def removeRange(self, left, right):
             intervals[right] = it.second
             intervals.erase(it)
             break
+
 ```
 
 ### **Algorithm Explanation:**

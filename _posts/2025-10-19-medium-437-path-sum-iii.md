@@ -48,23 +48,27 @@ Use DFS to explore all possible paths starting from each node, checking if the p
 
 ```python
 class Solution:
-def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
-if not node:
-return 0
-cnt = 1 if targetSum == node.val else 0
-return (
-cnt
-+ self.dfs(node.left, targetSum - node.val)
-+ self.dfs(node.right, targetSum - node.val)
-)
-def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
-if not root:
-return 0
-return (
-self.dfs(root, targetSum)
-+ self.pathSum(root.left, targetSum)
-+ self.pathSum(root.right, targetSum)
-)
+    def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
+        if not node:
+            return 0
+            cnt = 1 if targetSum == node.val else 0
+            return (
+            cnt
+            + self.dfs(node.left, targetSum - node.val)
+            + self.dfs(node.right, targetSum - node.val)
+            )
+            def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+                if not root:
+                    return 0
+                    return (
+                    self.dfs(root, targetSum)
+                    + self.pathSum(root.left, targetSum)
+                    + self.pathSum(root.right, targetSum)
+                    )
+
+
+
+
 ```
 
 ## How the Algorithm Works
@@ -113,10 +117,14 @@ self.dfs(root, targetSum)
 ### DFS Function:
 ```python
 def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
-if not node:
-return 0
-cnt = 1 if targetSum == node.val else 0
-return cnt + dfs(self, node.left, targetSum - node.val) + dfs(self, node.right, targetSum - node.val)
+    if not node:
+        return 0
+        cnt = 1 if targetSum == node.val else 0
+        return cnt + dfs(self, node.left, targetSum - node.val) + dfs(self, node.right, targetSum - node.val)
+
+
+
+
 ```
 
 **Process:**
@@ -128,9 +136,13 @@ return cnt + dfs(self, node.left, targetSum - node.val) + dfs(self, node.right, 
 ### Main Function:
 ```python
 def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
-if not root:
-return 0
-return dfs(self, root, targetSum) + pathSum(self, root.left, targetSum) + pathSum(self, root.right, targetSum)
+    if not root:
+        return 0
+        return dfs(self, root, targetSum) + pathSum(self, root.left, targetSum) + pathSum(self, root.right, targetSum)
+
+
+
+
 ```
 
 **Process:**
@@ -220,6 +232,7 @@ return count
 def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
 prefixSum = :0: 1
 return self.dfs(root, targetSum, prefixSum, 0)
+
 ```
 
 **Time Complexity:** O(n)  
@@ -228,28 +241,30 @@ return self.dfs(root, targetSum, prefixSum, 0)
 ### Approach 2: Iterative DFS
 ```python
 class Solution:
-def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
-if not root:
-return 0
-stk = [root]
-count = 0
-while stk:
-node = stk.pop()
-count += self.dfs(node, targetSum)
-if node.left:
-stk.append(node.left)
-if node.right:
-stk.append(node.right)
-return count
-def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
-if not node:
-return 0
-cnt = 1 if targetSum == node.val else 0
-return (
-cnt
-+ self.dfs(node.left, targetSum - node.val)
-+ self.dfs(node.right, targetSum - node.val)
-)
+    def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+        if not root:
+            return 0
+            stk = [root]
+            count = 0
+            while stk:
+                node = stk.pop()
+                count += self.dfs(node, targetSum)
+                if node.left:
+                    stk.append(node.left)
+                    if node.right:
+                        stk.append(node.right)
+                        return count
+                        def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
+                            if not node:
+                                return 0
+                                cnt = 1 if targetSum == node.val else 0
+                                return (
+                                cnt
+                                + self.dfs(node.left, targetSum - node.val)
+                                + self.dfs(node.right, targetSum - node.val)
+                                )
+
+
 ```
 
 **Time Complexity:** O(n²)  

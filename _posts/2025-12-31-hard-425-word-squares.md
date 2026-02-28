@@ -142,6 +142,7 @@ for word in words:
     list[str> square:word
 backtrack(1, square, rtn)
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -269,22 +270,23 @@ Here's the general backtracking template used in this problem:
 
 ```python
 def backtrack(self, step, square, rtn):
-    // Base case: solution is complete
+    # Base case: solution is complete
     if step == N:
-        rtn.append(square)  // Add complete solution
+        rtn.append(square)  # Add complete solution
         return
-    // Build constraint (prefix) for current step
+    # Build constraint (prefix) for current step
     str prefix = buildPrefix(step, square)
-    // Generate candidates (words matching prefix)
+    # Generate candidates (words matching prefix)
     list[int> candidates = getWordsWithPrefix(prefix)
-    // Try each candidate
+    # Try each candidate
     for idx in candidates:
-        // Make move: add candidate to solution
+        # Make move: add candidate to solution
         square.append(words[idx])
-        // Recurse: explore further
+        # Recurse: explore further
         backtrack(step + 1, square, rtn)
-        // Backtrack: remove candidate to try next
+        # Backtrack: remove candidate to try next
         square.pop()
+
 ```
 
 ### **Key Template Components:**
@@ -418,6 +420,7 @@ Actually, I realize the prefix building might work differently. Let me check the
 str prefix
 for word in square:
     prefix += word[step]
+
 ```
 
 So if square = ["ball"] and step = 1:
@@ -430,6 +433,7 @@ Actually, looking at the main function:
 for word in words:
     list[str> square:word
 backtrack(1, square, rtn)
+
 ```
 
 So step = 1 means we're filling the second row (index 1).

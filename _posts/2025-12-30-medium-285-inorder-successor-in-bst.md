@@ -112,6 +112,7 @@ def inorderSuccessor(self, root, p):
              else :
             node = node.right
     return successor
+
 ```
 
 ### **Algorithm Explanation:**
@@ -224,10 +225,11 @@ The in-order successor can be found in two different locations:
 When searching from root (Case 2):
 ```python
 if node.val > p.val:
-    successor = node      // Candidate found
-    node = node.left     // Try to find smaller candidate
+    successor = node      # Candidate found
+    node = node.left     # Try to find smaller candidate
      else :
-    node = node.right    // Need larger value
+    node = node.right    # Need larger value
+
 ```
 
 - **Go left**: When current node is greater, try to find smaller candidate

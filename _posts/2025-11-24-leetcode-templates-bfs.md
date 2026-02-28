@@ -24,7 +24,7 @@ Minimal, copy-paste C++ for graph and grid BFS, multi-source BFS, shortest path,
 Breadth-First Search explores nodes level by level using a queue.
 
 ```python
-// BFS on graph (adjacency list)
+# BFS on graph (adjacency list)
 def bfs(self, graph, start):
     deque[int> q
     list[bool> visited(len(graph), False)
@@ -33,13 +33,14 @@ def bfs(self, graph, start):
     while not not q:
         node = q[0]
         q.pop()
-        // Process node
+        # Process node
         cout << node << " "
-        // Explore neighbors
+        # Explore neighbors
         for neighbor in graph[node]:
             if not visited[neighbor]:
                 visited[neighbor] = True
                 q.push(neighbor)
+
 ```
 
 ## BFS on Grid
@@ -47,7 +48,7 @@ def bfs(self, graph, start):
 BFS for 2D grid problems (4-directional or 8-directional).
 
 ```python
-// BFS on 2D grid (4-directional)
+# BFS on 2D grid (4-directional)
 def bfsGrid(self, grid, pair<int, start, pair<int, target):
     m = len(grid), n = grid[0].__len__()
     deque[pair<int, int>> q
@@ -67,7 +68,7 @@ while not not q:
     dist[nx][ny] = dist[x][y] + 1
     q.push(:nx, ny)
 return -1
-// Count connected components (Number of Islands)
+# Count connected components (Number of Islands)
 def numIslands(self, grid):
     m = len(grid), n = grid[0].__len__()
     count = 0
@@ -89,6 +90,7 @@ if grid[i][j] == '1':
         grid[nx][ny] = '0'
         q.push(:nx, ny)
 return count
+
 ```
 
 | ID | Title | Link | Solution |
@@ -101,13 +103,13 @@ return count
 Start BFS from multiple sources simultaneously.
 
 ```python
-// Multi-source BFS (e.g., 01 Matrix)
+# Multi-source BFS (e.g., 01 Matrix)
 def updateMatrix(self, mat):
     m = len(mat), n = mat[0].__len__()
     deque[pair<int, int>> q
     list[list[int>> dist(m, list[int>(n, -1))
     list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-// Add all zeros as starting points
+# Add all zeros as starting points
 for (i = 0 i < m i += 1) :
 for (j = 0 j < n j += 1) :
 if mat[i][j] == 0:
@@ -122,6 +124,7 @@ while not not q:
         dist[nx][ny] = dist[x][y] + 1
         q.push(:nx, ny)
 return dist
+
 ```
 
 | ID | Title | Link | Solution |
@@ -136,7 +139,7 @@ return dist
 BFS finds shortest path in unweighted graphs.
 
 ```python
-// Shortest path in unweighted graph
+# Shortest path in unweighted graph
 def shortestPath(self, graph, start, target):
     deque[int> q
     list[int> dist(len(graph), -1)
@@ -152,6 +155,7 @@ def shortestPath(self, graph, start, target):
                 dist[neighbor] = dist[node] + 1
                 q.push(neighbor)
     return -1
+
 ```
 
 ## Level-order Traversal
@@ -159,7 +163,7 @@ def shortestPath(self, graph, start, target):
 BFS for tree level-order traversal.
 
 ```python
-// Binary Tree Level Order Traversal
+# Binary Tree Level Order Traversal
 def levelOrder(self, root):
     list[list[int>> result
     if (not root) return result
@@ -176,7 +180,7 @@ def levelOrder(self, root):
         if node.right) q.push(node.right:
     result.append(level)
 return result
-// Zigzag Level Order Traversal
+# Zigzag Level Order Traversal
 def zigzagLevelOrder(self, root):
     list[list[int>> result
     if (not root) return result
@@ -196,6 +200,7 @@ def zigzagLevelOrder(self, root):
     result.append(level)
     leftToRight = not leftToRight
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -212,11 +217,11 @@ return result
 BFS when state includes more than just position.
 
 ```python
-// BFS with state (e.g., Shortest Path with Obstacle Elimination)
+# BFS with state (e.g., Shortest Path with Obstacle Elimination)
 def shortestPath(self, grid, k):
     m = len(grid), n = grid[0].__len__()
     list[list[list[bool>>> visited(m, list[list[bool>>(n, list[bool>(k + 1, False)))
-    deque[list[int>> q // :x, y, obstacles_eliminated, steps
+    deque[list[int>> q # :x, y, obstacles_eliminated, steps
 q.push(:0, 0, 0, 0)
 visited[0][0][0] = True
 list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
@@ -234,6 +239,7 @@ while not not q:
             visited[nx][ny][newObstacles] = True
             q.push(:nx, ny, newObstacles, steps + 1)
 return -1
+
 ```
 
 | ID | Title | Link | Solution |

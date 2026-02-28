@@ -50,17 +50,18 @@ Both approaches achieve O(log n) time complexity by reducing the problem size by
 
 ```python
 class Solution:
-def myPow(self, x: float, n: int) -> float:
-N = n
-if n < 0:
-x = 1 / x
-N = -N
-return self.myPower(x, N)
-def myPower(self, x: float, n: int) -> float:
-if n == 0:
-return 1.0
-half = self.myPower(x, n // 2)
-return half  half if n % 2 == 0 else half  half  x
+    def myPow(self, x: float, n: int) -> float:
+        N = n
+        if n < 0:
+            x = 1 / x
+            N = -N
+        return self.myPower(x, N)
+
+    def myPower(self, x: float, n: int) -> float:
+        if n == 0:
+            return 1.0
+        half = self.myPower(x, n // 2)
+        return half * half if n % 2 == 0 else half * half * x
 ```
 
 **Time Complexity:** O(log n) - Each recursive call reduces n by half
@@ -70,20 +71,20 @@ return half  half if n % 2 == 0 else half  half  x
 
 ```python
 class Solution:
-def myPow(self, x: float, n: int) -> float:
-if n == 0:
-return 1.0
-if n < 0:
-n = -n
-x = 1 / x
-result = 1
-while n:
-if n % 2 == 1:
-result = x
-n -= 1
-x = x
-n //= 2
-return result
+    def myPow(self, x: float, n: int) -> float:
+        if n == 0:
+            return 1.0
+        if n < 0:
+            n = -n
+            x = 1 / x
+        result = 1
+        while n:
+            if n % 2 == 1:
+                result *= x
+                n -= 1
+            x *= x
+            n //= 2
+        return result
 ```
 
 **Time Complexity:** O(log n) - Each iteration processes one bit of n

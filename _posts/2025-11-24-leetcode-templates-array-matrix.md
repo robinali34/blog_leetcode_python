@@ -31,6 +31,7 @@ def twoSumSorted(self, a, target):
         if (sum == target) return True
         if (sum < target) l += 1 else r -= 1
     return False
+
 ```
 
 ### Three Sum / Four Sum
@@ -57,6 +58,7 @@ def threeSum(self, nums):
              else :
             right -= 1
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -75,7 +77,7 @@ return result
 ### Fixed Size Window
 
 ```python
-// Maximum sum of subarray of size k
+# Maximum sum of subarray of size k
 def maxSumSubarray(self, nums, k):
     sum = 0
     for (i = 0 i < k i += 1) :
@@ -85,12 +87,13 @@ for (i = k i < len(nums) i += 1) :
 sum = sum - nums[i-k] + nums[i]
 maxSum = max(maxSum, sum)
 return maxSum
+
 ```
 
 ### Variable Size Window
 
 ```python
-// Longest subarray with sum <= k
+# Longest subarray with sum <= k
 def longestSubarray(self, nums, k):
     left = 0, sum = 0, maxLen = 0
     for (right = 0 right < len(nums) right += 1) :
@@ -99,6 +102,7 @@ def longestSubarray(self, nums, k):
         sum -= nums[left += 1]
     maxLen = max(maxLen, right - left + 1)
 return maxLen
+
 ```
 
 | ID | Title | Link | Solution |
@@ -121,15 +125,16 @@ def prefixSum(self, a):
     for (i = 0 i < (int)len(a) i += 1) :
     ps[i+1] = ps[i] + a[i]
 return ps
-// Range sum query
+# Range sum query
 def rangeSum(self, prefix, l, r):
     return prefix[r+1] - prefix[l]
+
 ```
 
 ### Difference Array
 
 ```python
-// Range addition
+# Range addition
 def getModifiedArray(self, length, updates):
     list[int> diff(length + 1, 0)
     for update in updates:
@@ -140,6 +145,7 @@ def getModifiedArray(self, length, updates):
     for (i = 1 i < length i += 1) :
     result[i] = result[i-1] + diff[i]
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -166,6 +172,7 @@ def binarySearch(self, nums, target):
         if (nums[mid] < target) left = mid + 1
         else right = mid - 1
     return -1
+
 ```
 
 ### Search in Rotated Sorted Array
@@ -177,18 +184,19 @@ def searchRotated(self, nums, target):
         mid = left + (right - left) / 2
         if (nums[mid] == target) return mid
         if nums[left] <= nums[mid]:
-            // Left half is sorted
+            # Left half is sorted
             if nums[left] <= target  and  target < nums[mid]:
                 right = mid - 1
                  else :
                 left = mid + 1
              else :
-            // Right half is sorted
+            # Right half is sorted
             if nums[mid] < target  and  target <= nums[right]:
                 left = mid + 1
                  else :
                 right = mid - 1
     return -1
+
 ```
 
 | ID | Title | Link | Solution |
@@ -202,16 +210,17 @@ def searchRotated(self, nums, target):
 ### Rotate Matrix
 
 ```python
-// Rotate 90 degrees clockwise
+# Rotate 90 degrees clockwise
 def rotate(self, matrix):
     n = len(matrix)
-    // Transpose
+    # Transpose
     for (i = 0 i < n i += 1) :
     for (j = i j < n j += 1) :
     swap(matrix[i][j], matrix[j][i])
-// Reverse each row
+# Reverse each row
 for (i = 0 i < n i += 1) :
 reverse(matrix[i].begin(), matrix[i].end())
+
 ```
 
 ### Spiral Matrix
@@ -223,25 +232,26 @@ def spiralOrder(self, matrix):
     m = len(matrix), n = matrix[0].__len__()
     top = 0, bottom = m - 1, left = 0, right = n - 1
     while top <= bottom  and  left <= right:
-        // Right
+        # Right
         for (j = left j <= right j += 1) :
         result.append(matrix[top][j])
     top += 1
-    // Down
+    # Down
     for (i = top i <= bottom i += 1) :
     result.append(matrix[i][right])
 right -= 1
-// Left
+# Left
 if top <= bottom:
     for (j = right j >= left j -= 1) :
     result.append(matrix[bottom][j])
 bottom -= 1
-// Up
+# Up
 if left <= right:
     for (i = bottom i >= top i -= 1) :
     result.append(matrix[i][left])
 left += 1
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -268,12 +278,13 @@ def merge(self, intervals):
              else :
             merged[-1][1] = max(merged[-1][1], interval[1])
     return merged
+
 ```
 
 ### Jump Game
 
 ```python
-// Jump Game II - Minimum jumps
+# Jump Game II - Minimum jumps
 def jump(self, nums):
     n = len(nums)
     jumps = 0, curEnd = 0, curFar = 0
@@ -283,6 +294,7 @@ def jump(self, nums):
         jumps += 1
         curEnd = curFar
 return jumps
+
 ```
 
 | ID | Title | Link | Solution |

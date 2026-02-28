@@ -102,6 +102,7 @@ def findPeakElement(self, nums):
              else :
             right = mid
     return left
+
 ```
 
 ### Algorithm Breakdown:

@@ -52,6 +52,7 @@ def calculate(self, s):
         num = 0
         break
 return result + (sign  num)
+
 ```
 
 **Key Points:**
@@ -97,6 +98,7 @@ while not not stk:
     result += stk.top()
     stk.pop()
 return result
+
 ```
 
 **Key Points:**
@@ -124,6 +126,7 @@ def calculate(self, s):
         sign = c
         curr = 0
 return result + last
+
 ```
 
 | ID | Title | Link | Solution |
@@ -170,6 +173,7 @@ def parseNum(self, s, idx):
 def calculate(self, s):
     idx = 0
     return parseExpr(s, idx)
+
 ```
 
 **Key Points:**
@@ -189,26 +193,30 @@ num = 0
 for c in s:
     if isdigit(c):
         num = num  10 + (c - '0')
+
 ```
 
 ### 2. Sign Tracking
 ```python
-sign = 1  // 1 for positive, -1 for negative
-// Apply: result += sign  num
+sign = 1  # 1 for positive, -1 for negative
+# Apply: result += sign  num
+
+
 ```
 
 ### 3. Operator Precedence
 ```python
-// High precedence: evaluate immediately
+# High precedence: evaluate immediately
 if op == '*'  or  op == '/':
-    // Immediate evaluation
+    # Immediate evaluation
      else :
-    // Defer to stack
+    # Defer to stack
+
 ```
 
 ### 4. Parentheses Handling
 ```python
-// Stack approach
+# Stack approach
 if c == '(':
     stk.push(result)
     stk.push(sign)
@@ -218,9 +226,10 @@ if c == '(':
     result += sign  num
     result = stk.top() stk.pop()
     result += stk.top() stk.pop()
-// Recursive approach
+# Recursive approach
 if c == '(':
     num = parseExpr(s, idx += 1)
+
 ```
 
 ## Comparison Table

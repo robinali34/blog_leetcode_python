@@ -98,6 +98,7 @@ def maxSubArrayLen(self, nums, k):
     if sum == k:
         max_len = max(max_len, j - i + 1)
 return max_len
+
 ```
 
 ### Algorithm Breakdown:
@@ -136,6 +137,7 @@ def maxSubArrayLen(self, nums, k):
     if not prefixSum in cache:
         cache[prefixSum] = i
 return maxLen
+
 ```
 
 ### Algorithm Breakdown:

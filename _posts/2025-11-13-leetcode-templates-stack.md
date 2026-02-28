@@ -25,7 +25,7 @@ Use stack's LIFO property to match opening and closing brackets in reverse order
 ```python
 def isValid(self, s):
     list[char> st
-    dict[char, char> map = :
+    dict[char, char> map = {}
     :'', ':', :']', '[', :')', '('
 for c in s:
     if c == '{'  or  c == '['  or  c == '(':
@@ -34,6 +34,7 @@ for c in s:
         if(not st  or  st.top() != map[c]) return False
         st.pop()
 return not st
+
 ```
 
 | ID | Title | Link | Solution |
@@ -68,6 +69,7 @@ def calculate(self, s):
             result += stk.top() stk.pop()
             num = 0
     return result + sign  num
+
 ```
 
 | ID | Title | Link | Solution |
@@ -103,6 +105,7 @@ def decodeString(self, s):
              else :
             curr += c
     return curr
+
 ```
 
 | ID | Title | Link | Solution |
@@ -126,6 +129,7 @@ def nextGreater(self, nums):
         st.pop()
     st.push(i)
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -143,12 +147,12 @@ return result
 Use stack to save and restore state when processing nested or hierarchical structures.
 
 ```python
-// Example: Tracking function call stack
+# Example: Tracking function call stack
 def processLogs(self, logs):
-    list[pair<int, int>> st  // :function_id, start_time
+    list[pair<int, int>> st  # :function_id, start_time
 list[int> result(n, 0)
 for log in logs:
-    // Parse log entry
+    # Parse log entry
     if isStart:
         st.push(:id, time)
          else :
@@ -156,9 +160,10 @@ for log in logs:
         st.pop()
         duration = time - startTime + 1
         result[funcId] += duration
-        // Subtract from parent if exists
+        # Subtract from parent if exists
         if not not st:
             result[st.top().first] -= duration
+
 ```
 
 | ID | Title | Link | Solution |
@@ -180,6 +185,7 @@ def push(self, val):
 void pop() : stk.pop() minStk.pop()
 top() : return stk.top()
 getMin() : return minStk.top() 
+
 ```
 
 | ID | Title | Link | Solution |

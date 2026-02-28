@@ -121,6 +121,7 @@ def maximumUnits(self, boxTypes, truckSize):
         maximumUnits += cnt  boxType[1]
         remainSize -= cnt
     return maximumUnits
+
 ```
 
 ### **Algorithm Explanation:**

@@ -150,6 +150,7 @@ def findRedundantConnection(self, edges):
         if not dsu.unite(edge[0] - 1, edge[1] - 1):
             return edge
     return :
+
 ```
 
 ### **Algorithm Explanation:**
@@ -214,7 +215,7 @@ def dfs(self, src, visited, list[list[pair<int, adjList, parent):
         if not visited[adj]:
             parent[adj] = src
             dfs(adj, visited, adjList, parent)
-             else if(adj != parent[src]  and  cycleStart == -1) :
+             else if(adj != parent[src] * and  cycleStart == -1) :
             cycleStart = adj
             parent[adj] = src
 def findRedundantConnection(self, edges):
@@ -235,10 +236,11 @@ def findRedundantConnection(self, edges):
     node = parent[node]
      while node != cycleStart:
     for(i = len(edges) - 1 i >= 0 i -= 1) :
-    if(cycleNode[edges[i][0] - 1]  and
+    if(cycleNode[edges[i][0] - 1] * and
     cycleNode[edges[i][1] - 1]) :
     return edges[i]
 return :
+
 ```
 
 ### **Algorithm Explanation:**
@@ -305,17 +307,17 @@ parent.resize(n)
 rank.resize(n, 0)
 for(i = 0 i < n i += 1) :
 parent[i] = i
-// Find with path compression
+# Find with path compression
 def find(self, x):
     if parent[x] != x:
-        parent[x] = find(parent[x]) // Path compression
+        parent[x] = find(parent[x]) # Path compression
     return parent[x]
-// Union by rank
+# Union by rank
 def unite(self, x, y):
     x = find(x)
     y = find(y)
-    if(x == y) return False // Already in same set
-    // Union by rank: attach smaller tree to larger tree
+    if(x == y) return False # Already in same set
+    # Union by rank: attach smaller tree to larger tree
     if rank[x] < rank[y]:
         parent[x] = y
          else if(rank[x] > rank[y]) :
@@ -324,9 +326,10 @@ def unite(self, x, y):
         parent[y] = x
         rank[x]++
     return True
-// Check if two nodes are connected
+# Check if two nodes are connected
 def connected(self, x, y):
     return find(x) == find(y)
+
 ```
 
 ### **Key Template Components:**

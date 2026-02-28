@@ -125,11 +125,12 @@ def countPalindromesAroundCenter(self, s, low, high):
 def countSubstrings(self, s):
     count = 0
     for (i = 0 i < (int)len(s) i += 1) :
-    // Count odd-length palindromes (center at i)
+    # Count odd-length palindromes (center at i)
     count += countPalindromesAroundCenter(s, i, i)
-    // Count even-length palindromes (center between i and i+1)
+    # Count even-length palindromes (center between i and i+1)
     count += countPalindromesAroundCenter(s, i, i + 1)
 return count
+
 ```
 
 ## How the Algorithm Works
@@ -211,6 +212,7 @@ def countPalindromesAroundCenter(self, s, low, high):
         high += 1
         count += 1
     return count
+
 ```
 
 **How it works:**
@@ -230,9 +232,10 @@ def countPalindromesAroundCenter(self, s, low, high):
 def countSubstrings(self, s):
     count = 0
     for (i = 0 i < (int)len(s) i += 1) :
-    count += countPalindromesAroundCenter(s, i, i)      // Odd-length
-    count += countPalindromesAroundCenter(s, i, i + 1) // Even-length
+    count += countPalindromesAroundCenter(s, i, i)      # Odd-length
+    count += countPalindromesAroundCenter(s, i, i + 1) # Even-length
 return count
+
 ```
 
 **How it works:**
@@ -266,23 +269,24 @@ def countSubstrings(self, s):
     n = len(s)
     list[list[bool>> dp(n, list[bool>(n, False))
     count = 0
-    // Every single character is a palindrome
+    # Every single character is a palindrome
     for (i = 0 i < n i += 1) :
     dp[i][i] = True
     count += 1
-// Check for palindromes of length 2
+# Check for palindromes of length 2
 for (i = 0 i < n - 1 i += 1) :
 if s[i] == s[i + 1]:
     dp[i][i + 1] = True
     count += 1
-// Check for palindromes of length >= 3
+# Check for palindromes of length >= 3
 for (len = 3 len <= n len += 1) :
 for (i = 0 i <= n - len i += 1) :
 j = i + len - 1
-if s[i] == s[j]  and  dp[i + 1][j - 1]:
+if s[i] == s[j] * and  dp[i + 1][j - 1]:
     dp[i][j] = True
     count += 1
 return count
+
 ```
 
 **Pros:**

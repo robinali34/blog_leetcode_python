@@ -48,7 +48,7 @@ class Solution:
 def nextGreaterElements(self, nums: list[int]) -> list[int]:
 n = len(nums)
 st = []
-result = [-1]  n
+result = [-1] * n
 for i in range(2  n - 1, -1, -1):
 idx = i % n
 while st and st[-1] <= nums[idx]:
@@ -57,6 +57,7 @@ if st:
 result[idx] = st[-1]
 st.append(nums[idx])
 return result
+
 ```
 
 ## How the Algorithm Works
@@ -133,6 +134,7 @@ Wait, let me recalculate this more carefully...
 n = numslen()
 list[int> st
 list[int] rtn(n, -1)
+
 ```
 
 **Purpose:** Set up result array and stack for values.
@@ -142,6 +144,7 @@ list[int] rtn(n, -1)
 for i in range(2  n - 1, -1, -1):
 idx = i % n
 # Process nums[idx]
+
 ```
 
 **Purpose:** Handle circular nature by processing array twice (note: `2 * n + 1` ensures we process twice).
@@ -150,6 +153,7 @@ idx = i % n
 ```python
 while not stnot   st.top() <= nums[idx]:
     st.pop()
+
 ```
 
 **Purpose:** Remove values that are smaller or equal to maintain decreasing order.
@@ -158,6 +162,7 @@ while not stnot   st.top() <= nums[idx]:
 ```python
 if not stnot ) rtn[idx] = st.top(:
 st.push(nums[idx])
+
 ```
 
 **Purpose:** Set result and push current value to stack.
@@ -167,16 +172,18 @@ st.push(nums[idx])
 ### Approach 1: Brute Force
 ```python
 class Solution:
-def nextGreaterElements(self, nums: list[int]) -> list[int]:
-n = len(nums)
-res = [-1]  n
-for i in range(n):
-for j in range(1, n):
-idx = (i + j) % n
-if nums[idx] > nums[i]:
-res[i] = nums[idx]
-break
-return res
+    def nextGreaterElements(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        res = [-1] * n
+        for i in range(n):
+            for j in range(1, n):
+                idx = (i + j) % n
+                if nums[idx] > nums[i]:
+                    res[i] = nums[idx]
+                    break
+                    return res
+
+
 ```
 
 **Time Complexity:** O(n²)  
@@ -185,22 +192,24 @@ return res
 ### Approach 2: Two Pass with Stack
 ```python
 class Solution:
-def nextGreaterElements(self, nums: list[int]) -> list[int]:
-n = len(nums)
-res = [-1]  n
-st = []
-# First pass
-for i in range(n):
-while st and nums[st[-1]] < nums[i]:
-res[st[-1]] = nums[i]
-st.pop()
-st.append(i)
-# Second pass for circular
-for i in range(n):
-while st and nums[st[-1]] < nums[i]:
-res[st[-1]] = nums[i]
-st.pop()
-return res
+    def nextGreaterElements(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        res = [-1] * n
+        st = []
+        # First pass
+        for i in range(n):
+            while st and nums[st[-1]] < nums[i]:
+                res[st[-1]] = nums[i] * st.pop()
+                st.append(i)
+                # Second pass for circular
+                for i in range(n):
+                    while st and nums[st[-1]] < nums[i]:
+                        res[st[-1]] = nums[i] * st.pop()
+                        return res
+
+
+
+
 ```
 
 **Time Complexity:** O(n)  

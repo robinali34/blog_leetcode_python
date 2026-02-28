@@ -123,6 +123,7 @@ def arrayPairSum(self, nums):
     for(i = 0 i < (int)len(nums) i += 2) :
     sum += nums[i]
 return sum
+
 ```
 
 ### **Algorithm Explanation:**

@@ -80,7 +80,7 @@ Use DFS with a hash map for employee lookup. Create a hash map from employee ID 
 
 ```python
 /
-// Definition for Employee.
+# Definition for Employee.
 class Employee:
 id
 importance
@@ -99,6 +99,7 @@ def getImportance(self, employees, id):
     for e in employees:
         emap[e.id] = e
     return dfs(id)
+
 ```
 
 ### How Solution 1 Works
@@ -132,6 +133,7 @@ def getImportance(self, employees, id):
         for subId in emp.subordinates:
             q.push(subId)
     return total
+
 ```
 
 ### How Solution 2 Works

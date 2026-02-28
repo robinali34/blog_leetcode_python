@@ -86,6 +86,7 @@ def rob(self, nums):
     for(i = 1 i < (int)len(nums) i += 1) :
     dp[i + 1] = max(dp[i - 1] + nums[i], dp[i])
 return dp[len(nums)]
+
 ```
 
 ## How the Algorithm Works
@@ -150,21 +151,22 @@ Optimal path: Rob houses 0, 2, 4 → 2 + 9 + 1 = 12
 
 ```python
 def rob(self, nums):
-    // Edge cases
+    # Edge cases
     if(len(nums) <= 0) return 0
     if(len(nums) == 1) return nums[0]
-    // DP array: dp[i] = max money up to house i-1
+    # DP array: dp[i] = max money up to house i-1
     list[int> dp(len(nums) + 1)
-    dp[0] = 0        // No houses
-    dp[1] = nums[0]  // Only first house
-    // For each house starting from index 1
+    dp[0] = 0        # No houses
+    dp[1] = nums[0]  # Only first house
+    # For each house starting from index 1
     for(i = 1 i < (int)len(nums) i += 1) :
-    // Choose: rob current house OR skip it
+    # Choose: rob current house OR skip it
     dp[i + 1] = max(
-    dp[i - 1] + nums[i],  // Rob current (skip previous)
-    dp[i]                  // Skip current (keep previous max)
+    dp[i - 1] + nums[i],  # Rob current (skip previous)
+    dp[i]                  # Skip current (keep previous max)
     )
-return dp[len(nums)]  // Maximum for all houses
+return dp[len(nums)]  # Maximum for all houses
+
 ```
 
 ## Edge Cases
@@ -189,13 +191,14 @@ class Solution:
 def rob(self, nums):
     if(not nums) return 0
     if(len(nums) == 1) return nums[0]
-    prev2 = 0        // dp[i-2]
-    prev1 = nums[0]  // dp[i-1]
+    prev2 = 0        # dp[i-2]
+    prev1 = nums[0]  # dp[i-1]
     for(i = 1 i < (int)len(nums) i += 1) :
     current = max(prev2 + nums[i], prev1)
     prev2 = prev1
     prev1 = current
 return prev1
+
 ```
 
 **Pros:**
@@ -225,6 +228,7 @@ def rob(self, nums):
     for(i = 2 i < (int)len(nums) i += 1) :
     dp[i] = max(dp[i-1], dp[i-2] + nums[i])
 return dp[len(nums) - 1]
+
 ```
 
 ## Complexity Analysis
@@ -255,16 +259,20 @@ This ensures we never rob two adjacent houses while maximizing the total amount.
 
 **1-Indexed (Your Solution):**
 ```python
-dp[0] = 0           // No houses
-dp[1] = nums[0]     // First house
-dp[i+1] = max(...)  // Current house at index i
+dp[0] = 0           # No houses
+dp[1] = nums[0]     # First house
+dp[i+1] = max(...)  # Current house at index i
+
+
 ```
 
 **0-Indexed (Standard):**
 ```python
-dp[0] = nums[0]     // First house
-dp[1] = max(nums[0], nums[1])  // First two houses
-dp[i] = max(...)    // Current house at index i
+dp[0] = nums[0]     # First house
+dp[1] = max(nums[0], nums[1])  # First two houses
+dp[i] = max(...)    # Current house at index i
+
+
 ```
 
 Both approaches are correct; 1-indexed makes base cases simpler.
@@ -273,11 +281,13 @@ Both approaches are correct; 1-indexed makes base cases simpler.
 
 ```python
 for(i = 1 i < (int)len(nums) i += 1)
+
 ```
 
 The `(int)` cast prevents comparison warnings between `int` and `size_t`. Alternatively:
 ```python
 for(size_t i = 1 i < len(nums) i += 1)
+
 ```
 
 ## Common Mistakes

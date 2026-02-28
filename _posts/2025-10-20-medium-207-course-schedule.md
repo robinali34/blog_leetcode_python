@@ -75,25 +75,27 @@ This problem is asking whether we can complete all courses given their prerequis
 ```python
 from collections import deque
 class Solution:
-def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -> bool:
-indegree = [0]  numCourses
-adj = [[] for _ in range(numCourses)]
-for p in prerequisites:
-adj[p[1]].append(p[0])
-indegree[p[0]] += 1
-q = deque()
-for i in range(numCourses):
-if indegree[i] == 0:
-q.append(i)
-count = 0
-while q:
-course = q.popleft()
-count += 1
-for next_course in adj[course]:
-indegree[next_course] -= 1
-if indegree[next_course] == 0:
-q.append(next_course)
-return count == numCourses
+    def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -> bool:
+        indegree = [0] * numCourses
+        adj = [[] for _ in range(numCourses)]
+        for p in prerequisites:
+            adj[p[1]].append(p[0])
+            indegree[p[0]] += 1
+            q = deque()
+            for i in range(numCourses):
+                if indegree[i] == 0:
+                    q.append(i)
+                    count = 0
+                    while q:
+                        course = q.popleft()
+                        count += 1
+                        for next_course in adj[course]:
+                            indegree[next_course] -= 1
+                            if indegree[next_course] == 0:
+                                q.append(next_course)
+                                return count == numCourses
+
+
 ```
 
 ### **Solution 2: DFS Cycle Detection**
@@ -105,7 +107,7 @@ adj = [[] for _ in range(numCourses)]
 for p in prerequisites:
 adj[p[1]].append(p[0])
 # 0: unvisited, 1: visiting, 2: visited
-state = [0]  numCourses
+state = [0] * numCourses
 for i in range(numCourses):
 if self.hasCycle(i, adj, state):
 return False
@@ -121,6 +123,7 @@ if self.hasCycle(neighbor, adj, state):
 return True
 state[node] = 2  # mark as visited
 return False
+
 ```
 
 ### **Algorithm Explanation:**
@@ -208,32 +211,34 @@ DFS Cycle Detection:
 ### **DFS Iterative (Stack)**
 ```python
 class Solution:
-def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -> bool:
-adj = [[] for _ in range(numCourses)]
-for p in prerequisites:
-adj[p[1]].append(p[0])
-state = [0]  numCourses  # 0: unvisited, 1: visiting, 2: visited
-stk = []
-for i in range(numCourses):
-if state[i] == 0:
-stk.append(i)
-while stk:
-node = stk[-1]
-if state[node] == 2:
-stk.pop()
-continue
-if state[node] == 1:
-return False  # cycle detected
-state[node] = 1  # visiting
-for neighbor in adj[node]:
-if state[neighbor] == 0:
-stk.append(neighbor)
-elif state[neighbor] == 1:
-return False  # cycle detected
-if stk and stk[-1] == node:
-state[node] = 2  # visited
-stk.pop()
-return True
+    def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -> bool:
+        adj = [[] for _ in range(numCourses)]
+        for p in prerequisites:
+            adj[p[1]].append(p[0])
+            state = [0] * numCourses  # 0: unvisited, 1: visiting, 2: visited
+            stk = []
+            for i in range(numCourses):
+                if state[i] == 0:
+                    stk.append(i)
+                    while stk:
+                        node = stk[-1]
+                        if state[node] == 2:
+                            stk.pop()
+                            continue
+                            if state[node] == 1:
+                                return False  # cycle detected
+                                state[node] = 1  # visiting
+                                for neighbor in adj[node]:
+                                    if state[neighbor] == 0:
+                                        stk.append(neighbor)
+                                    elif state[neighbor] == 1:
+                                        return False  # cycle detected
+                                        if stk and stk[-1] == node:
+                                            state[node] = 2  # visited
+                                            stk.pop()
+                                            return True
+
+
 ```
 
 ## Related Problems

@@ -71,7 +71,7 @@ Convert `0` to `-1` and `1` to `+1`, then use prefix sum. When we see a prefix s
 class Solution:
 def findMaxLength(self, nums):
     dict[int, int> map
-    map[0] = -1  // Base case: prefix sum 0 at index -1
+    map[0] = -1  # Base case: prefix sum 0 at index -1
     maxLen = 0, count = 0
     for(i = 0 i < (int)len(nums) i += 1) :
     (1 if             count = count + (nums[i] == 1  else -1))
@@ -80,6 +80,7 @@ def findMaxLength(self, nums):
          else :
         map[count] = i
 return maxLen
+
 ```
 
 ## How the Algorithm Works
@@ -151,8 +152,9 @@ Subarray [0,5]: [0,1,0,0,1,1]
 ### 1. Initialize Hash Map
 ```python
 dict[int, int> map
-map[0] = -1  // Base case
+map[0] = -1  # Base case
 maxLen = 0, count = 0
+
 ```
 - **`map[0] = -1`**: Represents prefix sum 0 before the array starts
 - This allows us to handle subarrays starting at index 0
@@ -161,6 +163,7 @@ maxLen = 0, count = 0
 ### 2. Transform and Calculate Prefix Sum
 ```python
 (1 if count = count + (nums[i] == 1  else -1))
+
 ```
 - **Convert**: `0` → `-1`, `1` → `+1`
 - **Accumulate**: Add to running count
@@ -169,6 +172,10 @@ maxLen = 0, count = 0
 ```python
 if count in map:
     maxLen = max(maxLen, i - map[count])
+
+
+
+
 ```
 - **If prefix sum seen before**: Subarray from `map[count] + 1` to `i` has sum 0
 - **Length**: `i - map[count]` (we don't add 1 because `map[count]` is the index before the subarray starts)
@@ -177,6 +184,7 @@ if count in map:
 ```python
 else:
     map[count] = i
+
 ```
 - **Store only first occurrence**: To maximize subarray length
 - **Later occurrences**: Would give shorter subarrays
@@ -240,6 +248,7 @@ def findMaxLength(self, nums):
     if zeros == ones:
         maxLen = max(maxLen, j - i + 1)
 return maxLen
+
 ```
 
 **Time Complexity:** O(n²)  
@@ -252,17 +261,18 @@ Since prefix sums can only range from `-n` to `n`, we can use an array:
 ```python
 def findMaxLength(self, nums):
     n = len(nums)
-    list[int> map(2  n + 1, -2)  // Offset by n
-    map[n] = -1  // map[0] = -1 with offset
+    list[int> map(2  n + 1, -2)  # Offset by n
+    map[n] = -1  # map[0] = -1 with offset
     maxLen = 0, count = 0
     for(i = 0 i < n i += 1) :
     (1 if         count += (nums[i] == 1  else -1))
-    idx = count + n  // Offset to positive index
+    idx = count + n  # Offset to positive index
     if map[idx] != -2:
         maxLen = max(maxLen, i - map[idx])
          else :
         map[idx] = i
 return maxLen
+
 ```
 
 **Time Complexity:** O(n)  
@@ -408,10 +418,12 @@ For very large arrays, consider using array instead of hash map if prefix sum ra
 
 ### Use `contains()` vs `find()`
 ```python
-// Modern Python20 (your code)
+# Modern Python20 (your code)
 if(count in map) : ...
-// Alternative (Python17 and earlier)
-if(map.find(count) != map.end()) : ... 
+# Alternative (Python17 and earlier)
+if(map.find(count) != map.end()) : ...
+
+
 ```
 
 Both are O(1) average case, but `contains()` is more readable.

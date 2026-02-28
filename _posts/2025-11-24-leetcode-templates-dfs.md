@@ -23,23 +23,24 @@ Minimal, copy-paste C++ for graph DFS, grid DFS, tree DFS, memoization, and iter
 Depth-First Search explores as far as possible before backtracking.
 
 ```python
-// DFS on graph (adjacency list)
+# DFS on graph (adjacency list)
 def dfs(self, graph, node, visited):
     visited[node] = True
-    // Process node
+    # Process node
     cout << node << " "
-    // Explore neighbors
+    # Explore neighbors
     for neighbor in graph[node]:
         if not visited[neighbor]:
             dfs(graph, neighbor, visited)
-// DFS with return value
+# DFS with return value
 def dfs(self, graph, node, target, visited):
     if (node == target) return True
     visited[node] = True
     for neighbor in graph[node]:
-        if not visited[neighbor]  and  dfs(graph, neighbor, target, visited):
+        if not visited[neighbor] * and  dfs(graph, neighbor, target, visited):
             return True
     return False
+
 ```
 
 ## DFS on Grid
@@ -47,18 +48,18 @@ def dfs(self, graph, node, target, visited):
 DFS for 2D grid problems (connected components, paths).
 
 ```python
-// DFS on 2D grid (4-directional)
+# DFS on 2D grid (4-directional)
 def dfsGrid(self, grid, i, j):
     m = len(grid), n = grid[0].__len__()
     if i < 0  or  i >= m  or  j < 0  or  j >= n  or  grid[i][j] != '1':
         return
-    grid[i][j] = '0' // Mark as visited
-    // Explore 4 directions
+    grid[i][j] = '0' # Mark as visited
+    # Explore 4 directions
     dfsGrid(grid, i + 1, j)
     dfsGrid(grid, i - 1, j)
     dfsGrid(grid, i, j + 1)
     dfsGrid(grid, i, j - 1)
-// Number of Islands using DFS
+# Number of Islands using DFS
 def numIslands(self, grid):
     m = len(grid), n = grid[0].__len__()
     count = 0
@@ -68,19 +69,20 @@ def numIslands(self, grid):
         count += 1
         dfsGrid(grid, i, j)
 return count
-// Word Search
+# Word Search
 def dfsWordSearch(self, board, i, j, word, idx):
     if (idx == len(word)) return True
     if (i < 0  or  i >= len(board)  or  j < 0  or  j >= board[0].__len__()) return False
     if (board[i][j] != word[idx]) return False
     char temp = board[i][j]
-    board[i][j] = '#' // Mark as visited
+    board[i][j] = '#' # Mark as visited
     list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
 for ([dx, dy] : dirs) :
 if dfsWordSearch(board, i + dx, j + dy, word, idx + 1):
     return True
-board[i][j] = temp // Backtrack
+board[i][j] = temp # Backtrack
 return False
+
 ```
 
 | ID | Title | Link | Solution |
@@ -98,37 +100,38 @@ return False
 DFS for tree problems (preorder, inorder, postorder).
 
 ```python
-// Preorder DFS
+# Preorder DFS
 def preorder(self, root, result):
     if (not root) return
     result.append(root.val)
     preorder(root.left, result)
     preorder(root.right, result)
-// Inorder DFS
+# Inorder DFS
 def inorder(self, root, result):
     if (not root) return
     inorder(root.left, result)
     result.append(root.val)
     inorder(root.right, result)
-// Postorder DFS
+# Postorder DFS
 def postorder(self, root, result):
     if (not root) return
     postorder(root.left, result)
     postorder(root.right, result)
     result.append(root.val)
-// Path Sum
+# Path Sum
 def hasPathSum(self, root, targetSum):
     if (not root) return False
     if not root.left  and  not root.right:
         return root.val == targetSum
     return hasPathSum(root.left, targetSum - root.val)  or
     hasPathSum(root.right, targetSum - root.val)
-// Sum Root to Leaf Numbers
+# Sum Root to Leaf Numbers
 def sumNumbers(self, root, 0):
     if (not root) return 0
     sum = sum  10 + root.val
     if (not root.left  and  not root.right) return sum
     return sumNumbers(root.left, sum) + sumNumbers(root.right, sum)
+
 ```
 
 | ID | Title | Link | Solution |
@@ -149,7 +152,7 @@ def sumNumbers(self, root, 0):
 DFS with caching to avoid recomputation.
 
 ```python
-// DFS with memoization (e.g., Longest Increasing Path)
+# DFS with memoization (e.g., Longest Increasing Path)
 dfsWithMemo(list[list[int>> matrix, i, j,
 list[list[int>> memo, prev) :
 m = len(matrix), n = matrix[0].__len__()
@@ -164,6 +167,7 @@ result = max(result, 1 + dfsWithMemo(matrix, i + dx, j + dy,
 memo, matrix[i][j]))
 memo[i][j] = result
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -175,7 +179,7 @@ return result
 DFS using stack instead of recursion.
 
 ```python
-// Iterative DFS on graph
+# Iterative DFS on graph
 def dfsIterative(self, graph, start):
     list[int> st
     list[bool> visited(len(graph), False)
@@ -185,13 +189,13 @@ def dfsIterative(self, graph, start):
         st.pop()
         if (visited[node]) continue
         visited[node] = True
-        // Process node
+        # Process node
         cout << node << " "
-        // Push neighbors in reverse order to maintain order
+        # Push neighbors in reverse order to maintain order
         for (i = graph[node].__len__() - 1 i >= 0 i -= 1) :
         if not visited[graph[node][i]]:
             st.push(graph[node][i])
-// Iterative DFS on tree
+# Iterative DFS on tree
 def preorderIterative(self, root):
     list[int> result
     if (not root) return result
@@ -204,6 +208,7 @@ def preorderIterative(self, root):
         if node.right) st.push(node.right:
         if node.left) st.push(node.left:
     return result
+
 ```
 
 | ID | Title | Link | Solution |

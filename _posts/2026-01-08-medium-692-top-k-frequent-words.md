@@ -131,6 +131,7 @@ sort(rtn.begin(), rtn.end(), [](str a, str b):
 )
 rtn.erase(rtn.begin() + k, rtn.end())
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -206,6 +207,10 @@ Instead of `erase`, we could use `resize(k)` which is more efficient:
 ```python
 rtn.resize(k)
 return rtn
+
+
+
+
 ```
 
 ## Alternative Approaches
@@ -221,7 +226,7 @@ def topKFrequent(self, words, k):
     for word in words:
         cnt[word]++
     cmp = [](str a, str b) :
-    (a > b if             return cnt[a] == cnt[b]  else cnt[a] < cnt[b])
+    (a > b if             return cnt[a] == cnt[b] * else cnt[a] < cnt[b])
 heapq[str, list[str>, decltype(cmp)> pq(cmp)
 for([word, freq]: cnt) :
 pq.push(word)
@@ -232,6 +237,7 @@ while not not pq:
     pq.pop()
 rtn.reverse()
 return rtn
+
 ```
 
 **Time Complexity:** O(n + m log k) where m is unique words  
@@ -260,6 +266,7 @@ for word in buckets[i]:
     rtn.append(word)
     if(len(rtn) == k) break
 return rtn
+
 ```
 
 **Time Complexity:** O(n + m log m) in worst case  

@@ -94,6 +94,7 @@ def removeElement(self, nums, val):
         nums[last] = nums[curr]
         last += 1
 return last
+
 ```
 
 ### Algorithm Explanation:
@@ -205,6 +206,7 @@ def removeElement(self, nums, val):
              else :
             left += 1
     return right
+
 ```
 
 **Time Complexity:** O(n)  
@@ -222,9 +224,13 @@ def removeElement(self, nums, val):
 
 ```python
 class Solution:
-def removeElement(self, nums, val):
-    it = remove(nums.begin(), nums.end(), val)
-    return distance(nums.begin(), it)
+    def removeElement(self, nums, val):
+        it = remove(nums.begin(), nums.end(), val)
+        return distance(nums.begin(), it)
+
+
+
+
 ```
 
 **Time Complexity:** O(n)  

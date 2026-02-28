@@ -219,6 +219,7 @@ def repeatedStringMatch(self, a, b):
     if an - idx >= bn:
         return 1
     return (bn + idx - an - 1) / an + 2
+
 ```
 
 ### **Algorithm Explanation:**
@@ -296,18 +297,18 @@ def rabinKarpSearch(self, text, pattern, circular):
     n = len(text), m = len(pattern)
     if(m == 0) return 0
     if(n < m) return -1
-    // Compute pattern hash
+    # Compute pattern hash
     long long patternHash = computeHash(pattern, 0, m)
-    // Compute power for rolling hash
+    # Compute power for rolling hash
     long long power = 1
     for(i = 0 i < m - 1 i += 1) :
     power = (power  BASE) % MOD
-// Compute initial window hash
+# Compute initial window hash
 long long textHash = computeHash(text, 0, m)
-// Check first window
+# Check first window
 if textHash == patternHash  and  verifyMatch(text, 0, pattern):
     return 0
-// Rolling hash
+# Rolling hash
 (n + m - 1 if         maxIterations = circular  else n - m + 1)
 for(i = 1 i < maxIterations i += 1) :
 removeIdx = (i - 1) % n
@@ -320,12 +321,13 @@ if textHash == patternHash:
 return -1
 def repeatedStringMatch(self, a, b):
     an = len(a), bn = len(b)
-    // Try circular search
+    # Try circular search
     idx = rabinKarpSearch(a, b, True)
     if(idx == -1) return -1
     if an - idx >= bn:
         return 1
     return (bn + idx - an - 1) / an + 2
+
 ```
 
 ### **Algorithm Explanation:**
@@ -355,35 +357,36 @@ Here's the general template for KMP algorithm:
 
 ```python
 class KMP:
-// Build prefix function (LPS array)
+# Build prefix function (LPS array)
 def buildPrefixFunction(self, pattern):
     m = len(pattern)
     list[int> pi(m, 0)
     for(i = 1, j = 0 i < m i += 1) :
-    // Mismatch: backtrack using prefix function
+    # Mismatch: backtrack using prefix function
     while j > 0  and  pattern[i] != pattern[j]:
         j = pi[j - 1]
-    // Match: extend prefix
+    # Match: extend prefix
     if pattern[i] == pattern[j]:
         j += 1
     pi[i] = j
 return pi
-// Search for pattern in text
+# Search for pattern in text
 def search(self, text, pattern):
     n = len(text), m = len(pattern)
     if(m == 0) return 0
     list[int> pi = buildPrefixFunction(pattern)
     for(i = 0, j = 0 i < n i += 1) :
-    // Mismatch: use prefix function to skip
+    # Mismatch: use prefix function to skip
     while j > 0  and  text[i] != pattern[j]:
         j = pi[j - 1]
-    // Match: advance both pointers
+    # Match: advance both pointers
     if text[i] == pattern[j]:
         j += 1
-    // Pattern found
+    # Pattern found
     if j == m:
-        return i - m + 1 // Return starting index
-return -1 // Not found
+        return i - m + 1 # Return starting index
+return -1 # Not found
+
 ```
 
 ### **Key Template Components:**
@@ -422,23 +425,24 @@ def search(self, text, pattern):
     n = len(text), m = len(pattern)
     if(m == 0) return 0
     if(n < m) return -1
-    // Precompute pattern hash
+    # Precompute pattern hash
     long long patternHash = computeHash(pattern, 0, m)
-    // Precompute BASE^(m-1) for rolling hash
+    # Precompute BASE^(m-1) for rolling hash
     long long power = 1
     for(i = 0 i < m - 1 i += 1) :
     power = (power  BASE) % MOD
-// Initial window hash
+# Initial window hash
 long long textHash = computeHash(text, 0, m)
-// Check first window
+# Check first window
 if textHash == patternHash:
     if(text.substr(0, m) == pattern) return 0
-// Rolling hash: slide window
+# Rolling hash: slide window
 for(i = 1 i <= n - m i += 1) :
 textHash = updateHash(textHash, text[i-1], text[i+m-1], power)
 if textHash == patternHash:
     if(text.substr(i, m) == pattern) return i
 return -1
+
 ```
 
 ### **Key Template Components:**

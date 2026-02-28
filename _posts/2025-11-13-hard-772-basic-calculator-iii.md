@@ -120,6 +120,7 @@ def parseNum(self, s, idx):
 def calculate(self, s):
     idx = 0
     return parseExpr(s, idx)
+
 ```
 
 ## Solution 2: Optimized Iterative Approach
@@ -147,7 +148,7 @@ def calculate(self, s):
             num = 0
             op = '+'
              else :
-            // Apply current operation
+            # Apply current operation
             if op == '+':
                 nums.push(num)
                  else if(op == '-') :
@@ -161,12 +162,12 @@ def calculate(self, s):
                 nums.pop()
                 nums.push(top / num)
             if c == ')':
-                // Evaluate expression inside parentheses
+                # Evaluate expression inside parentheses
                 sum = 0
                 while not not ops  and  ops.top() != '(':
                     sum += nums.top()
                     nums.pop()
-                ops.pop() // Remove '('
+                ops.pop() # Remove '('
                 num = sum
                 ('+' if                         op = not ops  else ops.top())
                  else :
@@ -177,6 +178,7 @@ while not not nums:
     result += nums.top()
     nums.pop()
 return result
+
 ```
 
 ## Solution 3: Simplified Optimized Approach
@@ -197,20 +199,20 @@ def calculate(self, s):
     if isdigit(c):
         num = num  10 + (c - '0')
     if c == '(':
-        // Push current state
+        # Push current state
         stk.push(0)
         (1 if                 stk.push(sign == '+'  else -1))
         num = 0
         sign = '+'
          else if(c == ')') :
-        // Evaluate expression inside parentheses
+        # Evaluate expression inside parentheses
         val = num
         multiplier = stk.top() stk.pop()
         prevSum = stk.top() stk.pop()
         num = prevSum + multiplier  val
         sign = '+'
          else if(c == '+'  or  c == '-'  or  c == ''  or  c == '/') :
-        // Process previous operation
+        # Process previous operation
         if sign == '+':
             stk.push(num)
              else if(sign == '-') :
@@ -225,7 +227,7 @@ def calculate(self, s):
             stk.push(top / num)
         sign = c
         num = 0
-// Process last number
+# Process last number
 if sign == '+':
     stk.push(num)
      else if(sign == '-') :
@@ -243,6 +245,7 @@ while not not stk:
     result += stk.top()
     stk.pop()
 return result
+
 ```
 
 ## How the Algorithms Work
@@ -362,22 +365,25 @@ Result: sum([10]) = 10
 def parseExpr(self, s, idx):
     char op = '+'
     list[int> stk
-    // Process characters...
+    # Process characters...
+
 ```
 
 #### 2. Handle Parentheses
 ```python
 if s[idx] == '(':
-    num = parseExpr(s, idx += 1)  // Recursive call
+    num = parseExpr(s, idx += 1)  # Recursive call
      else if(s[idx] == ')') :
-    break  // Return from recursion
+    break  # Return from recursion
+
 ```
 
 #### 3. Handle Numbers
 ```python
 def if(self, isdigit(s[idx])):
     num = parseNum(s, idx)
-    idx -= 1  // Adjust because parseNum advances idx
+    idx -= 1  # Adjust because parseNum advances idx
+
 ```
 
 #### 4. Apply Operations
@@ -387,6 +393,7 @@ case '+': stk.append(num) break
 case '-': stk.append(-num) break
 case '': stk[-1] = num break
 case '/': stk[-1] /= num break
+
 ```
 
 ### Solution 3: Simplified Iterative
@@ -394,10 +401,11 @@ case '/': stk[-1] /= num break
 #### 1. Handle Opening Parenthesis
 ```python
 if c == '(':
-    stk.push(0)  // Push current sum
-    (1 if     stk.push(sign == '+'  else -1)  // Push multiplier)
+    stk.push(0)  # Push current sum
+    (1 if     stk.push(sign == '+'  else -1)  # Push multiplier)
     num = 0
     sign = '+'
+
 ```
 
 #### 2. Handle Closing Parenthesis
@@ -406,8 +414,9 @@ def if(self, ')'):
     val = num
     multiplier = stk.top() stk.pop()
     prevSum = stk.top() stk.pop()
-    num = prevSum + multiplier  val  // Combine with outer expression
+    num = prevSum + multiplier  val  # Combine with outer expression
     sign = '+'
+
 ```
 
 ## Complexity Analysis

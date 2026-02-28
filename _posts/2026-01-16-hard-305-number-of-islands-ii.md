@@ -142,7 +142,7 @@ def numIslands2(self, m, n, positions):
 UnionFind dsu(mn)
 list[int> rtn
 for position in positions:
-    landPosition = position[0]  n + position[1]
+    landPosition = position[0] * n + position[1]
     dsu.addLand(landPosition)
     for([dx, dy]: dirs) :
     neighborX = position[0] + dx
@@ -152,6 +152,7 @@ for position in positions:
         dsu.union_set(landPosition, neighborPosition)
 rtn.emplace_back(dsu.numberOfIslands())
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -292,7 +293,7 @@ def numIslands2(self, m, n, positions):
     for pos in positions:
         r = pos[0], c = pos[1]
         if grid[r][c] == 1:
-            // duplicate: count stays same
+            # duplicate: count stays same
             result.append(countIslands(grid))
              else :
             grid[r][c] = 1
@@ -317,6 +318,7 @@ def dfs(self, grid, visited, r, c):
     dfs(grid, visited, r - 1, c)
     dfs(grid, visited, r, c + 1)
     dfs(grid, visited, r, c - 1)
+
 ```
 
 **Time Complexity:** O(k × m × n) - Too slow for large inputs  

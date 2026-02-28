@@ -101,10 +101,11 @@ def nextClosestTime(self, time):
     if(i >= day) i -= day
     h1 = i / 60
     m1 = i - h1  60
-    if(con[h1/10]  and  con[h1%10]  and  con[m1/10]  and  con[m1 % 10]) break
+    if(con[h1/10] * and  con[h1%10] * and  con[m1/10] * and  con[m1 % 10]) break
 char rtn[60]
 sprintf(rtn, "%02d:%02d", h1, m1)
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -213,6 +214,7 @@ Result: "22:22"
 The algorithm handles day wrapping correctly:
 ```python
 if(i >= day) i -= day
+
 ```
 
 This ensures that after 23:59, we continue checking from 00:00 of the next day.

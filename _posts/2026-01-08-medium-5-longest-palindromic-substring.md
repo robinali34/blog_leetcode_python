@@ -114,6 +114,7 @@ def expandAroundCenter(self, s, left, right, start, maxLen):
             maxLen = len
         left -= 1
         right += 1
+
 ```
 
 ### **Algorithm Explanation:**
@@ -197,14 +198,14 @@ def longestPalindrome(self, s):
     mirror = 2  center - i
     if i < right:
     p[i] = min(right - i, p[mirror])
-    // Expand around center i
+    # Expand around center i
     while t[i + p[i] + 1] == t[i - p[i] - 1]:
     p[i]++
-    // Update center and right boundary
+    # Update center and right boundary
     if i + p[i] > right:
         center = i
         right = i + p[i]
-// Find the longest palindrome
+# Find the longest palindrome
 maxLen = 0, centerIndex = 0
 for (i = 1 i < n - 1 i += 1) :
 if p[i] > maxLen:
@@ -212,6 +213,7 @@ if p[i] > maxLen:
     centerIndex = i
 start = (centerIndex - maxLen) / 2
 return s.substr(start, maxLen)
+
 ```
 
 ### **Algorithm Explanation:**

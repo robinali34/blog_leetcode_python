@@ -138,6 +138,7 @@ delete node
  obj.addWord(word)
  bool param_2 = obj.search(word)
 /
+
 ```
 
 ### Algorithm Explanation:
@@ -249,8 +250,9 @@ Step 3: search(".ad")
 
 ```python
 struct TrieNode :
-TrieNode children[26] = :
+TrieNode children[26] = {}
 bool isWord = False
+
 ```
 
 **Pros**: Faster lookups, less memory overhead  
@@ -276,6 +278,7 @@ def search(self, word):
         if node.curr in children:
             q.push(:node.children[curr], idx + 1)
 return False
+
 ```
 
 **Pros**: Avoids recursion stack overflow for very long words  

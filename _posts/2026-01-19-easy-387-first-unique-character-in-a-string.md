@@ -102,6 +102,7 @@ def firstUniqChar(self, s):
     if once & bit:
         return i
 return -1
+
 ```
 
 ### Algorithm Explanation:
@@ -169,7 +170,7 @@ def firstUniqChar(self, s):
     list[int> cnt(26, 0)
     list[int> idx(26, -1)
     for(i = 0 i < (int)s.length() i += 1) :
-    // log first idx
+    # log first idx
     curr = s[i] - 'a'
     if cnt[curr] == 0:
         idx[curr] = i
@@ -179,6 +180,7 @@ for(i = 0 i < 26 i += 1):
 if cnt[i] == 1:
     minIdx = min(minIdx, idx[i])
 (-1 if         return minIdx == INT_MAX  else minIdx)
+
 ```
 
 ### Algorithm Explanation:
@@ -290,6 +292,7 @@ def firstUniqChar(self, s):
     if count[s[i] - 'a'] == 1:
         return i
 return -1
+
 ```
 
 **Pros**: Simple, clear, easy to understand  
@@ -307,6 +310,7 @@ def firstUniqChar(self, s):
     if count[s[i]] == 1:
         return i
 return -1
+
 ```
 
 **Pros**: Works for any character set  

@@ -103,6 +103,7 @@ dict[int, list[int>> freqArray
  RangeFreqQuery obj = new RangeFreqQuery(arr)
  param_1 = obj.query(left,right,value)
 /
+
 ```
 
 ### Algorithm Explanation:
@@ -113,6 +114,7 @@ dict[int, list[int>> freqArray
 RangeFreqQuery(list[int> arr) :
 for(i = 0 i < (int)len(arr) i += 1) :
 freqArray[arr[i]].append(i)
+
 ```
 
 - For each value, store all indices where it appears
@@ -140,6 +142,7 @@ def query(self, left, right, value):
     itLeft = lower_bound(v.begin(), v.end(), left)
     itRight = upper_bound(v.begin(), v.end(), right)
     return itRight - itLeft
+
 ```
 
 **Key Operations:**
@@ -264,6 +267,7 @@ def query(self, left, right, value):
     for(i = left i <= right i += 1) :
     if(arr[i] == value) count += 1
 return count
+
 ```
 
 **Time:** O(n) per query  
@@ -273,8 +277,10 @@ return count
 ### Approach 2: Segment Tree (Overkill)
 
 ```python
-// Build segment tree storing frequency map for each range
-// Query: Merge frequency maps from segments
+# Build segment tree storing frequency map for each range
+# Query: Merge frequency maps from segments
+
+
 ```
 
 **Time:** O(n log n) build, O(log n) query  

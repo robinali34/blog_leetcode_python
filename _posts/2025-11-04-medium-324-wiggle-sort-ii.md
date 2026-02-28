@@ -82,6 +82,7 @@ while i <= right:
         right -= 1
          else :
         i += 1
+
 ```
 
 ## Why Virtual Indexing Works

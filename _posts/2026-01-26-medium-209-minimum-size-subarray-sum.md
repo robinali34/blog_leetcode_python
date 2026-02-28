@@ -131,6 +131,7 @@ it = lower_bound(sums.begin(), sums.end(), currTarget)
 if it != sums.end():
     rtn = min(rtn, (int)(it - sums.begin()) - (i - 1))
 (0 if         return rtn == INT_MAX else rtn)
+
 ```
 
 ### Algorithm Explanation:
@@ -141,6 +142,7 @@ if it != sums.end():
 list[int> sums(N + 1, 0)
 for(i = 1 i <= N i += 1) :
 sums[i] = sums[i - 1] + nums[i - 1]
+
 ```
 
 - `sums[i]` = sum of elements from index `0` to `i-1`
@@ -157,6 +159,7 @@ currTarget = target + sums[i - 1]
 it = lower_bound(sums.begin(), sums.end(), currTarget)
 if it != sums.end():
     rtn = min(rtn, (int)(it - sums.begin()) - (i - 1))
+
 ```
 
 - **Starting at index `i-1`**: We want sum from `i-1` to some `j` >= target
@@ -235,6 +238,7 @@ def minSubArrayLen(self, target, nums):
             start += 1
         end += 1
     (0 if         return rtn == INT_MAX  else rtn)
+
 ```
 
 ### Algorithm Explanation:

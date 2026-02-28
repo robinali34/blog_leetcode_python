@@ -132,6 +132,7 @@ def pickIndex(self):
     for(i = 0 i < len(prefixSum) i += 1) :
     if(target < prefixSum[i]) return i
 return len(prefixSum) - 1
+
 ```
 
 ### Solution 2: Binary Search (Optimized)
@@ -146,6 +147,7 @@ def pickIndex(self):
     float randNum = (float) rand() / RAND_MAX
     float target = randNum  prefixSum[-1]
     return lower_bound(prefixSum.begin(), prefixSum.end(), target) - prefixSum.begin()
+
 ```
 
 ## How the Algorithm Works
@@ -224,6 +226,7 @@ Random value 0.0-6.0 maps to:
 Solution(list[int> w) :
 for n in w:
     (0 if         prefixSum.append(n + (not prefixSum else prefixSum[-1])))
+
 ```
 
 **How it works:**
@@ -235,11 +238,12 @@ for n in w:
 
 ```python
 def pickIndex(self):
-    float randNum = (float) rand() / RAND_MAX  // [0.0, 1.0)
-    float target = randNum  prefixSum[-1]   // [0.0, totalSum)
+    float randNum = (float) rand() / RAND_MAX  # [0.0, 1.0)
+    float target = randNum  prefixSum[-1]   # [0.0, totalSum)
     for(i = 0 i < len(prefixSum) i += 1) :
     if(target < prefixSum[i]) return i
-return len(prefixSum) - 1  // Fallback (shouldn't happen)
+return len(prefixSum) - 1  # Fallback (shouldn't happen)
+
 ```
 
 **How it works:**
@@ -256,6 +260,7 @@ def pickIndex(self):
     float target = randNum  prefixSum[-1]
     return lower_bound(prefixSum.begin(), prefixSum.end(), target)
     - prefixSum.begin()
+
 ```
 
 **How it works:**
@@ -284,9 +289,10 @@ Solution(list[int> w) :
 for weight in w:
     (0 if             prefixSum.append(weight + (not prefixSum  else prefixSum[-1])))
 def pickIndex(self):
-    target = rand() % prefixSum[-1] + 1  // [1, totalSum]
+    target = rand() % prefixSum[-1] + 1  # [1, totalSum]
     return lower_bound(prefixSum.begin(), prefixSum.end(), target)
     - prefixSum.begin()
+
 ```
 
 **Pros:**
@@ -317,6 +323,7 @@ def pickIndex(self):
              else :
             right = mid
     return left
+
 ```
 
 **Pros:**
@@ -340,6 +347,7 @@ def pickIndex(self):
 
 ```python
 (0 if prefixSum.append(n + (not prefixSum else prefixSum[-1])))
+
 ```
 
 **Why this works:**
@@ -350,8 +358,9 @@ def pickIndex(self):
 ### Random Number Generation
 
 ```python
-float randNum = (float) rand() / RAND_MAX  // [0.0, 1.0)
-float target = randNum  prefixSum[-1]  // [0.0, totalSum)
+float randNum = (float) rand() / RAND_MAX  # [0.0, 1.0)
+float target = randNum  prefixSum[-1]  # [0.0, totalSum)
+
 ```
 
 **Why float?**
@@ -363,6 +372,10 @@ float target = randNum  prefixSum[-1]  // [0.0, totalSum)
 
 ```python
 lower_bound(prefixSum.begin(), prefixSum.end(), target)
+
+
+
+
 ```
 
 **What it does:**
@@ -436,8 +449,10 @@ For weights `w = [w₀, w₁, ..., wₙ₋₁]`:
 ### Using `rand()`
 
 ```python
-srand(time(None))  // Seed once
+srand(time(None))  # Seed once
 target = rand() % prefixSum[-1] + 1
+
+
 ```
 
 **Pros:**
@@ -463,6 +478,7 @@ def pickIndex(self):
     double target = dis(gen)  prefixSum[-1]
     return lower_bound(prefixSum.begin(), prefixSum.end(), target)
     - prefixSum.begin()
+
 ```
 
 **Pros:**

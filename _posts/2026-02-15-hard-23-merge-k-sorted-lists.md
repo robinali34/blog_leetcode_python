@@ -83,29 +83,30 @@ Pair lists and merge them in rounds, halving the count each time. This avoids th
 {% raw %}
 ```python
 class Solution:
-def mergeTwo(self, a, b):
-dummy = ListNode(0)
-tail = dummy
-while a and b:
-if a.val < b.val:
-tail.next = a
-a = a.next
-else:
-tail.next = b
-b = b.next
-tail = tail.next
-tail.next = a if a else b
-return dummy.next
-def mergeKLists(self, lists):
-if not lists:
-return None
-n = len(lists)
-step = 1
-while step < n:
-for i in range(0, n - step, step  2):
-lists[i] = self.mergeTwo(lists[i], lists[i + step])
-step = 2
-return lists[0]
+    def mergeTwo(self, a, b):
+        dummy = ListNode(0)
+        tail = dummy
+        while a and b:
+            if a.val < b.val:
+                tail.next = a
+                a = a.next
+            else:
+                tail.next = b
+                b = b.next
+            tail = tail.next
+        tail.next = a if a else b
+        return dummy.next
+
+    def mergeKLists(self, lists):
+        if not lists:
+            return None
+        n = len(lists)
+        step = 1
+        while step < n:
+            for i in range(0, n - step, step * 2):
+                lists[i] = self.mergeTwo(lists[i], lists[i + step])
+            step *= 2
+        return lists[0]
 ```
 {% endraw %}
 
@@ -130,21 +131,22 @@ The heap always holds at most one node per list, so each push/pop is $O(\log k)$
 {% raw %}
 ```python
 import heapq
+
 class Solution:
-def mergeKLists(self, lists):
-heap = []
-for i, node in enumerate(lists):
-if node:
-heapq.heappush(heap, (node.val, i, node))
-dummy = ListNode(0)
-tail = dummy
-while heap:
-_, i, node = heapq.heappop(heap)
-tail.next = node
-tail = tail.next
-if node.next:
-heapq.heappush(heap, (node.next.val, i, node.next))
-return dummy.next
+    def mergeKLists(self, lists):
+        heap = []
+        for i, node in enumerate(lists):
+            if node:
+                heapq.heappush(heap, (node.val, i, node))
+        dummy = ListNode(0)
+        tail = dummy
+        while heap:
+            _, i, node = heapq.heappop(heap)
+            tail.next = node
+            tail = tail.next
+            if node.next:
+                heapq.heappush(heap, (node.next.val, i, node.next))
+        return dummy.next
 ```
 {% endraw %}
 

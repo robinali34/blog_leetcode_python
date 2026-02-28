@@ -60,6 +60,7 @@ Wait, the minimum is actually 4 (outbound[1] = 1 + return_trip[2] = 3), but the 
 This suggests the example might be showing one valid solution (1 + 4 = 5) rather than the optimal.
 Or there might be additional constraints not stated.
 For the solution, we'll find the True minimum cost.
+
 ```
 {% endraw %}
 
@@ -83,6 +84,7 @@ But if j >= i:
 - outbound[1] = 2: return_trip[1] = 2 → 4, return_trip[2] = 3 → 5
 - outbound[2] = 2: return_trip[2] = 3 → 4
 - Minimum: 4
+
 ```
 {% endraw %}
 
@@ -114,12 +116,13 @@ using namespace std
 def minimizeRoundTripCost(self, outbound, returnTrip):
     n = len(outbound)
     minCost = INT_MAX
-    // Try all possible pairs
+    # Try all possible pairs
     for (i = 0 i < n i += 1) :
     for (j = 0 j < n j += 1) :
     cost = outbound[i] + returnTrip[j]
     minCost = min(minCost, cost)
 return minCost
+
 ```
 
 ### Solution 2: Optimized - Find Minimums Separately (O(n))
@@ -131,14 +134,15 @@ return minCost
 using namespace std
 def minimizeRoundTripCost(self, outbound, returnTrip):
     n = len(outbound)
-    // Find minimum return price
+    # Find minimum return price
     minReturn = min_element(returnTrip.begin(), returnTrip.end())
-    // For each outbound, pair with minimum return
+    # For each outbound, pair with minimum return
     minCost = INT_MAX
     for (i = 0 i < n i += 1) :
     cost = outbound[i] + minReturn
     minCost = min(minCost, cost)
 return minCost
+
 ```
 
 **Why this works:**
@@ -215,6 +219,7 @@ list[int> minReturn(n)
 minReturn[n - 1] = returnTrip[n - 1]
 for (i = n - 2 i >= 0 i -= 1) :
 minReturn[i] = min(returnTrip[i], minReturn[i + 1])
+
 ```
 
 **Why:**
@@ -229,6 +234,7 @@ minCost = INT_MAX
 for (i = 0 i < n - 1 i += 1) :
 cost = outbound[i] + minReturn[i + 1]
 minCost = min(minCost, cost)
+
 ```
 
 **Why:**
@@ -255,17 +261,18 @@ def minimizeRoundTripCost(self, outbound, returnTrip):
     if n < 2:
         return INT_MAX
     minCost = INT_MAX
-    minReturnPrice = returnTrip[n - 1]  // Minimum return price from current position onwards
-    // Iterate backwards through outbound tickets
+    minReturnPrice = returnTrip[n - 1]  # Minimum return price from current position onwards
+    # Iterate backwards through outbound tickets
     for (i = n - 1 i >= 0 i -= 1) :
-    // Update minimum return price available (includes returnTrip[i] and all after)
+    # Update minimum return price available (includes returnTrip[i] and all after)
     if i < n - 1:
         minReturnPrice = min(minReturnPrice, returnTrip[i + 1])
     minReturnPrice = min(minReturnPrice, returnTrip[i])
-    // Calculate cost for current outbound ticket
+    # Calculate cost for current outbound ticket
     cost = outbound[i] + minReturnPrice
     minCost = min(minCost, cost)
 return minCost
+
 ```
 
 **Pros:**
@@ -295,6 +302,7 @@ def minimizeRoundTripCost(self, outbound, returnTrip):
     cost = outbound[i] + returnTrip[j]
     minCost = min(minCost, cost)
 return minCost
+
 ```
 
 **Pros:**
@@ -341,7 +349,9 @@ return minCost
 
 ```python
 if n < 2:
-    return INT_MAX  // or throw exception, or return -1
+    return float('inf')  # or throw exception, or return -1
+
+
 ```
 
 **Why:** Need at least 2 tickets (one outbound, one return) for a valid round trip.
@@ -438,6 +448,7 @@ Explanation:
 - Minimum return price: min(4, 5, 3) = 3
 - Costs: 9+3=12, 1+3=4, 5+3=8
 - Minimum: 4 (outbound[1]=1 + returnTrip[2]=3)
+
 ```
 {% endraw %}
 
@@ -451,6 +462,7 @@ Explanation:
 - Minimum return price: min(20, 9, 1) = 1
 - Costs: 5+1=6, 7+1=8, 10+1=11
 - Minimum: 6 (outbound[0]=5 + returnTrip[2]=1)
+
 ```
 {% endraw %}
 
@@ -464,6 +476,7 @@ Explanation:
 - Minimum return price: min(1000, 400, 2) = 2
 - Costs: 1+2=3, 100+2=102, 200+2=202
 - Minimum: 3 (outbound[0]=1 + returnTrip[2]=2)
+
 ```
 {% endraw %}
 
@@ -477,6 +490,7 @@ Explanation:
 - Minimum return price: min(5, 3, 6) = 3
 - Costs: 8+3=11, 4+3=7, 2+3=5
 - Minimum: 5 (outbound[2]=2 + returnTrip[1]=3)
+
 ```
 {% endraw %}
 
@@ -490,6 +504,7 @@ Explanation:
 - Minimum return price: min(10, 9, 8) = 8
 - Costs: 1+8=9, 2+8=10, 3+8=11
 - Minimum: 9 (outbound[0]=1 + returnTrip[2]=8)
+
 ```
 {% endraw %}
 
@@ -502,7 +517,7 @@ Explanation:
 #include <cassert>
 using namespace std
 def testMinimizeRoundTripCost(self):
-    list[pair<pair<list[int>, list[int>>, int>> testCases = :
+    list[pair<pair<list[int>, list[int>>, int>> testCases = {}
     :::9, 1, 5, :4, 5, 3, 4,
     :::5, 7, 10, :20, 9, 1, 6,
     :::1, 100, 200, :1000, 400, 2, 3,
@@ -513,20 +528,21 @@ for ([input, expected] : testCases) :
 result = minimizeRoundTripCost(outbound, returnTrip)
 assert(result == expected  and  "Test case failed")
 cout << "✓ Passed: "
-cout << "outbound = :"
+cout << "outbound = {"
 for (i = 0 i < (int)len(outbound) i += 1) :
 cout << outbound[i]
 if (i < (int)len(outbound) - 1) cout << ", "
-cout << ", returnTrip = :"
+cout << ", returnTrip = {"
 for (i = 0 i < (int)len(returnTrip) i += 1) :
 cout << returnTrip[i]
 if (i < (int)len(returnTrip) - 1) cout << ", "
 cout << " . " << result << endl
 cout << "All test cases passednot " << endl
-// Run tests
+# Run tests
 def main(self):
     testMinimizeRoundTripCost()
     return 0
+
 ```
 {% endraw %}
 

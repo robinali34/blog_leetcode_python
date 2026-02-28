@@ -85,19 +85,20 @@ def unite(self, parent, index1, index2):
 def findCircleNum(self, isConnected):
     cnt = len(isConnected)
     list[int> parent(cnt)
-    // Initialize: each city is its own parent
+    # Initialize: each city is its own parent
     for(i = 0 i < cnt i += 1) :
     parent[i] = i
-// Union connected cities
+# Union connected cities
 for(i = 0 i < cnt i += 1) :
 for(j = 0 j < cnt j += 1) :
 if isConnected[i][j] == 1:
     unite(parent, i, j)
-// Count provinces (number of roots)
+# Count provinces (number of roots)
 circles = 0
 for(i = 0 i < cnt i += 1) :
 if(parent[i] == i) circles += 1
 return circles
+
 ```
 
 ### How Solution 1 Works
@@ -134,6 +135,7 @@ def findCircleNum(self, isConnected):
         dfs(isConnected, visited, i)
         provinces += 1
 return provinces
+
 ```
 
 ### How Solution 2 Works
@@ -169,6 +171,7 @@ def findCircleNum(self, isConnected):
                 q.push(j)
     provinces += 1
 return provinces
+
 ```
 
 ## Comparison of Approaches

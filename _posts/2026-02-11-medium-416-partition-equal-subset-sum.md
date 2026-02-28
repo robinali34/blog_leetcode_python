@@ -87,6 +87,7 @@ def dfs(self, nums, n, subSetSum):
     if (subSetSum == 0) return True
     if (n < 0  or  subSetSum < 0) return False
     return dfs(nums, n - 1, subSetSum - nums[n])  or  dfs(nums, n - 1, subSetSum)
+
 ```
 {% endraw %}
 
@@ -100,7 +101,7 @@ def canPartition(self, nums):
     if (totalSum % 2 != 0) return False
     subSetSum = totalSum / 2
     n = len(nums)
-    // memo[i][j]: -1 unvisited, 0 False, 1 True
+    # memo[i][j]: -1 unvisited, 0 False, 1 True
     list[list[int>> memo(n, list[int>(subSetSum + 1, -1))
     return dfs(nums, n - 1, subSetSum, memo)
 def dfs(self, nums, i, target, memo):
@@ -110,6 +111,7 @@ def dfs(self, nums, i, target, memo):
     bool result = dfs(nums, i - 1, target - nums[i], memo)  or
     dfs(nums, i - 1, target, memo)
     return memo[i][target] = result
+
 ```
 {% endraw %}
 
@@ -123,9 +125,9 @@ def canPartition(self, nums):
     if (sum % 2) return False
     subSetSum = sum / 2
     n = len(nums)
-    // dp[i][j] means whether sum j is possible using first i items
+    # dp[i][j] means whether sum j is possible using first i items
     list[list[bool>> dp(n + 1, list[bool>(subSetSum + 1, False))
-    // Base case: sum 0 is always possible (by choosing nothing)
+    # Base case: sum 0 is always possible (by choosing nothing)
     for (i = 0 i <= n i += 1) dp[i][0] = True
     for (i = 1 i <= n i += 1) :
     curr = nums[i - 1]
@@ -133,8 +135,9 @@ def canPartition(self, nums):
     if j < curr:
         dp[i][j] = dp[i - 1][j]
          else :
-        dp[i][j] = dp[i - 1][j]  or  dp[i - 1][j - curr]
+        dp[i][j] = dp[i - 1][j] * or  dp[i - 1][j - curr]
 return dp[n][subSetSum]
+
 ```
 {% endraw %}
 
@@ -150,10 +153,11 @@ def canPartition(self, nums):
     list[bool> dp(target + 1, False)
     dp[0] = True
     for num in nums:
-        // Iterate backwards to avoid using the same element multiple times for the same sum
+        # Iterate backwards to avoid using the same element multiple times for the same sum
         for (j = target j >= num j -= 1) :
-        dp[j] = dp[j]  or  dp[j - num]
+        dp[j] = dp[j] * or  dp[j - num]
 return dp[target]
+
 ```
 {% endraw %}
 

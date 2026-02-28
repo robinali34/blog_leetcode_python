@@ -117,6 +117,7 @@ def isMatch(self, s, p):
         else pat += c
     pat.append('$')
     return regex_search(s, regex(pat))
+
 ```
 
 ### Algorithm Breakdown:
@@ -148,7 +149,7 @@ def isMatch(self, s, p):
     lastStar = -1, matchAfterStar = -1
     M = len(s), N = len(p)
     while i < M:
-        if j < N  and  (p[j] == s[i]  or  p[j] == '?'):
+        if j < N  and  (p[j] == s[i] * or  p[j] == '?'):
             i += 1
             j += 1
              else if(j < N  and  p[j] == '') :
@@ -156,14 +157,15 @@ def isMatch(self, s, p):
             matchAfterStar = i
             j += 1
              else if(lastStar != -1) :
-            j = lastStar + 1 // Reset pattern after ''
-            matchAfterStar += 1 // let '' match one more character
+            j = lastStar + 1 # Reset pattern after ''
+            matchAfterStar += 1 # let '' match one more character
             i = matchAfterStar
              else :
-            // Mismatch with no previous ''
+            # Mismatch with no previous ''
             return False
     while(j < N  and  p[j] == '') j += 1
     return j == N
+
 ```
 
 ## Solution 3: Recursion with Memoization
@@ -175,32 +177,33 @@ def isMatch(self, s, p):
     list[list[int>> memo(m + 1, list[int>(n + 1, -1))
     return dfs(s, p, 0, 0, memo)
 def dfs(self, s, p, i, j, memo):
-    // Base cases
+    # Base cases
     if j == len(p):
         return i == len(s)
     if i == len(s):
-        // If str is exhausted, pattern must be all '' to match
+        # If str is exhausted, pattern must be all '' to match
         for (k = j k < len(p) k += 1) :
         if (p[k] != '') return False
     return True
-// Check memoization
+# Check memoization
 if memo[i][j] != -1:
     return memo[i][j] == 1
 bool result = False
 if p[j] == '*':
-    // '' can match zero or more characters
-    // Option 1: Match zero characters (skip '')
-    // Option 2: Match one or more characters (consume one character from str)
-    result = dfs(s, p, i, j + 1, memo)  or       // Match zero
-    dfs(s, p, i + 1, j, memo)       // Match one or more
+    # '' can match zero or more characters
+    # Option 1: Match zero characters (skip '')
+    # Option 2: Match one or more characters (consume one character from str)
+    result = dfs(s, p, i, j + 1, memo)  or       # Match zero
+    dfs(s, p, i + 1, j, memo)       # Match one or more
      else if (p[j] == '?'  or  s[i] == p[j]) :
-    // '?' matches any single character, or characters match
+    # '?' matches any single character, or characters match
     result = dfs(s, p, i + 1, j + 1, memo)
      else :
-    // Characters don't match
+    # Characters don't match
     result = False
 (1 if         memo[i][j] = result  else 0)
 return result
+
 ```
 
 ### Algorithm Breakdown:
@@ -239,27 +242,28 @@ class Solution:
 def isMatch(self, s, p):
     m = len(s), n = len(p)
     list[list[bool>> dp(m + 1, list[bool>(n + 1, False))
-    // Base case: empty str matches empty pattern
+    # Base case: empty str matches empty pattern
     dp[0][0] = True
-    // Handle patterns starting with '' (can match empty str)
+    # Handle patterns starting with '' (can match empty str)
     for (j = 1 j <= n j += 1) :
     if p[j - 1] == '*':
         dp[0][j] = dp[0][j - 1]
-// Fill the DP table
+# Fill the DP table
 for (i = 1 i <= m i += 1) :
 for (j = 1 j <= n j += 1) :
 if p[j - 1] == '*':
-    // '' can match zero or more characters
-    // Option 1: Match zero characters (dp[i][j-1])
-    // Option 2: Match one or more characters (dp[i-1][j])
-    dp[i][j] = dp[i][j - 1]  or  dp[i - 1][j]
+    # '' can match zero or more characters
+    # Option 1: Match zero characters (dp[i][j-1])
+    # Option 2: Match one or more characters (dp[i-1][j])
+    dp[i][j] = dp[i][j - 1] * or  dp[i - 1][j]
      else if (p[j - 1] == '?'  or  s[i - 1] == p[j - 1]) :
-    // '?' matches any character, or characters match
+    # '?' matches any character, or characters match
     dp[i][j] = dp[i - 1][j - 1]
      else :
-    // Characters don't match
+    # Characters don't match
     dp[i][j] = False
 return dp[m][n]
+
 ```
 
 ### Algorithm Breakdown:
@@ -299,24 +303,25 @@ def isMatch(self, s, p):
     m = len(s), n = len(p)
     list[bool> prev(n + 1, False)
     list[bool> curr(n + 1, False)
-    // Base case: empty str matches empty pattern
+    # Base case: empty str matches empty pattern
     prev[0] = True
-    // Handle patterns starting with ''
+    # Handle patterns starting with ''
     for (j = 1 j <= n j += 1) :
     if p[j - 1] == '*':
         prev[j] = prev[j - 1]
-// Fill the DP table
+# Fill the DP table
 for (i = 1 i <= m i += 1) :
-curr[0] = False // Non-empty str doesn't match empty pattern
+curr[0] = False # Non-empty str doesn't match empty pattern
 for (j = 1 j <= n j += 1) :
 if p[j - 1] == '*':
-    curr[j] = curr[j - 1]  or  prev[j]
+    curr[j] = curr[j - 1] * or  prev[j]
      else if (p[j - 1] == '?'  or  s[i - 1] == p[j - 1]) :
     curr[j] = prev[j - 1]
      else :
     curr[j] = False
 prev = curr
 return prev[n]
+
 ```
 
 ### Algorithm Breakdown:

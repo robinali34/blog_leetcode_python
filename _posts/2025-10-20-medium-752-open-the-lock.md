@@ -78,30 +78,34 @@ This is a **shortest path problem** that can be solved using **BFS**. We need to
 ```python
 from collections import deque
 class Solution:
-def openLock(self, deadends: list[str], target: str) -> int:
-deads = set(deadends)
-visited = set()
-if "0000" in deads:
-return -1
-q = deque(["0000"])
-visited.add("0000")
-steps = 0
-while q:
-size = len(q)
-for _ in range(size):
-curr = q.popleft()
-if curr == target:
-return steps
-for i in range(4):
-for dir in [-1, 1]:
-next_state = list(curr)
-next_state[i] = str((int(curr[i]) + dir + 10) % 10)
-next_str = ''.join(next_state)
-if next_str not in deads and next_str not in visited:
-q.append(next_str)
-visited.add(next_str)
-steps += 1
-return -1
+    def openLock(self, deadends: list[str], target: str) -> int:
+        deads = set(deadends)
+        visited = set()
+        if "0000" in deads:
+            return -1
+            q = deque(["0000"])
+            visited.add("0000")
+            steps = 0
+            while q:
+                size = len(q)
+                for _ in range(size):
+                    curr = q.popleft()
+                    if curr == target:
+                        return steps
+                        for i in range(4):
+                            for dir in [-1, 1]:
+                                next_state = list(curr)
+                                next_state[i] = str((int(curr[i]) + dir + 10) % 10)
+                                next_str = ''.join(next_state)
+                                if next_str not in deads and next_str not in visited:
+                                    q.append(next_str)
+                                    visited.add(next_str)
+                                    steps += 1
+                                    return -1
+
+
+
+
 ```
 
 ### **Algorithm Explanation:**
@@ -133,10 +137,12 @@ Path: "0000" → "1000" → "1100" → "1200" → "1201" → "1202" → "0202"
 ### **Key Implementation Details:**
 
 ```python
-// Circular wrapping for digits
+# Circular wrapping for digits
 next[i] = (curr[i] - '0' + dir + 10) % 10 + '0'
-// For dir = -1: (0 - 1 + 10) % 10 = 9 (0 → 9)
-// For dir = +1: (9 + 1 + 10) % 10 = 0 (9 → 0)
+# For dir = -1: (0 - 1 + 10) % 10 = 9 (0 → 9)
+# For dir = +1: (9 + 1 + 10) % 10 = 0 (9 → 0)
+
+
 ```
 
 ## Complexity Analysis
@@ -171,7 +177,7 @@ def openLock(self, deadends: list[str], target: str) -> int:
 deads = set(deadends)
 if "0000" in deads or target in deads:
 return -1
-begin, end, visited = :"0000", :target, set()
+begin, end, visited = {"0000", :target, set()
 steps = 0
 while begin and end:
 if len(begin) > len(end):
@@ -194,6 +200,7 @@ next_level.add(next_str)
 begin = next_level
 steps += 1
 return -1
+
 ```
 
 ## Related Problems

@@ -64,54 +64,56 @@ There are three main approaches to solve this problem:
 ```python
 from collections import deque
 class Solution:
-def shortestDistance(self, grid: list[list[int]]) -> int:
-rows = len(grid)
-cols = len(grid[0])
-totalHouses = 0
-for row in grid:
-for cell in row:
-if cell == 1:
-totalHouses += 1
-minDistance = float('inf')
-for r in range(rows):
-for c in range(cols):
-if grid[r][c] == 0:
-result = self.bfs(grid, r, c, totalHouses)
-minDistance = min(minDistance, result)
-return -1 if minDistance == float('inf') else minDistance
-def bfs(self, grid: list[list[int]], startRow: int, startCol: int, totalHouses: int) -> int:
-directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-rows = len(grid)
-cols = len(grid[0])
-distanceSum = 0
-housesReached = 0
-steps = 0
-q = deque([(startRow, startCol)])
-visited = [[False]  cols for _ in range(rows)]
-visited[startRow][startCol] = True
-while q and housesReached != totalHouses:
-levelSize = len(q)
-for _ in range(levelSize):
-r, c = q.popleft()
-if grid[r][c] == 1:
-distanceSum += steps
-housesReached += 1
-continue
-for dr, dc in directions:
-nr = r + dr
-nc = c + dc
-if (0 <= nr < rows and 0 <= nc < cols and
-not visited[nr][nc] and grid[nr][nc] != 2):
-visited[nr][nc] = True
-q.append((nr, nc))
-steps += 1
-if housesReached != totalHouses:
-for r in range(rows):
-for c in range(cols):
-if grid[r][c] == 0 and visited[r][c]:
-grid[r][c] = 2  # Mark as unreachable
-return float('inf')
-return distanceSum
+    def shortestDistance(self, grid: list[list[int]]) -> int:
+        rows = len(grid)
+        cols = len(grid[0])
+        totalHouses = 0
+        for row in grid:
+            for cell in row:
+                if cell == 1:
+                    totalHouses += 1
+                    minDistance = float('inf')
+                    for r in range(rows):
+                        for c in range(cols):
+                            if grid[r][c] == 0:
+                                result = self.bfs(grid, r, c, totalHouses)
+                                minDistance = min(minDistance, result)
+                                return -1 if minDistance == float('inf') else minDistance
+                                def bfs(self, grid: list[list[int]], startRow: int, startCol: int, totalHouses: int) -> int:
+                                    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+                                    rows = len(grid)
+                                    cols = len(grid[0])
+                                    distanceSum = 0
+                                    housesReached = 0
+                                    steps = 0
+                                    q = deque([(startRow, startCol)])
+                                    visited = [[False] * cols for _ in range(rows)]
+                                    visited[startRow][startCol] = True
+                                    while q and housesReached != totalHouses:
+                                        levelSize = len(q)
+                                        for _ in range(levelSize):
+                                            r, c = q.popleft()
+                                            if grid[r][c] == 1:
+                                                distanceSum += steps
+                                                housesReached += 1
+                                                continue
+                                                for dr, dc in directions:
+                                                    nr = r + dr
+                                                    nc = c + dc
+                                                    if (0 <= nr < rows and 0 <= nc < cols and
+                                                    not visited[nr][nc] and grid[nr][nc] != 2):
+                                                        visited[nr][nc] = True
+                                                        q.append((nr, nc))
+                                                        steps += 1
+                                                        if housesReached != totalHouses:
+                                                            for r in range(rows):
+                                                                for c in range(cols):
+                                                                    if grid[r][c] == 0 and visited[r][c]:
+                                                                        grid[r][c] = 2  # Mark as unreachable
+                                                                        return float('inf')
+                                                                        return distanceSum
+
+
 ```
 
 ## Solution 2: BFS from Each Building
@@ -122,44 +124,46 @@ return distanceSum
 ```python
 from collections import deque
 class Solution:
-def shortestDistance(self, grid: list[list[int]]) -> int:
-rows, cols = len(grid), len(grid[0])
-minDistance = float('inf')
-totalHouses = 0
-# distances[row][col] = [totalDistance, housesReached]
-distances = [[[0, 0] for _ in range(cols)] for _ in range(rows)]
-for row in range(rows):
-for col in range(cols):
-if grid[row][col] == 1:
-totalHouses += 1
-self.bfs(grid, distances, row, col)
-for row in range(rows):
-for col in range(cols):
-if distances[row][col][1] == totalHouses:
-minDistance = min(minDistance, distances[row][col][0])
-return -1 if minDistance == float('inf') else minDistance
-def bfs(self, grid: list[list[int]], distances: list[list[list[int]]],
-startRow: int, startCol: int) -> None:
-dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-rows, cols = len(grid), len(grid[0])
-q = deque([(startRow, startCol)])
-vis = [[False]  cols for _ in range(rows)]
-vis[startRow][startCol] = True
-steps = 0
-while q:
-for _ in range(len(q)):
-r, c = q.popleft()
-if grid[r][c] == 0:
-distances[r][c][0] += steps
-distances[r][c][1] += 1
-for dr, dc in dirs:
-nextRow = r + dr
-nextCol = c + dc
-if (0 <= nextRow < rows and 0 <= nextCol < cols and
-not vis[nextRow][nextCol] and grid[nextRow][nextCol] == 0):
-vis[nextRow][nextCol] = True
-q.append((nextRow, nextCol))
-steps += 1
+    def shortestDistance(self, grid: list[list[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        minDistance = float('inf')
+        totalHouses = 0
+        # distances[row][col] = [totalDistance, housesReached]
+        distances = [[[0, 0] for _ in range(cols)] for _ in range(rows)]
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1:
+                    totalHouses += 1
+                    self.bfs(grid, distances, row, col)
+                    for row in range(rows):
+                        for col in range(cols):
+                            if distances[row][col][1] == totalHouses:
+                                minDistance = min(minDistance, distances[row][col][0])
+                                return -1 if minDistance == float('inf') else minDistance
+                                def bfs(self, grid: list[list[int]], distances: list[list[list[int]]],
+                                startRow: int, startCol: int) -> None:
+                                    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+                                    rows, cols = len(grid), len(grid[0])
+                                    q = deque([(startRow, startCol)])
+                                    vis = [[False] * cols for _ in range(rows)]
+                                    vis[startRow][startCol] = True
+                                    steps = 0
+                                    while q:
+                                        for _ in range(len(q)):
+                                            r, c = q.popleft()
+                                            if grid[r][c] == 0:
+                                                distances[r][c][0] += steps
+                                                distances[r][c][1] += 1
+                                                for dr, dc in dirs:
+                                                    nextRow = r + dr
+                                                    nextCol = c + dc
+                                                    if (0 <= nextRow < rows and 0 <= nextCol < cols and
+                                                    not vis[nextRow][nextCol] and grid[nextRow][nextCol] == 0):
+                                                        vis[nextRow][nextCol] = True
+                                                        q.append((nextRow, nextCol))
+                                                        steps += 1
+
+
 ```
 
 ## Solution 3: Optimized BFS with Grid Modification
@@ -170,33 +174,35 @@ steps += 1
 ```python
 from collections import deque
 class Solution:
-def shortestDistance(self, grid: list[list[int]]) -> int:
-rows, cols = len(grid), len(grid[0])
-dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-emptyLandValue = 0
-minDist = float('inf')
-total = [[0]  cols for _ in range(rows)]
-for row in range(rows):
-for col in range(cols):
-if grid[row][col] == 1:
-minDist = float('inf')
-q = deque([(row, col)])
-steps = 0
-while q:
-steps += 1
-for _ in range(len(q)):
-r, c = q.popleft()
-for dr, dc in dirs:
-nextRow = r + dr
-nextCol = c + dc
-if (0 <= nextRow < rows and 0 <= nextCol < cols and
-grid[nextRow][nextCol] == emptyLandValue):
-grid[nextRow][nextCol] -= 1
-total[nextRow][nextCol] += steps
-q.append((nextRow, nextCol))
-minDist = min(minDist, total[nextRow][nextCol])
-emptyLandValue -= 1
-return -1 if minDist == float('inf') else minDist
+    def shortestDistance(self, grid: list[list[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        emptyLandValue = 0
+        minDist = float('inf')
+        total = [[0] * cols for _ in range(rows)]
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1:
+                    minDist = float('inf')
+                    q = deque([(row, col)])
+                    steps = 0
+                    while q:
+                        steps += 1
+                        for _ in range(len(q)):
+                            r, c = q.popleft()
+                            for dr, dc in dirs:
+                                nextRow = r + dr
+                                nextCol = c + dc
+                                if (0 <= nextRow < rows and 0 <= nextCol < cols and
+                                grid[nextRow][nextCol] == emptyLandValue):
+                                    grid[nextRow][nextCol] -= 1
+                                    total[nextRow][nextCol] += steps
+                                    q.append((nextRow, nextCol))
+                                    minDist = min(minDist, total[nextRow][nextCol])
+                                    emptyLandValue -= 1
+                                    return -1 if minDist == float('inf') else minDist
+
+
 ```
 
 ## Step-by-Step Example

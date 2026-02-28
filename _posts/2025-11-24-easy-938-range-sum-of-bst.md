@@ -90,6 +90,7 @@ def rangeSumBST(self, root, low, high):
          else if(root.val < low) :
         return rangeSumBST(root.right, low, high)
     return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
+
 ```
 
 ## How the Algorithm Works
@@ -174,6 +175,7 @@ Sum = 32
 
 ```python
 if(root == None) return 0
+
 ```
 
 **Why:** Empty subtree contributes 0 to the sum.
@@ -183,6 +185,10 @@ if(root == None) return 0
 ```python
 if root.val > high:
     return rangeSumBST(root.left, low, high)
+
+
+
+
 ```
 
 **Why:** If current value > high, all values in right subtree are also > high (BST property). Only search left subtree.
@@ -190,6 +196,7 @@ if root.val > high:
 ```python
 def if(self, low):
     return rangeSumBST(root.right, low, high)
+
 ```
 
 **Why:** If current value < low, all values in left subtree are also < low (BST property). Only search right subtree.
@@ -198,6 +205,10 @@ def if(self, low):
 
 ```python
 return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
+
+
+
+
 ```
 
 **Why:** Current node is in range `[low, high]`, so:
@@ -239,6 +250,7 @@ def rangeSumBST(self, root, low, high):
             stk.push(node.left)
             stk.push(node.right)
     return sum
+
 ```
 
 **Pros:**
@@ -264,6 +276,7 @@ def rangeSumBST(self, root, low, high):
     sum += rangeSumBST(root.left, low, high)
     sum += rangeSumBST(root.right, low, high)
     return sum
+
 ```
 
 **Pros:**
@@ -300,6 +313,10 @@ For node with value v:
 
 ```python
 return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
+
+
+
+
 ```
 
 **Breakdown:**

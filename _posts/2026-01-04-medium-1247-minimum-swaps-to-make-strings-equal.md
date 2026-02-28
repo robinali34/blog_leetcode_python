@@ -132,6 +132,7 @@ def minimumSwap(self, s1, s2):
 if (xy + yx) % 2 == 1:
     return -1
 return xy / 2 + yx / 2 + xy % 2 + yx % 2
+
 ```
 
 ### **Algorithm Explanation:**

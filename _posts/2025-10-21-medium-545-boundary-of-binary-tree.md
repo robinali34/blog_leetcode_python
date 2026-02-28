@@ -78,39 +78,41 @@ The boundary traversal consists of three parts in order:
 
 ```python
 class Solution:
-def boundaryOfBinaryTree(self, root: TreeNode) -> list[int]:
-if not root:
-return []
-result = []
-result.append(root.val)
-self.getleft(root.left, result)
-self.getleaf(root.left, result)
-self.getleaf(root.right, result)
-self.getright(root.right, result)
-return result
-def getleft(self, node: TreeNode, result: list[int]) -> None:
-if not node or (not node.left and not node.right):
-return
-result.append(node.val)
-if not node.left:
-self.getleft(node.right, result)
-else:
-self.getleft(node.left, result)
-def getleaf(self, node: TreeNode, result: list[int]) -> None:
-if not node:
-return
-self.getleaf(node.left, result)
-if not node.left and not node.right:
-result.append(node.val)
-self.getleaf(node.right, result)
-def getright(self, node: TreeNode, result: list[int]) -> None:
-if not node or (not node.left and not node.right):
-return
-if not node.right:
-self.getright(node.left, result)
-else:
-self.getright(node.right, result)
-result.append(node.val)
+    def boundaryOfBinaryTree(self, root: TreeNode) -> list[int]:
+        if not root:
+            return []
+            result = []
+            result.append(root.val)
+            self.getleft(root.left, result)
+            self.getleaf(root.left, result)
+            self.getleaf(root.right, result)
+            self.getright(root.right, result)
+            return result
+            def getleft(self, node: TreeNode, result: list[int]) -> None:
+                if not node or (not node.left and not node.right):
+                    return
+                    result.append(node.val)
+                    if not node.left:
+                        self.getleft(node.right, result)
+                    else:
+                        self.getleft(node.left, result)
+                        def getleaf(self, node: TreeNode, result: list[int]) -> None:
+                            if not node:
+                                return
+                                self.getleaf(node.left, result)
+                                if not node.left and not node.right:
+                                    result.append(node.val)
+                                    self.getleaf(node.right, result)
+                                    def getright(self, node: TreeNode, result: list[int]) -> None:
+                                        if not node or (not node.left and not node.right):
+                                            return
+                                            if not node.right:
+                                                self.getright(node.left, result)
+                                            else:
+                                                self.getright(node.right, result)
+                                                result.append(node.val)
+
+
 ```
 
 ### Alternative Approach: Single Pass with Flags
@@ -122,42 +124,44 @@ result.append(node.val)
 
 ```python
 class Solution:
-def boundaryOfBinaryTree(self, root: TreeNode) -> list[int]:
-result = []
-if not root:
-return result
-result.append(root.val)
-# Get left boundary (excluding root and leaves)
-self.getLeftBoundary(root.left, result)
-# Get all leaves
-self.getLeaves(root, result)
-# Get right boundary (excluding root and leaves)
-self.getRightBoundary(root.right, result)
-return result
-def getLeftBoundary(self, node: TreeNode, result: list[int]) -> None:
-if not node or (not node.left and not node.right):
-return
-result.append(node.val)
-if node.left:
-self.getLeftBoundary(node.left, result)
-else:
-self.getLeftBoundary(node.right, result)
-def getLeaves(self, node: TreeNode, result: list[int]) -> None:
-if not node:
-return
-if not node.left and not node.right:
-result.append(node.val)
-return
-self.getLeaves(node.left, result)
-self.getLeaves(node.right, result)
-def getRightBoundary(self, node: TreeNode, result: list[int]) -> None:
-if not node or (not node.left and not node.right):
-return
-if node.right:
-self.getRightBoundary(node.right, result)
-else:
-self.getRightBoundary(node.left, result)
-result.append(node.val)
+    def boundaryOfBinaryTree(self, root: TreeNode) -> list[int]:
+        result = []
+        if not root:
+            return result
+            result.append(root.val)
+            # Get left boundary (excluding root and leaves)
+            self.getLeftBoundary(root.left, result)
+            # Get all leaves
+            self.getLeaves(root, result)
+            # Get right boundary (excluding root and leaves)
+            self.getRightBoundary(root.right, result)
+            return result
+            def getLeftBoundary(self, node: TreeNode, result: list[int]) -> None:
+                if not node or (not node.left and not node.right):
+                    return
+                    result.append(node.val)
+                    if node.left:
+                        self.getLeftBoundary(node.left, result)
+                    else:
+                        self.getLeftBoundary(node.right, result)
+                        def getLeaves(self, node: TreeNode, result: list[int]) -> None:
+                            if not node:
+                                return
+                                if not node.left and not node.right:
+                                    result.append(node.val)
+                                    return
+                                    self.getLeaves(node.left, result)
+                                    self.getLeaves(node.right, result)
+                                    def getRightBoundary(self, node: TreeNode, result: list[int]) -> None:
+                                        if not node or (not node.left and not node.right):
+                                            return
+                                            if node.right:
+                                                self.getRightBoundary(node.right, result)
+                                            else:
+                                                self.getRightBoundary(node.left, result)
+                                                result.append(node.val)
+
+
 ```
 
 ## Detailed Algorithm Breakdown

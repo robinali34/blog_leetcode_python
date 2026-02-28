@@ -87,25 +87,26 @@ def wallsAndGates(self, rooms):
     ROWS = len(rooms), COLS = rooms[0].__len__()
     if(ROWS == 0  or  COLS == 0) return
     deque[pair<int, int>> q
-    // Add all gates to queue (multi-source BFS)
+    # Add all gates to queue (multi-source BFS)
     for(row = 0 row < ROWS row += 1) :
     for(col = 0 col < COLS col += 1) :
     if rooms[row][col] == GATE:
         q.push(:row, col)
-// BFS from all gates simultaneously
+# BFS from all gates simultaneously
 while not not q:
     [row, col] = q[0]
     q.pop()
     for dir in dirs:
         nrow = row + dir[0]
         ncol = col + dir[1]
-        // Skip if out of bounds, wall, or already visited (not EMPTY)
+        # Skip if out of bounds, wall, or already visited (not EMPTY)
         if(nrow < 0  or  nrow >= ROWS  or  ncol < 0  or  ncol >= COLS  or
         rooms[nrow][ncol] != EMPTY) :
         continue
-    // Update distance and add to queue
+    # Update distance and add to queue
     rooms[nrow][ncol] = rooms[row][col] + 1
     q.push(:nrow, ncol)
+
 ```
 
 ### How Solution 1 Works
@@ -154,11 +155,12 @@ for dir in dirs:
 def wallsAndGates(self, rooms):
     ROWS = len(rooms), COLS = rooms[0].__len__()
     if(ROWS == 0  or  COLS == 0) return
-    // Start DFS from each gate
+    # Start DFS from each gate
     for(row = 0 row < ROWS row += 1) :
     for(col = 0 col < COLS col += 1) :
     if rooms[row][col] == GATE:
         dfs(rooms, row, col, 0)
+
 ```
 
 ### How Solution 2 Works

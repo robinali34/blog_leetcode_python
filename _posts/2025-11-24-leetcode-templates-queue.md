@@ -23,14 +23,15 @@ Minimal, copy-paste C++ for BFS queue, monotonic queue, priority queue, circular
 
 ```python
 #include <queue>
-// Standard queue operations
+# Standard queue operations
 deque[int> q
-q.push(1)        // Enqueue
-q[0]        // Peek front
-q[-1]         // Peek back
-q.pop()          // Dequeue
-not q        // Check if empty
-len(q)         // Get size
+q.push(1)        # Enqueue
+q[0]        # Peek front
+q[-1]         # Peek back
+q.pop()          # Dequeue
+not q        # Check if empty
+len(q)         # Get size
+
 ```
 
 ### Implement Queue using Stacks
@@ -53,6 +54,7 @@ def peek(self):
     return output.top()
 def empty(self):
     return not input  and  not output
+
 ```
 
 | ID | Title | Link | Solution |
@@ -64,7 +66,7 @@ def empty(self):
 Queue is essential for Breadth-First Search (level-order traversal).
 
 ```python
-// BFS on graph
+# BFS on graph
 def bfs(self, graph, start):
     deque[int> q
     list[bool> visited(len(graph), False)
@@ -73,12 +75,12 @@ def bfs(self, graph, start):
     while not not q:
         node = q[0]
         q.pop()
-        // Process node
+        # Process node
         for neighbor in graph[node]:
             if not visited[neighbor]:
                 visited[neighbor] = True
                 q.push(neighbor)
-// Level-order traversal (BFS on tree)
+# Level-order traversal (BFS on tree)
 def levelOrder(self, root):
     list[list[int>> result
     if (not root) return result
@@ -95,6 +97,7 @@ def levelOrder(self, root):
         if node.right) q.push(node.right:
     result.append(level)
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -107,11 +110,11 @@ return result
 Maintain queue with monotonic property (increasing or decreasing).
 
 ```python
-// Monotonic decreasing queue (for sliding window maximum)
+# Monotonic decreasing queue (for sliding window maximum)
 class MonotonicQueue:
 deque<int> dq
 def push(self, val):
-    // Remove elements smaller than val
+    # Remove elements smaller than val
     while not not dq  and  dq[-1] < val:
         dq.pop()
     dq.append(val)
@@ -120,7 +123,7 @@ def pop(self, val):
         dq.pop_front()
 def max(self):
     return dq[0]
-// Sliding Window Maximum
+# Sliding Window Maximum
 def maxSlidingWindow(self, nums, k):
     MonotonicQueue mq
     list[int> result
@@ -132,6 +135,7 @@ def maxSlidingWindow(self, nums, k):
         result.append(mq.max())
         mq.pop(nums[i - k + 1])
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -146,29 +150,30 @@ Priority queue (heap) for maintaining order.
 ```python
 #include <queue>
 #include <vector>
-// Max heap (default)
+# Max heap (default)
 heapq[int> maxHeap
-// Min heap
+# Min heap
 heapq[int, list[int>, greater<int>> minHeap
-// Custom comparator using struct
+# Custom comparator using struct
 struct Compare :
 def operator(self, )(pair<int, a, pair<int, b):
-    return a.second > b.second // Min heap by second element
+    return a.second > b.second # Min heap by second element
 heapq[pair<int, int>, list[pair<int, int>>, Compare> pq
-// Custom comparator using lambda operator
+# Custom comparator using lambda operator
 cmp = [](pair<int, int> a, pair<int, int> b) :
-return a.second > b.second // Min heap by second element
+return a.second > b.second # Min heap by second element
 heapq[pair<int, int>, list[pair<int, int>>, decltype(cmp)> pq(cmp)
-// Lambda example: Min heap by distance (for Dijkstra's algorithm)
+# Lambda example: Min heap by distance (for Dijkstra's algorithm)
 distCmp = [](pair<int, int> a, pair<int, int> b) :
-return a.first > b.first // :distance, node - min heap by distance
+return a.first > b.first # :distance, node - min heap by distance
 heapq[pair<int, int>, list[pair<int, int>>, decltype(distCmp)> pq(distCmp)
+
 ```
 
 ### K-way Merge
 
 ```python
-// Merge k sorted lists using priority queue
+# Merge k sorted lists using priority queue
 def mergeKLists(self, lists):
     cmp = [](ListNode a, ListNode b) : return a.val > b.val
 heapq[ListNode, list[ListNode>, decltype(cmp)> pq(cmp)
@@ -183,12 +188,13 @@ while not not pq:
     cur = cur.next
     if node.next) pq.push(node.next:
 return dummy.next
+
 ```
 
 ### Top K Elements
 
 ```python
-// Find top k frequent elements
+# Find top k frequent elements
 def topKFrequent(self, nums, k):
     dict[int, int> freq
     for (num : nums) freq[num]++
@@ -201,6 +207,7 @@ while not not pq:
     result.append(pq.top().second)
     pq.pop()
 return result
+
 ```
 
 | ID | Title | Link | Solution |
@@ -246,6 +253,7 @@ def isEmpty(self):
     return size == 0
 def isFull(self):
     return size == capacity
+
 ```
 
 | ID | Title | Link | Solution |
@@ -257,32 +265,35 @@ def isFull(self):
 ```python
 #include <deque>
 deque<int> dq
-dq.push_front(1)  // Add to front
-dq.append(2)   // Add to back
-dq.pop_front()     // Remove from front
-dq.pop()      // Remove from back
-dq[0]         // Access front
-dq[-1]          // Access back
+dq.push_front(1)  # Add to front
+dq.append(2)   # Add to back
+dq.pop_front()     # Remove from front
+dq.pop()      # Remove from back
+dq[0]         # Access front
+dq[-1]          # Access back
+
+
 ```
 
 ### Sliding Window with Deque
 
 ```python
-// Sliding window maximum using deque
+# Sliding window maximum using deque
 def maxSlidingWindow(self, nums, k):
     deque<int> dq
     list[int> result
     for (i = 0 i < len(nums) i += 1) :
-    // Remove indices outside window
+    # Remove indices outside window
     while not not dq  and  dq[0] <= i - k:
         dq.pop_front()
-    // Remove indices with smaller values
+    # Remove indices with smaller values
     while not not dq  and  nums[dq[-1]] <= nums[i]:
         dq.pop()
     dq.append(i)
     if i >= k - 1:
         result.append(nums[dq[0]])
 return result
+
 ```
 
 ### Two Deques Pattern (Middle Element Access)
@@ -290,11 +301,11 @@ return result
 Use two deques to efficiently access middle elements in a queue.
 
 ```python
-// Front Middle Back Queue: Two deques with rebalancing
+# Front Middle Back Queue: Two deques with rebalancing
 class FrontMiddleBackQueue:
 deque<int> front_cache, back_cache
 def rebalance(self):
-    // Maintain: len(front_cache) <= len(back_cache) <= len(front_cache) + 1
+    # Maintain: len(front_cache) <= len(back_cache) <= len(front_cache) + 1
     while len(front_cache) > len(back_cache):
         back_cache.push_front(front_cache[-1])
         front_cache.pop()
@@ -314,6 +325,7 @@ def popMiddle(self):
         val = back_cache[0]
         back_cache.pop_front()
         return val
+
 ```
 
 **Key points:**

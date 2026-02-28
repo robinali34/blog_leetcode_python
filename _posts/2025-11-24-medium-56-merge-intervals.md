@@ -110,6 +110,7 @@ if not len(merged)  or  merged[-1][1] < left:
      else :
     merged[-1][1] = max (merged[-1][1], right)
 return merged
+
 ```
 
 ## How the Algorithm Works
@@ -175,6 +176,10 @@ After:   [1,6]  [8,10]  [15,18]
 
 ```python
 intervals.sort()
+
+
+
+
 ```
 
 **Why this works:**
@@ -190,6 +195,7 @@ if len(merged) == 0  or  merged[-1][1] < left:
     merged.append(:left, right)
      else :
     merged[-1][1] = max(merged[-1][1], right)
+
 ```
 
 **Breakdown:**
@@ -245,6 +251,7 @@ if intervals[i][0] <= merged[-1][1]:
      else :
     merged.append(intervals[i])
 return merged
+
 ```
 
 **Pros:**
@@ -274,6 +281,7 @@ if intervals[i][0] <= intervals[writeIdx][1]:
     intervals[writeIdx] = intervals[i]
 intervals.resize(writeIdx + 1)
 return intervals
+
 ```
 
 **Pros:**
@@ -298,6 +306,10 @@ return intervals
 
 ```python
 intervals.sort()
+
+
+
+
 ```
 
 **For `vector<vector<int>>`:**
@@ -314,8 +326,10 @@ After:  [[1,3], [2,6], [8,10]]
 ### Overlap Condition Explained
 
 ```python
-merged[-1][1] < left  // No overlap
-merged[-1][1] >= left // Overlap
+merged[-1][1] < left  # No overlap
+merged[-1][1] >= left # Overlap
+
+
 ```
 
 **Why this works:**
@@ -328,6 +342,10 @@ merged[-1][1] >= left // Overlap
 
 ```python
 merged[-1][1] = max(merged[-1][1], right)
+
+
+
+
 ```
 
 **Why max?**
@@ -477,13 +495,13 @@ list[list[int>> mergeTwoArrays(
 list[list[int>> arr1,
 list[list[int>> arr2
 ) :
-// Combine both arrays
+# Combine both arrays
 list[list[int>> combined
 combined.insert(combined.end(), arr1.begin(), arr1.end())
 combined.insert(combined.end(), arr2.begin(), arr2.end())
-// Sort by start time
+# Sort by start time
 combined.sort()
-// Merge overlapping intervals
+# Merge overlapping intervals
 list[list[int>> merged
 for(i = 0 i < (int)len(combined) i += 1) :
 left = combined[i][0], right = combined[i][1]
@@ -492,6 +510,7 @@ if len(merged) == 0  or  merged[-1][1] < left:
      else :
     merged[-1][1] = max(merged[-1][1], right)
 return merged
+
 ```
 
 ### Alternative: More Efficient Approach
@@ -503,7 +522,7 @@ First merge each array individually, then merge the two merged arrays using two 
 
 ```python
 class Solution:
-// Helper function to merge intervals in one array
+# Helper function to merge intervals in one array
 def mergeOneArray(self, intervals):
     if(len(intervals) == 0) return :
 intervals.sort()
@@ -519,26 +538,27 @@ list[list[int>> mergeTwoArrays(
 list[list[int>> arr1,
 list[list[int>> arr2
 ) :
-// Merge each array individually
+# Merge each array individually
 list[list[int>> merged1 = mergeOneArray(arr1)
 list[list[int>> merged2 = mergeOneArray(arr2)
-// Merge the two merged arrays using two pointers
+# Merge the two merged arrays using two pointers
 list[list[int>> result
 i = 0, j = 0
 while i < len(merged1)  or  j < len(merged2):
-    // Choose the interval with smaller start time
+    # Choose the interval with smaller start time
     list[int> current
     if(j >= len(merged2)  or
     (i < len(merged1)  and  merged1[i][0] <= merged2[j][0])) :
     current = merged1[i += 1]
      else :
     current = merged2[j += 1]
-// Merge with last interval in result if overlapping
+# Merge with last interval in result if overlapping
 if len(result) == 0  or  result[-1][1] < current[0]:
     result.append(current)
      else :
     result[-1][1] = max(result[-1][1], current[1])
 return result
+
 ```
 
 ### How the Two-Pointer Approach Works

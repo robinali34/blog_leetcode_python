@@ -60,20 +60,22 @@ Use two pointers with sliding window technique to efficiently count complete sub
 
 ```python
 class Solution:
-def countCompleteSubarrays(self, nums: list[int]) -> int:
-cnt = 0
-distinct_cnt = len(set(nums))
-freq = :
-left = 0
-for right in range(len(nums)):
-freq[nums[right]] = freq.get(nums[right], 0) + 1
-while len(freq) == distinct_cnt:
-cnt += len(nums) - right
-freq[nums[left]] -= 1
-if freq[nums[left]] == 0:
-del freq[nums[left]]
-left += 1
-return cnt
+    def countCompleteSubarrays(self, nums: list[int]) -> int:
+        cnt = 0
+        distinct_cnt = len(set(nums))
+        freq = {}
+        left = 0
+        for right in range(len(nums)):
+            freq[nums[right]] = freq.get(nums[right], 0) + 1
+            while len(freq) == distinct_cnt:
+                cnt += len(nums) - right
+                freq[nums[left]] -= 1
+                if freq[nums[left]] == 0:
+                    del freq[nums[left]]
+                    left += 1
+                    return cnt
+
+
 ```
 
 ## How the Algorithm Works
@@ -123,7 +125,10 @@ Total: 4 complete subarrays
 ### 1. Initialize Variables
 ```python
 distinct_cnt = len(set(nums))
-freq = :
+freq = {}
+
+
+
 ```
 
 **Purpose:** Track total distinct elements and current window frequencies.
@@ -132,13 +137,15 @@ freq = :
 ```python
 left = 0
 for right in range(len(nums)):
-freq[nums[right]] = freq.get(nums[right], 0) + 1
-while len(freq) == distinct_cnt:
-cnt += len(nums) - right
-freq[nums[left]] -= 1
-if freq[nums[left]] == 0:
-del freq[nums[left]]
-left += 1
+    freq[nums[right]] = freq.get(nums[right], 0) + 1
+    while len(freq) == distinct_cnt:
+        cnt += len(nums) - right
+        freq[nums[left]] -= 1
+        if freq[nums[left]] == 0:
+            del freq[nums[left]]
+            left += 1
+
+
 ```
 
 **Process:**
@@ -196,16 +203,20 @@ Indices:    0  1  2  3  4
 ### Approach 1: Nested Loops (Original)
 ```python
 class Solution:
-def countCompleteSubarrays(self, nums: list[int]) -> int:
-cnt = 0
-total_unique = len(set(nums))
-for left in range(len(nums)):
-window_counts = :
-for right in range(left, len(nums)):
-window_counts[nums[right]] = window_counts.get(nums[right], 0) + 1
-if len(window_counts) == total_unique:
-cnt += 1
-return cnt
+    def countCompleteSubarrays(self, nums: list[int]) -> int:
+        cnt = 0
+        total_unique = len(set(nums))
+        for left in range(len(nums)):
+            window_counts = {}
+            for right in range(left, len(nums)):
+                window_counts[nums[right]] = window_counts.get(nums[right], 0) + 1
+                if len(window_counts) == total_unique:
+                    cnt += 1
+                    return cnt
+
+
+
+
 ```
 
 **Time Complexity:** O(n²)  
@@ -214,18 +225,22 @@ return cnt
 ### Approach 2: Brute Force with Set
 ```python
 class Solution:
-def countCompleteSubarrays(self, nums: list[int]) -> int:
-n = len(nums)
-total_unique = len(set(nums))
-cnt = 0
-for i in range(n):
-for j in range(i, n):
-subarray_elements = set()
-for k in range(i, j + 1):
-subarray_elements.add(nums[k])
-if len(subarray_elements) == total_unique:
-cnt += 1
-return cnt
+    def countCompleteSubarrays(self, nums: list[int]) -> int:
+        n = len(nums)
+        total_unique = len(set(nums))
+        cnt = 0
+        for i in range(n):
+            for j in range(i, n):
+                subarray_elements = set()
+                for k in range(i, j + 1):
+                    subarray_elements.add(nums[k])
+                    if len(subarray_elements) == total_unique:
+                        cnt += 1
+                        return cnt
+
+
+
+
 ```
 
 **Time Complexity:** O(n³)  
@@ -307,20 +322,28 @@ Total complete subarrays: 4
 ### 1. Early Termination
 ```python
 if window_countslen() == total_unique:
-    cnt += (numslen() - right)  // All remaining subarrays are complete
+    cnt += (numslen() - right)  # All remaining subarrays are complete
     break
+
+
 ```
 
 ### 2. Set Instead of Map
 ```python
 window_elements = set()
 # Only track presence, not frequency
+
+
+
+
 ```
 
 ### 3. Two Pointers Optimization
 ```python
-// Use two pointers to find minimum window with all elements
-// Then count all subarrays containing this window
+# Use two pointers to find minimum window with all elements
+# Then count all subarrays containing this window
+
+
 ```
 
 ## Related Problems

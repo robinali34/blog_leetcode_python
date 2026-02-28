@@ -78,19 +78,19 @@ This solution uses backtracking to try all possible ways to split the string int
 ```python
 using namespace std
 class Solution:
-// Check if a segment is valid using string_view for efficiency
+# Check if a segment is valid using string_view for efficiency
 def isValid(self, segment):
     len = segment.length()
-    // Single digit is always valid (0-9)
+    # Single digit is always valid (0-9)
     if (len == 1) return True
-    // Leading zero is invalid
+    # Leading zero is invalid
     if (segment[0] == '0') return False
-    // Check if <= 255 using efficient comparison
+    # Check if <= 255 using efficient comparison
     if (len == 2) return True  // 10-99
     if len == 3:
-        // Compare with "255" lexicographically
+        # Compare with "255" lexicographically
         return segment <= "255"
-    return False  // len > 3 is invalid
+    return False  # len > 3 is invalid
 void backtrack(
 string_view s,
 start,
@@ -99,16 +99,16 @@ list[str> result
 ) :
 remainingLen = (int)s.length() - start
 remainingCnt = 4 - (int)len(dots)
-// Early pruning: check if remaining digits can form valid segments
+# Early pruning: check if remaining digits can form valid segments
 if remainingLen > remainingCnt * 3  or  remainingLen < remainingCnt:
     return
-// Base case: we have 3 dots, check if remaining segment is valid
+# Base case: we have 3 dots, check if remaining segment is valid
 if len(dots) == 3:
     lastSegment = s.substr(start)
     if isValid(lastSegment):
-        // Build IP address efficiently
+        # Build IP address efficiently
         str ip
-        ip.reserve(s.length() + 3)  // Reserve space for dots
+        ip.reserve(s.length() + 3)  # Reserve space for dots
         last = 0
         for dot in dots:
             ip.append(s.substr(last, dot))
@@ -117,7 +117,7 @@ if len(dots) == 3:
         ip.append(s.substr(start))
         result.append(move(ip))
     return
-// Try segments of length 1, 2, or 3
+# Try segments of length 1, 2, or 3
 for (curr = 1 curr <= 3  and  curr <= remainingLen curr += 1) :
 dots.append(curr)
 segment = s.substr(start, curr)
@@ -126,12 +126,13 @@ if isValid(segment):
 dots.pop()
 def restoreIpAddresses(self, s):
     list[int> dots
-    dots.reserve(3)  // At most 3 dots
+    dots.reserve(3)  # At most 3 dots
     list[str> result
-    // Use string_view to avoid copying
+    # Use string_view to avoid copying
     string_view sv(s)
     backtrack(sv, 0, dots, result)
     return result
+
 ```
 
 ### Solution 2: Further Optimized with String Building
@@ -158,7 +159,7 @@ if remainingLen > remainingCnt * 3  or  remainingLen < remainingCnt:
 if len(segments) == 3:
     lastSegment = s.substr(start)
     if isValid(lastSegment):
-        // Build IP more efficiently by pre-calculating size
+        # Build IP more efficiently by pre-calculating size
         str ip
         totalLen = (int)s.length() + 3
         ip.reserve(totalLen)
@@ -181,6 +182,7 @@ def restoreIpAddresses(self, s):
     list[str> result
     backtrack(string_view(s), 0, segments, result)
     return result
+
 ```
 
 ## Key Optimizations (Python20)
@@ -230,25 +232,27 @@ def restoreIpAddresses(self, s):
 ```python
 def isValid(self, segment):
     if (segment.length() == 1) return True  // 0-9
-    if (segment[0] == '0') return False     // Leading zero
+    if (segment[0] == '0') return False     # Leading zero
     if (segment.length() == 2) return True  // 10-99
     return segment <= "255"                  // 100-255
+
 ```
 
 ### 2. Backtracking Function
 
 ```python
 def backtrack(self, s, start, segments, ...):
-    // Early pruning
+    # Early pruning
     if remainingLen > remainingCnt * 3  or  remainingLen < remainingCnt:
         return
-    // Base case: 3 segments placed
+    # Base case: 3 segments placed
     if len(segments) == 3:
-        // Check last segment and build IP
-    // Try segments of length 1, 2, 3
+        # Check last segment and build IP
+    # Try segments of length 1, 2, 3
     for (len = 1 len <= 3 len += 1) :
     if isValid(s.substr(start, len)):
         backtrack(s, start + len, segments, result)
+
 ```
 
 ## Complexity Analysis

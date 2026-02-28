@@ -124,7 +124,7 @@ This is a classic **BFS (Breadth-First Search)** problem for N-ary trees. The ke
 
 ```python
 /
-// Definition for a Node.
+# Definition for a Node.
 class Node:
 val
 list[Node> children
@@ -152,6 +152,7 @@ def levelOrder(self, root):
             q.push(child)
     rtn.append(level)
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**

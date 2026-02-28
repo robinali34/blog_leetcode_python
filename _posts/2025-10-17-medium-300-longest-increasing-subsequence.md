@@ -48,17 +48,21 @@ Use dynamic programming to track the length of the longest increasing subsequenc
 
 ```python
 class Solution:
-def lengthOfLIS(self, nums: list[int]) -> int:
-dp = [1]  len(nums)
-result = 1
-for i in range(1, len(nums)):
-max_pre = 0
-for j in range(i):
-if nums[i] > nums[j]:
-max_pre = max(max_pre, dp[j])
-dp[i] = max_pre + 1
-result = max(result, dp[i])
-return result
+    def lengthOfLIS(self, nums: list[int]) -> int:
+        dp = [1] * len(nums)
+        result = 1
+        for i in range(1, len(nums)):
+            max_pre = 0
+            for j in range(i):
+                if nums[i] > nums[j]:
+                    max_pre = max(max_pre, dp[j])
+                    dp[i] = max_pre + 1
+                    result = max(result, dp[i])
+                    return result
+
+
+
+
 ```
 
 ## Solution 2: Binary Search with Patience Sorting
@@ -71,16 +75,18 @@ Use binary search to maintain a sorted array representing the smallest tail elem
 ```python
 import bisect
 class Solution:
-def lengthOfLIS(self, nums: list[int]) -> int:
-sub = [nums[0]]
-for i in range(1, len(nums)):
-num = nums[i]
-if num > sub[-1]:
-sub.append(num)
-else:
-idx = bisect.bisect_left(sub, num)
-sub[idx] = num
-return len(sub)
+    def lengthOfLIS(self, nums: list[int]) -> int:
+        sub = [nums[0]]
+        for i in range(1, len(nums)):
+            num = nums[i]
+            if num > sub[-1]:
+                sub.append(num)
+            else:
+                idx = bisect.bisect_left(sub, num)
+                sub[idx] = num
+                return len(sub)
+
+
 ```
 
 ## How the Algorithms Work
@@ -142,15 +148,19 @@ return len(sub)
 ### Solution 1: Dynamic Programming
 
 ```python
-dp = [1]  len(nums)
+dp = [1] * len(nums)
 rtn = 1
 for i in range(1, len(nums)):
-max_pre = 0
-for j in range(i):
-if nums[i] > nums[j]:
-max_pre = max(max_pre, dp[j])
-dp[i] = max_pre + 1
-rtn = max(rtn, dp[i])
+    max_pre = 0
+    for j in range(i):
+        if nums[i] > nums[j]:
+            max_pre = max(max_pre, dp[j])
+            dp[i] = max_pre + 1
+            rtn = max(rtn, dp[i])
+
+
+
+
 ```
 
 **Process:**
@@ -165,11 +175,13 @@ rtn = max(rtn, dp[i])
 import bisect
 sub = [nums[0]]
 for num in nums[1:]:
-if num > sub[-1]:
-sub.append(num)
-else:
-i = bisect.bisect_left(sub, num)
-sub[i] = num
+    if num > sub[-1]:
+        sub.append(num)
+    else:
+        i = bisect.bisect_left(sub, num)
+        sub[i] = num
+
+
 ```
 
 **Process:**
@@ -249,21 +261,25 @@ i=5: [0,1,2,3]
 ### Approach 1: Recursive with Memoization
 ```python
 class Solution:
-def lengthOfLIS(self, nums: list[int]) -> int:
-memo = [-1]  len(nums)
-maxLen = 0
-for i in range(len(nums)):
-maxLen = max(maxLen, self.dfs(nums, i, memo))
-return maxLen
-def dfs(self, nums: list[int], index: int, memo: list[int]) -> int:
-if memo[index] != -1:
-return memo[index]
-maxLen = 1
-for i in range(index + 1, len(nums)):
-if nums[i] > nums[index]:
-maxLen = max(maxLen, 1 + self.dfs(nums, i, memo))
-memo[index] = maxLen
-return maxLen
+    def lengthOfLIS(self, nums: list[int]) -> int:
+        memo = [-1] * len(nums)
+        maxLen = 0
+        for i in range(len(nums)):
+            maxLen = max(maxLen, self.dfs(nums, i, memo))
+            return maxLen
+            def dfs(self, nums: list[int], index: int, memo: list[int]) -> int:
+                if memo[index] != -1:
+                    return memo[index]
+                    maxLen = 1
+                    for i in range(index + 1, len(nums)):
+                        if nums[i] > nums[index]:
+                            maxLen = max(maxLen, 1 + self.dfs(nums, i, memo))
+                            memo[index] = maxLen
+                            return maxLen
+
+
+
+
 ```
 
 **Time Complexity:** O(n²)  

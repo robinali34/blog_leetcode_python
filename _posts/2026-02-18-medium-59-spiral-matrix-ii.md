@@ -90,6 +90,7 @@ def generateMatrix(self, n):
     for (ptr = n - layer - 2 ptr > layer ptr -= 1)
     rtn[ptr][layer] = cnt += 1
 return rtn
+
 ```
 {% endraw %}
 
@@ -117,6 +118,7 @@ if nr < 0  or  nr >= n  or  nc < 0  or  nc >= n  or  mat[nr][nc] != 0:
 r = nr
 c = nc
 return mat
+
 ```
 {% endraw %}
 

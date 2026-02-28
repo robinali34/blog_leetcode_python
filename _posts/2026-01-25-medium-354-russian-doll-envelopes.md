@@ -97,7 +97,7 @@ def maxEnvelopes(self, envelopes):
     if(not envelopes) return 0
     N = len(envelopes)
     sort(envelopes.begin(), envelopes.end(), [](e1, e2) :
-    return e1[0] < e2[0]  or  (e1[0] == e2[0]  and  e1[1] > e2[1])
+    return e1[0] < e2[0] * or  (e1[0] == e2[0] * and  e1[1] > e2[1])
     )
     list[int> dp = :envelopes[0][1]
 for(i = 1 i < N i += 1) :
@@ -108,6 +108,7 @@ if num > dp[-1]:
     it = lower_bound(dp.begin(), dp.end(), num)
     it = num
 return len(dp)
+
 ```
 
 ### Algorithm Explanation:
@@ -116,8 +117,9 @@ return len(dp)
 
 ```python
 sort(envelopes.begin(), envelopes.end(), [](e1, e2) :
-return e1[0] < e2[0]  or  (e1[0] == e2[0]  and  e1[1] > e2[1])
+return e1[0] < e2[0] * or  (e1[0] == e2[0] * and  e1[1] > e2[1])
 )
+
 ```
 
 - **Primary Sort**: By width (`e1[0]`) in ascending order
@@ -137,6 +139,7 @@ if num > dp[-1]:
      else :
     it = lower_bound(dp.begin(), dp.end(), num)
     it = num
+
 ```
 
 - **`dp`**: Maintains smallest tail element for each subsequence length
@@ -221,10 +224,11 @@ def maxEnvelopes(self, envelopes):
     list[int> dp(n, 1)
     for(i = 1 i < n i += 1) :
     for(j = 0 j < i j += 1) :
-    if(envelopes[i][0] > envelopes[j][0]  and
+    if(envelopes[i][0] > envelopes[j][0] * and
     envelopes[i][1] > envelopes[j][1]) :
     dp[i] = max(dp[i], dp[j] + 1)
 return max_element(dp.begin(), dp.end())
+
 ```
 
 **Time Complexity:** O(n²)  

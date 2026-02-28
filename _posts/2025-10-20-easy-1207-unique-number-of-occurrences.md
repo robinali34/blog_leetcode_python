@@ -59,12 +59,16 @@ Explanation: The value -3 has 3 occurrences, 0 has 2 occurrences, 1 has 4 occurr
 
 ```python
 class Solution:
-def uniqueOccurrences(self, arr: list[int]) -> bool:
-freqs = :
-for num in arr:
-freqs[num] = freqs.get(num, 0) + 1
-occurs = set(freqs.values())
-return len(occurs) == len(freqs)
+    def uniqueOccurrences(self, arr: list[int]) -> bool:
+        freqs = {}
+        for num in arr:
+            freqs[num] = freqs.get(num, 0) + 1
+            occurs = set(freqs.values())
+            return len(occurs) == len(freqs)
+
+
+
+
 ```
 
 ### Approach 2: Early Termination Optimization
@@ -79,16 +83,20 @@ return len(occurs) == len(freqs)
 
 ```python
 class Solution:
-def uniqueOccurrences(self, arr: list[int]) -> bool:
-freqs = :
-for num in arr:
-freqs[num] = freqs.get(num, 0) + 1
-occurs = set()
-for freq in freqs.values():
-if freq in occurs:
-return False
-occurs.add(freq)
-return True
+    def uniqueOccurrences(self, arr: list[int]) -> bool:
+        freqs = {}
+        for num in arr:
+            freqs[num] = freqs.get(num, 0) + 1
+            occurs = set()
+            for freq in freqs.values():
+                if freq in occurs:
+                    return False
+                    occurs.add(freq)
+                    return True
+
+
+
+
 ```
 
 ### Approach 3: Array-Based Counting
@@ -103,17 +111,21 @@ return True
 
 ```python
 class Solution:
-def uniqueOccurrences(self, arr: list[int]) -> bool:
-freq = [0]  2001  # Offset by 1000 for negative numbers
-count = [0]  1001  # Max frequency is 1000
-for num in arr:
-freq[num + 1000] += 1
-for f in freq:
-if f > 0:
-count[f] += 1
-if count[f] > 1:
-return False
-return True
+    def uniqueOccurrences(self, arr: list[int]) -> bool:
+        freq = [0] * 2001  # Offset by 1000 for negative numbers
+        count = [0] * 1001  # Max frequency is 1000
+        for num in arr:
+            freq[num + 1000] += 1
+            for f in freq:
+                if f > 0:
+                    count[f] += 1
+                    if count[f] > 1:
+                        return False
+                        return True
+
+
+
+
 ```
 
 ## Algorithm Analysis
@@ -137,15 +149,17 @@ return True
 
 ### Hash Set Insert Behavior
 ```python
-// insert() returns pair<iterator, bool>
-// second is True if insertion successful (no duplicate)
+# insert() returns pair<iterator, bool>
+# second is True if insertion successful (no duplicate)
 if(not occurs.insert(freq).second) return False
+
 ```
 
 ### Array Offset Technique
 ```python
-// Offset by 1000 to handle negative numbers
+# Offset by 1000 to handle negative numbers
 freq[num + 1000]++
+
 ```
 
 ## Edge Cases

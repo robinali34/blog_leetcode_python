@@ -101,6 +101,7 @@ def numIslands(self, grid):
         dfs(grid, i, j)
         cnt += 1
 return cnt
+
 ```
 
 ## How the Algorithm Works
@@ -167,32 +168,33 @@ Island 1:        Island 2:    Island 3:
 
 ```python
 def numIslands(self, grid):
-    // Handle empty grid
+    # Handle empty grid
     if (len(grid) == 0  or  grid[0].__len__() == 0) return 0
     cnt = 0
-    // Scan entire grid
+    # Scan entire grid
     for(i = 0 i < len(grid) i += 1) :
     for(j = 0 j < grid[0].__len__() j += 1) :
-    // Found unvisited land cell
+    # Found unvisited land cell
     if grid[i][j] == '1':
-        // Explore entire island
+        # Explore entire island
         dfs(grid, i, j)
-        // Count this island
+        # Count this island
         cnt += 1
 return cnt
 def dfs(self, grid, row, col):
-    // Base cases: out of bounds or water/visited
+    # Base cases: out of bounds or water/visited
     if (row < 0  or  col < 0  or
     row >= len(grid)  or  col >= grid[0].__len__()  or
     grid[row][col] != '1') :
     return
-// Mark as visited by changing to '0'
+# Mark as visited by changing to '0'
 grid[row][col] = '0'
-// Explore all 4 directions
-dfs(grid, row - 1, col)  // Up
-dfs(grid, row, col - 1)   // Left
-dfs(grid, row + 1, col)   // Down
-dfs(grid, row, col + 1)   // Right
+# Explore all 4 directions
+dfs(grid, row - 1, col)  # Up
+dfs(grid, row, col - 1)   # Left
+dfs(grid, row + 1, col)   # Down
+dfs(grid, row, col + 1)   # Right
+
 ```
 
 ## Edge Cases
@@ -236,6 +238,7 @@ if grid[i][j] == '1':
             grid[nr][nc] = '0'
             q.push(:nr, nc)
 return cnt
+
 ```
 
 **Pros:**
@@ -281,6 +284,7 @@ def numIslands(self, grid):
                 unite(idx, left)
                 islands -= 1
 return islands
+
 ```
 
 **Pros:**
@@ -308,6 +312,7 @@ if (row < 0  or  col < 0  or
 row >= (int)len(grid)  or  col >= (int)grid[0].__len__()  or
 grid[row][col] != '1') :
 return
+
 ```
 
 **Why cast to `int`?**
@@ -318,6 +323,10 @@ return
 
 ```python
 grid[row][col] = '0'
+
+
+
+
 ```
 
 **Why change to '0'?**
@@ -328,10 +337,14 @@ grid[row][col] = '0'
 ### Direction Exploration Order
 
 ```python
-dfs(grid, row - 1, col)  // Up
-dfs(grid, row, col - 1)  // Left
-dfs(grid, row + 1, col)  // Down
-dfs(grid, row, col + 1)  // Right
+dfs(grid, row - 1, col)  # Up
+dfs(grid, row, col - 1)  # Left
+dfs(grid, row + 1, col)  # Down
+dfs(grid, row, col + 1)  # Right
+
+
+
+
 ```
 
 Order doesn't matter - all 4 directions must be explored.
@@ -352,6 +365,7 @@ Order doesn't matter - all 4 directions must be explored.
 list[list[int>> dirs = \:\:-1,0\, \:1,0\, \:0,-1\, \:0,1\\
 for dir in dirs:
     dfs(grid, row + dir[0], col + dir[1])
+
 ```
 3. BFS for Wide Islands: Use BFS if islands are very wide (less stack depth)
 ## Related Problems

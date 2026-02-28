@@ -121,6 +121,7 @@ def bfs(self, adj, u, visited):
             if not visited[successor]:
                 q.push(successor)
                 visited[successor] = True
+
 ```
 
 ### **Algorithm Explanation:**
@@ -229,6 +230,7 @@ def dfs(self, adj, u, visited):
     for v in adj[u]:
         if not visited[v]:
             dfs(adj, v, visited)
+
 ```
 
 ### **Complexity Analysis:**
@@ -263,6 +265,7 @@ def find(self, parent, x):
     return parent[x]
 def unite(self, parent, a, b):
     parent[find(parent, a)] = find(parent, b)
+
 ```
 
 ### **Algorithm Explanation:**

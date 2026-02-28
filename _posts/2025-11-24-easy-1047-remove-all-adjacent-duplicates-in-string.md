@@ -121,6 +121,7 @@ def removeDuplicates(self, s):
              else :
             stk.append(ch)
     return stk
+
 ```
 
 ## Solution 2: In-Place Two Pointers
@@ -135,6 +136,7 @@ def removeDuplicates(self, s):
         continue
     s[left += 1] = s[right]
 return s.substr(0, left + 1)
+
 ```
 
 ## How the Algorithms Work
@@ -235,10 +237,11 @@ Final: s.substr(0, 2) = "ca"
 str stk
 for ch in s:
     if not not stk  and  stk[-1] == ch:
-        stk.pop()  // Remove duplicate
+        stk.pop()  # Remove duplicate
          else :
-        stk.append(ch)  // Add character
+        stk.append(ch)  # Add character
 return stk
+
 ```
 
 **How it works:**
@@ -250,13 +253,14 @@ return stk
 ### In-Place Two Pointers Solution
 
 ```python
-left = -1  // Stack pointer (points to last valid character)
+left = -1  # Stack pointer (points to last valid character)
 for(right = 0 right < len(s) right += 1) :
 if left >= 0  and  s[right] == s[left]:
-    left -= 1  // Pop: move stack pointer back
+    left -= 1  # Pop: move stack pointer back
     continue
-s[left += 1] = s[right]  // Push: increment and assign
+s[left += 1] = s[right]  # Push: increment and assign
 return s.substr(0, left + 1)
+
 ```
 
 **How it works:**
@@ -286,10 +290,11 @@ return s.substr(0, left + 1)
 ### Stack-Based: Why String Works
 
 ```python
-str stk  // Acts as stack
-stk[-1]    // Top of stack
-stk.pop() // Pop from stack
-stk.append() // Push to stack
+str stk  # Acts as stack
+stk[-1]    # Top of stack
+stk.pop() # Pop from stack
+stk.append() # Push to stack
+
 ```
 
 **Why use string instead of stack<char>?**
@@ -300,7 +305,9 @@ stk.append() // Push to stack
 ### In-Place: Two Pointer Logic
 
 ```python
-left = -1  // Points to last valid character (-1 means empty)
+left = -1  # Points to last valid character (-1 means empty)
+
+
 ```
 
 **Why `left = -1` initially?**
@@ -333,6 +340,7 @@ def removeDuplicates(self, s):
         result = stk.top() + result
         stk.pop()
     return result
+
 ```
 
 **Pros:**
@@ -355,6 +363,7 @@ def removeDuplicates(self, s):
     if s[i] == s[i+1]:
         return removeDuplicates(s.substr(0, i) + s.substr(i+2))
 return s
+
 ```
 
 **Pros:**

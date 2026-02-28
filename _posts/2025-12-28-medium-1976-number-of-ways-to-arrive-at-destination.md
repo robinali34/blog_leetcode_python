@@ -127,6 +127,7 @@ def countPaths(self, n, roads):
         def if(self, shortestTime[neighborNode]):
             pathCount[neighborNode] = (pathCount[neighborNode] + pathCount[currNode]) % MOD
 return pathCount[n - 1]
+
 ```
 
 ### **Algorithm Explanation:**
@@ -211,32 +212,33 @@ Here's the general template for Dijkstra's algorithm with path counting:
 def countShortestPaths(self, n, list[list[pair<int, adjList, start, end):
     MOD = 1e9 + 7
     long long INF = LLONG_MAX
-    // Distance and path count arrays
+    # Distance and path count arrays
     list[long long> dist(n, INF)
     list[int> pathCount(n, 0)
-    // Priority queue: (distance, node)
+    # Priority queue: (distance, node)
     heapq[pair<long long, int>, list[pair<long long, int>>, greater<>> pq
-    // Initialize start node
+    # Initialize start node
     dist[start] = 0
     pathCount[start] = 1
     pq.emplace(0, start)
     while not not pq:
         [currDist, currNode] = pq.top()
         pq.pop()
-        // Skip if outdated (already found shorter path)
+        # Skip if outdated (already found shorter path)
         if (currDist > dist[currNode]) continue
-        // Explore neighbors
+        # Explore neighbors
         for ([neighbor, weight] : adjList[currNode]) :
         long long newDist = currDist + weight
-        // Found shorter path: update distance and reset count
+        # Found shorter path: update distance and reset count
         if newDist < dist[neighbor]:
             dist[neighbor] = newDist
             pathCount[neighbor] = pathCount[currNode]
             pq.emplace(newDist, neighbor)
-        // Found equal path: add to count
+        # Found equal path: add to count
         def if(self, dist[neighbor]):
             pathCount[neighbor] = (pathCount[neighbor] + pathCount[currNode]) % MOD
 return pathCount[end]
+
 ```
 
 ### **Key Template Components:**

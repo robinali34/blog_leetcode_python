@@ -136,6 +136,7 @@ def deleteTrie(self, node):
     for([_, child]: node.children) :
     deleteTrie(child)
 delete node
+
 ```
 
 ### Algorithm Explanation:
@@ -209,6 +210,7 @@ def removeSubfolders(self, folder):
         f[rtn[-1].__len__()] != '/'):
         rtn.append(f)
 return rtn
+
 ```
 
 ### Algorithm Explanation:

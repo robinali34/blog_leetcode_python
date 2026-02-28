@@ -125,6 +125,7 @@ for(i = 0 i < rows i += 1) :
 count += dp[cur]
 cur = next[cur]
 return count
+
 ```
 
 ### **Algorithm Explanation:**

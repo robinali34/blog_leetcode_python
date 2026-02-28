@@ -38,7 +38,7 @@ Generate all permutations of distinct elements.
 ### Permutations without duplicates
 
 ```python
-// Permutations without duplicates
+# Permutations without duplicates
 def backtrack(self, nums, cur, used, res):
     if len(cur) == len(nums):
         res.append(cur)
@@ -50,6 +50,7 @@ def backtrack(self, nums, cur, used, res):
     backtrack(nums, cur, used, res)
     cur.pop()
     used[i] = False
+
 ```
 
 ### Permutations with duplicates
@@ -57,20 +58,20 @@ def backtrack(self, nums, cur, used, res):
 Avoid duplicates by sorting first, then skipping duplicates at the same level when the previous duplicate hasn't been used.
 
 ```python
-// Permutations with duplicates (avoid duplicates by sorting + skip used duplicates)
+# Permutations with duplicates (avoid duplicates by sorting + skip used duplicates)
 def backtrack(self, nums, cur, used, res):
     if len(cur) == len(nums):
         res.append(cur)
         return
     for (i = 0 i < (int)len(nums) i += 1):
-    // Skip if already used, or if duplicate and previous duplicate not used
-    if (used[i]  or  (i > 0  and  nums[i] == nums[i-1]  and  not used[i-1])) continue
+    # Skip if already used, or if duplicate and previous duplicate not used
+    if (used[i] * or  (i > 0  and  nums[i] == nums[i-1] * and  not used[i-1])) continue
     used[i] = True
     cur.append(nums[i])
     backtrack(nums, cur, used, res)
     cur.pop()
     used[i] = False
-// Call with sorted array
+# Call with sorted array
 def permuteUnique(self, nums):
     nums.sort()
     list[list[int>> res
@@ -78,6 +79,7 @@ def permuteUnique(self, nums):
     list[bool> used(len(nums), False)
     backtrack(nums, cur, used, res)
     return res
+
 ```
 
 | ID | Title | Link | Solution |
@@ -90,16 +92,17 @@ def permuteUnique(self, nums):
 Generate all combinations of k elements from n elements. Order doesn't matter, so we use `start` index to avoid duplicates.
 
 ```python
-// Combinations C(n, k)
+# Combinations C(n, k)
 def backtrack(self, start, n, k, cur, res):
     if len(cur) == k:
         res.append(cur)
         return
-    // Only consider elements from start onwards to avoid duplicates
+    # Only consider elements from start onwards to avoid duplicates
     for (i = start i <= n i += 1):
     cur.append(i)
-    backtrack(i+1, n, k, cur, res)  // Next start is i+1
+    backtrack(i+1, n, k, cur, res)  # Next start is i+1
     cur.pop()
+
 ```
 
 **Key insight:** Use `start` parameter to ensure we only consider elements after the current position, preventing duplicate combinations.
@@ -116,13 +119,14 @@ Generate all subsets (power set) of an array. This includes the empty set and th
 ### Subsets without duplicates
 
 ```python
-// Subsets without duplicates
+# Subsets without duplicates
 def backtrack(self, start, nums, cur, res):
-    res.append(cur)  // Add current subset (including empty set)
+    res.append(cur)  # Add current subset (including empty set)
     for (i = start i < (int)len(nums) i += 1):
     cur.append(nums[i])
     backtrack(i+1, nums, cur, res)
     cur.pop()
+
 ```
 
 ### Subsets with duplicates
@@ -130,22 +134,23 @@ def backtrack(self, start, nums, cur, res):
 Sort first, then skip duplicates at the same level.
 
 ```python
-// Subsets with duplicates (sort first, skip duplicates at same level)
+# Subsets with duplicates (sort first, skip duplicates at same level)
 def backtrack(self, start, nums, cur, res):
     res.append(cur)
     for (i = start i < (int)len(nums) i += 1):
-    // Skip duplicates at the same level
+    # Skip duplicates at the same level
     if (i > start  and  nums[i] == nums[i-1]) continue
     cur.append(nums[i])
     backtrack(i+1, nums, cur, res)
     cur.pop()
-// Call with sorted array
+# Call with sorted array
 def subsetsWithDup(self, nums):
     nums.sort()
     list[list[int>> res
     list[int> cur
     backtrack(0, nums, cur, res)
     return res
+
 ```
 
 | ID | Title | Link | Solution |
@@ -160,48 +165,50 @@ Find all combinations that sum to target. Elements can be reused or used once de
 ### Combination Sum (can reuse same element)
 
 ```python
-// Combination Sum (can reuse same element)
+# Combination Sum (can reuse same element)
 def backtrack(self, start, candidates, target, cur, res):
     if target == 0:
         res.append(cur)
         return
-    if (target < 0) return  // Pruning: target exceeded
+    if (target < 0) return  # Pruning: target exceeded
     for (i = start i < (int)len(candidates) i += 1):
     cur.append(candidates[i])
-    // Can reuse: start=i (not i+1)
+    # Can reuse: start=i (not i+1)
     backtrack(i, candidates, target - candidates[i], cur, res)
     cur.pop()
+
 ```
 
 ### Combination Sum II (each element used once, duplicates exist)
 
 ```python
-// Combination Sum II (each element used once, duplicates exist)
+# Combination Sum II (each element used once, duplicates exist)
 def backtrack(self, start, candidates, target, cur, res):
     if target == 0:
         res.append(cur)
         return
     if (target < 0) return
     for (i = start i < (int)len(candidates) i += 1):
-    // Skip duplicates at the same level
+    # Skip duplicates at the same level
     if (i > start  and  candidates[i] == candidates[i-1]) continue
     cur.append(candidates[i])
-    // No reuse: start=i+1
+    # No reuse: start=i+1
     backtrack(i+1, candidates, target - candidates[i], cur, res)
     cur.pop()
-// Call with sorted array
+# Call with sorted array
 def combinationSum2(self, candidates, target):
     candidates.sort()
     list[list[int>> res
     list[int> cur
     backtrack(0, candidates, target, cur, res)
     return res
+
 ```
 
 ### Combination Sum III (choose k numbers from 1-9 that sum to n)
 
 ```python
-// Combination Sum III: choose k numbers from 1-9 that sum to n
+# Combination Sum III: choose k numbers from 1-9 that sum to n
 def backtrack(self, start, k, n, cur, res):
     if len(cur) == k  and  n == 0:
         res.append(cur)
@@ -211,6 +218,7 @@ def backtrack(self, start, k, n, cur, res):
     cur.append(i)
     backtrack(i+1, k, n-i, cur, res)
     cur.pop()
+
 ```
 
 | ID | Title | Link | Solution |
@@ -226,23 +234,24 @@ Backtrack on 2D grid with constraints. Mark cells as visited during exploration,
 ### Word Search
 
 ```python
-// Word Search: find if word exists in grid
+# Word Search: find if word exists in grid
 def dfs(self, board, i, j, word, idx):
     if (idx == (int)len(word)) return True
     if (i < 0  or  i >= (int)len(board)  or  j < 0  or  j >= (int)board[0].__len__()) return False
     if (board[i][j] != word[idx]) return False
     char temp = board[i][j]
-    board[i][j] = '#'  // Mark as visited
+    board[i][j] = '#'  # Mark as visited
     dirs[4][2] = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
 for d in dirs:
     if (dfs(board, i+d[0], j+d[1], word, idx+1)) return True
-board[i][j] = temp  // Backtrack: restore original value
+board[i][j] = temp  # Backtrack: restore original value
 return False
 def exist(self, board, word):
     for (i = 0 i < (int)len(board) i += 1):
     for (j = 0 j < (int)board[0].__len__() j += 1):
     if (dfs(board, i, j, word, 0)) return True
 return False
+
 ```
 
 **Key points:**
@@ -265,7 +274,7 @@ Backtracking with complex constraints. Validate each move before placing.
 ### N-Queens
 
 ```python
-// N-Queens: place n queens on n×n board
+# N-Queens: place n queens on n×n board
 def backtrack(self, row, n, board, res):
     if row == n:
         res.append(board)
@@ -274,24 +283,25 @@ def backtrack(self, row, n, board, res):
     if isValid(board, row, col, n):
         board[row][col] = 'Q'
         backtrack(row+1, n, board, res)
-        board[row][col] = '.'  // Backtrack
+        board[row][col] = '.'  # Backtrack
 def isValid(self, board, row, col, n):
-    // Check column above
+    # Check column above
     for i in range(0, row):
     if (board[i][col] == 'Q') return False
-    // Check diagonal \ (top-left to bottom-right)
+    # Check diagonal \ (top-left to bottom-right)
     for (i = row-1, j = col-1 i >= 0  and  j >= 0 i -= 1, j -= 1)
     if (board[i][j] == 'Q') return False
-    // Check diagonal / (top-right to bottom-left)
+    # Check diagonal / (top-right to bottom-left)
     for (i = row-1, j = col+1 i >= 0  and  j < n i -= 1, j += 1)
     if (board[i][j] == 'Q') return False
     return True
+
 ```
 
 ### Sudoku Solver
 
 ```python
-// Sudoku Solver
+# Sudoku Solver
 def solveSudoku(self, board):
     for (i = 0 i < 9 i += 1):
     for (j = 0 j < 9 j += 1):
@@ -300,18 +310,19 @@ def solveSudoku(self, board):
         if isValid(board, i, j, c):
             board[i][j] = c
             if (solveSudoku(board)) return True
-            board[i][j] = '.'  // Backtrack
-    return False  // No valid number found
-return True  // All cells filled
+            board[i][j] = '.'  # Backtrack
+    return False  # No valid number found
+return True  # All cells filled
 def isValid(self, board, row, col, c):
     for (i = 0 i < 9 i += 1):
-    // Check row
+    # Check row
     if (board[row][i] == c) return False
-    // Check column
+    # Check column
     if (board[i][col] == c) return False
-    // Check 3x3 box
+    # Check 3x3 box
     if (board[3(row/3) + i/3][3(col/3) + i%3] == c) return False
 return True
+
 ```
 
 | ID | Title | Link | Solution |
@@ -325,7 +336,7 @@ return True
 Partition string into palindromic substrings. Check if substring is palindrome before partitioning.
 
 ```python
-// Palindrome Partitioning
+# Palindrome Partitioning
 def backtrack(self, start, s, cur, res):
     if start == (int)len(s):
         res.append(cur)
@@ -334,17 +345,18 @@ def backtrack(self, start, s, cur, res):
     if isPalindrome(s, start, end):
         cur.append(s.substr(start, end-start+1))
         backtrack(end+1, s, cur, res)
-        cur.pop()  // Backtrack
+        cur.pop()  # Backtrack
 def isPalindrome(self, s, l, r):
     while l < r:
         if (s[l += 1] != s[r -= 1]) return False
     return True
+
 ```
 
 **Optimization:** Precompute palindrome table to avoid repeated checks.
 
 ```python
-// Optimized: Precompute palindrome table
+# Optimized: Precompute palindrome table
 def precomputePalindromes(self, s):
     n = len(s)
     list[list[bool>> dp(n, list[bool>(n, False))
@@ -352,8 +364,9 @@ def precomputePalindromes(self, s):
     for (j = i j < n j += 1):
     if (i == j) dp[i][j] = True
 elif j == i+1) dp[i][j] = (s[i] == s[j]:
-else dp[i][j] = (s[i] == s[j]  and  dp[i+1][j-1])
+else dp[i][j] = (s[i] == s[j] * and  dp[i+1][j-1])
 return dp
+
 ```
 
 | ID | Title | Link | Solution |
@@ -368,19 +381,21 @@ return dp
 Generate all valid parentheses combinations using backtracking.
 
 ```python
-// Generate Parentheses: generate all valid n pairs
+# Generate Parentheses: generate all valid n pairs
 def backtrack(self, n, open, close, path, res):
     if len(path) == 2 * n:
         res.append(path)
         return
-    if open < n:
-        path.append('(')
-        backtrack(n, open + 1, close, path, res)
-        path.pop()
-    if close < open:
-        path.append(')')
-        backtrack(n, open, close + 1, path, res)
-        path.pop()
+        if open < n:
+            path.append('(')
+            backtrack(n, open + 1, close, path, res)
+            path.pop()
+            if close < open:
+                path.append(')')
+                backtrack(n, open, close + 1, path, res)
+                path.pop()
+
+
 ```
 
 **Key constraints:**
@@ -396,20 +411,21 @@ def backtrack(self, n, open, close, path, res):
 
 ```python
 def backtrack(self, state, constraints, current_solution, results):
-    // Base case: solution is complete
+    # Base case: solution is complete
     if isComplete(current_solution):
         results.add(current_solution)
         return
-    // Generate candidates
+    # Generate candidates
     for (each candidate in candidates):
-    // Pruning: skip invalid candidates early
+    # Pruning: skip invalid candidates early
     if isValid(candidate, constraints):
-        // Make move: add candidate to solution
+        # Make move: add candidate to solution
         makeMove(candidate, current_solution)
-        // Recurse: explore further
+        # Recurse: explore further
         backtrack(updated_state, constraints, current_solution, results)
-        // Backtrack: remove candidate to try next option
+        # Backtrack: remove candidate to try next option
         undoMove(candidate, current_solution)
+
 ```
 
 **Key Points:**

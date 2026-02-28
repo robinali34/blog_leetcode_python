@@ -98,6 +98,7 @@ def isSubsequence(self, s, t):
             j += 1
         j += 1
     return i == N
+
 ```
 
 ### **Algorithm Explanation:**
@@ -208,7 +209,9 @@ The two-pointer approach is optimal because:
 ```python
 if s[i] == t[j]:
     i += 1
-j += 1  // Always advance j
+    j += 1  # Always advance j
+
+
 ```
 
 ### **Subsequence Property**
@@ -283,11 +286,11 @@ A subsequence maintains the **relative order** of characters:
 If we need to check many strings `s` against the same `t`, we can optimize:
 
 ```python
-// Preprocess t to store character positions
+# Preprocess t to store character positions
 dict[char, list[int>> charPositions
 for(i = 0 i < t.length() i += 1) :
 charPositions[t[i]].append(i)
-// For each query s, use binary search
+# For each query s, use binary search
 def isSubsequence(self, s, dict[char, pos):
     prev = -1
     for c in s:
@@ -295,6 +298,7 @@ def isSubsequence(self, s, dict[char, pos):
         if(it == pos[c].end()) return False
         prev = it
     return True
+
 ```
 
 **Time**: O(m + n log m) per query (better when many queries)

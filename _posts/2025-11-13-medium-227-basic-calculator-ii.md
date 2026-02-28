@@ -139,6 +139,7 @@ while not not stk:
     rtn += stk.top()
     stk.pop()
 return rtn
+
 ```
 
 ## Solution 2: Optimized Without Stack
@@ -171,6 +172,7 @@ def calculate(self, s):
         curr = 0
 rtn += last
 return rtn
+
 ```
 
 ## How the Algorithms Work
@@ -259,7 +261,7 @@ This is still wrong. The issue is that we're processing the operator when we see
 
 ```python
 if not isdigit(ch)  and  not isspace(ch)  or  i == len - 1:
-    // Process previous operation
+    # Process previous operation
     if sign == '+'  or  sign == '-':
         rtn += last
         (curr if         last = (sign == '+')  else -curr)
@@ -267,8 +269,9 @@ if not isdigit(ch)  and  not isspace(ch)  or  i == len - 1:
         last = last  curr
          else if(sign == '/') :
         last = last / curr
-    sign = ch  // Update sign for next operation
+    sign = ch  # Update sign for next operation
     curr = 0
+
 ```
 
 I see - when we see an operator, we process the PREVIOUS operator with the current number. Let me trace again:
@@ -307,6 +310,7 @@ Yes! That's correct now.
 ```python
 if isdigit(ch):
     curr = (curr  10) + (ch - '0')
+
 ```
 - Accumulate digits to form multi-digit numbers
 
@@ -314,19 +318,20 @@ if isdigit(ch):
 ```python
 if not isdigit(ch)  and  not isspace(ch)  or  i == len - 1:
     if operation == '-':
-        stk.push(-curr)  // Push negative for subtraction
+        stk.push(-curr)  # Push negative for subtraction
          else if(operation == '+') :
         stk.push(curr)
          else if(operation == '') :
         stkTop = stk.top()
         stk.pop()
-        stk.push(stkTop  curr)  // Immediate evaluation
+        stk.push(stkTop  curr)  # Immediate evaluation
          else if(operation == '/') :
         stkTop = stk.top()
         stk.pop()
-        stk.push(stkTop / curr)  // Immediate evaluation
+        stk.push(stkTop / curr)  # Immediate evaluation
     operation = ch
     curr = 0
+
 ```
 
 #### 3. Sum Stack
@@ -335,6 +340,10 @@ rtn = 0
 while not not stk:
     rtn += stk.top()
     stk.pop()
+
+
+
+
 ```
 
 ### Solution 2: Optimized
@@ -343,6 +352,7 @@ while not not stk:
 ```python
 curr = 0, last = 0, rtn = 0
 char sign = '+'
+
 ```
 - **`last`**: Stores the value that might be multiplied/divided
 - **`rtn`**: Accumulates final result
@@ -350,17 +360,20 @@ char sign = '+'
 #### 2. Process Operators
 ```python
 if sign == '+'  or  sign == '-':
-    rtn += last  // Add previous last to result
-    (curr if     last = (sign == '+')  else -curr  // Set new last)
+    rtn += last  # Add previous last to result
+    (curr if     last = (sign == '+')  else -curr  # Set new last)
      else if(sign == '') :
-    last = last  curr  // Immediate evaluation
+    last = last  curr  # Immediate evaluation
      else if(sign == '/') :
-    last = last / curr  // Immediate evaluation
+    last = last / curr  # Immediate evaluation
+
 ```
 
 #### 3. Final Addition
 ```python
-rtn += last  // Add remaining last value
+rtn += last  # Add remaining last value
+
+
 ```
 
 ## Complexity Analysis

@@ -71,13 +71,14 @@ def trap(self, height):
     n = len(height)
     water = 0
     for (i = 0 i < n i += 1) :
-    leftMax = 0, rightMax = 0
-    for (l = 0 l <= i l += 1)
-    leftMax = max(leftMax, height[l])
+        leftMax = 0, rightMax = 0
+    for (l = 0 l <= i l += 1) :
+        leftMax = max(leftMax, height[l])
     for r in range(i, n):
-    rightMax = max(rightMax, height[r])
-    water += min(leftMax, rightMax) - height[i]
+        rightMax = max(rightMax, height[r])
+        water += min(leftMax, rightMax) - height[i]
 return water
+
 ```
 {% endraw %}
 
@@ -93,18 +94,20 @@ Precompute `leftMax[i]` and `rightMax[i]` in two linear passes, then compute wat
 class Solution:
 def trap(self, height):
     n = len(height)
-    if (n == 0) return 0
+    if (n == 0):
+        return 0
     list[int> leftMax(n), rightMax(n)
     water = 0
     leftMax[0] = height[0]
     for i in range(1, n):
-    leftMax[i] = max(leftMax[i - 1], height[i])
-    rightMax[n - 1] = height[n - 1]
-    for (i = n - 2 i >= 0 i -= 1)
-    rightMax[i] = max(rightMax[i + 1], height[i])
+        leftMax[i] = max(leftMax[i - 1], height[i])
+        rightMax[n - 1] = height[n - 1]
+    for (i = n - 2 i >= 0 i -= 1):
+        rightMax[i] = max(rightMax[i + 1], height[i])
     for i in range(0, n):
-    water += min(leftMax[i], rightMax[i]) - height[i]
+        water += min(leftMax[i], rightMax[i]) - height[i]
     return water
+
 ```
 {% endraw %}
 
@@ -140,6 +143,7 @@ def trap(self, height):
     water += rightMax - height[r]
     r -= 1
 return water
+
 ```
 {% endraw %}
 
@@ -158,15 +162,17 @@ def trap(self, height):
     water = 0
     list[int> st
     for (i = 0 i < n i += 1) :
-    while not not st  and  height[i] > height[st.top()]:
-        top = st.top()
-        st.pop()
-        if (not st) break
-        distance = i - st.top() - 1
-        boundedHeight = min(height[i], height[st.top()]) - height[top]
-        water += distance  boundedHeight
-    st.push(i)
+        while not not st  and  height[i] > height[st.top()]:
+            top = st.top()
+            st.pop()
+            if (not st):
+                break
+            distance = i - st.top() - 1
+            boundedHeight = min(height[i], height[st.top()]) - height[top]
+            water += distance  boundedHeight
+        st.push(i)
 return water
+
 ```
 {% endraw %}
 

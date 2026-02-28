@@ -77,6 +77,7 @@ def findPairs(self, nums, k):
     if num + k in freqs:
         rtn += 1
 return rtn
+
 ```
 
 - **k == 0:** Each value that appears at least twice gives exactly one unique pair (that value with itself).
@@ -105,6 +106,7 @@ def findPairs(self, nums, k):
     if *it + k in hs:
         rtn += 1
 return rtn
+
 ```
 
 - **Time:** O(n). **Space:** O(n).

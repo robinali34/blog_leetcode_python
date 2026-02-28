@@ -44,23 +44,25 @@ The solution uses backtracking (DFS) with the following strategy:
 
 ```python
 class Solution:
-def partition(self, s: str) -> list[list[str]]:
-cur = []
-result = []
-self.dfs(s, 0, cur, result)
-return result
-def dfs(self, s: str, start: int, cur: list[str], result: list[list[str]]) -> None:
-if start >= len(s):
-result.append(cur[:])
-return
-for end in range(start, len(s)):
-if self.isPalindrome(s, start, end):
-cur.append(s[start:end + 1])
-self.dfs(s, end + 1, cur, result)
-cur.pop()
-def isPalindrome(self, s: str, start: int, end: int) -> bool:
-substring = s[start:end + 1]
-return substring == substring[::-1]
+    def partition(self, s: str) -> list[list[str]]:
+        cur = []
+        result = []
+        self.dfs(s, 0, cur, result)
+        return result
+    def dfs(self, s: str, start: int, cur: list[str], result: list[list[str]]) -> None:
+        if start >= len(s):
+            result.append(cur[:])
+            return
+            for end in range(start, len(s)):
+                if self.isPalindrome(s, start, end):
+                    cur.append(s[start:end + 1])
+                    self.dfs(s, end + 1, cur, result)
+                    cur.pop()
+                    def isPalindrome(self, s: str, start: int, end: int) -> bool:
+                        substring = s[start:end + 1]
+                        return substring == substring[::-1]
+
+
 ```
 
 ## Step-by-Step Example
@@ -107,19 +109,27 @@ For `s = "aab"`:
 ### 1. **Optimized Palindrome Check**
 ```python
 def isPalindrome(self, s: str, start: int, end: int) -> bool:
-while start < end:
-if s[start] != s[end]:
-return False
-start += 1
-end -= 1
-return True
+    while start < end:
+        if s[start] != s[end]:
+            return False
+            start += 1
+            end -= 1
+            return True
+
+
+
+
 ```
 
 ### 2. **Precompute Palindrome Table**
 ```python
-isPal = [[False]  n for _ in range(n)]
+isPal = [[False] * n for _ in range(n)]
 # Precompute all palindrome substrings
 # Time: O(n²), Space: O(n²)
+
+
+
+
 ```
 
 ## Common Mistakes

@@ -145,6 +145,7 @@ def rob(self, nums, l, r):
     prev2 = prev1
     prev1 = curr
 return prev1
+
 ```
 
 ### Algorithm Explanation:
@@ -310,6 +311,7 @@ def robLinear(self, nums, start, end):
     for(i = 2 i <= end - start i += 1) :
     dp[i] = max(dp[i-1], dp[i-2] + nums[start + i])
 return dp[end - start]
+
 ```
 
 **Time Complexity:** O(n)  

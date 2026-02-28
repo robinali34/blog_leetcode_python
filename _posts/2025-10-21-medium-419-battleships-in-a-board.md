@@ -54,17 +54,21 @@ Output: 0
 
 ```python
 class Solution:
-def countBattleships(self, board: list[list[str]]) -> int:
-count = 0
-for i in range(len(board)):
-for j in range(len(board[0])):
-if board[i][j] == 'X':
-if i > 0 and board[i - 1][j] == 'X':
-continue
-if j > 0 and board[i][j - 1] == 'X':
-continue
-count += 1
-return count
+    def countBattleships(self, board: list[list[str]]) -> int:
+        count = 0
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] == 'X':
+                    if i > 0 and board[i - 1][j] == 'X':
+                        continue
+                        if j > 0 and board[i][j - 1] == 'X':
+                            continue
+                            count += 1
+                            return count
+
+
+
+
 ```
 
 ### Approach 2: DFS with Visited Tracking
@@ -79,26 +83,28 @@ return count
 
 ```python
 class Solution:
-def countBattleships(self, board: list[list[str]]) -> int:
-m, n = len(board), len(board[0])
-visited = [[False]  n for _ in range(m)]
-count = 0
-for i in range(m):
-for j in range(n):
-if board[i][j] == 'X' and not visited[i][j]:
-self.dfs(board, visited, i, j)
-count += 1
-return count
-def dfs(self, board: list[list[str]], visited: list[list[bool]], i: int, j: int) -> None:
-if (i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or
-board[i][j] != 'X' or visited[i][j]):
-return
-visited[i][j] = True
-# Explore in all four directions
-self.dfs(board, visited, i + 1, j)
-self.dfs(board, visited, i - 1, j)
-self.dfs(board, visited, i, j + 1)
-self.dfs(board, visited, i, j - 1)
+    def countBattleships(self, board: list[list[str]]) -> int:
+        m, n = len(board), len(board[0])
+        visited = [[False] * n for _ in range(m)]
+        count = 0
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == 'X' and not visited[i][j]:
+                    self.dfs(board, visited, i, j)
+                    count += 1
+                    return count
+                    def dfs(self, board: list[list[str]], visited: list[list[bool]], i: int, j: int) -> None:
+                        if (i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or
+                        board[i][j] != 'X' or visited[i][j]):
+                            return
+                            visited[i][j] = True
+                            # Explore in all four directions
+                            self.dfs(board, visited, i + 1, j)
+                            self.dfs(board, visited, i - 1, j)
+                            self.dfs(board, visited, i, j + 1)
+                            self.dfs(board, visited, i, j - 1)
+
+
 ```
 
 ### Approach 3: Union Find
@@ -133,7 +139,7 @@ return len(roots)
 class UnionFind:
 def __init__(self, n: int):
 self.parent = list(range(n))
-self.rank = [0]  n
+self.rank = [0] * n
 def find(self, x: int) -> int:
 if self.parent[x] != x:
 self.parent[x] = self.find(self.parent[x])
@@ -147,6 +153,7 @@ px, py = py, px
 self.parent[py] = px
 if self.rank[px] == self.rank[py]:
 self.rank[px] += 1
+
 ```
 
 ## Algorithm Analysis
@@ -160,8 +167,9 @@ self.rank[px] += 1
 
 **Key Conditions:**
 ```python
-if(i > 0  board[i - 1][j] == 'X') continue  // Not top-left
-if(j > 0  board[i][j - 1] == 'X') continue  // Not top-left
+if(i > 0  board[i - 1][j] == 'X') continue  # Not top-left
+if(j > 0  board[i][j - 1] == 'X') continue  # Not top-left
+
 ```
 
 ### Complexity Comparison

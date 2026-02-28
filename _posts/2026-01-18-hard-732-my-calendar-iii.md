@@ -116,6 +116,7 @@ map<int, int> mp
  MyCalendarThree obj = new MyCalendarThree()
  param_1 = obj.book(startTime, endTime)
 /
+
 ```
 
 ### **Algorithm Explanation:**
@@ -194,6 +195,7 @@ def update(self, start, end, left, right, idx):
  MyCalendarThree obj = new MyCalendarThree()
  param_1 = obj.book(startTime, endTime)
 /
+
 ```
 
 ### **Algorithm Explanation:**
@@ -239,6 +241,7 @@ def split(self, x):
  MyCalendarThree obj = new MyCalendarThree()
  param_1 = obj.book(startTime, endTime)
 /
+
 ```
 
 ### **Algorithm Explanation:**

@@ -83,6 +83,7 @@ def sortColors(self, nums):
     if nums[i] == 0:
         swap(nums[i], nums[p0])
         p0 += 1
+
 ```
 
 ## How the Algorithm Works
@@ -181,6 +182,7 @@ idx = 0
 for(color = 0 color < 3 color += 1) :
 while count[color]-- > 0:
     nums[idx += 1] = color
+
 ```
 
 **Time Complexity:** O(n)  
@@ -230,7 +232,7 @@ class Solution:
 def sortColorsMinSwaps(self, nums):
     n = len(nums)
     p0 = 0, p2 = n - 1
-    // First pass: Move all 2s to the end
+    # First pass: Move all 2s to the end
     while p0 <= p2:
         if nums[p2] == 2:
             p2 -= 1
@@ -239,12 +241,13 @@ def sortColorsMinSwaps(self, nums):
             p2 -= 1
              else :
             p0 += 1
-    // Second pass: Move all 0s to the front
+    # Second pass: Move all 0s to the front
     p0 = 0
     for(i = 0 i <= p2 i += 1) :
     if nums[i] == 0:
         swap(nums[i], nums[p0])
         p0 += 1
+
 ```
 
 ### Alternative: Single-Pass Greedy Approach
@@ -259,18 +262,19 @@ def sortColorsMinSwaps(self, nums):
     i = 0
     while i <= right:
         if nums[i] == 0:
-            // Move 0 to front
+            # Move 0 to front
             swap(nums[i], nums[left])
             left += 1
             i += 1
              else if(nums[i] == 2) :
-            // Move 2 to end, but don't increment i
-            // because swapped element needs to be checked
+            # Move 2 to end, but don't increment i
+            # because swapped element needs to be checked
             swap(nums[i], nums[right])
             right -= 1
              else :
-            // nums[i] == 1, leave it
+            # nums[i] == 1, leave it
             i += 1
+
 ```
 
 ### Why This Minimizes Swaps?

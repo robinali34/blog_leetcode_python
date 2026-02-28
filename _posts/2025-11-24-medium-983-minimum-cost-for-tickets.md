@@ -99,16 +99,17 @@ def mincostTickets(self, days, costs):
     set[int> travelDays(days.begin(), days.end())
     for (i = 1 i <= lastDay i += 1) :
     if travelDays.find(i) == travelDays.end():
-        // Not a travel day - cost stays the same as previous day
+        # Not a travel day - cost stays the same as previous day
         dp[i] = dp[i - 1]
          else :
-        // Travel day - choose minimum cost among three options
+        # Travel day - choose minimum cost among three options
         dp[i] = min(:
-        dp[i - 1] + costs[0],           // Buy 1-day pass
-        dp[max(0, i - 7)] + costs[1],   // Buy 7-day pass
-        dp[max(0, i - 30)] + costs[2]   // Buy 30-day pass
+        dp[i - 1] + costs[0],           # Buy 1-day pass
+        dp[max(0, i - 7)] + costs[1],   # Buy 7-day pass
+        dp[max(0, i - 30)] + costs[2]   # Buy 30-day pass
         )
 return dp[lastDay]
+
 ```
 
 ## How the Algorithm Works
@@ -213,6 +214,7 @@ Total: $11
 lastDay = days[-1]
 list[int> dp(lastDay + 1, 0)
 set[int> travelDays(days.begin(), days.end())
+
 ```
 
 **Why:**
@@ -232,6 +234,7 @@ if travelDays.find(i) == travelDays.end():
     dp[max(0, i - 7)] + costs[1],
     dp[max(0, i - 30)] + costs[2]
     )
+
 ```
 
 **Why:**
@@ -263,7 +266,7 @@ def dp(self, i):
     if (memo[i] != -1) return memo[i]
     memo[i] = INT_MAX
     for (k = 0 k < 3 k += 1) :
-    // Find first day after current pass expires
+    # Find first day after current pass expires
     j = upper_bound(days.begin(), days.end(),
     days[i] + durations[k] - 1) - days.begin()
     memo[i] = min(memo[i], dp(j) + costs[k])
@@ -273,6 +276,7 @@ def mincostTickets(self, days, costs):
     this.costs = costs
     memo.assign(len(days), -1)
     return dp(0)
+
 ```
 
 **Pros:**
@@ -330,6 +334,7 @@ Where `n` = last travel day (≤365), `m` = number of travel days
 
 ```python
 set[int> travelDays(days.begin(), days.end())
+
 ```
 
 **Why:** O(1) lookup instead of O(m) linear search in `days` array.

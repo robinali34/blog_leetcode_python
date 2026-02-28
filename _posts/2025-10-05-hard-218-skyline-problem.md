@@ -69,7 +69,7 @@ edgeSet.add(left)
 edgeSet.add(right)
 edges = sorted(list(edgeSet))
 edgeIdxMap = :edge: i for i, edge in enumerate(edges)
-heights = [0]  len(edges)
+heights = [0] * len(edges)
 for building in buildings:
 left, right, height = building[0], building[1], building[2]
 leftIdx, rightIdx = edgeIdxMap[left], edgeIdxMap[right]
@@ -81,6 +81,7 @@ curHeight, curPos = heights[i], edges[i]
 if i == 0 or curHeight != heights[i - 1]:
 result.append([curPos, curHeight])
 return result
+
 ```
 
 **Time Complexity:** O(n²) - For each building, we update all positions it covers
@@ -119,6 +120,7 @@ if cur != pre:
 result.append([x, cur])
 pre = cur
 return result
+
 ```
 
 **Time Complexity:** O(n log n) - Sorting + map operations
@@ -135,30 +137,32 @@ return result
 ```python
 import heapq
 class Solution:
-def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-edges = []
-for i, building in enumerate(buildings):
-edges.append([building[0], i])
-edges.append([building[1], i])
-edges.sort()
-live = []  # Max heap: (-height, right)
-result = []
-idx = 0
-while idx < len(edges):
-cur = edges[idx][0]
-while idx < len(edges) and edges[idx][0] == cur:
-b = edges[idx][1]
-if buildings[b][0] == cur:
-right = buildings[b][1]
-height = buildings[b][2]
-heapq.heappush(live, (-height, right))
-idx += 1
-while live and live[0][1] <= cur:
-heapq.heappop(live)
-curHeight = -live[0][0] if live else 0
-if not result or result[-1][1] != curHeight:
-result.append([cur, curHeight])
-return result
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        edges = []
+        for i, building in enumerate(buildings):
+            edges.append([building[0], i])
+            edges.append([building[1], i])
+            edges.sort()
+            live = []  # Max heap: (-height, right)
+            result = []
+            idx = 0
+            while idx < len(edges):
+                cur = edges[idx][0]
+                while idx < len(edges) and edges[idx][0] == cur:
+                    b = edges[idx][1]
+                    if buildings[b][0] == cur:
+                        right = buildings[b][1]
+                        height = buildings[b][2]
+                        heapq.heappush(live, (-height, right))
+                        idx += 1
+                        while live and live[0][1] <= cur:
+                            heapq.heappop(live)
+                            curHeight = -live[0][0] if live else 0
+                            if not result or result[-1][1] != curHeight:
+                                result.append([cur, curHeight])
+                                return result
+
+
 ```
 
 **Time Complexity:** O(n log n) - Sorting + priority queue operations
@@ -176,32 +180,34 @@ return result
 ```python
 import heapq
 class Solution:
-def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-edges = []
-for b in buildings:
-edges.append([b[0], b[2]])
-edges.append([b[1], -b[2]])
-edges.sort(key=lambda x: (x[0], -x[1]))
-live = []  # Max heap: (-height, height)
-past = []  # Max heap: (-height, height)
-result = []
-idx = 0
-while idx < len(edges):
-cur = edges[idx][0]
-while idx < len(edges) and edges[idx][0] == cur:
-height = edges[idx][1]
-if height > 0:
-heapq.heappush(live, (-height, height))
-else:
-heapq.heappush(past, (height, -height))
-idx += 1
-while live and past and live[0][1] == past[0][1]:
-heapq.heappop(live)
-heapq.heappop(past)
-curHeight = -live[0][0] if live else 0
-if not result or result[-1][1] != curHeight:
-result.append([cur, curHeight])
-return result
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        edges = []
+        for b in buildings:
+            edges.append([b[0], b[2]])
+            edges.append([b[1], -b[2]])
+            edges.sort(key=lambda x: (x[0], -x[1]))
+            live = []  # Max heap: (-height, height)
+            past = []  # Max heap: (-height, height)
+            result = []
+            idx = 0
+            while idx < len(edges):
+                cur = edges[idx][0]
+                while idx < len(edges) and edges[idx][0] == cur:
+                    height = edges[idx][1]
+                    if height > 0:
+                        heapq.heappush(live, (-height, height))
+                    else:
+                        heapq.heappush(past, (height, -height))
+                        idx += 1
+                        while live and past and live[0][1] == past[0][1]:
+                            heapq.heappop(live)
+                            heapq.heappop(past)
+                            curHeight = -live[0][0] if live else 0
+                            if not result or result[-1][1] != curHeight:
+                                result.append([cur, curHeight])
+                                return result
+
+
 ```
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 grep
@@ -238,7 +244,7 @@ edgeSet.add(b[1])
 edges = sorted(list(edgeSet))
 edgeIdxMap = :edge: i for i, edge in enumerate(edges)
 uf = UnionFind(len(edges))
-heights = [0]  len(edges)
+heights = [0] * len(edges)
 for b in buildings:
 left, right, height = b[0], b[1], b[2]
 leftIdx = uf.find(edgeIdxMap[left])
@@ -253,6 +259,7 @@ for i in range(len(edges)):
 if i == 0 or heights[i] != heights[i - 1]:
 result.append([edges[i], heights[i]])
 return result
+
 ```
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 read_file

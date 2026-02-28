@@ -105,6 +105,7 @@ def hasNext(self):
  ZigzagIterator i(v1, v2)
  while i.hasNext()) cout << i.next(:
 /
+
 ```
 
 ### How Solution 1 Works
@@ -152,6 +153,7 @@ def hasNext(self):
  ZigzagIterator i(v1, v2)
  while i.hasNext()) cout << i.next(:
 /
+
 ```
 
 ### How Solution 2 Works
@@ -242,6 +244,7 @@ def next(self):
     return cache[vec_index][elem_index]
 def hasNext(self):
     return not not q
+
 ```
 
 ## Related Problems

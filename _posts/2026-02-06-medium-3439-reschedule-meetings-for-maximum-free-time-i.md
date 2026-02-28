@@ -69,6 +69,7 @@ for (i = k - 1 i < n i += 1) :
 (0 if             left = i == k - 1  else endTime[i - k])
 rtn = max(rtn, right - left - (sum[i + 1] - sum[i - k + 1]))
 return rtn
+
 ```
 
 - **Indexing:** Window of `k` meetings ending at index `i` = meetings `[i-k+1, i]`. Their total duration = `sum[i+1] - sum[i-k+1]`. Span: `[left, right]` with `left` = `endTime[i-k]` (or 0 if no meeting before), `right` = `startTime[i+1]` (or `eventTime` if no meeting after).
@@ -91,6 +92,7 @@ def maxFreeTime(self, eventTime, k, startTime, endTime):
     if i >= k - 1:
         t -= endTime[i - k + 1] - startTime[i - k + 1]
 return rtn
+
 ```
 
 - **Running sum:** `t` is the total duration of meetings in the current window. When `i >= k - 1`, subtract the duration of meeting `i - k + 1` so that `t` stays the sum of the last `k` meetings. (The `vector<int> sum(n+1)` in the code is unused; removing it gives O(1) space.)
@@ -110,6 +112,7 @@ rtn = max(rtn, right - left - t)
 if i >= k - 1:
 t -= endTime[i - k + 1] - startTime[i - k + 1]
 return rtn
+
 ```
 
 ## Comparison

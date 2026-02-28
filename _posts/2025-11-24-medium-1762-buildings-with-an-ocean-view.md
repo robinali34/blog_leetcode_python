@@ -105,6 +105,7 @@ def findBuildings(self, heights):
         maxHeight = heights[curr]
 rtn.reverse()
 return rtn
+
 ```
 
 **How it works:**
@@ -133,15 +134,16 @@ def findBuildings(self, heights):
     list[int> rtn
     list[int> stk
     for (curr = n - 1 curr >= 0 curr -= 1) :
-    // Remove buildings that are shorter than current
+    # Remove buildings that are shorter than current
     while not not stk  and  heights[stk.top()] < heights[curr]:
         stk.pop()
-    // If stack is empty, current building has ocean view
+    # If stack is empty, current building has ocean view
     if not stk:
         rtn.append(curr)
     stk.push(curr)
 rtn.reverse()
 return rtn
+
 ```
 
 **How it works:**
@@ -245,6 +247,7 @@ def findBuildings(self, heights):
         maxHeight = heights[curr]
 rtn.reverse()
 return rtn
+
 ```
 
 **Key Points:**
@@ -268,6 +271,7 @@ def findBuildings(self, heights):
     stk.push(curr)
 rtn.reverse()
 return rtn
+
 ```
 
 **Key Points:**

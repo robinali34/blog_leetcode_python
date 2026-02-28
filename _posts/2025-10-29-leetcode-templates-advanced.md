@@ -20,14 +20,16 @@ tags: [leetcode, templates, advanced]
 ```python
 from bisect import bisect_left
 class Compressor:
-def __init__(self):
-self.vals = []
-def add(self, items):
-self.vals.extend(items)
-def build(self):
-self.vals = sorted(set(self.vals))
-def get(self, x):
-return bisect_left(self.vals, x)
+    def __init__(self):
+        self.vals = []
+    def add(self, items):
+        self.vals.extend(items)
+    def build(self):
+        self.vals = sorted(set(self.vals))
+    def get(self, x):
+        return bisect_left(self.vals, x)
+
+
 ```
 
 | ID | Title | Link |
@@ -60,6 +62,7 @@ left = bisect_left(R, T - x)
 right = bisect_right(R, T - x)
 ans += right - left
 return ans
+
 ```
 
 | ID | Title | Link |
@@ -73,7 +76,7 @@ return ans
 def manacher(s: str) -> str:
 t = "|" + "|".join(s) + "|"
 n = len(t)
-p = [0]  n
+p = [0] * n
 c = r = best = center = 0
 for i in range(n):
 mir = 2  c - i
@@ -89,6 +92,7 @@ best = p[i]
 center = i
 start = (center - best) // 2
 return s[start:start + best]
+
 ```
 
 | ID | Title | Link |
@@ -99,18 +103,22 @@ return s[start:start + best]
 
 ```python
 def z_func(s: str) -> list[int]:
-n = len(s)
-z = [0]  n
-l = r = 0
-for i in range(1, n):
-if i <= r:
-z[i] = min(r - i + 1, z[i - l])
-while i + z[i] < n and s[z[i]] == s[i + z[i]]:
-z[i] += 1
-if i + z[i] - 1 > r:
-l = i
-r = i + z[i] - 1
-return z
+    n = len(s)
+    z = [0] * n
+    l = r = 0
+    for i in range(1, n):
+        if i <= r:
+            z[i] = min(r - i + 1, z[i - l])
+            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+                z[i] += 1
+                if i + z[i] - 1 > r:
+                    l = i
+                    r = i + z[i] - 1
+                    return z
+
+
+
+
 ```
 
 | ID | Title | Link |
@@ -146,6 +154,7 @@ u = self.t[u].ch[want]
 else:
 u = self.t[u].ch[bit]
 return ans
+
 ```
 
 | ID | Title | Link |

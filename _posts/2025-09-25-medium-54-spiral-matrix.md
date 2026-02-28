@@ -40,32 +40,32 @@ There are two main approaches to solve this problem:
 
 ```python
 class Solution:
-def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
-result = []
-rows, cols = len(matrix), len(matrix[0])
-up, left = 0, 0
-right, down = cols - 1, rows - 1
-while len(result) < rows  cols:
-# Traverse right along top row
-for col in range(left, right + 1):
-result.append(matrix[up][col])
-# Traverse down along right column
-for row in range(up + 1, down + 1):
-result.append(matrix[row][right])
-# Traverse left along bottom row (if not same as top)
-if up != down:
-for col in range(right - 1, left - 1, -1):
-result.append(matrix[down][col])
-# Traverse up along left column (if not same as right)
-if left != right:
-for row in range(down - 1, up, -1):
-result.append(matrix[row][left])
-# Move boundaries inward
-left += 1
-right -= 1
-up += 1
-down -= 1
-return result
+    def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
+        result = []
+        rows, cols = len(matrix), len(matrix[0])
+        up, left = 0, 0
+        right, down = cols - 1, rows - 1
+        while len(result) < rows * cols:
+            # Traverse right along top row
+            for col in range(left, right + 1):
+                result.append(matrix[up][col])
+            # Traverse down along right column
+            for row in range(up + 1, down + 1):
+                result.append(matrix[row][right])
+            # Traverse left along bottom row (if not same as top)
+            if up != down:
+                for col in range(right - 1, left - 1, -1):
+                    result.append(matrix[down][col])
+            # Traverse up along left column (if not same as right)
+            if left != right:
+                for row in range(down - 1, up, -1):
+                    result.append(matrix[row][left])
+            # Move boundaries inward
+            left += 1
+            right -= 1
+            up += 1
+            down -= 1
+        return result
 ```
 
 **Time Complexity:** O(m × n) - Visit each cell exactly once
@@ -75,29 +75,29 @@ return result
 
 ```python
 class Solution:
-def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
-VISITED = 101
-rows, cols = len(matrix), len(matrix[0])
-dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # right, down, left, up
-dir_idx = 0
-result = []
-row, col = 0, 0
-for _ in range(rows  cols):
-result.append(matrix[row][col])
-matrix[row][col] = VISITED  # Mark as visited
-# Calculate next position
-nextRow = row + dirs[dir_idx][0]
-nextCol = col + dirs[dir_idx][1]
-# Check if next position is valid and not visited
-if (0 <= nextRow < rows and 0 <= nextCol < cols and
-matrix[nextRow][nextCol] != VISITED):
-row, col = nextRow, nextCol
-else:
-# Change direction and move
-dir_idx = (dir_idx + 1) % 4
-row += dirs[dir_idx][0]
-col += dirs[dir_idx][1]
-return result
+    def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
+        VISITED = 101
+        rows, cols = len(matrix), len(matrix[0])
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # right, down, left, up
+        dir_idx = 0
+        result = []
+        row, col = 0, 0
+        for _ in range(rows * cols):
+            result.append(matrix[row][col])
+            matrix[row][col] = VISITED  # Mark as visited
+            # Calculate next position
+            nextRow = row + dirs[dir_idx][0]
+            nextCol = col + dirs[dir_idx][1]
+            # Check if next position is valid and not visited
+            if (0 <= nextRow < rows and 0 <= nextCol < cols and
+                    matrix[nextRow][nextCol] != VISITED):
+                row, col = nextRow, nextCol
+            else:
+                # Change direction and move
+                dir_idx = (dir_idx + 1) % 4
+                row += dirs[dir_idx][0]
+                col += dirs[dir_idx][1]
+        return result
 ```
 
 **Time Complexity:** O(m × n) - Visit each cell exactly once

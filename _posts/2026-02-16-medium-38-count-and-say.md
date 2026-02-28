@@ -85,6 +85,7 @@ def countAndSay(self, n):
     next += to_string(k - j) + curr[j]
 curr = next
 return curr
+
 ```
 {% endraw %}
 

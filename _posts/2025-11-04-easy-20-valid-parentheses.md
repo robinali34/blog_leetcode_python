@@ -118,7 +118,7 @@ Use a stack to track opening brackets. When encountering a closing bracket, chec
 class Solution:
 def isValid(self, s):
     list[char> st
-    dict[char, char> map = :
+    dict[char, char> map = {}
     :'', ':',
     :']', '[',
     :')', '('
@@ -129,6 +129,7 @@ for c in s:
         if(not st  or  st.top() != map[c]) return False
         st.pop()
 return not st
+
 ```
 
 ## How the Algorithm Works
@@ -211,10 +212,11 @@ Result: false ✗
 ### 1. Initialize Stack and Map
 ```python
 list[char> st
-dict[char, char> map = :
+dict[char, char> map = {}
 :'', ':',
 :']', '[',
 :')', '('
+
 ```
 - **Stack**: Stores opening brackets
 - **Map**: Maps closing brackets to their corresponding opening brackets
@@ -223,6 +225,10 @@ dict[char, char> map = :
 ```python
 if c == '{'  or  c == '['  or  c == '(':
     st.push(c)
+
+
+
+
 ```
 - Push opening brackets onto stack
 - They will be matched later when closing brackets appear
@@ -232,6 +238,7 @@ if c == '{'  or  c == '['  or  c == '(':
 else:
     if(not st  or  st.top() != map[c]) return False
     st.pop()
+
 ```
 - **Check if stack is empty**: No opening bracket to match
 - **Check if top matches**: Most recent opening bracket must match current closing bracket
@@ -240,6 +247,10 @@ else:
 ### 4. Final Validation
 ```python
 return not st
+
+
+
+
 ```
 - If stack is empty, all brackets were matched
 - If stack has remaining elements, some opening brackets were never closed
@@ -270,6 +281,7 @@ def isValid(self, s):
             (c == ''  and  top != ':')) :
             return False
 return not st
+
 ```
 
 **Time Complexity:** O(n)  
@@ -292,6 +304,7 @@ def isValid(self, s):
             (c == ''  and  last != ':')) :
             return False
 return not stack
+
 ```
 
 **Time Complexity:** O(n)  
@@ -302,7 +315,7 @@ return not stack
 ### Approach 3: Counter-Based (Only for Single Type)
 
 ```python
-// Only works for single bracket type like "()"
+# Only works for single bracket type like "()"
 def isValid(self, s):
     count = 0
     for c in s:
@@ -310,6 +323,7 @@ def isValid(self, s):
         else count -= 1
         if(count < 0) return False
     return count == 0
+
 ```
 
 **Time Complexity:** O(n)  
@@ -454,6 +468,7 @@ The hash map lookup is very fast, but explicit checks might be slightly faster d
 if c == ')':
     if(not st  or  st.top() != '(') return False
     st.pop()
+
 ```
 
 ## Related Problems
@@ -494,14 +509,15 @@ This problem demonstrates the **Stack for Matching** pattern:
 The solution easily extends to other bracket types:
 
 ```python
-dict[char, char> map = :
+dict[char, char> map = {}
 :'', ':',
 :']', '[',
 :')', '(',
-:'>', '<'  // Add new type
-// Check also includes '<'
+:'>', '<'  # Add new type
+# Check also includes '<'
 if c == '{'  or  c == '['  or  c == '('  or  c == '<':
     st.push(c)
+
 ```
 
 ---

@@ -107,6 +107,7 @@ if occ[i] % 2 == 1:
     left += 1
 left = max(left, 1)
 return left <= k  and  k <= right
+
 ```
 
 ### **Algorithm Explanation:**

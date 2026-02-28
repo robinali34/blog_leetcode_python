@@ -123,6 +123,7 @@ def findCheapestPrice(self, n, flights, src, dst, k):
             q.push(:neighbor, newPrice)
     stop += 1
 (-1 if         return prices[dst] == LONG_LONG_MAX else prices[dst])
+
 ```
 
 ### Algorithm Breakdown:
@@ -160,6 +161,7 @@ def findCheapestPrice(self, n, flights, src, dst, k):
             tmp[flight[1]] = min(tmp[flight[1]], dist[flight[0]] + flight[2])
     dist = tmp
 (-1 if         return dist[dst] == INT_MAX  else dist[dst])
+
 ```
 
 ### Algorithm Breakdown:
@@ -191,17 +193,18 @@ def findCheapestPrice(self, n, flights, src, dst, k):
     for(e: flights) adj[e[0]].append(:e[1], e[2])
     list[int> stops(n, INT_MAX)
     heapq[list[int>, list[list[int>>, greater<>> pq
-    pq.push(:0, src, 0) // dist node stops
+    pq.push(:0, src, 0) # dist node stops
     while not not pq:
         tmp = pq.top()
         pq.pop()
         dist = tmp[0], node = tmp[1], steps = tmp[2]
-        if(steps >= stops[node]  or  steps > k + 1) continue
+        if(steps >= stops[node] * or  steps > k + 1) continue
         stops[node] = steps
         if(node == dst) return dist
         for([neighbor, price]: adj[node]) :
         pq.push(:dist + price, neighbor, steps + 1)
 return -1
+
 ```
 
 ### Algorithm Breakdown:

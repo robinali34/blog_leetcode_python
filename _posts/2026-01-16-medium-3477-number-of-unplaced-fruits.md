@@ -121,17 +121,17 @@ def build(self, node, l, r, baskets):
         build(node2, l, mid, baskets)
         build(node2+1, mid+1, r, baskets)
         tree[node] = max(tree[node2], tree[node2+1])
-// Find leftmost index >= l with value >= val
+# Find leftmost index >= l with value >= val
 def query(self, node, l, r, val):
-    if (tree[node] < val) return -1 // no basket in this range can hold fruit
-    if (l == r) return l // found
+    if (tree[node] < val) return -1 # no basket in this range can hold fruit
+    if (l == r) return l # found
     mid = (l + r) / 2
     left = query(node2, l, mid, val)
     if (left != -1) return left
     return query(node2+1, mid+1, r, val)
 def update(self, node, l, r, idx):
     if l == r:
-        tree[node] = 0 // mark basket used
+        tree[node] = 0 # mark basket used
          else :
         mid = (l + r) / 2
         if idx <= mid) update(node*2, l, mid, idx:
@@ -147,8 +147,9 @@ def numOfUnplacedFruits(self, fruits, baskets):
         if idx == -1:
             unplaced += 1
              else :
-            st.update(1, 0, n-1, idx) // mark basket used
+            st.update(1, 0, n-1, idx) # mark basket used
     return unplaced
+
 ```
 
 ### **Algorithm Explanation:**
@@ -281,12 +282,13 @@ def numOfUnplacedFruits(self, fruits, baskets):
     for f in fruits:
         bool placed = False
         for (j = 0 j < n j += 1) :
-        if not used[j]  and  baskets[j] >= f:
+        if not used[j] * and  baskets[j] >= f:
             used[j] = True
             placed = True
             break
     if (not placed) unplaced += 1
 return unplaced
+
 ```
 
 **Time Complexity:** O(n × m) - Too slow for large inputs  

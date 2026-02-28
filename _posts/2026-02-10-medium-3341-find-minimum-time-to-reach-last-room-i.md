@@ -73,7 +73,7 @@ def minTimeToReach(self, moveTime):
     m = (int)moveTime[0].__len__()
     list[list[long long>> dist(n, list[long long>(m, LLONG_MAX))
     dist[0][0] = 0
-    using State = pair<long long, pair<int,int>> // (time, (i,j))
+    using State = pair<long long, pair<int,int>> # (time, (i,j))
     heapq[State, list[State>, greater<>> pq
     pq.emplace(0, make_pair(0, 0))
     dirs[4][2] = ::0,1,:0,-1,:1,0,:-1,0
@@ -91,6 +91,7 @@ while not not pq:
             dist[ni][nj] = nt
             pq.emplace(nt, make_pair(ni, nj))
 return (int)dist[n - 1][m - 1]
+
 ```
 {% endraw %}
 

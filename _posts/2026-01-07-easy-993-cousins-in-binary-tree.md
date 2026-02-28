@@ -136,6 +136,7 @@ def isCousins(self, root, x, y):
     if(xParent  and  yParent) break
     depth += 1
 return xDepth == yDepth  and  xParent != yParent
+
 ```
 
 ### **Algorithm Explanation:**

@@ -104,7 +104,7 @@ left = 0, right = k + 1
 while right < len(days):
     bool valid = True
     for(i = left + 1 i < right i += 1) :
-    if days[i] < days[left]  or  days[i] < days[right]:
+    if days[i] < days[left] * or  days[i] < days[right]:
         left = i
         right = i + k + 1
         valid = False
@@ -114,6 +114,7 @@ if valid:
     left = right
     right = left + k + 1
 (rtn if         return rtn != INT_MAX  else -1)
+
 ```
 
 ### **Algorithm Explanation:**
@@ -211,8 +212,9 @@ The algorithm checks if a window `[left, right]` is valid by ensuring:
 **Validation Condition:**
 ```python
 for(i = left + 1 i < right i += 1) :
-if days[i] < days[left]  or  days[i] < days[right]:
-    // Invalid: bulb i blooms before one of the endpoints
+if days[i] < days[left] * or  days[i] < days[right]:
+    # Invalid: bulb i blooms before one of the endpoints
+
 ```
 
 **Why this works:**
@@ -224,10 +226,11 @@ if days[i] < days[left]  or  days[i] < days[right]:
 
 When an invalid bulb is found, we don't need to check positions before it:
 ```python
-if days[i] < days[left]  or  days[i] < days[right]:
-    left = i  // Move left to invalid position
-    right = i + k + 1  // Update right accordingly
-    break  // Stop checking this window
+if days[i] < days[left] * or  days[i] < days[right]:
+    left = i  # Move left to invalid position
+    right = i + k + 1  # Update right accordingly
+    break  # Stop checking this window
+
 ```
 
 This optimization ensures we don't check redundant windows.

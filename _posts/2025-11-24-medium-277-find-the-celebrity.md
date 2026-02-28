@@ -80,25 +80,26 @@ The key insight is to use a two-pass approach:
 ### Solution: Two-Pass with Candidate Elimination
 
 ```python
-// Forward declaration of the knows API
+# Forward declaration of the knows API
 bool knows(a, b)
 class Solution:
 def findCelebrity(self, n):
-    // First pass: find candidate
+    # First pass: find candidate
     candidate = 0
     for (i = 1 i < n i += 1) :
     if knows(candidate, i):
         candidate = i
-// Second pass: verify candidate
+# Second pass: verify candidate
 for (i = 0 i < n i += 1) :
 if i != candidate:
-    // Celebrity should not know anyone
+    # Celebrity should not know anyone
     if knows(candidate, i):
         return -1
-    // Everyone should know the celebrity
+    # Everyone should know the celebrity
     if not knows(i, candidate):
         return -1
 return candidate
+
 ```
 
 ## How the Algorithm Works
@@ -174,6 +175,7 @@ candidate = 0
 for (i = 1 i < n i += 1) :
 if knows(candidate, i):
     candidate = i
+
 ```
 
 **Why:**
@@ -189,8 +191,9 @@ if knows(candidate, i):
 ```python
 for (i = 0 i < n i += 1) :
 if i != candidate:
-    if (knows(candidate, i)) return -1  // Celebrity knows someone
-    if (not knows(i, candidate)) return -1   // Someone doesn't know celebrity
+    if (knows(candidate, i)) return -1  # Celebrity knows someone
+    if (not knows(i, candidate)) return -1   # Someone doesn't know celebrity
+
 ```
 
 **Why:**
@@ -218,19 +221,20 @@ class Solution:
 def findCelebrity(self, n):
     for (i = 0 i < n i += 1) :
     bool isCelebrity = True
-    // Check if i knows anyone
+    # Check if i knows anyone
     for (j = 0 j < n j += 1) :
     if i != j  and  knows(i, j):
         isCelebrity = False
         break
 if (not isCelebrity) continue
-// Check if everyone knows i
+# Check if everyone knows i
 for (j = 0 j < n j += 1) :
 if i != j  and  not knows(j, i):
     isCelebrity = False
     break
 if (isCelebrity) return i
 return -1
+
 ```
 
 **Pros:**
@@ -288,19 +292,20 @@ The current solution can be slightly optimized:
 ```python
 def findCelebrity(self, n):
     candidate = 0
-    // First pass: find candidate
+    # First pass: find candidate
     for (i = 1 i < n i += 1) :
     if knows(candidate, i):
         candidate = i
-// Verify: celebrity doesn't know anyone
+# Verify: celebrity doesn't know anyone
 for (i = 0 i < n i += 1) :
 if i != candidate  and  knows(candidate, i):
     return -1
-// Verify: everyone knows celebrity
+# Verify: everyone knows celebrity
 for (i = 0 i < n i += 1) :
 if i != candidate  and  not knows(i, candidate):
     return -1
 return candidate
+
 ```
 
 **Why:** Separating verification into two loops allows early termination.

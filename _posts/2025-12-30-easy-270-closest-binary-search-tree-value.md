@@ -103,6 +103,7 @@ def closestValue(self, root, target):
     if root.val < target  and  root.right != None:
         return closerValue(root.val, closestValue(root.right, target), target)
     return root.val
+
 ```
 
 ### **Algorithm Explanation:**
@@ -208,6 +209,7 @@ The algorithm uses BST property to narrow down the search:
 ```python
 def closerValue(self, lower, upper, target):
     (lower if     return upper - target >= target - lower else upper)
+
 ```
 
 This function determines which value is closer:
@@ -317,6 +319,7 @@ def closestValue(self, root, target):
             closest = root.val
         (root.left if             root = target < root.val  else root.right)
     return closest
+
 ```
 
 **Comparison:**

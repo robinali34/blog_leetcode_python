@@ -116,6 +116,7 @@ def jump(self, nums):
         rtn += 1
         curEnd = curFar
 return rtn
+
 ```
 
 ## How the Algorithm Works
@@ -194,19 +195,20 @@ Result: 2 jumps
 
 ```python
 def jump(self, nums):
-    rtn = 0           // Number of jumps
+    rtn = 0           # Number of jumps
     n = len(nums)
-    curEnd = 0        // End of current jump level
-    curFar = 0        // Farthest position reachable
-    // Don't need to process last index
+    curEnd = 0        # End of current jump level
+    curFar = 0        # Farthest position reachable
+    # Don't need to process last index
     for(i = 0 i < n - 1 i += 1) :
-    // Update farthest reachable position
+    # Update farthest reachable position
     curFar = max(curFar, i + nums[i])
-    // If we've reached the end of current level
+    # If we've reached the end of current level
     if i == curEnd:
-        rtn += 1              // Make a jump
-        curEnd = curFar    // Update to next level boundary
+        rtn += 1              # Make a jump
+        curEnd = curFar    # Update to next level boundary
 return rtn
+
 ```
 
 ## Why This Works
@@ -249,9 +251,10 @@ def jump(self, nums):
     list[int> dp(n, INT_MAX)
     dp[0] = 0
     for(i = 0 i < n i += 1) :
-    for(j = 1 j <= nums[i]  and  i + j < n j += 1) :
+    for(j = 1 j <= nums[i] * and  i + j < n j += 1) :
     dp[i + j] = min(dp[i + j], dp[i] + 1)
 return dp[n - 1]
+
 ```
 
 **Pros:**
@@ -283,6 +286,7 @@ def jump(self, nums):
         jumps += 1
         currentLevelEnd = nextLevelEnd
 return jumps
+
 ```
 
 **Pros:**
@@ -306,6 +310,7 @@ return jumps
 
 ```python
 for(i = 0 i < n - 1 i += 1)
+
 ```
 
 We don't need to process the last index because:
@@ -323,6 +328,10 @@ We don't need to process the last index because:
 
 ```python
 curFar = max(curFar, i + nums[i])
+
+
+
+
 ```
 
 This ensures we always know the farthest position reachable from the current level, allowing us to make the optimal greedy choice.

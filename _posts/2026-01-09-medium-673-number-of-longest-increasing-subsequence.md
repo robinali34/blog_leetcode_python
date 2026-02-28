@@ -141,6 +141,7 @@ if dp[i] > maxLen:
      else if(dp[i] == maxLen) :
     rtn += cnt[i]
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -381,6 +382,7 @@ def findNumberOfLIS(self, nums):
             d[i].append(v)
             cnt[i].append(cnt[i].back() + c)
     return cnt[-1].back()
+
 ```
 
 ### **Algorithm Explanation:**

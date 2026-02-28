@@ -107,6 +107,7 @@ res.append(s[i])
 if mask[i] == True  and  (i == n - 1  or  mask[i+1] == False):
     res += "</b>"
 return res
+
 ```
 
 ### **Algorithm Explanation:**
@@ -209,6 +210,7 @@ The algorithm handles overlapping matches automatically:
 **Opening tag `<b>`:**
 ```python
 if mask[i] == True  and  (i == 0  or  mask[i - 1] == False):
+
 ```
 - Current character is bold
 - AND we're at the start of a bold sequence (first char OR previous not bold)
@@ -216,6 +218,7 @@ if mask[i] == True  and  (i == 0  or  mask[i - 1] == False):
 **Closing tag `</b>`:**
 ```python
 if mask[i] == True  and  (i == n - 1  or  mask[i+1] == False):
+
 ```
 - Current character is bold
 - AND we're at the end of a bold sequence (last char OR next not bold)
@@ -225,6 +228,7 @@ if mask[i] == True  and  (i == n - 1  or  mask[i+1] == False):
 For each position, we check all words:
 ```python
 if i + word_len <= n  and  s.substr(i, word_len) == word:
+
 ```
 - Bounds check: `i + word_len <= n`
 - Substring comparison: `s.substr(i, word_len) == word`
@@ -260,7 +264,8 @@ Skip positions that are too short for any word:
 minLen = INT_MAX
 for word in words:
     minLen = min(minLen, (int)len(word))
-// Skip positions where remaining str is too short
+# Skip positions where remaining str is too short
+
 ```
 
 ### **Optimization 2: Trie for Word Matching**

@@ -132,6 +132,7 @@ def searchPrefix(self, prefix):
  bool param_2 = obj.search(word)
  bool param_3 = obj.startsWith(prefix)
 /
+
 ```
 
 ### Algorithm Explanation:
@@ -263,11 +264,12 @@ class Trie:
 TrieNode root
 Trie() : root = new TrieNode()
 ~Trie() : deleteSubtree(root)
-// ... insert, search, startsWith with helper methods
+# ... insert, search, startsWith with helper methods
 def deleteSubtree(self, node):
     if(not node) return
     for(i = 0 i < 26 i += 1) deleteSubtree(node.links[i])
     delete node
+
 ```
 
 **Pros**: Better encapsulation, explicit memory management with destructor  
@@ -279,7 +281,8 @@ def deleteSubtree(self, node):
 class Trie:
 dict[char, Trie> children
 bool isWord
-// ... rest of implementation
+# ... rest of implementation
+
 ```
 
 **Pros**: Supports any character set, more flexible  
@@ -293,6 +296,7 @@ The current implementation doesn't include a destructor. For production code, co
 ~Trie() :
 for child in children:
     if(child) delete child
+
 ```
 
 However, for LeetCode problems, this is often omitted for simplicity.

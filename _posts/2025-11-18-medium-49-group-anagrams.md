@@ -95,6 +95,7 @@ list[list[str>> rtn
 for(itr = hm.begin() itr != hm.end() itr += 1) :
 rtn.append(itr.second)
 return rtn
+
 ```
 
 ## How the Algorithm Works
@@ -157,29 +158,30 @@ Groups: ["eat","tea","ate"]  ["tan","nat"]  ["bat"]
 
 ```python
 def groupAnagrams(self, strs):
-    // Handle empty input
+    # Handle empty input
     if len(strs) == 0) return list[list[str>>(:
-    // Map: character count key . list of anagrams
+    # Map: character count key . list of anagrams
     dict[str, list[str>> hm
-    count[26]  // Count array for 26 lowercase letters
+    count[26]  # Count array for 26 lowercase letters
     for s in strs:
-        // Reset count array
+        # Reset count array
         fill(begin(count), end(count), 0)
-        // Count characters in current str
+        # Count characters in current str
         for(char c: s) count[c-'a']++
-        // Build key from character counts
+        # Build key from character counts
         str key = ""
         for(i = 0 i < 26 i += 1) :
-        key += "#"           // Delimiter
-        key += to_string(count[i])  // Count for each letter
-    // Add str to appropriate group
+        key += "#"           # Delimiter
+        key += to_string(count[i])  # Count for each letter
+    # Add str to appropriate group
     if not key in hm) hm[key] = list[str>(:
     hm[key].append(s)
-// Convert map values to result vector
+# Convert map values to result vector
 list[list[str>> rtn
 for(itr = hm.begin() itr != hm.end() itr += 1) :
 rtn.append(itr.second)
 return rtn
+
 ```
 
 ## Edge Cases
@@ -209,6 +211,7 @@ def groupAnagrams(self, strs):
     for([key, group] : hm) :
     rtn.append(group)
 return rtn
+
 ```
 
 **Pros:**
@@ -229,7 +232,7 @@ Uses prime numbers to create hash keys, avoiding string concatenation overhead.
 ```python
 class Solution:
 def groupAnagrams(self, strs):
-    // Prime numbers for each letter
+    # Prime numbers for each letter
     primes[26] = :2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101
 dict[long long, list[str>> hm
 for s in strs:
@@ -241,6 +244,7 @@ list[list[str>> rtn
 for([key, group] : hm) :
 rtn.append(group)
 return rtn
+
 ```
 
 **Pros:**
@@ -271,10 +275,11 @@ return rtn
 ### Character Count Array
 
 ```python
-count[26]  // For 26 lowercase letters a-z
-fill(begin(count), end(count), 0)  // Reset to zero
-// Count characters
-for(char c: s) count[c-'a']++  // 'a' maps to index 0, 'z' to 25
+count[26]  # For 26 lowercase letters a-z
+fill(begin(count), end(count), 0)  # Reset to zero
+# Count characters
+for(char c: s) count[c-'a']++  # 'a' maps to index 0, 'z' to 25
+
 ```
 
 ### Key Construction
@@ -282,8 +287,9 @@ for(char c: s) count[c-'a']++  // 'a' maps to index 0, 'z' to 25
 ```python
 str key = ""
 for(i = 0 i < 26 i += 1) :
-key += "#"              // Delimiter prevents ambiguity
-key += to_string(count[i])  // Count for letter at position i
+key += "#"              # Delimiter prevents ambiguity
+key += to_string(count[i])  # Count for letter at position i
+
 ```
 
 **Why use "#" delimiter?**
@@ -294,11 +300,13 @@ key += to_string(count[i])  // Count for letter at position i
 
 ```python
 if not key in hm) hm[key] = list[str>(:
+
 ```
 
 Alternative (Python11/14):
 ```python
 if hm.find(key) == hm.end()) hm[key] = list[str>(:
+
 ```
 
 ## Common Mistakes

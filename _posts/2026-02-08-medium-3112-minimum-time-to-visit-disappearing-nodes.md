@@ -141,6 +141,7 @@ list[int> rtn(n, -1)
 for(i = 0 i < n i += 1) :
 if(dist[i] != LLONG_MAX) rtn[i] = dist[i]
 return rtn
+
 ```
 
 **Key Points:**
@@ -169,10 +170,11 @@ def minimumTime(self, n, edges, disappear):
         if(dis[u] != -1  and  du > dis[u]) continue
         for([v, w]: adj[u]) :
         nd = du + w
-        if nd < disappear[v]  and  (dis[v] == -1  or  nd < dis[v]):
+        if nd < disappear[v] * and  (dis[v] == -1  or  nd < dis[v]):
             dis[v] = nd
             pq.emplace(nd, v)
 return dis
+
 ```
 
 **Key Points:**

@@ -101,7 +101,7 @@ def minimumSemesters(self, n, relations):
     maxLen = 1
     for(node = 1 node < n + 1 node += 1) :
     len = dfs(node, graph, visited)
-    if(len == -1) return -1 // Found a cycle
+    if(len == -1) return -1 # Found a cycle
     maxLen = max(maxLen, len)
 return maxLen
 def dfs(self, node, graph, visited):
@@ -115,6 +115,7 @@ def dfs(self, node, graph, visited):
         maxLen = max(maxLen, len + 1)
     visited[node] = maxLen
     return maxLen
+
 ```
 
 ### Algorithm Explanation:
@@ -125,6 +126,7 @@ def dfs(self, node, graph, visited):
 list[list[int>> graph(n + 1)
 for relation in relations:
     graph[relation[0]].append(relation[1])
+
 ```
 
 - Build adjacency list: `graph[u]` contains all nodes that `u` points to
@@ -135,8 +137,9 @@ for relation in relations:
 ```python
 for(node = 1 node < n + 1 node += 1) :
 len = dfs(node, graph, visited)
-if(len == -1) return -1 // Found a cycle
+if(len == -1) return -1 # Found a cycle
 maxLen = max(maxLen, len)
+
 ```
 
 - For each unvisited node, find the longest path starting from it
@@ -157,6 +160,7 @@ def dfs(self, node, graph, visited):
         maxLen = max(maxLen, len + 1)
     visited[node] = maxLen
     return maxLen
+
 ```
 
 **Key Operations:**
@@ -324,6 +328,7 @@ while not not q:
         if indegree[neighbor] == 0:
             q.push(neighbor)
 (semesters if         return coursesTaken == n  else -1)
+
 ```
 
 **Time Complexity:** O(V + E)  

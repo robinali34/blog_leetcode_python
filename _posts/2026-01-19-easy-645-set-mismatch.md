@@ -95,10 +95,11 @@ def findErrorNums(self, nums):
     long long x = 0, y = 0
     for(i = 1 i <= N i += 1) :
     x += nums[i - 1] - i
-    y += (long long) nums[i - 1]  nums[i - 1] - (long long)i  i
+    y += (long long) nums[i - 1] * nums[i - 1] - (long long)i  i
 missing = (y - x  x) / (2  x)
 duplicate = missing + x
 return :duplicate, missing
+
 ```
 
 ### Algorithm Explanation:
@@ -164,21 +165,22 @@ class Solution:
 def findErrorNums(self, nums):
     duplicate = -1
     n = len(nums)
-    // First pass: find duplicate by marking visited indices negative
+    # First pass: find duplicate by marking visited indices negative
     for x in nums:
-        idx = abs(x) - 1  // convert to 0-based index
+        idx = abs(x) - 1  # convert to 0-based index
         if nums[idx] < 0:
-            // Already negative => this value seen before
+            # Already negative => this value seen before
             duplicate = abs(x)
              else :
-            nums[idx] = -nums[idx]  // Mark as visited
-    // Second pass: find missing number (index with positive value)
+            nums[idx] = -nums[idx]  # Mark as visited
+    # Second pass: find missing number (index with positive value)
     missing = -1
     for (i = 0 i < n i += 1) :
     if nums[i] > 0:
         missing = i + 1
         break
 return :duplicate, missing
+
 ```
 
 ### Algorithm Explanation:
@@ -205,14 +207,15 @@ def findErrorNums(self, nums):
     n = len(nums)
     list[int> count(n + 1, 0)
     duplicate = -1, missing = -1
-    // Count occurrences
+    # Count occurrences
     for x in nums:
         count[x]++
-    // Find duplicate (count == 2) and missing (count == 0)
+    # Find duplicate (count == 2) and missing (count == 0)
     for (i = 1 i <= n i += 1) :
     if (count[i] == 2) duplicate = i
     else if (count[i] == 0) missing = i
 return :duplicate, missing
+
 ```
 
 ### Complexity Analysis:
@@ -227,15 +230,15 @@ class Solution:
 def findErrorNums(self, nums):
     n = len(nums)
     xor_all = 0
-    // XOR all numbers in nums and 1..n
+    # XOR all numbers in nums and 1..n
     for (i = 0 i < n i += 1) :
     xor_all ^= nums[i]
     xor_all ^= (i + 1)
-// xor_all = duplicate ^ missing
-// Find rightmost set bit
+# xor_all = duplicate ^ missing
+# Find rightmost set bit
 rightmost_bit = xor_all  (-xor_all)
 xor0 = 0, xor1 = 0
-// Separate numbers into two groups based on rightmost bit
+# Separate numbers into two groups based on rightmost bit
 for (i = 0 i < n i += 1) :
 if nums[i] & rightmost_bit:
     xor1 ^= nums[i]
@@ -245,11 +248,12 @@ if (i + 1) & rightmost_bit:
     xor1 ^= (i + 1)
      else :
     xor0 ^= (i + 1)
-// Determine which is duplicate and which is missing
+# Determine which is duplicate and which is missing
 for num in nums:
     if num == xor0:
         return :xor0, xor1
 return :xor1, xor0
+
 ```
 
 ### Complexity Analysis:

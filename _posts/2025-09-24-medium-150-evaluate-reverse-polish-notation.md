@@ -61,25 +61,26 @@ The solution uses a stack-based approach:
 
 ```python
 class Solution:
-def evalRPN(self, tokens: list[str]) -> int:
-stack = []
-ops = :"+", "-", "", "/"
-for token in tokens:
-if token not in ops:
-stack.append(int(token))
-else:
-num2 = stack.pop()
-num1 = stack.pop()
-if token == '+':
-result = num1 + num2
-elif token == '-':
-result = num1 - num2
-elif token == '':
-result = num1  num2
-else:  # token == '/'
-result = int(num1 / num2)  # Truncate towards zero
-stack.append(result)
-return stack[-1]
+    def evalRPN(self, tokens: list[str]) -> int:
+        stack = []
+        ops = {"+", "-", "*", "/"}
+        for token in tokens:
+            if token not in ops:
+                stack.append(int(token))
+            else:
+                num2 = stack.pop()
+                num1 = stack.pop()
+                if token == '+':
+                    result = num1 + num2
+                elif token == '-':
+                    result = num1 - num2
+                elif token == '*':
+                    result = num1 * num2
+                else:  # token == '/'
+                    result = int(num1 / num2)  # Truncate towards zero
+                stack.append(result)
+        return stack[-1]
+
 ```
 
 ## Solution 2: Using List with Index Tracking
@@ -89,29 +90,30 @@ return stack[-1]
 
 ```python
 class Solution:
-def evalRPN(self, tokens: list[str]) -> int:
-n = len(tokens)
-stack = [0]  ((n + 1) // 2)
-idx = -1
-ops = :"+", "-", "", "/"
-for token in tokens:
-if len(token) > 1 or token not in ops:
-idx += 1
-stack[idx] = int(token)
-else:
-if token == '+':
-idx -= 1
-stack[idx] += stack[idx + 1]
-elif token == '-':
-idx -= 1
-stack[idx] -= stack[idx + 1]
-elif token == '':
-idx -= 1
-stack[idx] = stack[idx + 1]
-else:  # token == '/'
-idx -= 1
-stack[idx] = int(stack[idx] / stack[idx + 1])  # Truncate towards zero
-return stack[idx]
+    def evalRPN(self, tokens: list[str]) -> int:
+        n = len(tokens)
+        stack = [0] * ((n + 1) // 2)
+        idx = -1
+        ops = {"+", "-", "*", "/"}
+        for token in tokens:
+            if len(token) > 1 or token not in ops:
+                idx += 1
+                stack[idx] = int(token)
+            else:
+                if token == '+':
+                    idx -= 1
+                    stack[idx] += stack[idx + 1]
+                elif token == '-':
+                    idx -= 1
+                    stack[idx] -= stack[idx + 1]
+                elif token == '*':
+                    idx -= 1
+                    stack[idx] *= stack[idx + 1]
+                else:  # token == '/'
+                    idx -= 1
+                    stack[idx] = int(stack[idx] / stack[idx + 1])  # Truncate towards zero
+        return stack[idx]
+
 ```
 
 ## Step-by-Step Example

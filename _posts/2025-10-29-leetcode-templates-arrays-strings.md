@@ -24,21 +24,25 @@ tags: [leetcode, templates, arrays, strings]
 ```python
 # Variable-size window (e.g., longest substring without repeating)
 def longest_no_repeat(s: str) -> int:
-cnt = [0]  256
-dup = 0
-best = 0
-l = 0
-for r in range(len(s)):
-cnt[ord(s[r])] += 1
-if cnt[ord(s[r])] == 2:
-dup += 1
-while dup > 0:
-cnt[ord(s[l])] -= 1
-if cnt[ord(s[l])] == 1:
-dup -= 1
-l += 1
-best = max(best, r - l + 1)
-return best
+    cnt = [0] * 256
+    dup = 0
+    best = 0
+    l = 0
+    for r in range(len(s)):
+        cnt[ord(s[r])] += 1
+        if cnt[ord(s[r])] == 2:
+            dup += 1
+            while dup > 0:
+                cnt[ord(s[l])] -= 1
+                if cnt[ord(s[l])] == 1:
+                    dup -= 1
+                    l += 1
+                    best = max(best, r - l + 1)
+                    return best
+
+
+
+
 ```
 
 | ID | Title | Link |
@@ -51,16 +55,17 @@ return best
 
 ```python
 def two_sum_sorted(a: list[int], target: int) -> bool:
-l, r = 0, len(a) - 1
-while l < r:
-s = a[l] + a[r]
-if s == target:
-return True
-if s < target:
-l += 1
-else:
-r -= 1
-return False
+    l, r = 0, len(a) - 1
+    while l < r:
+        s = a[l] + a[r]
+        if s == target:
+            return True
+        if s < target:
+            l += 1
+        else:
+            r -= 1
+    return False
+
 ```
 
 | ID | Title | Link |
@@ -73,16 +78,18 @@ return False
 
 ```python
 def bin_search(lo: int, hi: int) -> int:  # [lo, hi]
-def good(x: int) -> bool:
-# check feasibility
-return True
-while lo < hi:
-mid = (lo + hi) >> 1
-if good(mid):
-hi = mid
-else:
-lo = mid + 1
-return lo
+    def good(x: int) -> bool:
+        # check feasibility
+        return True
+
+    while lo < hi:
+        mid = (lo + hi) >> 1
+        if good(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+
 ```
 
 | ID | Title | Link |
@@ -96,10 +103,11 @@ return lo
 
 ```python
 def prefix(a: list[int]) -> list[int]:
-ps = [0]  (len(a) + 1)
-for i in range(len(a)):
-ps[i + 1] = ps[i] + a[i]
-return ps
+    ps = [0] * (len(a) + 1)
+    for i in range(len(a)):
+        ps[i + 1] = ps[i] + a[i]
+    return ps
+
 ```
 
 | ID | Title | Link |
@@ -115,9 +123,13 @@ return ps
 from collections import Counter
 freq = Counter(nums)
 # or manually:
-freq = :
+freq = {}
 for x in nums:
-freq[x] = freq.get(x, 0) + 1
+    freq[x] = freq.get(x, 0) + 1
+
+
+
+
 ```
 
 | ID | Title | Link |
@@ -150,16 +162,17 @@ we move j back to lps[j-1].
 
 ```python
 def kmp_pi(s: str) -> list[int]:
-n = len(s)
-pi = [0]  n
-for i in range(1, n):
-j = pi[i - 1]
-while j > 0 and s[i] != s[j]:
-j = pi[j - 1]
-if s[i] == s[j]:
-j += 1
-pi[i] = j
-return pi
+    n = len(s)
+    pi = [0] * n
+    for i in range(1, n):
+        j = pi[i - 1]
+        while j > 0 and s[i] != s[j]:
+            j = pi[j - 1]
+        if s[i] == s[j]:
+            j += 1
+        pi[i] = j
+    return pi
+
 ```
 
 | ID | Title | Link |
@@ -171,24 +184,25 @@ return pi
 
 ```python
 def manacher(s: str) -> str:
-t = "|" + "|".join(s) + "|"
-n = len(t)
-p = [0]  n
-c = r = best = center = 0
-for i in range(n):
-mir = 2  c - i
-if i < r:
-p[i] = min(r - i, p[mir])
-while i - 1 - p[i] >= 0 and i + 1 + p[i] < n and t[i - 1 - p[i]] == t[i + 1 + p[i]]:
-p[i] += 1
-if i + p[i] > r:
-c = i
-r = i + p[i]
-if p[i] > best:
-best = p[i]
-center = i
-start = (center - best) // 2
-return s[start:start + best]
+    t = "|" + "|".join(s) + "|"
+    n = len(t)
+    p = [0] * n
+    c = r = best = center = 0
+    for i in range(n):
+        mir = 2 * c - i
+        if i < r:
+            p[i] = min(r - i, p[mir])
+        while i - 1 - p[i] >= 0 and i + 1 + p[i] < n and t[i - 1 - p[i]] == t[i + 1 + p[i]]:
+            p[i] += 1
+        if i + p[i] > r:
+            c = i
+            r = i + p[i]
+        if p[i] > best:
+            best = p[i]
+            center = i
+    start = (center - best) // 2
+    return s[start:start + best]
+
 ```
 
 | ID | Title | Link |
@@ -199,18 +213,22 @@ return s[start:start + best]
 
 ```python
 def z_func(s: str) -> list[int]:
-n = len(s)
-z = [0]  n
-l = r = 0
-for i in range(1, n):
-if i <= r:
-z[i] = min(r - i + 1, z[i - l])
-while i + z[i] < n and s[z[i]] == s[i + z[i]]:
-z[i] += 1
-if i + z[i] - 1 > r:
-l = i
-r = i + z[i] - 1
-return z
+    n = len(s)
+    z = [0] * n
+    l = r = 0
+    for i in range(1, n):
+        if i <= r:
+            z[i] = min(r - i + 1, z[i - l])
+            while i + z[i] < n and s[z[i]] == s[i + z[i]]:
+                z[i] += 1
+                if i + z[i] - 1 > r:
+                    l = i
+                    r = i + z[i] - 1
+                    return z
+
+
+
+
 ```
 
 | ID | Title | Link |
@@ -221,17 +239,22 @@ return z
 
 ```python
 class RH:
-B = 911382323
-M = 972663749  # example
-def __init__(self, s: str):
-n = len(s)
-self.p = [1]  (n + 1)
-self.h = [0]  (n + 1)
-for i in range(n):
-self.p[i + 1] = (self.p[i]  self.B) % self.M
-self.h[i + 1] = (self.h[i]  self.B + ord(s[i])) % self.M
-def get(self, l: int, r: int) -> int:  # [l, r)
-return (self.h[r] - self.h[l]  self.p[r - l]) % self.M
+    B = 911382323
+    M = 972663749  # example
+
+    def __init__(self, s: str):
+        n = len(s)
+        self.p = [1] * (n + 1)
+        self.h = [0] * (n + 1)
+        for i in range(n):
+            self.p[i + 1] = (self.p[i] * self.B) % self.M
+            self.h[i + 1] = (self.h[i] * self.B + ord(s[i])) % self.M
+
+            def get(self, l: int, r: int) -> int:
+                # [l, r)
+                return (self.h[r] - self.h[l] * self.p[r - l]) % self.M
+
+
 ```
 
 | ID | Title | Link |

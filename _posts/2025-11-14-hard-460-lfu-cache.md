@@ -105,17 +105,17 @@ When there's a tie in frequency, we use the least recently used key (front of th
 ```python
 using namespace std
 class LFUCache:
-// frequency . list of (key, value) pairs (most recent at back)
+# frequency . list of (key, value) pairs (most recent at back)
 dict[int, list<pair<int, int>>> frequencies_
-// key . (frequency, iterator to node in frequencies list)
+# key . (frequency, iterator to node in frequencies list)
 dict[int, pair<int, list<pair<int, int>>.iterator>> cache_
 capacity_
 min_frequency_
-// Insert key-value pair with given frequency
+# Insert key-value pair with given frequency
 def insert(self, key, frequency, value):
     frequencies_[frequency].emplace_back(key, value)
     cache_[key] = :frequency, frequencies_ -= 1[frequency].end()
-// Remove key from its current frequency list
+# Remove key from its current frequency list
 def removeFromFrequency(self, frequency, list<pair<int, it):
     frequencies_[frequency].erase(it)
     if frequencies_[frequency].empty():
@@ -132,12 +132,12 @@ def get(self, key):
     it = cache_.find(key)
     if it == cache_.end():
         return -1
-    // Get current frequency and iterator
+    # Get current frequency and iterator
     [freq, iter] = it.second
     [key_val, value] = iter
-    // Remove from current frequency list
+    # Remove from current frequency list
     removeFromFrequency(freq, iter)
-    // Insert with incremented frequency
+    # Insert with incremented frequency
     insert(key, freq + 1, value)
     return value
 def put(self, key, value):
@@ -145,22 +145,23 @@ def put(self, key, value):
         return
     it = cache_.find(key)
     if it != cache_.end():
-        // Update existing key
-        it.second.second.second = value  // Update value in place
-        get(key)  // Increment frequency by calling get
+        # Update existing key
+        it.second.second.second = value  # Update value in place
+        get(key)  # Increment frequency by calling get
         return
-    // Check capacity
+    # Check capacity
     if len(cache_) >= capacity_:
-        // Evict least frequently used (and least recently used if tie)
-        // min_frequency_ list's front is the LRU item
+        # Evict least frequently used (and least recently used if tie)
+        # min_frequency_ list's front is the LRU item
         [lfu_key, _] = frequencies_[min_frequency_].front()
         cache_.erase(lfu_key)
         frequencies_[min_frequency_].pop_front()
         if frequencies_[min_frequency_].empty():
             frequencies_.erase(min_frequency_)
-    // Insert new key with frequency 1
+    # Insert new key with frequency 1
     min_frequency_ = 1
     insert(key, 1, value)
+
 ```
 
 ### Alternative: More Explicit Version
@@ -172,9 +173,9 @@ struct Node :
 key
 value
 frequency
-// frequency . list of nodes (most recent at back)
+# frequency . list of nodes (most recent at back)
 dict[int, list<Node>> freq_lists_
-// key . iterator in frequency list
+# key . iterator in frequency list
 dict[int, list<Node>.iterator> cache_
 capacity_
 min_freq_
@@ -182,13 +183,13 @@ def promote(self, key):
     node = cache_[key]
     old_freq = node.frequency
     new_freq = old_freq + 1
-    // Remove from old frequency list
+    # Remove from old frequency list
     freq_lists_[old_freq].erase(cache_[key])
     if freq_lists_[old_freq].empty():
         freq_lists_.erase(old_freq)
         if min_freq_ == old_freq:
             min_freq_ += 1
-    // Add to new frequency list
+    # Add to new frequency list
     freq_lists_[new_freq].emplace_back(node)
     cache_[key] = freq_lists_ -= 1[new_freq].end()
     cache_[key].frequency = new_freq
@@ -208,11 +209,11 @@ def put(self, key, value):
     if (capacity_ <= 0) return
     it = cache_.find(key)
     if it != cache_.end():
-        // Update existing
+        # Update existing
         it.second.value = value
         promote(key)
         return
-    // Evict if needed
+    # Evict if needed
     if len(cache_) >= capacity_:
         lfu_list = freq_lists_[min_freq_]
         lfu_key = lfu_list[0].key
@@ -220,10 +221,11 @@ def put(self, key, value):
         lfu_list.pop_front()
         if not lfu_list:
             freq_lists_.erase(min_freq_)
-    // Insert new
+    # Insert new
     min_freq_ = 1
     freq_lists_[1].emplace_back(Node:key, value, 1)
     cache_[key] = freq_lists_ -= 1[1].end()
+
 ```
 
 ## Key Optimizations (Python20)

@@ -146,6 +146,7 @@ def getNumberOfBacklogOrders(self, orders):
         rtn = (rtn + sell.top().second) % MOD
         sell.pop()
     return rtn
+
 ```
 
 ### Algorithm Explanation:
@@ -288,13 +289,14 @@ Result: 5 + 1 = 6 ✓
 struct Order :
 price, amount
 Order(p, a) : price(p), amount(a) :
-// Custom comparators
+# Custom comparators
 buyCmp = [](Order a, Order b) :
-return a.price < b.price // Max heap
+return a.price < b.price # Max heap
 sellCmp = [](Order a, Order b) :
-return a.price > b.price // Min heap
+return a.price > b.price # Min heap
 heapq[Order, list[Order>, decltype(buyCmp)> buy(buyCmp)
 heapq[Order, list[Order>, decltype(sellCmp)> sell(sellCmp)
+
 ```
 
 **Pros**: More structured, clearer intent  

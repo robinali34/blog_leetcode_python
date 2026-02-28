@@ -144,6 +144,7 @@ def calculate(self, s):
     curr = 0
     break
 return rtn + (sign  curr)
+
 ```
 
 ## Solution 2: Optimized Recursive Approach
@@ -172,16 +173,17 @@ def parseExpr(self, s, idx):
             sign = -1
             num = 0
              else if(c == '(') :
-            idx += 1  // Skip '('
-            num = parseExpr(s, idx)  // Recursive call
+            idx += 1  # Skip '('
+            num = parseExpr(s, idx)  # Recursive call
              else if(c == ')') :
             result += sign  num
-            return result  // Return to parent
+            return result  # Return to parent
         idx += 1
     return result + sign  num
 def calculate(self, s):
     idx = 0
     return parseExpr(s, idx)
+
 ```
 
 ## Solution 3: Simplified Iterative (No Stack for Numbers)
@@ -198,7 +200,7 @@ def calculate(self, s):
     sign = 1
     result = 0
     num = 0
-    signs.push(1)  // Initial sign
+    signs.push(1)  # Initial sign
     for c in s:
         if isdigit(c):
             num = num  10 + (c - '0')
@@ -216,6 +218,7 @@ def calculate(self, s):
             sign = 1
     result += signs.top()  sign  num
     return result
+
 ```
 
 ## How the Algorithms Work
@@ -364,6 +367,7 @@ But the answer should be 0, which is correct! (1 + (2-3) = 1 + (-1) = 0)
 ```python
 if isdigit(ch):
     curr = (10  curr) + (ch - '0')
+
 ```
 - Build multi-digit numbers incrementally
 
@@ -380,7 +384,8 @@ rtn += sign  curr
 sign = -1
 curr = 0
 break
-// ...
+# ...
+
 ```
 - Use `switch` for cleaner code when handling multiple character cases
 - Add current number with sign to result
@@ -395,6 +400,7 @@ sign = 1
 rtn = 0
 curr = 0
 break
+
 ```
 - Save current result and sign
 - Reset for inner expression
@@ -403,12 +409,13 @@ break
 ```python
 case ')':
 rtn += sign  curr
-rtn = stk.top()  // Apply saved sign
+rtn = stk.top()  # Apply saved sign
 stk.pop()
-rtn += stk.top()  // Add saved result
+rtn += stk.top()  # Add saved result
 stk.pop()
 curr = 0
 break
+
 ```
 - Complete inner expression
 - Apply saved sign
@@ -417,6 +424,7 @@ break
 #### 5. Final Addition
 ```python
 return rtn + (sign  curr)
+
 ```
 - Add the last number if any
 
@@ -429,15 +437,16 @@ def parseExpr(self, s, idx):
     sign = 1
     num = 0
     while idx < s.length():
-        // Process characters...
+        # Process characters...
         if c == '(':
-            idx += 1  // Skip '('
-            num = parseExpr(s, idx)  // Recursive call
+            idx += 1  # Skip '('
+            num = parseExpr(s, idx)  # Recursive call
              else if(c == ')') :
             result += sign  num
-            return result  // Return to parent
+            return result  # Return to parent
         idx += 1
     return result + sign  num
+
 ```
 
 ### Solution 3: Sign Stack
@@ -445,15 +454,17 @@ def parseExpr(self, s, idx):
 #### 1. Sign Propagation
 ```python
 list[int> signs
-signs.push(1)  // Initial sign
+signs.push(1)  # Initial sign
 if c == '(':
-    signs.push(signs.top()  sign)  // Cumulative sign
+    signs.push(signs.top()  sign)  # Cumulative sign
     sign = 1
+
 ```
 
 #### 2. Apply Cumulative Sign
 ```python
 result += signs.top()  sign  num
+
 ```
 - `signs.top()`: Cumulative sign from all outer parentheses
 - `sign`: Current operator sign

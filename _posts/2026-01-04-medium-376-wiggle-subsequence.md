@@ -112,6 +112,7 @@ def wiggleMaxLength(self, nums):
     rtn += 1
     prevDiff = diff
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -353,6 +354,7 @@ def wiggleMaxLength(self, nums):
         up[i] = up[i-1]
         down[i] = down[i-1]
 return max(up[n-1], down[n-1])
+
 ```
 
 ### **Approach 3: Space-Optimized DP**

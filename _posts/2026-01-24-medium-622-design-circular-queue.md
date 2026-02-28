@@ -132,6 +132,7 @@ head, tail, size, cap
  bool param_5 = obj.isEmpty()
  bool param_6 = obj.isFull()
 /
+
 ```
 
 ### Algorithm Explanation:
@@ -257,6 +258,7 @@ cnt, cap
  bool param_5 = obj.isEmpty()
  bool param_6 = obj.isFull()
 /
+
 ```
 
 ### Algorithm Explanation:

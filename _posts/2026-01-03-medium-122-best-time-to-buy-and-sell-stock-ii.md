@@ -105,6 +105,7 @@ def maxProfit(self, prices):
     for(i = 1 i < (int)len(prices) i += 1) :
     maxProfit += max(0, prices[i] - prices[i - 1])
 return maxProfit
+
 ```
 
 ### **Algorithm Explanation:**

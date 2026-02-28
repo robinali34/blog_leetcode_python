@@ -112,9 +112,10 @@ for(j = i + 1 j < 4 j += 1) :
 dx = points[i][0] - points[j][0]
 dy = points[i][1] - points[j][1]
 distSq = dx  dx + dy  dy
-if(distSq == 0) return False // Duplicate points
+if(distSq == 0) return False # Duplicate points
 distances.insert(distSq)
 return len(distances) == 2
+
 ```
 
 ## How the Algorithm Works
@@ -222,7 +223,8 @@ for([dist, count] : distCount) :
 if(count == 4) side = dist
 else if(count == 2) diagonal = dist
 else return False
-return diagonal == 2  side // Verify diagonal² = 2 × side²
+return diagonal == 2  side # Verify diagonal² = 2 × side²
+
 ```
 
 However, the simpler solution (checking `distances.size() == 2`) is sufficient because:

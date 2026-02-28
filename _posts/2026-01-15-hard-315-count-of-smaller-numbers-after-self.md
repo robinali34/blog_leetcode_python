@@ -126,11 +126,11 @@ n
 list[int> bit
 lowbit(x) : return x  -x
 Fenwick(_n): n(_n), bit(n + 1, 0) :
-// Add delta at position x (1-indexed)
+# Add delta at position x (1-indexed)
 def update(self, x, delta):
     for ( x <= n x += lowbit(x)) :
     bit[x] += delta
-// Sum from 1..x (1-indexed)
+# Sum from 1..x (1-indexed)
 def query(self, x):
     s = 0
     for ( x > 0 x -= lowbit(x)) :
@@ -140,20 +140,21 @@ class Solution:
 def countSmaller(self, nums):
     sz = len(nums)
     list[int> res(sz, 0)
-    // Coordinate compression: map distinct values to [1, k]
+    # Coordinate compression: map distinct values to [1, k]
     list[int> sorted(nums.begin(), nums.end())
     sorted.sort()
     sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end())
     Fenwick fw(len(sorted))
-    // Process from right to left
+    # Process from right to left
     for (i = sz - 1 i >= 0 i -= 1) :
-    // Find compressed index for nums[i]
+    # Find compressed index for nums[i]
     x = lower_bound(sorted.begin(), sorted.end(), nums[i]) - sorted.begin() + 1
-    // Query how many numbers < nums[i] have been seen
+    # Query how many numbers < nums[i] have been seen
     res[i] = fw.query(x - 1)
-    // Mark nums[i] as seen
+    # Mark nums[i] as seen
     fw.update(x, 1)
 return res
+
 ```
 
 ### **Algorithm Explanation:**
@@ -293,6 +294,7 @@ def merge(self, list[pair<int, arr, l, mid, r, res):
         temp.append(arr[j += 1])
     for (k = 0 k < len(temp) k += 1) :
     arr[l + k] = temp[k]
+
 ```
 
 **Time Complexity:** O(n log n)  

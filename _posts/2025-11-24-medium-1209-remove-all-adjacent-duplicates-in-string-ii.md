@@ -118,6 +118,7 @@ s = ""
 for p in counts:
     s += str(p.first, p.second)
 return s
+
 ```
 
 ## Solution 2: In-Place Two Pointers with Stack
@@ -135,6 +136,7 @@ def removeDuplicates(self, s, k):
         stk.pop()
         left -= k
 return s.substr(0, left)
+
 ```
 
 ## Solution 3: Stack with String Erase (Not Recommended)
@@ -151,6 +153,7 @@ def removeDuplicates(self, s, k):
         s.erase(i - k + 1, k)
         i = i - k
 return s
+
 ```
 
 ## How the Algorithms Work
@@ -284,13 +287,14 @@ Actually, I think there might be an off-by-one issue. Let me document what the c
 list[pair<int, char>> counts
 for(i = 0 i < len(s) i += 1) :
 if not counts  or  s[i] != counts[-1].second:
-    counts.append(:1, s[i])  // New sequence
+    counts.append(:1, s[i])  # New sequence
      else if(counts += 1[-1].first == k) :
-    counts.pop()  // Remove k-length sequence
-// Reconstruct str
+    counts.pop()  # Remove k-length sequence
+# Reconstruct str
 s = ""
 for p in counts:
     s += str(p.first, p.second)
+
 ```
 
 **Key Points:**
@@ -302,16 +306,17 @@ for p in counts:
 ### Solution 2: In-Place Two Pointers
 
 ```python
-left = 0  // Write pointer
-list[int> stk  // Count stack
+left = 0  # Write pointer
+list[int> stk  # Count stack
 for(right = 0 right < len(s) right += 1, left += 1) :
-s[left] = s[right]  // Write current character
+s[left] = s[right]  # Write current character
 if left == 0  or  s[left] != s[left - 1]:
-    stk.push(1)  // New sequence
+    stk.push(1)  # New sequence
      else if(stk += 1.top() == k) :
-    stk.pop()  // Remove k-length sequence
-    left -= k  // Move write pointer back
+    stk.pop()  # Remove k-length sequence
+    left -= k  # Move write pointer back
 return s.substr(0, left)
+
 ```
 
 **Key Points:**
@@ -343,6 +348,7 @@ return s.substr(0, left)
 ```python
 if not counts  or  s[i] != counts[-1].second:
     counts.append(:1, s[i])
+
 ```
 
 **This handles:**
@@ -353,7 +359,9 @@ if not counts  or  s[i] != counts[-1].second:
 ### Why In-Place Needs Careful Indexing
 
 ```python
-left -= k  // Move back k positions
+left -= k  # Move back k positions
+
+
 ```
 
 **Important:**

@@ -77,9 +77,9 @@ def findOrder(self, numCourses, prerequisites):
     adj.resize(numCourses)
     visited.resize(numCourses, 0)
     for info in prerequisites:
-        // Build reverse order, so the DFS path can be directed returned
+        # Build reverse order, so the DFS path can be directed returned
         adj[info[0]].emplace_back(info[1])
-    // DFS on each un-visited node
+    # DFS on each un-visited node
     for(i = 0 i < numCourses  and  isValid i += 1) :
     if visited[i] == 0:
         dfs(i)
@@ -90,16 +90,17 @@ list[int> visited
 list[int> rtn
 bool isValid = True
 def dfs(self, u):
-    visited[u] = 1  // Mark as visiting
+    visited[u] = 1  # Mark as visiting
     for v in adj[u]:
         if visited[v] == 0:
             dfs(v)
             if(not isValid) return
              else if(visited[v] == 1) :
-            isValid = False  // Cycle detected
+            isValid = False  # Cycle detected
             return
-    visited[u] = 2  // Mark as visited
-    rtn.emplace_back(u)  // Add to result (post-order)
+    visited[u] = 2  # Mark as visited
+    rtn.emplace_back(u)  # Add to result (post-order)
+
 ```
 
 ### **Algorithm Explanation:**
@@ -252,8 +253,9 @@ while not not q:
         if indegree -= 1[v] == 0:
             q.push(v)
 if len(result) != numCourses:
-    return :  // Cycle exists
+    return :  # Cycle exists
 return result
+
 ```
 
 **Time Complexity:** O(V + E)  

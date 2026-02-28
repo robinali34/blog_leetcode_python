@@ -133,13 +133,13 @@ class Solution:
 def alienOrder(self, words):
     N = len(words)
     if(N == 0) return ""
-    // Build adj list for graph
+    # Build adj list for graph
     dict[char, set[char>> adj
     for word in words:
         for c in word:
             adj[c]
     list[int> inDegree(26, 0)
-    // Compare adj list to find order
+    # Compare adj list to find order
     for(i = 0 i < N - 1 i += 1) :
     str w1 = words[i]
     str w2 = words[i + 1]
@@ -152,7 +152,7 @@ def alienOrder(self, words):
         break
     if j == minLen - 1  and  len(w1) > len(w2):
         return ""
-// BFS Topological Sort
+# BFS Topological Sort
 deque[char> q
 for([c, _]: adj) :
 if inDegree[c - 'a'] == 0:
@@ -166,10 +166,11 @@ while not not q:
         inDegree[success - 'a']--
         if inDegree[success - 'a'] == 0:
             q.push(success)
-// Check if all nodes were output (DAG check)
+# Check if all nodes were output (DAG check)
 if len(rtn) == len(adj):
     return rtn
 return ""
+
 ```
 
 ### **Algorithm Explanation:**
@@ -353,12 +354,12 @@ class Solution:
 def alienOrder(self, words):
     dict[char, set[char>> adj
     dict[char, int> state // 0: unvisited, 1: visiting, 2: visited
-    // Initialize all characters
+    # Initialize all characters
     for word in words:
         for c in word:
             adj[c]
             state[c] = 0
-    // Build graph
+    # Build graph
     for(i = 0 i < len(words) - 1 i += 1) :
     str w1 = words[i]
     str w2 = words[i + 1]
@@ -379,15 +380,16 @@ result.reverse()
 return result
 bool hasCycle(char c, dict[char, set[char>> adj,
 dict[char, int> state, str result) :
-if(state[c] == 1) return True // Cycle detected
-if(state[c] == 2) return False // Already processed
-state[c] = 1 // Mark as visiting
+if(state[c] == 1) return True # Cycle detected
+if(state[c] == 2) return False # Already processed
+state[c] = 1 # Mark as visiting
 for neighbor in adj[c]:
     if hasCycle(neighbor, adj, state, result):
         return True
-state[c] = 2 // Mark as visited
+state[c] = 2 # Mark as visited
 result.append(c)
 return False
+
 ```
 
 **Time Complexity:** O(C + E)  

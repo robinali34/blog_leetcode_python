@@ -144,12 +144,13 @@ def dfs(self, row):
     for(c = 0 c < size c += 1) :
     d = row - c + size
     a = row + c
-    if(col[c]  or  diag[d]  or  anti[a]) continue
+    if(col[c] * or  diag[d] * or  anti[a]) continue
     col[c] = diag[d] = anti[a] = True
     board[row][c] = 'Q'
     dfs(row + 1)
     board[row][c] = '.'
     col[c] = diag[d] = anti[a] = False
+
 ```
 
 ### **Algorithm Explanation:**
@@ -314,16 +315,17 @@ def dfs(self, board, row, n, result):
         dfs(board, row + 1, n, result)
         board[row][col] = '.'
 def isValid(self, board, row, col, n):
-    // Check column above
+    # Check column above
     for(i = 0 i < row i += 1) :
     if(board[i][col] == 'Q') return False
-// Check diagonal \
+# Check diagonal \
 for(i = row - 1, j = col - 1 i >= 0  and  j >= 0 i -= 1, j -= 1) :
 if(board[i][j] == 'Q') return False
-// Check diagonal /
+# Check diagonal /
 for(i = row - 1, j = col + 1 i >= 0  and  j < n i -= 1, j += 1) :
 if(board[i][j] == 'Q') return False
 return True
+
 ```
 
 **Time Complexity:** O(n! × n) (slower due to O(n) validation)  

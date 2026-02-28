@@ -107,6 +107,7 @@ return False
  bool param_2 = obj->deposit(account,money)
  bool param_3 = obj->withdraw(account,money)
 /
+
 ```
 
 ## Explanation
@@ -188,33 +189,39 @@ For `balance = [10, 100, 20, 50, 30]` (5 accounts):
 ### Using Map for Dynamic Accounts:
 ```python
 class Bank:
-def __init__(self, balance: list[int]):
-self.balance = :
-for i, bal in enumerate(balance):
-self.balance[i + 1] = bal
-def transfer(self, account1: int, account2: int, money: int) -> bool:
-if account1 in self.balance and account2 in self.balance and self.balance[account1] >= money:
-self.balance[account1] -= money
-self.balance[account2] += money
-return True
-return False
-# ... other methods
+    def __init__(self, balance: list[int]):
+        self.balance = {}
+        for i, bal in enumerate(balance):
+            self.balance[i + 1] = bal
+            def transfer(self, account1: int, account2: int, money: int) -> bool:
+                if account1 in self.balance and account2 in self.balance and self.balance[account1] >= money:
+                    self.balance[account1] -= money
+                    self.balance[account2] += money
+                    return True
+                    return False
+                    # ... other methods
+
+
+
+
 ```
 
 ### With Additional Features:
 ```python
 class Bank:
-def __init__(self, balance: list[int]):
-self.balance = balance
-self.transactionLog = []
-def transfer(self, account1: int, account2: int, money: int) -> bool:
-if self.isValid(account1) and self.isValid(account2) and self.balance[account1 - 1] >= money:
-self.balance[account1 - 1] -= money
-self.balance[account2 - 1] += money
-self.transactionLog.append(f"Transfer: :account1 -> :account2 $:money")
-return True
-return False
-# ... other methods
+    def __init__(self, balance: list[int]):
+        self.balance = balance
+        self.transactionLog = []
+    def transfer(self, account1: int, account2: int, money: int) -> bool:
+        if self.isValid(account1) and self.isValid(account2) and self.balance[account1 - 1] >= money:
+            self.balance[account1 - 1] -= money
+            self.balance[account2 - 1] += money
+            self.transactionLog.append(f"Transfer: :account1 -> :account2 $:money")
+            return True
+            return False
+            # ... other methods
+
+
 ```
 
 The vector-based approach is optimal for this problem due to its simplicity, efficiency, and direct array access patterns.

@@ -84,6 +84,7 @@ curr = decode + curr  count
 else:
 curr += ch
 return curr
+
 ```
 
 ## How the Algorithm Works
@@ -133,6 +134,7 @@ count = counts.pop()
 curr = decode + curr  count
 else:
 curr += ch
+
 ```
 
 **Process:**
@@ -149,6 +151,10 @@ counts.push(k)
 strings.push(curr)
 curr = ""
 k = 0
+
+
+
+
 ```
 
 **Pop Operation (on ']'):**
@@ -159,6 +165,7 @@ count = counts.top()
 while(count -= 1) decode += curr
 counts.pop()
 curr = decode
+
 ```
 
 ## Complexity Analysis
@@ -238,6 +245,7 @@ i[0] += 1
 return result
 def decodeString(self, s: str) -> str:
 return self.decodeString(s, [0])
+
 ```
 
 **Time Complexity:** O(n + m)  
@@ -266,6 +274,7 @@ curr = prev + temp
 else:
 curr += c
 return curr
+
 ```
 
 **Time Complexity:** O(n + m)  

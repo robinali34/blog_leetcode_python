@@ -136,6 +136,7 @@ def validUtf8(self, data):
         if(not isValid(data[idx + i])) return False
     idx += n
 return True
+
 ```
 
 ### **Algorithm Explanation:**
@@ -393,16 +394,17 @@ Result: false (invalid pattern)
 ### **Common Bit Operations**
 
 ```python
-// Check if bit 7 is set
+# Check if bit 7 is set
 (num  0x80) != 0
-// Check if bits 7-6 are "10"
+# Check if bits 7-6 are "10"
 (num  0xC0) == 0x80
-// Count leading 1s
+# Count leading 1s
 count = 0
 mask = 0x80
 while (num & mask) != 0  and  count < 4:
     count += 1
     mask >>= 1
+
 ```
 
 ## Related Problems

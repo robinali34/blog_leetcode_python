@@ -109,7 +109,7 @@ class Solution:
 def countRangeSum(self, nums, lower, upper):
     n = len(nums)
     list[long long> prefix(n + 1, 0)
-    // prefix sum with 0 included
+    # prefix sum with 0 included
     for i in range(0, n):
     prefix[i + 1] = prefix[i] + nums[i]
     list[long long> temp(n + 1)
@@ -144,6 +144,7 @@ while (i <= mid) temp[k += 1] = prefix[i += 1]
 while (j <= right) temp[k += 1] = prefix[j += 1]
 for (i = left i <= right i += 1)
 prefix[i] = temp[i]
+
 ```
 
 ### Algorithm Explanation:
@@ -220,8 +221,8 @@ def query(self, node, l, r):
     if(l > node.end  or  r < node.start) return 0
     if(l <= node.start  and  node.end <= r) return node.cnt
     return query(node.left, l, r) + query(node.right, l, r)
-// node is not null
-// add pos [start, end]
+# node is not null
+# add pos [start, end]
 def add(self, node, pos):
     node.cnt += 1
     if(node.start == node.end) return
@@ -234,6 +235,7 @@ def add(self, node, pos):
         if not node.right:
             node.right = Node(mid+1, node.end)
         add(node.right, pos)
+
 ```
 
 ### Algorithm Explanation:

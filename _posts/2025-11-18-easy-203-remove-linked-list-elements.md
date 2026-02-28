@@ -130,6 +130,7 @@ def removeElements(self, head, val):
             toDelete = None
     ListNode ret = dummy.next
     return ret
+
 ```
 
 ## How the Algorithm Works
@@ -206,28 +207,29 @@ After:   [1] -> [2] -> [3] -> [4] -> [5] -> nullptr
 
 ```python
 def removeElements(self, head, val):
-    // Handle empty list
+    # Handle empty list
     if(head == None) return head
-    // Create dummy node to simplify edge cases
+    # Create dummy node to simplify edge cases
     def dummy(self, 0, head)
-    ListNode prev = dummy  // Previous valid node
-    ListNode curr = head    // Current node being checked
+    ListNode prev = dummy  # Previous valid node
+    ListNode curr = head    # Current node being checked
     ListNode toDelete = None
     while curr != None:
         if curr.val == val:
-            // Skip the current node
+            # Skip the current node
             prev.next = curr.next
-            toDelete = curr  // Mark for deletion
+            toDelete = curr  # Mark for deletion
              else :
-            // Move prev forward only when we keep the node
+            # Move prev forward only when we keep the node
             prev = curr
-        // Move to next node
+        # Move to next node
         curr = curr.next
-        // Delete removed node
+        # Delete removed node
         if toDelete != None:
             delete toDelete
             toDelete = None
-    return dummy.next  // Return new head
+    return dummy.next  # Return new head
+
 ```
 
 ## Edge Cases
@@ -259,6 +261,7 @@ def removeElements(self, head, val):
     if(head == None) return head
     head.next = removeElements(head.next, val)
     (head.next if         return head.val == val  else head)
+
 ```
 
 ### Approach 3: Simplified Iterative (No Memory Deletion)
@@ -278,6 +281,7 @@ def removeElements(self, head, val):
             prev = curr
         curr = curr.next
     return dummy.next
+
 ```
 
 ## Complexity Analysis

@@ -130,6 +130,7 @@ def claPatterns(self, last, len):
         sum += claPatterns(i, len - 1)
         used[i] = False
 return sum
+
 ```
 
 ### **Algorithm Explanation:**
@@ -359,13 +360,14 @@ This formula identifies adjacent dots in the grid:
 Since the grid is symmetric, we can count patterns starting from symmetric positions once and multiply:
 
 ```python
-// Corners (0,2,6,8) are symmetric
-// Edges (1,3,5,7) are symmetric
-// Center (4) is unique
+# Corners (0,2,6,8) are symmetric
+# Edges (1,3,5,7) are symmetric
+# Center (4) is unique
 count = 0
-count += 4  countFrom(0, len)  // corners
-count += 4  countFrom(1, len)  // edges
-count += 1  countFrom(4, len)  // center
+count += 4  countFrom(0, len)  # corners
+count += 4  countFrom(1, len)  # edges
+count += 1  countFrom(4, len)  # center
+
 ```
 
 This reduces computation by ~4x for corners and edges.

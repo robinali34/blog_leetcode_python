@@ -129,6 +129,7 @@ def backtrack(self, n, open, close, path, rtn):
         path.append(')')
         backtrack(n, open, close + 1, path, rtn)
         path.pop()
+
 ```
 
 ### **Algorithm Explanation:**
@@ -280,6 +281,7 @@ def generateParenthesis(self, n):
         if close < open:
             q.push(:path + ")", :open, close + 1)
     return result
+
 ```
 
 **Time Complexity:** O(4^n / √n)  
@@ -299,6 +301,7 @@ for(str left: generateParenthesis(i)) :
 for(str right: generateParenthesis(n - 1 - i)) :
 result.append("(" + left + ")" + right)
 return result
+
 ```
 
 **Time Complexity:** O(4^n / √n)  

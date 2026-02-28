@@ -111,7 +111,7 @@ def lowbit(self, x):
     return x  (-x)
 class Solution:
 def countSmaller(self, nums):
-    // Get rank order
+    # Get rank order
     list[int> sorted(nums)
     sorted.sort()
     sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end())
@@ -120,13 +120,14 @@ def countSmaller(self, nums):
     for num in sorted:
         ranks[num] = rank += 1
     list[int> rtn
-    // Update pre-fix sum while iterate, add ranks by 1 when encouter
+    # Update pre-fix sum while iterate, add ranks by 1 when encouter
     FrenwickTree tree(len(ranks))
     for(i = len(nums) - 1 i >= 0 i -= 1) :
     rtn.append(tree.query(ranks[nums[i]] - 1))
     tree.update(ranks[nums[i]], 1)
 rtn.reverse()
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**
@@ -267,26 +268,27 @@ def mergeSort(self, list[pair<int, arr, l, r, res):
 def merge(self, list[pair<int, arr, l, mid, r, res):
     list[pair<int, int>> temp
     i = l, j = mid + 1
-    rightCount = 0 // Count of elements from right subarray already merged
+    rightCount = 0 # Count of elements from right subarray already merged
     while i <= mid  and  j <= r:
         if arr[i].first > arr[j].first:
-            // Right element is smaller, will be placed before left elements
+            # Right element is smaller, will be placed before left elements
             rightCount += 1
             temp.append(arr[j += 1])
              else :
-            // Left element is smaller/equal, add count of right elements already merged
+            # Left element is smaller/equal, add count of right elements already merged
             res[arr[i].second] += rightCount
             temp.append(arr[i += 1])
-    // Remaining left elements: all right elements were smaller
+    # Remaining left elements: all right elements were smaller
     while i <= mid:
         res[arr[i].second] += rightCount
         temp.append(arr[i += 1])
-    // Remaining right elements: no left elements to count
+    # Remaining right elements: no left elements to count
     while j <= r:
         temp.append(arr[j += 1])
-    // Copy back to original array
+    # Copy back to original array
     for (k = 0 k < len(temp) k += 1) :
     arr[l + k] = temp[k]
+
 ```
 
 **Algorithm Explanation:**
@@ -330,20 +332,21 @@ class Solution:
 def countSmaller(self, nums):
     n = len(nums)
     list[int> res(n, 0)
-    // Coordinate compression
+    # Coordinate compression
     list[int> sorted(nums.begin(), nums.end())
     sorted.sort()
     sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end())
     SegmentTree st(len(sorted))
-    // Process from right to left
+    # Process from right to left
     for (i = n - 1 i >= 0 i -= 1) :
     rank = lower_bound(sorted.begin(), sorted.end(), nums[i]) - sorted.begin()
-    // Query count of elements < nums[i]
+    # Query count of elements < nums[i]
     if rank > 0:
         res[i] = st.query(0, rank - 1)
-    // Mark nums[i] as seen
+    # Mark nums[i] as seen
     st.update(rank)
 return res
+
 ```
 
 **Time Complexity:** O(n log n)  
@@ -385,6 +388,7 @@ def insert(self, root, val):
             root.right = Node(val)
             return root.less_or_equal()
         return root.less_or_equal() + insert(root.right, val)
+
 ```
 
 **Algorithm Explanation:**
@@ -420,15 +424,16 @@ def countSmaller(self, nums):
     n = len(nums)
     list[int> res(n, 0)
     list[int> sortedList
-    // Process from right to left
+    # Process from right to left
     for (i = n - 1 i >= 0 i -= 1) :
-    // Find position where nums[i] should be inserted
+    # Find position where nums[i] should be inserted
     it = lower_bound(sortedList.begin(), sortedList.end(), nums[i])
-    // Count of elements smaller than nums[i]
+    # Count of elements smaller than nums[i]
     res[i] = it - sortedList.begin()
-    // Insert nums[i] at correct position
+    # Insert nums[i] at correct position
     sortedList.insert(it, nums[i])
 return res
+
 ```
 
 **Algorithm Explanation:**

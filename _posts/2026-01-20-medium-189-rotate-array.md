@@ -83,6 +83,7 @@ def rotate(self, nums, k):
     temp = nums[j]
     nums[j] = previous
     previous = temp
+
 ```
 
 ### Explanation
@@ -110,19 +111,21 @@ We can rotate the array in-place using the **reverse** operation three times:
 
 ```python
 class Solution:
-def rotate(self, nums, k):
-    N = len(nums)
-    k %= N
-    reverse(nums, 0, N - 1)
-    reverse(nums, 0, k - 1)
-    reverse(nums, k, N - 1)
-def reverse(self, nums, start, end):
-    while start < end:
-        tmp = nums[start]
-        nums[start] = nums[end]
-        nums[end] = tmp
-        start += 1
-        end -= 1
+    def rotate(self, nums, k):
+        N = len(nums)
+        k %= N
+        reverse(nums, 0, N - 1)
+        reverse(nums, 0, k - 1)
+        reverse(nums, k, N - 1)
+    def reverse(self, nums, start, end):
+        while start < end:
+            tmp = nums[start]
+            nums[start] = nums[end]
+            nums[end] = tmp
+            start += 1
+            end -= 1
+
+
 ```
 
 ### Why This Works

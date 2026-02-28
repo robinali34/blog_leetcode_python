@@ -119,6 +119,7 @@ while i <=j:
          else :
         (fn(nums[i += 1]) if                 rtn[index += 1] = fn(nums[i]) <= fn(nums[j])  else fn(nums[j -= 1]))
 return rtn
+
 ```
 
 ### **Algorithm Explanation:**

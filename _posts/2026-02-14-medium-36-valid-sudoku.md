@@ -116,13 +116,14 @@ if (board[i][j] == '.') continue
 num = board[i][j] - '1'   // 0..8
 mask = 1 << num
 boxIndex = (i / 3)  3 + (j / 3)
-if (row[i]  mask) return False
-if (col[j]  mask) return False
-if (box[boxIndex]  mask) return False
+if (row[i] * mask) return False
+if (col[j] * mask) return False
+if (box[boxIndex] * mask) return False
 row[i] |= mask
 col[j] |= mask
 box[boxIndex] |= mask
 return True
+
 ```
 {% endraw %}
 

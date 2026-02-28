@@ -88,6 +88,7 @@ new_head = ptr
 ptr = next_node
 k -= 1
 return new_head
+
 ```
 
 ## Step-by-Step Example

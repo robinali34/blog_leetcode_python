@@ -72,7 +72,7 @@ class FindSumPairs:
 def __init__(self, nums1: list[int], nums2: list[int]):
 self.nums1 = nums1
 self.nums2 = nums2
-self.cnts = :
+self.cnts = {}
 for num in nums2:
 self.cnts[num] = self.cnts.get(num, 0) + 1
 def add(self, index: int, val: int) -> None:
@@ -92,6 +92,7 @@ return cnt
  obj->add(index,val)
  param_2 = obj->count(tot)
 /
+
 ```
 
 ## How the Algorithm Works
@@ -154,10 +155,14 @@ Total count = 0 + 0 + 0 + 0 + 0 + 2 = 2
 ### Constructor:
 ```python
 def __init__(self, nums1: list[int], nums2: list[int]):
-self.nums1 = nums1
-self.nums2 = nums2
-for num in nums2:
-cnts[num] = cnts.get(num, 0) + 1
+    self.nums1 = nums1
+    self.nums2 = nums2
+    for num in nums2:
+        cnts[num] = cnts.get(num, 0) + 1
+
+
+
+
 ```
 
 **Process:**
@@ -168,9 +173,13 @@ cnts[num] = cnts.get(num, 0) + 1
 ### Add Operation:
 ```python
 def add(self, index: int, val: int) -> None:
-cnts[nums2[index]] -= 1
-nums2[index] += val
-cnts[nums2[index]] = cnts.get(nums2[index], 0) + 1
+    cnts[nums2[index]] -= 1
+    nums2[index] += val
+    cnts[nums2[index]] = cnts.get(nums2[index], 0) + 1
+
+
+
+
 ```
 
 **Process:**
@@ -181,12 +190,14 @@ cnts[nums2[index]] = cnts.get(nums2[index], 0) + 1
 ### Count Operation:
 ```python
 def count(self, tot: int) -> int:
-cnt = 0
-for num in nums1:
-rest = tot - num
-if rest in cnts:
-cnt += cnts[rest]
-return cnt
+    cnt = 0
+    for num in nums1:
+        rest = tot - num
+        if rest in cnts:
+            cnt += cnts[rest]
+            return cnt
+
+
 ```
 
 **Process:**
@@ -269,18 +280,22 @@ Total count = 2 + 0 = 2
 ### Approach 1: Brute Force
 ```python
 class FindSumPairs:
-def __init__(self, nums1: list[int], nums2: list[int]):
-self.nums1 = nums1
-self.nums2 = nums2
-def add(self, index: int, val: int) -> None:
-self.nums2[index] += val
-def count(self, tot: int) -> int:
-cnt = 0
-for num1 in self.nums1:
-for num2 in self.nums2:
-if num1 + num2 == tot:
-cnt += 1
-return cnt
+    def __init__(self, nums1: list[int], nums2: list[int]):
+        self.nums1 = nums1
+        self.nums2 = nums2
+    def add(self, index: int, val: int) -> None:
+        self.nums2[index] += val
+    def count(self, tot: int) -> int:
+        cnt = 0
+        for num1 in self.nums1:
+            for num2 in self.nums2:
+                if num1 + num2 == tot:
+                    cnt += 1
+                    return cnt
+
+
+
+
 ```
 
 **Time Complexity:** O(m × n) for count operation  
@@ -306,6 +321,7 @@ for num, freq in self.cnts1.items():
 rest = tot - num
 cnt += freq  self.cnts2.get(rest, 0)
 return cnt
+
 ```
 
 **Time Complexity:** O(k) for count operation where k is unique values in nums1  

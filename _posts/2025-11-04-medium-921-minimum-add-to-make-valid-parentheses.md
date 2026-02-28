@@ -97,6 +97,7 @@ def minAddToMakeValid(self, s):
                  else :
                 right += 1
     return left + right
+
 ```
 
 ## How the Algorithm Works
@@ -165,6 +166,7 @@ Total: 4 additions
 ### 1. Initialize Counters
 ```python
 left = 0, right = 0
+
 ```
 - **`left`**: Tracks unmatched opening parentheses
 - **`right`**: Tracks unmatched closing parentheses (need to add opening)
@@ -173,6 +175,10 @@ left = 0, right = 0
 ```python
 if ch == '(':
     left += 1
+
+
+
+
 ```
 - Increment `left` counter
 - This represents an opening that needs to be closed later
@@ -184,6 +190,7 @@ def if(self, ')'):
         left -= 1
          else :
         right += 1
+
 ```
 - **If `left > 0`**: Match with existing opening → decrement `left`
 - **If `left == 0`**: No opening to match → increment `right` (need to add an opening)
@@ -191,6 +198,10 @@ def if(self, ')'):
 ### 4. Calculate Final Answer
 ```python
 return left + right
+
+
+
+
 ```
 - **`right`**: Number of opening parentheses to add (for unmatched closing)
 - **`left`**: Number of closing parentheses to add (for unmatched opening)
@@ -216,10 +227,11 @@ def minAddToMakeValid(self, s):
             st.push(c)
              else :
             if not st:
-                minAdd += 1  // Need to add '('
+                minAdd += 1  # Need to add '('
                  else :
-                st.pop()  // Match found
-    return minAdd + len(st)  // Add ')' for remaining '('
+                st.pop()  # Match found
+    return minAdd + len(st)  # Add ')' for remaining '('
+
 ```
 
 **Time Complexity:** O(n)  
@@ -236,10 +248,11 @@ def minAddToMakeValid(self, s):
             st.push(c)
              else :
             if not st:
-                right += 1  // Need to add '('
+                right += 1  # Need to add '('
                  else :
-                st.pop()  // Match found
-    return right + len(st)  // Add ')' for remaining '('
+                st.pop()  # Match found
+    return right + len(st)  # Add ')' for remaining '('
+
 ```
 
 **Time Complexity:** O(n)  
@@ -250,8 +263,10 @@ def minAddToMakeValid(self, s):
 ### Approach 3: Dynamic Programming (Overkill)
 
 ```python
-// Not recommended for this problem
-// DP would be O(n²) time and space
+# Not recommended for this problem
+# DP would be O(n²) time and space
+
+
 ```
 
 ## Comparison of Approaches
@@ -463,7 +478,7 @@ def minAddToMakeValid(self, s):
             st.push(c)
              else :
             if not st:
-                minAdd += 1  // Need to add opening
+                minAdd += 1  # Need to add opening
                  else :
                 char top = st.top()
                 if((c == ')'  and  top == '(')  or
@@ -471,8 +486,9 @@ def minAddToMakeValid(self, s):
                 (c == ''  and  top == ':')) :
                 st.pop()
                  else :
-                minAdd += 1  // Mismatch, need to add opening
-return minAdd + len(st)  // Add closing for remaining
+                minAdd += 1  # Mismatch, need to add opening
+return minAdd + len(st)  # Add closing for remaining
+
 ```
 
 But for single bracket type `()`, the counter approach is optimal.

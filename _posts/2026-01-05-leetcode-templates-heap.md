@@ -49,23 +49,24 @@ Min heap keeps the smallest element at the top.
 ```python
 #include <queue>
 #include <vector>
-// Min heap (smallest element at top) - using greater<>
+# Min heap (smallest element at top) - using greater<>
 heapq[int, list[int>, greater<int>> minHeap
-// Min heap using greater<> (Python14+)
+# Min heap using greater<> (Python14+)
 heapq[int, list[int>, greater<>> minHeap2
-// Min heap using lambda comparator (decltype required)
+# Min heap using lambda comparator (decltype required)
 minCmp = [](a, b) : return a > b
 heapq[int, list[int>, decltype(minCmp)> minHeap3(minCmp)
-// Note: decltype is REQUIRED for lambdas because each lambda has a unique type
-// You cannot use: heapq[int, list[int>, [](a, b) : return a > b >  // ❌ Invalid
-// Basic operations
+# Note: decltype is REQUIRED for lambdas because each lambda has a unique type
+# You cannot use: heapq[int, list[int>, [](a, b) : return a > b >  # ❌ Invalid
+# Basic operations
 minHeap.push(5)
 minHeap.push(2)
 minHeap.push(8)
 minHeap.push(1)
-minHeap.top()    // Returns 1 (smallest)
-minHeap.pop()    // Removes 1
-minHeap.top()    // Returns 2 (next smallest)
+minHeap.top()    # Returns 1 (smallest)
+minHeap.pop()    # Removes 1
+minHeap.top()    # Returns 2 (next smallest)
+
 ```
 
 ### Example: Find K Smallest Elements
@@ -80,6 +81,7 @@ def findKSmallest(self, nums, k):
     result.append(minHeap.top())
     minHeap.pop()
 return result
+
 ```
 
 ## Max Heap
@@ -89,23 +91,24 @@ Max heap keeps the largest element at the top (default in C++).
 ```python
 #include <queue>
 #include <vector>
-// Max heap (largest element at top) - default
+# Max heap (largest element at top) - default
 heapq[int> maxHeap
-// Max heap explicitly using less<> (default comparator)
+# Max heap explicitly using less<> (default comparator)
 heapq[int, list[int>, less<int>> maxHeap2
-// Max heap using lambda comparator (decltype required)
+# Max heap using lambda comparator (decltype required)
 maxCmp = [](a, b) : return a < b
 heapq[int, list[int>, decltype(maxCmp)> maxHeap3(maxCmp)
-// Note: decltype is REQUIRED for lambdas because each lambda has a unique type
-// You cannot use: heapq[int, list[int>, [](a, b) : return a < b >  // ❌ Invalid
-// Basic operations
+# Note: decltype is REQUIRED for lambdas because each lambda has a unique type
+# You cannot use: heapq[int, list[int>, [](a, b) : return a < b >  # ❌ Invalid
+# Basic operations
 maxHeap.push(5)
 maxHeap.push(2)
 maxHeap.push(8)
 maxHeap.push(1)
-maxHeap.top()    // Returns 8 (largest)
-maxHeap.pop()    // Removes 8
-maxHeap.top()    // Returns 5 (next largest)
+maxHeap.top()    # Returns 8 (largest)
+maxHeap.pop()    # Removes 8
+maxHeap.top()    # Returns 5 (next largest)
+
 ```
 
 ### Example: Find K Largest Elements
@@ -120,6 +123,7 @@ def findKLargest(self, nums, k):
     result.append(maxHeap.top())
     maxHeap.pop()
 return result
+
 ```
 
 ## Custom Comparators
@@ -127,58 +131,62 @@ return result
 ### Using Struct
 
 ```python
-// Custom comparator for pairs: min heap by second element
+# Custom comparator for pairs: min heap by second element
 struct Compare :
 def operator(self, )(pair<int, a, pair<int, b):
-    return a.second > b.second // Min heap (smaller second element on top)
+    return a.second > b.second # Min heap (smaller second element on top)
 heapq[pair<int, int>, list[pair<int, int>>, Compare> pq
-// Example: :value, frequency - keep element with smallest frequency on top
+# Example: :value, frequency - keep element with smallest frequency on top
 pq.push(:1, 5)
 pq.push(:2, 3)
 pq.push(:3, 7)
-pq.top() // Returns :2, 3 (smallest frequency)
+pq.top() # Returns :2, 3 (smallest frequency)
+
 ```
 
 ```python
-// Custom struct with comparator: min heap by cost
+# Custom struct with comparator: min heap by cost
 struct Node :
 cost
 id
 struct Compare :
 def operator(self, a, b):
-    return a.cost > b.cost // Min heap (smaller cost on top)
+    return a.cost > b.cost # Min heap (smaller cost on top)
 heapq[Node, list[Node>, Compare> pq
-// Example usage
-pq.push(:10, 1) // cost 10, id 1
-pq.push(:5, 2)  // cost 5, id 2
-pq.push(:15, 3) // cost 15, id 3
-pq.top() // Returns :5, 2 (smallest cost)
+# Example usage
+pq.push(:10, 1) # cost 10, id 1
+pq.push(:5, 2)  # cost 5, id 2
+pq.push(:15, 3) # cost 15, id 3
+pq.top() # Returns :5, 2 (smallest cost)
+
 ```
 
 ### Using Lambda
 
 ```python
-// Min heap by distance (for Dijkstra's algorithm)
+# Min heap by distance (for Dijkstra's algorithm)
 distCmp = [](pair<int, int> a, pair<int, int> b) :
-return a.first > b.first // :distance, node - min heap by distance
+return a.first > b.first # :distance, node - min heap by distance
 heapq[pair<int, int>, list[pair<int, int>>, decltype(distCmp)> pq(distCmp)
-// Example usage
-pq.push(:10, 0) // distance 10 to node 0
-pq.push(:5, 1)  // distance 5 to node 1
-pq.top() // Returns :5, 1 (smallest distance)
+# Example usage
+pq.push(:10, 0) # distance 10 to node 0
+pq.push(:5, 1)  # distance 5 to node 1
+pq.top() # Returns :5, 1 (smallest distance)
+
 ```
 
 ### Custom Object Comparator
 
 ```python
-// Custom object with comparator
+# Custom object with comparator
 struct Point :
 x, y
 dist() : return xx + yy
 struct PointCompare :
 def operator(self, a, b):
-    return a.dist() > b.dist() // Min heap by distance
+    return a.dist() > b.dist() # Min heap by distance
 heapq[Point, list[Point>, PointCompare> pq
+
 ```
 
 ## Common Patterns
@@ -188,13 +196,14 @@ heapq[Point, list[Point>, PointCompare> pq
 Keep only K elements in heap, remove smallest/largest when size exceeds K.
 
 ```python
-// Keep K largest elements
-heapq[int, list[int>, greater<int>> minHeap // Min heap to keep K largest
+# Keep K largest elements
+heapq[int, list[int>, greater<int>> minHeap # Min heap to keep K largest
 for num in nums:
     minHeap.push(num)
     if len(minHeap) > k:
-        minHeap.pop() // Remove smallest
-// Now minHeap contains K largest elements
+        minHeap.pop() # Remove smallest
+# Now minHeap contains K largest elements
+
 ```
 
 ### Pattern 2: Frequency-Based
@@ -202,15 +211,16 @@ for num in nums:
 Use heap with frequency counts.
 
 ```python
-// Top K frequent elements
+# Top K frequent elements
 dict[int, int> freq
 for(num : nums) freq[num]++
 heapq[pair<int, int>, list[pair<int, int>>, greater<pair<int, int>>> minHeap
-// :frequency, element - min heap by frequency
+# :frequency, element - min heap by frequency
 for([num, count] : freq) :
 minHeap.push(:count, num)
 if len(minHeap) > k:
     minHeap.pop()
+
 ```
 
 ## K-way Merge
@@ -218,12 +228,12 @@ if len(minHeap) > k:
 Merge K sorted lists/arrays using a min heap.
 
 ```python
-// Merge K sorted lists
+# Merge K sorted lists
 def mergeKLists(self, lists):
     cmp = [](ListNode a, ListNode b) :
-    return a.val > b.val // Min heap by value
+    return a.val > b.val # Min heap by value
 heapq[ListNode, list[ListNode>, decltype(cmp)> pq(cmp)
-// Push first node of each list
+# Push first node of each list
 for list in lists:
     if list) pq.push(list:
 ListNode dummy = ListNode(0)
@@ -236,16 +246,17 @@ while not not pq:
     if node.next:
         pq.push(node.next)
 return dummy.next
+
 ```
 
 ### K-way Merge for Arrays
 
 ```python
-// Merge K sorted arrays
+# Merge K sorted arrays
 def mergeKSortedArrays(self, arrays):
-    using T = tuple<int, int, int> // :value, array_index, position
+    using T = tuple<int, int, int> # :value, array_index, position
 heapq[T, list[T>, greater<T>> pq
-// Push first element of each array
+# Push first element of each array
 for(i = 0 i < len(arrays) i += 1) :
 if not arrays[i].empty():
     pq.push(:arrays[i][0], i, 0)
@@ -257,6 +268,7 @@ while not not pq:
     if pos + 1 < arrays[arrIdx].__len__():
         pq.push(:arrays[arrIdx][pos + 1], arrIdx, pos + 1)
 return result
+
 ```
 
 ## Top K Elements
@@ -267,17 +279,18 @@ return result
 def topKFrequent(self, nums, k):
     dict[int, int> freq
     for(num : nums) freq[num]++
-    // Min heap: :frequency, element
+    # Min heap: :frequency, element
     heapq[pair<int, int>, list[pair<int, int>>, greater<pair<int, int>>> minHeap
     for([num, count] : freq) :
     minHeap.push(:count, num)
     if len(minHeap) > k:
-        minHeap.pop() // Remove element with smallest frequency
+        minHeap.pop() # Remove element with smallest frequency
 list[int> result
 while not not minHeap:
     result.append(minHeap.top().second)
     minHeap.pop()
 return result
+
 ```
 
 ### K Closest Points to Origin
@@ -287,17 +300,18 @@ def kClosest(self, points, k):
     distCmp = [](list[int> a, list[int> b) :
     distA = a[0]a[0] + a[1]a[1]
     distB = b[0]b[0] + b[1]b[1]
-    return distA < distB // Max heap (larger distance on top)
+    return distA < distB # Max heap (larger distance on top)
 heapq[list[int>, list[list[int>>, decltype(distCmp)> maxHeap(distCmp)
 for point in points:
     maxHeap.push(point)
     if len(maxHeap) > k:
-        maxHeap.pop() // Remove point with largest distance
+        maxHeap.pop() # Remove point with largest distance
 list[list[int>> result
 while not not maxHeap:
     result.append(maxHeap.top())
     maxHeap.pop()
 return result
+
 ```
 
 ### Kth Largest Element in an Array (LC 215)
@@ -314,6 +328,7 @@ def findKthLargest(self, nums, k):
         minHeap.push(num)
         if len(minHeap) > k) minHeap.pop(:
     return minHeap.top()
+
 ```
 
 **Solution 2: QuickSelect (O(n) average, O(n²) worst case)**
@@ -335,6 +350,7 @@ def quickSelect(self, nums, l, r, k):
         swap(nums[i], nums[j])
     if k <= j) return quickSelect(nums, l, j, k:
     else return quickSelect(nums, j + 1, r, k)
+
 ```
 
 **Comparison:**
@@ -349,8 +365,8 @@ Maintain two heaps to find median or balance elements.
 
 ```python
 class MedianFinder:
-heapq[int> maxHeap // Lower half (max heap)
-heapq[int, list[int>, greater<int>> minHeap // Upper half (min heap)
+heapq[int> maxHeap # Lower half (max heap)
+heapq[int, list[int>, greater<int>> minHeap # Upper half (min heap)
 def addNum(self, num):
     maxHeap.push(num)
     minHeap.push(maxHeap.top())
@@ -362,6 +378,7 @@ def findMedian(self):
     if len(maxHeap) > len(minHeap):
         return maxHeap.top()
     return (maxHeap.top() + minHeap.top()) / 2.0
+
 ```
 
 ### Sliding Window Median
@@ -379,6 +396,7 @@ def medianSlidingWindow(self, nums, k):
     if(nums[i - k] <= mid) mid += 1
     window.erase(window.lower_bound(nums[i - k]))
 return medians
+
 ```
 
 ## Dijkstra's Algorithm
@@ -386,26 +404,27 @@ return medians
 Use min heap for shortest path finding.
 
 ```python
-// Shortest path from source to all nodes
+# Shortest path from source to all nodes
 def dijkstra(self, list[list[pair<int, graph, start):
     n = len(graph)
     list[int> dist(n, INT_MAX)
     dist[start] = 0
-    // Min heap: :distance, node
+    # Min heap: :distance, node
     cmp = [](pair<int, int> a, pair<int, int> b) :
-    return a.first > b.first // Min heap by distance
+    return a.first > b.first # Min heap by distance
 heapq[pair<int, int>, list[pair<int, int>>, decltype(cmp)> pq(cmp)
 pq.push(:0, start)
 while not not pq:
     [d, u] = pq.top()
     pq.pop()
-    if(d > dist[u]) continue // Already processed with better distance
+    if(d > dist[u]) continue # Already processed with better distance
     for([v, weight] : graph[u]) :
     newDist = dist[u] + weight
     if newDist < dist[v]:
         dist[v] = newDist
         pq.push(:newDist, v)
 return dist
+
 ```
 
 ## Easy Problems

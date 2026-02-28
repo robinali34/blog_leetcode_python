@@ -116,6 +116,7 @@ def maxLengthBetweenEqualCharacters(self, s):
 for([c, idx]: RightIdx) :
 maxLen = max(maxLen, RightIdx[c] - LeftIdx[c] - 1)
 return maxLen
+
 ```
 
 ### Algorithm Explanation:
@@ -231,6 +232,7 @@ def maxLengthBetweenEqualCharacters(self, s):
          else :
         maxLen = max(maxLen, i - first[c] - 1)
 return maxLen
+
 ```
 
 **Pros**: More efficient, single pass, uses array instead of hash map  
@@ -249,6 +251,7 @@ for(i = 0 i < (int)s.length() i += 1) :
 if lastIdx[s[i]] != i:
     maxLen = max(maxLen, lastIdx[s[i]] - i - 1)
 return maxLen
+
 ```
 
 **Pros**: Clear separation of tracking and calculation  

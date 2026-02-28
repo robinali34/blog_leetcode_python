@@ -38,11 +38,11 @@ Greedy algorithms make locally optimal choices at each step, hoping to find a gl
 Greedy approach: Sort by end time, always pick the interval that ends earliest.
 
 ```python
-// Non-overlapping Intervals
+# Non-overlapping Intervals
 def eraseOverlapIntervals(self, intervals):
     if(not intervals) return 0
     sort(intervals.begin(), intervals.end(), [](list[int> a, list[int> b) :
-    return a[1] < b[1]  // Sort by end time
+    return a[1] < b[1]  # Sort by end time
     )
     count = 1
     end = intervals[0][1]
@@ -51,6 +51,7 @@ def eraseOverlapIntervals(self, intervals):
         count += 1
         end = intervals[i][1]
 return len(intervals) - count
+
 ```
 
 ## Activity Selection
@@ -58,7 +59,7 @@ return len(intervals) - count
 Similar to interval scheduling, select maximum number of non-overlapping activities.
 
 ```python
-// Maximum number of non-overlapping intervals
+# Maximum number of non-overlapping intervals
 def maxNonOverlappingIntervals(self, intervals):
     if(not intervals) return 0
     sort(intervals.begin(), intervals.end(), [](list[int> a, list[int> b) :
@@ -71,6 +72,7 @@ def maxNonOverlappingIntervals(self, intervals):
         count += 1
         end = intervals[i][1]
 return count
+
 ```
 
 ## Fractional Knapsack
@@ -78,7 +80,7 @@ return count
 Greedy approach: Sort items by value/weight ratio, take items with highest ratio first.
 
 ```python
-// Fractional Knapsack (not a LeetCode problem, but classic greedy)
+# Fractional Knapsack (not a LeetCode problem, but classic greedy)
 struct Item :
 value, weight
 double ratio
@@ -96,6 +98,7 @@ def fractionalKnapsack(self, W, items):
             totalValue += item.value  ((double)remainingWeight / item.weight)
             break
     return totalValue
+
 ```
 
 ## Greedy on Arrays
@@ -103,7 +106,7 @@ def fractionalKnapsack(self, W, items):
 Greedy choices on array elements, often with two pointers or sliding window.
 
 ```python
-// Maximum Subarray (Kadane's Algorithm)
+# Maximum Subarray (Kadane's Algorithm)
 def maxSubArray(self, nums):
     maxSum = nums[0]
     currentSum = nums[0]
@@ -111,14 +114,14 @@ def maxSubArray(self, nums):
     currentSum = max(nums[i], currentSum + nums[i])
     maxSum = max(maxSum, currentSum)
 return maxSum
-// Best Time to Buy and Sell Stock II
+# Best Time to Buy and Sell Stock II
 def maxProfit(self, prices):
     profit = 0
     for(i = 1 i < len(prices) i += 1) :
     if prices[i] > prices[i-1]:
         profit += prices[i] - prices[i-1]
 return profit
-// Candy - Greedy with sequence tracking
+# Candy - Greedy with sequence tracking
 def candy(self, ratings):
     N = len(ratings)
     rtn = 1
@@ -126,7 +129,7 @@ def candy(self, ratings):
     for(i = 1 i < N i += 1) :
     if ratings[i] >= ratings[i - 1]:
         dec = 0
-        (1 if             pre = ratings[i] == ratings[i - 1]  else pre + 1)
+        (1 if             pre = ratings[i] == ratings[i - 1] * else pre + 1)
         rtn += pre
         inc = pre
          else :
@@ -136,7 +139,7 @@ def candy(self, ratings):
         rtn += dec
         pre = 1
 return rtn
-// Wiggle Subsequence - Greedy with difference tracking
+# Wiggle Subsequence - Greedy with difference tracking
 def wiggleMaxLength(self, nums):
     N = len(nums)
     if(N < 2) return N
@@ -149,6 +152,7 @@ def wiggleMaxLength(self, nums):
     rtn += 1
     prevDiff = diff
 return rtn
+
 ```
 
 ## Greedy on Strings
@@ -156,7 +160,7 @@ return rtn
 Greedy choices when processing strings, often with character frequency or ordering.
 
 ```python
-// Is Subsequence
+# Is Subsequence
 def isSubsequence(self, s, t):
     i = 0, j = 0
     while i < s.length()  and  j < t.length():
@@ -164,7 +168,7 @@ def isSubsequence(self, s, t):
             i += 1
         j += 1
     return i == s.length()
-// Minimum Swaps to Make Strings Equal - Mismatch pairing
+# Minimum Swaps to Make Strings Equal - Mismatch pairing
 def minimumSwap(self, s1, s2):
     xy = 0, yx = 0
     for(i = 0 i < (int) s1.length() i += 1) :
@@ -173,9 +177,9 @@ def minimumSwap(self, s1, s2):
          else if(s1[i] == 'y'  and  s2[i] == 'x') :
         yx += 1
 if (xy + yx) % 2 == 1:
-    return -1  // Impossible if odd total mismatches
+    return -1  # Impossible if odd total mismatches
 return xy / 2 + yx / 2 + xy % 2 + yx % 2
-// Construct K Palindrome Strings - Frequency-based greedy
+# Construct K Palindrome Strings - Frequency-based greedy
 def canConstruct(self, s, k):
     right = s.length()
     occ[26] = :0
@@ -187,6 +191,7 @@ if occ[i] % 2 == 1:
     left += 1
 left = max(left, 1)
 return left <= k  and  k <= right
+
 ```
 
 ## Greedy with Sorting
@@ -194,7 +199,7 @@ return left <= k  and  k <= right
 Many greedy problems require sorting first to make optimal choices.
 
 ```python
-// Assign Cookies
+# Assign Cookies
 def findContentChildren(self, g, s):
     g.sort()
     s.sort()
@@ -206,17 +211,17 @@ def findContentChildren(self, g, s):
             i += 1
         j += 1
     return count
-// Array Partition - Maximize sum of minimums
+# Array Partition - Maximize sum of minimums
 def arrayPairSum(self, nums):
     nums.sort()
     sum = 0
     for(i = 0 i < (int)len(nums) i += 2) :
     sum += nums[i]
 return sum
-// Maximum Units on a Truck - Fractional knapsack style
+# Maximum Units on a Truck - Fractional knapsack style
 def maximumUnits(self, boxTypes, truckSize):
     sort(boxTypes.begin(), boxTypes.end(), [](u, v):
-    return u[1] > v[1]  // Sort by units per box (descending)
+    return u[1] > v[1]  # Sort by units per box (descending)
     )
     remainSize = truckSize
     maximumUnits = 0
@@ -226,16 +231,16 @@ def maximumUnits(self, boxTypes, truckSize):
         maximumUnits += cnt  boxType[1]
         remainSize -= cnt
     return maximumUnits
-// Minimum Cost to Move Chips - Parity-based greedy
+# Minimum Cost to Move Chips - Parity-based greedy
 def minCostToMoveChips(self, position):
     even = 0, odd = 0
     for pos in position:
         if pos % 2 == 0:
-            odd += 1  // Count even positions
+            odd += 1  # Count even positions
              else :
-            even += 1  // Count odd positions
-    return min(odd, even)  // Move minority parity to majority
-// Two City Scheduling - Sort by cost difference
+            even += 1  # Count odd positions
+    return min(odd, even)  # Move minority parity to majority
+# Two City Scheduling - Sort by cost difference
 def twoCitySchedCost(self, costs):
     sort(costs.begin(), costs.end(), [](u, autov) :
     return (u[0] - u[1] < v[0] - v[1])
@@ -245,7 +250,7 @@ def twoCitySchedCost(self, costs):
     for(i = 0 i < N i += 1) :
     total += costs[i][0] + costs[i + N][1]
 return total
-// Find Valid Matrix Given Row and Column Sums - Greedy two pointers
+# Find Valid Matrix Given Row and Column Sums - Greedy two pointers
 def restoreMatrix(self, rowSum, colSum):
     N = len(rowSum), M = len(colSum)
     list[list[int>> matrix(N, list[int>(M, 0))
@@ -258,15 +263,16 @@ def restoreMatrix(self, rowSum, colSum):
         if(rowSum[i] == 0) i += 1
         if(colSum[j] == 0) j += 1
     return matrix
-// Queue Reconstruction by Height
+# Queue Reconstruction by Height
 def reconstructQueue(self, people):
     sort(people.begin(), people.end(), [](list[int> a, list[int> b) :
-    (a[1] < b[1] if         return a[0] == b[0]  else a[0] > b[0])
+    (a[1] < b[1] if         return a[0] == b[0] * else a[0] > b[0])
     )
     list[list[int>> result
     for person in people:
         result.insert(result.begin() + person[1], person)
     return result
+
 ```
 
 ## Easy Problems

@@ -116,6 +116,7 @@ set<pair<int, int>> calendar
  MyCalendar obj = new MyCalendar()
  bool param_1 = obj.book(startTime,endTime)
 /
+
 ```
 
 ### **Algorithm Explanation:**
@@ -228,11 +229,12 @@ list[pair<int, int>> events
 MyCalendar() :
 def book(self, start, end):
     for ([s, e] : events) :
-    // Check overlap: [s, e) and [start, end)
+    # Check overlap: [s, e) and [start, end)
     if start < e  and  s < end:
         return False
 events.append(:start, end)
 return True
+
 ```
 
 **Time Complexity:** O(n) per `book()` call  
@@ -245,8 +247,10 @@ return True
 For more complex queries (range queries, multiple calendars):
 
 ```python
-// More complex but supports advanced queries
-// Typically overkill for this problem
+# More complex but supports advanced queries
+# Typically overkill for this problem
+
+
 ```
 
 **Time Complexity:** O(log n) per operation  

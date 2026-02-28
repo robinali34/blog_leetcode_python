@@ -140,6 +140,7 @@ def query(self, node, l, r, ql, qr):
  obj.update(index,val)
  param_2 = obj.sumRange(left,right)
 /
+
 ```
 
 ### **Algorithm Explanation:**
@@ -292,7 +293,7 @@ def add(self, index, val):
     while index <= n:
         tree[index] += val
         index += lowbit(index)
-// Prefix sum [1 .. index]
+# Prefix sum [1 .. index]
 def prefixSum(self, index):
     sum = 0
     while index > 0:
@@ -305,6 +306,7 @@ def prefixSum(self, index):
  obj.update(index,val)
  param_2 = obj.sumRange(left,right)
 /
+
 ```
 
 ### **Algorithm Explanation:**
@@ -435,6 +437,7 @@ def sumRange(self, left, right):
     for (i = left i <= right i += 1) :
     sum += nums[i]
 return sum
+
 ```
 
 **Time Complexity:** O(1) update, O(n) query → **TLE** for many queries  

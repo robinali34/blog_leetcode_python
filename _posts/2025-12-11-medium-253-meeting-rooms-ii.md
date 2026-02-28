@@ -104,6 +104,7 @@ def minMeetingRooms(self, intervals):
         allocator.pop()
     allocator.push(intervals[i][1])
 return len(allocator)
+
 ```
 
 ### How Solution 1 Works
@@ -149,6 +150,7 @@ while startPointer < len(intervals):
     usedRooms += 1
     startPointer += 1
 return usedRooms
+
 ```
 
 ### How Solution 2 Works
@@ -180,17 +182,18 @@ def minMeetingRooms(self, intervals):
     if (len(intervals) == 0) return 0
     MAX_TIME = 1000000
     list[int> timeline(MAX_TIME + 1, 0)
-    // Mark start and end times
+    # Mark start and end times
     for interval in intervals:
-        timeline[interval[0]]++  // Meeting starts
-        timeline[interval[1]]--  // Meeting ends
-    // Compute prefix sum to find maximum concurrent meetings
+        timeline[interval[0]]++  # Meeting starts
+        timeline[interval[1]]--  # Meeting ends
+    # Compute prefix sum to find maximum concurrent meetings
     maxRooms = 0
     currentRooms = 0
     for(i = 0 i <= MAX_TIME i += 1) :
     currentRooms += timeline[i]
     maxRooms = max(maxRooms, currentRooms)
 return maxRooms
+
 ```
 
 ### How Solution 3 Works
@@ -232,14 +235,15 @@ def minMeetingRooms(self, intervals):
     if (len(intervals) == 0) return 0
     map<int, int> timeline
     for interval in intervals:
-        timeline[interval[0]]++  // Meeting starts
-        timeline[interval[1]]--  // Meeting ends
+        timeline[interval[0]]++  # Meeting starts
+        timeline[interval[1]]--  # Meeting ends
     maxRooms = 0
     currentRooms = 0
     for([time, change] : timeline) :
     currentRooms += change
     maxRooms = max(maxRooms, currentRooms)
 return maxRooms
+
 ```
 
 This uses O(n log n) time (map insertion) but O(n) space, making it better for sparse data.

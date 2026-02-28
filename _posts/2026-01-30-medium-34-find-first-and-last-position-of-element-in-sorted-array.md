@@ -114,6 +114,7 @@ def upperBound(self, nums, target):
         if(nums[mid] <= target) left = mid + 1
         else right = mid
     return left
+
 ```
 
 ### Algorithm Breakdown:

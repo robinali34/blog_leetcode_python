@@ -138,7 +138,7 @@ Skiplist(): head_(new SkiplistNode(-1)), level_(0) :
 def search(self, target):
     SkiplistNode curr = this.head_
     for(i = level_ - 1 i >= 0 i -= 1) :
-    while curr.forward_[i]  and  curr.forward_[i].val_ < target:
+    while curr.forward_[i] * and  curr.forward_[i].val_ < target:
         curr = curr.forward_[i]
 curr = curr.forward_[0]
 if curr  and  curr.val_ == target:
@@ -148,7 +148,7 @@ def add(self, num):
     list[SkiplistNode> update(MAX_LEVEL, head_)
     SkiplistNode curr = this.head_
     for(i = level_ - 1 i >= 0 i -= 1) :
-    while curr.forward_[i]  and  curr.forward_[i].val_ < num:
+    while curr.forward_[i] * and  curr.forward_[i].val_ < num:
         curr = curr.forward_[i]
     update[i] = curr
 lv = randomLevel()
@@ -161,7 +161,7 @@ def erase(self, num):
     list[SkiplistNode> update(MAX_LEVEL, None)
     SkiplistNode curr = this.head_
     for(i = level_ - 1 i >= 0 i -= 1) :
-    while curr.forward_[i]  and  curr.forward_[i].val_ < num:
+    while curr.forward_[i] * and  curr.forward_[i].val_ < num:
         curr = curr.forward_[i]
     update[i] = curr
 curr = curr.forward_[0]
@@ -182,6 +182,7 @@ return True
  obj.add(num)
  bool param_3 = obj.erase(num)
 /
+
 ```
 
 ## How the Algorithm Works
@@ -211,9 +212,10 @@ A skiplist consists of multiple levels of sorted linked lists:
 
 ```python
 def search(self, target):
-    // Start from head at highest level
-    // Traverse down levels, moving right while value < target
-    // At level 0, check if next node equals target
+    # Start from head at highest level
+    # Traverse down levels, moving right while value < target
+    # At level 0, check if next node equals target
+
 ```
 
 **Algorithm:**
@@ -228,9 +230,10 @@ def search(self, target):
 
 ```python
 def add(self, num):
-    // Find insertion points at each level
-    // Generate random level for new node
-    // Insert node and update pointers
+    # Find insertion points at each level
+    # Generate random level for new node
+    # Insert node and update pointers
+
 ```
 
 **Algorithm:**
@@ -245,10 +248,11 @@ def add(self, num):
 
 ```python
 def erase(self, num):
-    // Find update points at each level
-    // Locate node to delete
-    // Update pointers to bypass deleted node
-    // Decrease level if necessary
+    # Find update points at each level
+    # Locate node to delete
+    # Update pointers to bypass deleted node
+    # Decrease level if necessary
+
 ```
 
 **Algorithm:**

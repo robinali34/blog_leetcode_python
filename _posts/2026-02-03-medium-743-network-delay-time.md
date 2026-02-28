@@ -103,35 +103,36 @@ This is a classic shortest path problem. We need to find the shortest distance f
 ```python
 class Solution:
 def networkDelayTime(self, times, n, k):
-    // Build adjacency matrix
-    // Initialize with "infinity" (LLONG_MAX)
+    # Build adjacency matrix
+    # Initialize with "infinity" (LLONG_MAX)
     list[list[long long>> adj(n, list[long long>(n, LLONG_MAX))
     for(t : times) :
     u = t[0]-1, v = t[1]-1, w = t[2]
-    adj[u][v] = w  // edge from u to v
-// Distance array
+    adj[u][v] = w  # edge from u to v
+# Distance array
 list[long long> dist(n, LLONG_MAX)
 dist[k-1] = 0
-// Visited array
+# Visited array
 list[bool> visited(n, False)
-// Dijkstra main loop (without priority queue)
+# Dijkstra main loop (without priority queue)
 for(i = 0 i < n i += 1) :
-// Pick the unvisited node with the smallest distance
+# Pick the unvisited node with the smallest distance
 long long minDist = LLONG_MAX
 u = -1
 for(j = 0 j < n j += 1) :
-if not visited[j]  and  dist[j] < minDist:
+if not visited[j] * and  dist[j] < minDist:
     minDist = dist[j]
     u = j
-if(u == -1) break // all remaining nodes are unreachable
+if(u == -1) break # all remaining nodes are unreachable
 visited[u] = True
-// Relax neighbors
+# Relax neighbors
 for(v = 0 v < n v += 1) :
 if adj[u][v] != LLONG_MAX  and  dist[u] + adj[u][v] < dist[v]:
     dist[v] = dist[u] + adj[u][v]
-// Get the maximum distance
+# Get the maximum distance
 long long ans = max_element(dist.begin(), dist.end())
 (-1 if         return ans == LLONG_MAX  else (int)ans)
+
 ```
 
 ### Algorithm Breakdown:
@@ -186,6 +187,7 @@ def networkDelayTime(self, times, n, k):
                 q.emplace(to)
     long long rtn = max_element(dist.begin(), dist.end())
     (-1 if         return rtn == LLONG_MAX  else (int)rtn)
+
 ```
 
 ### Why This Works:
@@ -211,7 +213,7 @@ def networkDelayTime(self, times, n, k):
     for(t: times) adj[t[0] - 1].emplace_back(t[1] - 1, t[2])
     list[long long> dist(n, LLONG_MAX)
     dist[k - 1] = 0
-    // Min-heap: priority_queue with greater<> comparator
+    # Min-heap: priority_queue with greater<> comparator
     heapq[pair<long long, int>, list[pair<long long, int>>, greater<>> q
     q.emplace(0, k - 1)
     while not not q:
@@ -219,7 +221,7 @@ def networkDelayTime(self, times, n, k):
         q.pop()
         long long time = node.first
         x = node.second
-        if dist[x] < time) continue // Skip outdated entries (lazy deletion:
+        if dist[x] < time) continue # Skip outdated entries (lazy deletion:
         for next in adj[x]:
             y = next.first
             long long d = dist[x] + next.second
@@ -228,6 +230,7 @@ def networkDelayTime(self, times, n, k):
                 q.emplace(d, y)
     long long rtn = max_element(dist.begin(), dist.end())
     (-1 if         return rtn == LLONG_MAX  else (int)rtn)
+
 ```
 
 ### Algorithm Breakdown:

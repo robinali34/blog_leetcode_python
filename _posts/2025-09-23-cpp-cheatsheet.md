@@ -23,6 +23,10 @@ s[start:end]              # Slice str
 s += "abc"                # Append
 str(x)                    # Convert to str
 int(s)                    # Convert str to int
+
+
+
+
 ```
 
 ---
@@ -43,6 +47,10 @@ v.remove(x)               # Remove first occurrence of x
 sorted(v)                 # Return sorted list
 v.sort()                  # Sort in place
 v.reverse()               # Reverse in place
+
+
+
+
 ```
 
 ---
@@ -50,8 +58,12 @@ v.reverse()               # Reverse in place
 ### ✅ Arrays (using lists)
 
 ```python
-arr = [0]  100           # Array of 100 zeros
+arr = [0] * 100           # Array of 100 zeros
 arr = [1, 2, 3, 4, 5]     # Initialize array
+
+
+
+
 ```
 
 ---
@@ -67,6 +79,10 @@ x in s                    # Check membership
 len(s)                    # Size
 # Note: Sets don't have lower_bound/upper_bound like C += 1
 # Use sorted(set) for ordered operations
+
+
+
+
 ```
 
 ---
@@ -74,7 +90,7 @@ len(s)                    # Size
 ### ✅ Dictionaries (Maps)
 
 ```python
-m = :                    # Empty dict
+m = {}  # Empty dict
 m = dict()                # Empty dict
 m[key] = val              # Assign value
 m.get(key, default)       # Get value with default
@@ -82,8 +98,12 @@ key in m                  # Check if key exists
 m.keys()                  # Iterate keys
 m.values()                # Iterate values
 m.items()                 # Iterate (key, value) pairs
-for k, v in m.items():    # Iterate key-value pairs
-pass
+for k, v in m.items():
+    # Iterate key-value pairs
+    pass
+
+
+
 ```
 
 ---
@@ -101,6 +121,10 @@ import bisect
 bisect.bisect_left(lst, x)         # Lower bound (first pos >= x)
 bisect.bisect_right(lst, x)        # Upper bound (first pos > x)
 x in lst                           # Linear search
+
+
+
+
 ```
 
 ---
@@ -115,6 +139,10 @@ sum(lst)                          # Sum of elements
 lst.count(x)                      # Count occurrences of x
 from itertools import permutations
 list(permutations(lst))           # All permutations
+
+
+
+
 ```
 
 ---
@@ -128,6 +156,10 @@ import math
 math.sqrt(x)
 math.gcd(a, b)                    # GCD
 math.lcm(a, b)                    # LCM (Python 3.9+)
+
+
+
+
 ```
 
 ---
@@ -144,6 +176,10 @@ q.popleft()                       # Remove from front
 q[0]                              # Front element
 q[-1]                             # Back element
 len(q) == 0                       # Check if empty
+
+
+
+
 ```
 
 ### ✅ Stack (using list)
@@ -154,6 +190,10 @@ s.append(x)                       # Push
 s.pop()                           # Pop
 s[-1]                             # Top
 len(s) == 0                       # Check if empty
+
+
+
+
 ```
 
 ### ✅ Deque
@@ -165,6 +205,10 @@ dq.appendleft(x)                  # Add to front
 dq.append(x)                      # Add to end
 dq.popleft()                      # Remove from front
 dq.pop()                          # Remove from end
+
+
+
+
 ```
 
 ### ✅ Priority Queue (Heap)
@@ -178,6 +222,10 @@ heap[0]                           # Peek minimum
 # For max heap, negate values:
 heapq.heappush(heap, -x)          # Push negative for max heap
 max_val = -heapq.heappop(heap)    # Pop and negate back
+
+
+
+
 ```
 
 ---
@@ -191,6 +239,10 @@ x  (x - 1)                       # Remove lowest 1-bit
 x  -x                            # Isolate lowest 1-bit
 x >> 1                            # Right shift
 x << 1                            # Left shift
+
+
+
+
 ```
 
 ---
@@ -223,7 +275,11 @@ s = input().strip()               # Read and strip whitespace
 nums = list(map(int, input().split()))
 # File I/O
 with open('input.txt', 'r') as f:
-data = f.read()
+    data = f.read()
+
+
+
+
 ```
 
 ---

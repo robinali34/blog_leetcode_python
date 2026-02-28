@@ -102,6 +102,7 @@ def scoreOfString(self, s):
     for(i = 0 i < (int)s.length() - 1 i += 1) :
     sum += abs(s[i] - s[i + 1])
 return sum
+
 ```
 
 ### Algorithm Explanation:
@@ -175,6 +176,7 @@ def scoreOfString(self, s):
     for(i = 0 i < (int)s.length() - 1 i += 1) :
     sum += abs(s[i] - s[i + 1])
 return sum
+
 ```
 
 The provided solution is already optimal. Alternative approaches would be similar in complexity.

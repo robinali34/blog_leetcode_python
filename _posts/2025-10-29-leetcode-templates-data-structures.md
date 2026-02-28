@@ -22,7 +22,7 @@ tags: [leetcode, templates, data-structures]
 ```python
 def next_greater(a: list[int]) -> list[int]:
 n = len(a)
-ans = [-1]  n
+ans = [-1] * n
 st = []
 for i in range(2  n):
 idx = i % n
@@ -32,6 +32,7 @@ st.pop()
 if i < n:
 st.append(idx)
 return ans
+
 ```
 
 | ID | Title | Link |
@@ -45,17 +46,19 @@ return ans
 ```python
 from collections import deque
 def max_window(a: list[int], k: int) -> list[int]:
-dq = deque()
-out = []
-for i in range(len(a)):
-while dq and a[dq[-1]] <= a[i]:
-dq.pop()
-dq.append(i)
-if dq[0] <= i - k:
-dq.popleft()
-if i >= k - 1:
-out.append(a[dq[0]])
-return out
+    dq = deque()
+    out = []
+    for i in range(len(a)):
+        while dq and a[dq[-1]] <= a[i]:
+            dq.pop()
+            dq.append(i)
+            if dq[0] <= i - k:
+                dq.popleft()
+                if i >= k - 1:
+                    out.append(a[dq[0]])
+                    return out
+
+
 ```
 
 | ID | Title | Link |
@@ -68,18 +71,20 @@ return out
 ```python
 import heapq
 def merge_k(lists: list[list[int]]) -> list[int]:
-# pq: (val, list_idx, pos)
-pq = []
-for i, lst in enumerate(lists):
-if lst:
-heapq.heappush(pq, (lst[0], i, 0))
-out = []
-while pq:
-v, i, j = heapq.heappop(pq)
-out.append(v)
-if j + 1 < len(lists[i]):
-heapq.heappush(pq, (lists[i][j + 1], i, j + 1))
-return out
+    # pq: (val, list_idx, pos)
+    pq = []
+    for i, lst in enumerate(lists):
+        if lst:
+            heapq.heappush(pq, (lst[0], i, 0))
+            out = []
+            while pq:
+                v, i, j = heapq.heappop(pq)
+                out.append(v)
+                if j + 1 < len(lists[i]):
+                    heapq.heappush(pq, (lists[i][j + 1], i, j + 1))
+                    return out
+
+
 ```
 
 | ID | Title | Link |
@@ -91,24 +96,26 @@ return out
 
 ```python
 class DSU:
-def __init__(self, n: int):
-self.p = list(range(n))
-self.r = [0]  n
-def find(self, x: int) -> int:
-if self.p[x] != x:
-self.p[x] = self.find(self.p[x])
-return self.p[x]
-def unite(self, a: int, b: int) -> bool:
-a = self.find(a)
-b = self.find(b)
-if a == b:
-return False
-if self.r[a] < self.r[b]:
-a, b = b, a
-self.p[b] = a
-if self.r[a] == self.r[b]:
-self.r[a] += 1
-return True
+    def __init__(self, n: int):
+        self.p = list(range(n))
+        self.r = [0] * n
+    def find(self, x: int) -> int:
+        if self.p[x] != x:
+            self.p[x] = self.find(self.p[x])
+            return self.p[x]
+            def unite(self, a: int, b: int) -> bool:
+                a = self.find(a)
+                b = self.find(b)
+                if a == b:
+                    return False
+                    if self.r[a] < self.r[b]:
+                        a, b = b, a
+                        self.p[b] = a
+                        if self.r[a] == self.r[b]:
+                            self.r[a] += 1
+                            return True
+
+
 ```
 
 | ID | Title | Link |
@@ -142,6 +149,7 @@ if i not in self.t[u]:
 return False
 u = self.t[u][i]
 return self.end[u]
+
 ```
 
 | ID | Title | Link |
@@ -156,7 +164,7 @@ return self.end[u]
 class SegTree:
 def __init__(self, n: int):
 self.n = n
-self.st = [0]  (4  n)
+self.st = [0] * (4  n)
 def update(self, p: int, v: int, i: int = 0, l: int = 0, r: int = None):
 if r is None:
 r = self.n - 1
@@ -178,6 +186,7 @@ if ql <= l and r <= qr:
 return self.st[i]
 m = (l + r) // 2
 return self.query(ql, qr, 2  i + 1, l, m) + self.query(ql, qr, 2  i + 2, m + 1, r)
+
 ```
 
 | ID | Title | Link |
@@ -189,19 +198,21 @@ return self.query(ql, qr, 2  i + 1, l, m) + self.query(ql, qr, 2  i + 2, m + 1, 
 
 ```python
 class BIT:
-def __init__(self, n: int):
-self.n = n
-self.f = [0]  (n + 1)
-def add(self, i: int, v: int):
-while i <= self.n:
-self.f[i] += v
-i += i  -i
-def sum(self, i: int) -> int:
-s = 0
-while i > 0:
-s += self.f[i]
-i -= i  -i
-return s
+    def __init__(self, n: int):
+        self.n = n
+        self.f = [0] * (n + 1)
+    def add(self, i: int, v: int):
+        while i <= self.n:
+            self.f[i] += v
+            i += i  -i
+            def sum(self, i: int) -> int:
+                s = 0
+                while i > 0:
+                    s += self.f[i]
+                    i -= i  -i
+                    return s
+
+
 ```
 
 | ID | Title | Link |

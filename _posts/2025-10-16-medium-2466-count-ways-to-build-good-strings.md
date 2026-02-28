@@ -51,19 +51,21 @@ Use bottom-up DP to calculate the number of ways to build strings of each length
 
 ```python
 class Solution:
-def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
-MOD = 109 + 7
-dp = [0]  (high + 1)
-dp[0] = 1  # Base case: empty str
-for i in range(1, high + 1):
-if i - zero >= 0:
-dp[i] = (dp[i] + dp[i - zero]) % MOD
-if i - one >= 0:
-dp[i] = (dp[i] + dp[i - one]) % MOD
-result = 0
-for i in range(low, high + 1):
-result = (result + dp[i]) % MOD
-return result
+    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
+        MOD = 109 + 7
+        dp = [0] * (high + 1)
+        dp[0] = 1  # Base case: empty str
+        for i in range(1, high + 1):
+            if i - zero >= 0:
+                dp[i] = (dp[i] + dp[i - zero]) % MOD
+                if i - one >= 0:
+                    dp[i] = (dp[i] + dp[i - one]) % MOD
+                    result = 0
+                    for i in range(low, high + 1):
+                        result = (result + dp[i]) % MOD
+                        return result
+
+
 ```
 
 ## Solution 2: Top-Down Dynamic Programming (Memoization)
@@ -75,25 +77,27 @@ Use top-down DP with memoization to calculate the number of ways recursively.
 
 ```python
 class Solution:
-def __init__(self):
-self.MOD = 109 + 7
-def dfs(self, dp: list[int], zero: int, one: int, end: int) -> int:
-if dp[end] != -1:
-return dp[end]
-cnt = 0
-if end >= one:
-cnt = (cnt + self.dfs(dp, zero, one, end - one)) % self.MOD
-if end >= zero:
-cnt = (cnt + self.dfs(dp, zero, one, end - zero)) % self.MOD
-dp[end] = cnt
-return dp[end]
-def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
-dp = [-1]  (high + 1)
-dp[0] = 1  # Base case: empty str
-result = 0
-for length in range(low, high + 1):
-result = (result + self.dfs(dp, zero, one, length)) % self.MOD
-return result
+    def __init__(self):
+        self.MOD = 109 + 7
+    def dfs(self, dp: list[int], zero: int, one: int, end: int) -> int:
+        if dp[end] != -1:
+            return dp[end]
+            cnt = 0
+            if end >= one:
+                cnt = (cnt + self.dfs(dp, zero, one, end - one)) % self.MOD
+                if end >= zero:
+                    cnt = (cnt + self.dfs(dp, zero, one, end - zero)) % self.MOD
+                    dp[end] = cnt
+                    return dp[end]
+                    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
+                        dp = [-1] * (high + 1)
+                        dp[0] = 1  # Base case: empty str
+                        result = 0
+                        for length in range(low, high + 1):
+                            result = (result + self.dfs(dp, zero, one, length)) % self.MOD
+                            return result
+
+
 ```
 
 ## How the Algorithm Works
@@ -141,13 +145,15 @@ Good strings (length 2-3): "00", "1", "000", "01", "10" = 5 ways
 
 ```python
 MOD = 109 + 7
-dp = [0]  (high + 1)
+dp = [0] * (high + 1)
 dp[0] = 1  # Base case
 for i in range(1, high + 1):
-if i - zero >= 0:
-dp[i] = (dp[i] + dp[i - zero]) % MOD
-if i - one >= 0:
-dp[i] = (dp[i] + dp[i - one]) % MOD
+    if i - zero >= 0:
+        dp[i] = (dp[i] + dp[i - zero]) % MOD
+        if i - one >= 0:
+            dp[i] = (dp[i] + dp[i - one]) % MOD
+
+
 ```
 
 **Process:**
@@ -160,15 +166,19 @@ dp[i] = (dp[i] + dp[i - one]) % MOD
 
 ```python
 def dfs(self, zero: int, one: int, end: int) -> int:
-if dp[end] != -1:
-return dp[end]  # Memoization check
-cnt = 0
-if end >= one:
-cnt = (cnt + dfs(self, zero, one, end - one)) % MOD
-if end >= zero:
-cnt = (cnt + dfs(self, zero, one, end - zero)) % MOD
-dp[end] = cnt  # Store result
-return dp[end]
+    if dp[end] != -1:
+        return dp[end]  # Memoization check
+        cnt = 0
+        if end >= one:
+            cnt = (cnt + dfs(self, zero, one, end - one)) % MOD
+            if end >= zero:
+                cnt = (cnt + dfs(self, zero, one, end - zero)) % MOD
+                dp[end] = cnt  # Store result
+                return dp[end]
+
+
+
+
 ```
 
 **Process:**
@@ -258,16 +268,20 @@ Sum = dp[2] + dp[3] = 2 + 3 = 5
 ### Approach 1: Brute Force (DFS)
 ```python
 class Solution:
-def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
-return self.dfs(0, low, high, zero, one)
-def dfs(self, length: int, low: int, high: int, zero: int, one: int) -> int:
-MOD = 109 + 7
-if length > high:
-return 0
-count = 1 if length >= low else 0
-count = (count + self.dfs(length + zero, low, high, zero, one)) % MOD
-count = (count + self.dfs(length + one, low, high, zero, one)) % MOD
-return count
+    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
+        return self.dfs(0, low, high, zero, one)
+    def dfs(self, length: int, low: int, high: int, zero: int, one: int) -> int:
+        MOD = 109 + 7
+        if length > high:
+            return 0
+            count = 1 if length >= low else 0
+            count = (count + self.dfs(length + zero, low, high, zero, one)) % MOD
+            count = (count + self.dfs(length + one, low, high, zero, one)) % MOD
+            return count
+
+
+
+
 ```
 
 **Time Complexity:** O(2^high)  
@@ -276,19 +290,21 @@ return count
 ### Approach 2: Mathematical Formula
 ```python
 class Solution:
-def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
-MOD = 109 + 7
-dp = [0]  (high + 1)
-dp[0] = 1
-for i in range(1, high + 1):
-if i >= zero:
-dp[i] = (dp[i] + dp[i - zero]) % MOD
-if i >= one:
-dp[i] = (dp[i] + dp[i - one]) % MOD
-result = 0
-for i in range(low, high + 1):
-result = (result + dp[i]) % MOD
-return result
+    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
+        MOD = 109 + 7
+        dp = [0] * (high + 1)
+        dp[0] = 1
+        for i in range(1, high + 1):
+            if i >= zero:
+                dp[i] = (dp[i] + dp[i - zero]) % MOD
+                if i >= one:
+                    dp[i] = (dp[i] + dp[i - one]) % MOD
+                    result = 0
+                    for i in range(low, high + 1):
+                        result = (result + dp[i]) % MOD
+                        return result
+
+
 ```
 
 ## Related Problems

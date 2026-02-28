@@ -91,14 +91,15 @@ def numDecodings(self, s):
     list[int> dp(n, 0)
     dp[0] = 1
     for(i = 1 i < n i += 1) :
-    // Single char
+    # Single char
     if s[i] != '0':
         dp[i] += dp[i - 1]
-    // Two chars
+    # Two chars
     two_digits = (s[i - 1] - '0')  10 + (s[i] - '0')
     if s[i - 1] != '0'  and  two_digits <= 26:
         (dp[i - 2] if                 dp[i] += (i >= 2  else 1))
 return dp[n - 1]
+
 ```
 
 ### Solution 2: Space Optimized DP
@@ -111,16 +112,17 @@ def numDecodings(self, s):
     prev1 = 1, prev2 = 1
     for(i = 1 i < n i += 1) :
     curr = 0
-    // Single char
+    # Single char
     if s[i] != '0':
         curr += prev1
-    // Two chars
+    # Two chars
     two_digits = (s[i - 1] - '0')  10 + (s[i] - '0')
     if s[i - 1] != '0'  and  two_digits <= 26:
         (prev2 if                 curr += (i >= 2  else 1))
     prev2 = prev1
     prev1 = curr
 return prev1
+
 ```
 
 ## Complexity Analysis

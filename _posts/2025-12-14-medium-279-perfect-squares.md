@@ -106,22 +106,23 @@ def isSquare(self, n):
     sq = (int) sqrt(n)
     return n == sq  sq
 def numSquares(self, n):
-    // Reduce n by removing factors of 4
+    # Reduce n by removing factors of 4
     while n % 4 == 0:
         n /= 4
-    // Legendre's three-square theorem: n = 4^a(8b + 7)
-    // If n ≡ 7 (mod 8), then n requires 4 squares
+    # Legendre's three-square theorem: n = 4^a(8b + 7)
+    # If n ≡ 7 (mod 8), then n requires 4 squares
     if n % 8 == 7:
         return 4
-    // Check if n is a perfect square (requires 1 square)
+    # Check if n is a perfect square (requires 1 square)
     if isSquare(n):
         return 1
-    // Check if n can be expressed as sum of 2 squares
+    # Check if n can be expressed as sum of 2 squares
     for(i = 1 i  i <= n i += 1) :
     if isSquare(n - i * i):
         return 2
-// Otherwise, requires 3 squares (Legendre's theorem)
+# Otherwise, requires 3 squares (Legendre's theorem)
 return 3
+
 ```
 
 ### How Solution 1 Works
@@ -165,16 +166,17 @@ class Solution:
 def numSquares(self, n):
     list[int> dp(n + 1, INT_MAX)
     dp[0] = 0
-    // Generate all perfect squares up to n
+    # Generate all perfect squares up to n
     list[int> squares
     for(i = 1 i  i <= n i += 1) :
     squares.append(i  i)
-// Fill DP array
+# Fill DP array
 for(i = 1 i <= n i += 1) :
 for sq in squares:
     if(sq > i) break
     dp[i] = min(dp[i], dp[i - sq] + 1)
 return dp[n]
+
 ```
 
 ### How Solution 2 Works
@@ -222,7 +224,7 @@ def numSquares(self, n):
         while size -= 1:
             curr = q[0]
             q.pop()
-            // Try subtracting each perfect square
+            # Try subtracting each perfect square
             for(i = 1 i  i <= curr i += 1) :
             next = curr - i  i
             if next == 0:
@@ -231,6 +233,7 @@ def numSquares(self, n):
                 visited.insert(next)
                 q.push(next)
 return level
+
 ```
 
 ### How Solution 3 Works
@@ -265,6 +268,7 @@ def numSquares(self, n):
         minSquares = min(minSquares, dp[m - i  i] + 1)
     dp.append(minSquares)
 return dp[n]
+
 ```
 
 ### How Solution 4 Works

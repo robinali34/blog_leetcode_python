@@ -107,6 +107,7 @@ def dailyTemperatures(self, temperatures):
         rtn[prev] = i - prev
     s.push(i)
 return rtn
+
 ```
 
 ### Algorithm Explanation:
@@ -158,6 +159,7 @@ def dailyTemperatures(self, temperatures):
         else j += rtn[j]
     if(j < N) rtn[i] = j - i
 return rtn
+
 ```
 
 ### Algorithm Explanation:

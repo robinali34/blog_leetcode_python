@@ -117,7 +117,7 @@ class Solution:
 def addTwoNumbers(self, l1, l2):
     return addTwoNumbersHelper(l1, l2, 0)
 def addTwoNumbersHelper(self, l1, l2, carry):
-    // Base case: if both lists are null and no carry
+    # Base case: if both lists are null and no carry
     if l1 == None  and  l2 == None  and  carry == 0:
         return None
     sum = carry
@@ -132,6 +132,7 @@ def addTwoNumbersHelper(self, l1, l2, carry):
     sum / 10
     )
     return newNode
+
 ```
 
 ## How the Algorithm Works
@@ -205,22 +206,23 @@ Result: [8,9,9,9,0,0,0,1]
 
 ```python
 def addTwoNumbersHelper(self, l1, l2, carry):
-    // Base case: all digits processed and no carry
+    # Base case: all digits processed and no carry
     if l1 == None  and  l2 == None  and  carry == 0:
         return None
-    // Calculate sum: carry + l1.val + l2.val
+    # Calculate sum: carry + l1.val + l2.val
     sum = carry
     if (l1 != None) sum += l1.val
     if (l2 != None) sum += l2.val
-    // Create new node with ones digit
+    # Create new node with ones digit
     ListNode newNode = ListNode(sum % 10)
-    // Recursively process next digits
+    # Recursively process next digits
     newNode.next = addTwoNumbersHelper(
-    (l1.next if         l1 != None  else None,  // Move to next or null)
-    (l2.next if         l2 != None  else None,  // Move to next or null)
-    sum / 10                              // Pass carry forward
+    (l1.next if         l1 != None  else None,  # Move to next or null)
+    (l2.next if         l2 != None  else None,  # Move to next or null)
+    sum / 10                              # Pass carry forward
     )
     return newNode
+
 ```
 
 ## Edge Cases
@@ -256,6 +258,7 @@ def addTwoNumbers(self, l1, l2):
         carry /= 10
         curr = curr.next
     return dummy.next
+
 ```
 
 **Pros:**
@@ -296,6 +299,7 @@ def addTwoNumbers(self, l1, l2):
             tail = newNode
         carry = sum / 10
     return head
+
 ```
 
 ## Complexity Analysis
@@ -313,6 +317,10 @@ def addTwoNumbers(self, l1, l2):
 ```python
 if l1 == None  and  l2 == None  and  carry == 0:
     return None
+
+
+
+
 ```
 
 **Why all three conditions?**
@@ -326,14 +334,19 @@ if l1 == None  and  l2 == None  and  carry == 0:
 sum = carry
 if (l1 != None) sum += l1.val
 if (l2 != None) sum += l2.val
-digit = sum % 10  // Ones digit
-newCarry = sum / 10  // Tens digit (carry)
+digit = sum % 10  # Ones digit
+newCarry = sum / 10  # Tens digit (carry)
+
 ```
 
 ### Null Handling
 
 ```python
 (l1.next if l1 != None  else None)
+
+
+
+
 ```
 
 When a list ends, we pass `nullptr` to indicate no more digits from that list.

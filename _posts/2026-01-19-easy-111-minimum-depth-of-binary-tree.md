@@ -80,26 +80,22 @@ This problem requires finding the shortest path from root to any leaf node. The 
 ## Solution: Recursive DFS (Handling Single Child)
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
 class Solution:
-def minDepth(self, root):
-    if(not root) return 0
-    if(not root.left  and  not root.right) return 1
-    minDep = INT_MAX
-    if root.left:
-        minDep = min(minDep, minDepth(root.left))
-    if root.right:
-        minDep = min(minDep, minDepth(root.right))
-    return minDep + 1
+    def minDepth(self, root):
+        if not root:
+            return 0
+            if not root.left and not root.right:
+                return 1
+                min_dep = float('inf')
+                if root.left:
+                    min_dep = min(min_dep, self.minDepth(root.left))
+                    if root.right:
+                        min_dep = min(min_dep, self.minDepth(root.right))
+                        return min_dep + 1
+
+
+
+
 ```
 
 ### Algorithm Explanation:
@@ -231,14 +227,21 @@ Wait, but the answer should be 5. Let me recalculate:
 
 ```python
 class Solution:
-def minDepth(self, root):
-    if (not root) return 0
-    // If left subtree is null, only right side matters
-    if not root.left) return 1 + minDepth(root.right:
-    // If right subtree is null, only left side matters
-    if not root.right) return 1 + minDepth(root.left:
-    // Both subtrees exist, take the minimum
-    return 1 + min(minDepth(root.left), minDepth(root.right))
+    def minDepth(self, root):
+        if not root:
+            return 0
+            # If left subtree is null, only right side matters
+            if not root.left:
+                return 1 + self.minDepth(root.right)
+                # If right subtree is null, only left side matters
+                if not root.right:
+                    return 1 + self.minDepth(root.left)
+                    # Both subtrees exist, take the minimum
+                    return 1 + min(self.minDepth(root.left), self.minDepth(root.right))
+
+
+
+
 ```
 
 **Key Difference**: Explicitly handles single-child cases before computing min
@@ -248,21 +251,30 @@ def minDepth(self, root):
 ### Solution 3: Iterative BFS (Level-order Traversal)
 
 ```python
+from collections import deque
+
 class Solution:
-def minDepth(self, root):
-    deque[TreeNode> q
-    if root) q.push(root:
-    depth = 0
-    while not not q:
-        sz = len(q)
-        depth += 1
-        for(i = 0 i < sz i += 1) :
-        TreeNode curr = q[0]
-        q.pop()
-        if(not curr.left  and  not curr.right) return depth
-        if curr.left) q.push(curr.left:
-        if curr.right) q.push(curr.right:
-return depth
+    def minDepth(self, root):
+        if not root:
+            return 0
+            q = deque([root])
+            depth = 0
+            while q:
+                sz = len(q)
+                depth += 1
+                for _ in range(sz):
+                    curr = q.popleft()
+                    if not curr.left and not curr.right:
+                        return depth
+                        if curr.left:
+                            q.append(curr.left)
+                            if curr.right:
+                                q.append(curr.right)
+                                return depth
+
+
+
+
 ```
 
 **Algorithm**:
@@ -309,19 +321,21 @@ Level 2: depth = 2, process [9, 20]
 
 ```python
 class Solution:
-def minDepth(self, root):
-    if (not root) return 0
-    list[pair<TreeNode, int>> st
-    st.push(:root, 1)
-    minDepth = INT_MAX
-    while not not st:
-        [node, depth] = st.top()
-        st.pop()
-        if not node.left  and  not node.right:
-            minDepth = min(minDepth, depth)
-        if node.right) st.push({node.right, depth + 1}:
-        if node.left) st.push({node.left, depth + 1}:
-    return minDepth
+    def minDepth(self, root):
+        if not root:
+            return 0
+        st = [(root, 1)]
+        min_depth = float('inf')
+        while st:
+            node, depth = st.pop()
+            if not node.left and not node.right:
+                min_depth = min(min_depth, depth)
+            if node.right:
+                st.append((node.right, depth + 1))
+            if node.left:
+                st.append((node.left, depth + 1))
+        return min_depth
+
 ```
 
 **Complexity**: Same as recursive DFS
