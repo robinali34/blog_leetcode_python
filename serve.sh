@@ -62,5 +62,6 @@ fi
 echo -e "${YELLOW}Press Ctrl+C to stop the server${NC}"
 echo ""
 
-# Serve on all interfaces so other devices on the LAN can connect; empty baseurl for local dev
-bundle exec jekyll serve --host 0.0.0.0 --port "$PORT" --baseurl ""
+# Serve on all interfaces so other devices on the LAN can connect; empty baseurl for local dev.
+# --watch: rebuild when files change; --livereload: refresh browser after rebuild
+bundle exec jekyll serve --host 0.0.0.0 --port "$PORT" --baseurl "" --watch --livereload
