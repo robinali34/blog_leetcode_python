@@ -1,13 +1,17 @@
 ---
 layout: post
-title: "LeetCode 416. Partition Equal Subset Sum"
-date: 2026-02-11
+title: "416. Partition Equal Subset Sum"
+date: 2026-02-11 00:00:00 -0700
 categories: [leetcode, medium, dynamic-programming]
 tags: [leetcode, medium, dp, knapsack]
 permalink: /2026/02/11/medium-416-partition-equal-subset-sum/
 ---
 
-Given an integer array `nums`, return `true` *if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or* `false` *otherwise*.
+# 416. Partition Equal Subset Sum
+
+## Problem Statement
+
+Given an integer array `nums`, return `true` if you can partition the array into two subsets such that the sum of the elements in both subsets is equal, or `false` otherwise.
 
 ## Examples
 
@@ -32,7 +36,22 @@ Explanation: The array cannot be partitioned into equal sum subsets.
 - `1 <= nums.length <= 200`
 - `1 <= nums[i] <= 100`
 
-## Approach
+## Clarification Questions
+
+1. **Two subsets**: Must every element be in exactly one subset? (Assumption: Yes — partition.)
+2. **Equal sum**: Both subsets must have the same sum? (Assumption: Yes.)
+3. **Empty subset**: Can one subset be empty? (Assumption: No — then the other has full sum; only valid if total is 0, but nums[i] >= 1 so not possible.)
+4. **Order**: Does order matter? (Assumption: No — subset sum only.)
+
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Brute-force (5 min)** — Try all 2^n subsets; check if any has sum = total/2. O(2^n) — TLE.
+
+**Step 2: DP (7 min)** — If total is odd, return false. Otherwise target = total/2. dp[j] = can we form sum j with first i elements? 0/1 knapsack. O(n * target) time and space.
+
+**Step 3: Space-optimized (8 min)** — Use 1D boolean array; iterate backwards for target to avoid using same element twice. Same time, O(target) space.
+
+## Solution Approach
 
 This problem is a classic variation of the **0/1 Knapsack Problem**. 
 

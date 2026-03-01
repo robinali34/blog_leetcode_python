@@ -1,11 +1,15 @@
 ---
 layout: post
-title: "LeetCode 59. Spiral Matrix II"
-date: 2026-02-18
+title: "59. Spiral Matrix II"
+date: 2026-02-18 00:00:00 -0700
 categories: [leetcode, medium, matrix, simulation]
 tags: [leetcode, medium, matrix, simulation, spiral]
 permalink: /2026/02/18/medium-59-spiral-matrix-ii/
 ---
+
+# 59. Spiral Matrix II
+
+## Problem Statement
 
 Given a positive integer `n`, generate an `n × n` matrix filled with elements from `1` to `n²` in spiral order (clockwise).
 
@@ -32,7 +36,23 @@ Output: [[1]]
 
 - `1 <= n <= 20`
 
-## Thinking Process
+## Clarification Questions
+
+1. **Direction**: Clockwise from top-left? (Assumption: Yes — right, down, left, up.)
+2. **Starting value**: Fill from 1 to n²? (Assumption: Yes.)
+3. **n = 1**: Return [[1]]? (Assumption: Yes.)
+4. **Matrix type**: 2D list of integers? (Assumption: Yes.)
+5. **In-place**: Generate into new matrix? (Assumption: Yes, return new matrix.)
+
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Simulation (5 min)** — Maintain boundaries (top, bottom, left, right). Fill top row left→right, right col top→bottom, bottom row right→left (if different from top), left col bottom→top (if different from right). Shrink boundaries. Repeat.
+
+**Step 2: Layer-by-layer (7 min)** — Same idea; for each layer fill four sides in order. Handle n odd (center cell) and n even (no center). O(n²) time and space.
+
+**Step 3: Optimized (8 min)** — Single loop with direction vector; change direction when hitting boundary or already-filled cell. Alternatively keep boundary variables; both are O(n²).
+
+## Solution Approach
 
 ### Core Observations
 
@@ -138,11 +158,11 @@ return mat
 - **Direction array** is shorter but requires checking "already filled" cells
 - Both approaches are $O(n^2)$ and optimal since every cell must be visited
 
-## Related Problems
+### Related Problems:
 
-- [54. Spiral Matrix](https://leetcode.com/problems/spiral-matrix/) -- read a matrix in spiral order (the reverse operation)
-- [885. Spiral Matrix III](https://leetcode.com/problems/spiral-matrix-iii/) -- spiral walk on a grid from a starting point
-- [2326. Spiral Matrix IV](https://leetcode.com/problems/spiral-matrix-iv/) -- fill spiral from a linked list
+- [LC 54: Spiral Matrix](https://leetcode.com/problems/spiral-matrix/) — Read a matrix in spiral order (the reverse operation)
+- [LC 885: Spiral Matrix III](https://leetcode.com/problems/spiral-matrix-iii/) — Spiral walk on a grid from a starting point
+- [LC 2326: Spiral Matrix IV](https://leetcode.com/problems/spiral-matrix-iv/) — Fill spiral from a linked list
 
 ## Template Reference
 

@@ -1,11 +1,15 @@
 ---
 layout: post
-title: "LeetCode 23. Merge k Sorted Lists"
-date: 2026-02-15
+title: "23. Merge k Sorted Lists"
+date: 2026-02-15 00:00:00 -0700
 categories: [leetcode, hard, linked-list, divide-and-conquer, heap]
 tags: [leetcode, hard, linked-list, divide-and-conquer, heap, merge]
 permalink: /2026/02/15/hard-23-merge-k-sorted-lists/
 ---
+
+# 23. Merge k Sorted Lists
+
+## Problem Statement
 
 You are given an array of `k` linked lists, each sorted in ascending order. Merge all the linked lists into one sorted linked list and return it.
 
@@ -41,11 +45,32 @@ Output: []
 - `lists[i]` is sorted in ascending order
 - The sum of `lists[i].length` will not exceed `10^4`
 
-## Thinking Process
+## Clarification Questions
 
-Let `k` = number of lists, `N` = total number of nodes.
+1. **Empty input**: What if `lists` is empty? (Assumption: Return `None`.)
+2. **Empty lists**: Can some lists be empty? (Assumption: Yes; skip them.)
+3. **In-place**: Must we merge in place or can we create new nodes? (Assumption: Rewiring pointers is fine; O(1) extra space for divide & conquer.)
+4. **Stability**: Any requirement on order of equal elements? (Assumption: Any valid merge order.)
+5. **k and N**: Can k be very large? (Assumption: Yes — need O(N log k), not O(kN).)
 
-**Lower bound**: We must touch every node, so $\Omega(N)$.
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Brute-Force (5 min)** — Merge lists one by one: merge list 0 and 1, then merge result with list 2, etc. Time O(kN) in the worst case — too slow when k is large.
+
+**Step 2: Min-heap (7 min)** — Push head of each list into a min-heap; pop smallest, append to result, push its next. Each of N nodes is pushed/popped once, O(log k) per operation → O(N log k). Space O(k) for the heap.
+
+**Step 3: Divide & conquer (8 min)** — Pair lists and merge in rounds (like merge sort). Each round processes all N nodes once; number of rounds is O(log k). Time O(N log k), space O(1) extra. Optimal.
+
+## Solution Approach
+
+Let `k` = number of lists, `N` = total number of nodes. We must touch every node, so $\Omega(N)$.
+
+### Key Insights:
+
+1. **Lower bound**: Time is at least O(N).
+2. **Sequential merge is bad**: Merging one-by-one can be O(kN); avoid re-traversing long lists.
+3. **Two optimal approaches**: Min-heap (O(N log k) time, O(k) space) or divide & conquer (O(N log k) time, O(1) extra space).
+4. **Merge two**: The base operation is merging two sorted lists in O(a + b); use it in a tree of merges.
 
 ### Why Sequential Merge Is Bad
 
@@ -174,11 +199,11 @@ When you see **"merge k sorted ..."**, immediately think:
 
 This is a pattern problem. Balanced merging prevents repeated long traversals, bringing complexity from $O(kN)$ down to $O(N \log k)$.
 
-## Related Problems
+### Related Problems:
 
-- [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/) -- base case for this problem
-- [148. Sort List](https://leetcode.com/problems/sort-list/) -- merge sort on linked list
-- [378. Kth Smallest Element in a Sorted Matrix](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/) -- multi-way merge variant
+- [LC 21: Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/) — Base case for this problem
+- [LC 148: Sort List](https://leetcode.com/problems/sort-list/) — Merge sort on linked list
+- [LC 378: Kth Smallest Element in a Sorted Matrix](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/) — Multi-way merge variant
 
 ## Template Reference
 

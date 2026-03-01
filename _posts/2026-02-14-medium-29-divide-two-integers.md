@@ -1,11 +1,15 @@
 ---
 layout: post
-title: "LeetCode 29. Divide Two Integers"
-date: 2026-02-14
+title: "29. Divide Two Integers"
+date: 2026-02-14 00:00:00 -0700
 categories: [leetcode, medium, math, bit-manipulation]
 tags: [leetcode, medium, bit-manipulation, math]
 permalink: /2026/02/14/medium-29-divide-two-integers/
 ---
+
+# 29. Divide Two Integers
+
+## Problem Statement
 
 Given two integers `dividend` and `divisor`, divide two integers **without** using multiplication, division, and mod operator. Return the quotient after dividing `dividend` by `divisor`. The integer division should truncate toward zero.
 
@@ -36,7 +40,23 @@ Explanation: 7/-3 = -2.33333.. which is truncated to -2.
 - Return `2^31 - 1` if overflow occurs
 - Range: signed 32-bit integer
 
-## Thinking Process
+## Clarification Questions
+
+1. **Operators**: Can we use multiplication, division, or mod? (Assumption: No — only addition, subtraction, bit shifts.)
+2. **Truncation**: Truncate toward zero or floor? (Assumption: Toward zero — e.g. -7/3 = -2.)
+3. **Overflow**: What if quotient exceeds 32-bit range? (Assumption: Return 2^31 - 1.)
+4. **Divisor zero**: Guaranteed non-zero? (Assumption: Yes per constraints.)
+5. **Negative numbers**: Can both be negative? (Assumption: Yes; work with absolute values then fix sign.)
+
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Brute-Force (5 min)** — Repeatedly subtract divisor from dividend until dividend < divisor. Count subtractions. O(dividend/divisor) which can be 2^31 — TLE.
+
+**Step 2: Power-of-two multiples (7 min)** — Subtract the largest multiple of divisor that is a power of two (divisor << k). Greedily subtract divisor*(2^k) and add 2^k to quotient. Reduces to O(log quotient) steps.
+
+**Step 3: Optimized (8 min)** — Use longs to avoid overflow when handling INT_MIN. Convert to positive, then apply bit-shift subtraction. Handle sign at the end. Edge: INT_MIN / -1 overflows → return INT_MAX.
+
+## Solution Approach
 
 Focus on: time complexity, overflow safety, bit manipulation tricks, edge case coverage, mathematical transformation.
 

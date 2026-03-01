@@ -1,11 +1,15 @@
 ---
 layout: post
-title: "LeetCode 42. Trapping Rain Water"
-date: 2026-02-17
+title: "42. Trapping Rain Water"
+date: 2026-02-17 00:00:00 -0700
 categories: [leetcode, hard, two-pointers, stack, dp]
 tags: [leetcode, hard, two-pointers, monotonic-stack, prefix-suffix, dp]
 permalink: /2026/02/17/hard-42-trapping-rain-water/
 ---
+
+# 42. Trapping Rain Water
+
+## Problem Statement
 
 Given `n` non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
 
@@ -31,7 +35,23 @@ Output: 9
 - `1 <= n <= 2 * 10^4`
 - `0 <= height[i] <= 10^5`
 
-## Thinking Process
+## Clarification Questions
+
+1. **Bar width**: Is each bar width 1? (Assumption: Yes — standard problem.)
+2. **Water units**: One unit of water per unit area between bars? (Assumption: Yes.)
+3. **Edges**: Do the first and last bars trap water? (Assumption: They form boundaries; water is trapped between higher bars.)
+4. **Empty array**: n >= 1? (Assumption: Yes per constraints.)
+5. **Output**: Total water trapped as integer? (Assumption: Yes.)
+
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Brute-Force (5 min)** — For each index i, find max height to the left and right; water at i = min(maxLeft, maxRight) - height[i]. O(n^2) — too slow.
+
+**Step 2: Prefix/Suffix (7 min)** — Precompute leftMax[i] and rightMax[i] in two passes. Then one pass to sum water. O(n) time, O(n) space.
+
+**Step 3: Two pointers (8 min)** — If leftMax < rightMax, water at left depends only on leftMax; move left pointer and update leftMax. Else symmetric for right. O(n) time, O(1) space.
+
+## Solution Approach
 
 ### Mathematical Model
 
@@ -193,11 +213,11 @@ When you see "for each position, need left info + right info," immediately consi
 - Monotonic stack computes water layer by layer (horizontally) rather than column by column (vertically)
 - Master both two-pointer and monotonic-stack versions -- they appear in many related problems
 
-## Related Problems
+### Related Problems:
 
-- [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water/) -- two-pointer on water area
-- [84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/) -- monotonic stack classic
-- [407. Trapping Rain Water II](https://leetcode.com/problems/trapping-rain-water-ii/) -- 3D version with BFS + heap
+- [LC 11: Container With Most Water](https://leetcode.com/problems/container-with-most-water/) — Two-pointer on water area
+- [LC 84: Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/) — Monotonic stack classic
+- [LC 407: Trapping Rain Water II](https://leetcode.com/problems/trapping-rain-water-ii/) — 3D version with BFS + heap
 
 ## Template Reference
 

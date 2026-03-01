@@ -1,11 +1,15 @@
 ---
 layout: post
-title: "LeetCode 43. Multiply Strings"
-date: 2026-02-17
+title: "43. Multiply Strings"
+date: 2026-02-17 00:00:00 -0700
 categories: [leetcode, medium, string, math, simulation]
 tags: [leetcode, medium, string, math, big-integer, simulation]
 permalink: /2026/02/17/medium-43-multiply-strings/
 ---
+
+# 43. Multiply Strings
+
+## Problem Statement
 
 Given two non-negative integers represented as strings `num1` and `num2`, return their product as a string. You **cannot** convert the inputs to integers directly (numbers can be very large).
 
@@ -31,11 +35,26 @@ Output: "56088"
 - `num1` and `num2` consist of digits only
 - Neither contains leading zeros (except `"0"` itself)
 
-## Thinking Process
+## Clarification Questions
+
+1. **Direct conversion**: Can we use int()? (Assumption: No — numbers can exceed int range.)
+2. **Leading zeros**: Should output have leading zeros? (Assumption: No — return canonical form.)
+3. **Zero product**: "0" × anything = "0"? (Assumption: Yes.)
+4. **Digits only**: Only '0'-'9'? (Assumption: Yes.)
+
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Grade-school multiplication (5 min)** — Multiply each digit of num1 by each digit of num2; add into result at the right position. Result length at most len(num1) + len(num2).
+
+**Step 2: Index mapping (7 min)** — num1[i] * num2[j] contributes to result at index i + j and i + j + 1. Use an array of length n + m; accumulate then strip leading zeros.
+
+**Step 3: Optimized (8 min)** — Single pass: for each (i, j), add digit product to res[i+j+1] and carry to res[i+j]. Then convert to string and strip leading zeros. Handle "0" explicitly.
+
+## Solution Approach
 
 This is **big integer multiplication** -- simulate digit-by-digit multiplication exactly like grade school arithmetic.
 
-### Key Observations
+### Key Insights
 
 If `num1` has length `n` and `num2` has length `m`:
 - The product has **at most `n + m` digits**

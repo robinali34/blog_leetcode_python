@@ -1,11 +1,15 @@
 ---
 layout: post
-title: "LeetCode 155. Min Stack"
-date: 2026-02-11
+title: "155. Min Stack"
+date: 2026-02-11 00:00:00 -0700
 categories: [leetcode, medium, stack]
 tags: [leetcode, medium, stack, data-structure-design]
 permalink: /2026/02/11/medium-155-min-stack/
 ---
+
+# 155. Min Stack
+
+## Problem Statement
 
 Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
 
@@ -49,7 +53,22 @@ minStack.getMin(); // return -2
 - Methods `pop`, `top`, and `getMin` will always be called on **non-empty** stacks.
 - At most `3 * 10^4` calls will be made to `push`, `pop`, `top`, and `getMin`.
 
-## Approach
+## Clarification Questions
+
+1. **O(1) for getMin**: Must getMin be O(1) amortized or worst-case? (Assumption: O(1) per call.)
+2. **Pop behavior**: After pop, getMin returns the min of remaining elements? (Assumption: Yes.)
+3. **Duplicate mins**: Can we push same value multiple times? (Assumption: Yes — auxiliary structure must handle duplicates.)
+4. **Top vs getMin**: top() returns top element, getMin() returns minimum in stack? (Assumption: Yes.)
+
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Naive (5 min)** — Store elements in a list. getMin() scans the list — O(n), not O(1). Need to maintain min.
+
+**Step 2: Auxiliary min stack (7 min)** — Main stack holds values. Second stack holds current minimum: on push, push min(val, minStack.top()); on pop, pop both. getMin = minStack.top(). O(1) for all operations.
+
+**Step 3: Optimizations (8 min)** — Can store (val, min_so_far) in one stack instead of two. Or two stacks as above. Handle empty stack on first push.
+
+## Solution Approach
 
 To achieve $O(1)$ for `getMin()`, we need to keep track of the minimum value at every state of the stack.
 

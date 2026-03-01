@@ -1,11 +1,15 @@
 ---
 layout: post
-title: "LeetCode 893. Groups of Special-Equivalent Strings"
-date: 2026-02-15
+title: "893. Groups of Special-Equivalent Strings"
+date: 2026-02-15 00:00:00 -0700
 categories: [leetcode, easy, string, hash]
 tags: [leetcode, easy, string, hash, canonical-form]
 permalink: /2026/02/15/easy-893-groups-of-special-equivalent-strings/
 ---
+
+# 893. Groups of Special-Equivalent Strings
+
+## Problem Statement
 
 Two strings are **special-equivalent** if you can swap characters at even indices among themselves and swap characters at odd indices among themselves, any number of times. Return the number of groups of special-equivalent strings.
 
@@ -33,7 +37,24 @@ Output: 3
 - `words[i]` consist of lowercase English letters
 - All `words[i]` have the same length
 
-## Thinking Process
+## Clarification Questions
+
+1. **Same length**: All words same length? (Assumption: Yes per constraints.)
+2. **Group definition**: Two strings in same group iff they are special-equivalent? (Assumption: Yes.)
+3. **Output**: Number of distinct groups? (Assumption: Yes.)
+4. **Even/odd**: 0-based indexing for even/odd? (Assumption: Yes.)
+
+## Interview Deduction Process (20 minutes)
+
+**Step 1: Brute-force (5 min)** — For each pair, check if special-equivalent by trying swaps. Too slow — O(n²) pairs and expensive equivalence check.
+
+**Step 2: Canonical form (7 min)** — Two strings are special-equivalent iff they have the same sorted even-index characters and same sorted odd-index characters. So canonical form = (sorted(even), sorted(odd)); group by this. O(n * L log L) where L is word length.
+
+**Step 3: Optimized (8 min)** — Same idea; use tuple of sorted even chars and sorted odd chars as key. Count distinct keys. Handle length 1 (even and odd sets).
+
+## Solution Approach
+
+### Key Insights
 
 Swapping within even positions and within odd positions means:
 
