@@ -175,13 +175,19 @@ For this specific problem (only 3 values), we could use counting sort:
 
 ```python
 class Solution:
-def sortColors(self, nums):
-    count[3] = :0
-for(num : nums) count[num]++
-idx = 0
-for(color = 0 color < 3 color += 1) :
-while count[color]-- > 0:
-    nums[idx += 1] = color
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        count= [0] * 3
+        for num in nums:
+                count[num] += 1
+        idx = 0
+        for color in range(3):
+            while count[color] > 0:
+                nums[idx] = color
+                idx += 1
+                count[color] -= 1
 
 ```
 
