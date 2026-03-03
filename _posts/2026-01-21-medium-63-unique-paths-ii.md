@@ -103,22 +103,23 @@ We can optimize space from O(m×n) to O(n) by using a 1D array since we only nee
 ### **Solution 1: Space-Optimized DP (O(n) space)**
 
 ```python
+# if(i, j) = 0 if obstacleGrid[i][j] == 1
+# if(i, j) = f(i-1, j) + f(i, j-1), if obstacleGrid[i][j] == 0
+
 class Solution:
-/
-f(i, j) = 0 if obstacleGrid[i][j] == 1
-f(i, j) = f(i-1, j) + f(i, j-1), if obstacleGrid[i][j] == 0
-/
-def uniquePathsWithObstacles(self, obstacleGrid):
-    N = len(obstacleGrid), M = obstacleGrid[0].__len__()
-    list[int> dp(M, 0)
-    (1 if         dp[0] = (obstacleGrid[0][0] == 0)  else 0)
-    for(i = 0 i < N i += 1) :
-    for(j = 0 j < M j += 1) :
-    if obstacleGrid[i][j] == 1:
-        dp[j] = 0
-    def if(self, 0):
-        dp[j] += dp[j - 1]
-return dp[-1]
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+
+        dp = [0] * n
+        dp[0] = 1 if obstacleGrid[0][0] == 0 else 0
+        for i in range(m):
+            for j in range(n):
+                if obstacleGrid[i][j] == 1:
+                    dp[j] = 0
+                elif j > 0:
+                    dp[j] += dp[j - 1]
+        return dp[-1]
 
 ```
 
@@ -179,27 +180,22 @@ Result: 2 paths
 
 ```python
 class Solution:
-def uniquePathsWithObstacles(self, obstacleGrid):
-    m = len(obstacleGrid), n = obstacleGrid[0].__len__()
-    list[list[int>> dp(m, list[int>(n, 0))
-    # Base case: starting cell
-    if obstacleGrid[0][0] == 0:
-        dp[0][0] = 1
-    # Fill first row
-    for (j = 1 j < n j += 1) :
-    if obstacleGrid[0][j] == 0:
-        dp[0][j] = dp[0][j-1]
-# Fill first column
-for (i = 1 i < m i += 1) :
-if obstacleGrid[i][0] == 0:
-    dp[i][0] = dp[i-1][0]
-# Fill remaining cells
-for (i = 1 i < m i += 1) :
-for (j = 1 j < n j += 1) :
-if obstacleGrid[i][j] == 0:
-    dp[i][j] = dp[i-1][j] + dp[i][j-1]
-return dp[m-1][n-1]
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
 
+        dp = [[0] * n for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                if obstacleGrid[i][j] == 1:
+                    dp[i][j] = 0
+                elif i == 0 and j == 0:
+                    dp[i][j] = 1
+                else:
+                    up = dp[i - 1][j] if i > 0 else 0
+                    left = dp[i][j - 1] if j > 0 else 0
+                    dp[i][j] = up + left
+        return dp[m - 1][n - 1]
 ```
 
 ### **Complexity Analysis:**

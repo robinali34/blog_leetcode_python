@@ -57,7 +57,7 @@ def longest_no_repeat(s: str) -> int:
 
 | ID | Title | Link |
 |---|---|---|
-| 3 | Longest Substring Without Repeating Characters | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) |
+| 3 | [Longest Substring Without Repeating Characters](/2025/10/09/medium-3-longest-substring-without-repeating-characters/) | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) |
 | 76 | Minimum Window Substring | [Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/) |
 | 424 | Longest Repeating Character Replacement | [Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/) |
 
@@ -120,8 +120,8 @@ def range_sum(ps: list[int], l: int, r: int) -> int:
 
 | ID | Title | Link |
 |---|---|---|
-| 560 | Subarray Sum Equals K | [Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/) |
-| 238 | Product of Array Except Self | [Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/) |
+| 560 | [Subarray Sum Equals K](/2026/02/01/medium-560-subarray-sum-equals-k/) | [Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/) |
+| 238 | [Product of Array Except Self](/2026/01/27/medium-238-product-of-array-except-self/) | [Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/) |
 | 370 | Range Addition | [Range Addition](https://leetcode.com/problems/range-addition/) |
 
 ## Hash Map Frequencies
@@ -144,7 +144,7 @@ def freq_map_manual(nums: list[int]) -> dict[int, int]:
 | ID | Title | Link |
 |---|---|---|
 | 1 | Two Sum | [Two Sum](https://leetcode.com/problems/two-sum/) |
-| 49 | Group Anagrams | [Group Anagrams](https://leetcode.com/problems/group-anagrams/) |
+| 49 | [Group Anagrams](/posts/2025-11-18-medium-49-group-anagrams/) | [Group Anagrams](https://leetcode.com/problems/group-anagrams/) |
 | 359 | Logger Rate Limiter | [Logger Rate Limiter](https://leetcode.com/problems/logger-rate-limiter/) |
 
 ## KMP (Substring Search)
@@ -220,7 +220,7 @@ def manacher(s: str) -> str:
 
 | ID | Title | Link |
 |---|---|---|
-| 5 | Longest Palindromic Substring | [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/) |
+| 5 | [Longest Palindromic Substring](/2026/01/08/medium-5-longest-palindromic-substring/) | [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/) |
 
 ## Z-Algorithm (Pattern occurrences)
 
@@ -269,6 +269,6 @@ class RH:
 
 | ID | Title | Link |
 |---|---|---|
-| 187 | Repeated DNA Sequences | [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/) |
+| 187 | [Repeated DNA Sequences](/2026/02/27/medium-187-repeated-dna-sequences/) | [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/) |
 | 1044 | Longest Duplicate Substring | [Longest Duplicate Substring](https://leetcode.com/problems/longest-duplicate-substring/) |
 
