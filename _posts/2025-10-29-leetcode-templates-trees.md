@@ -2,20 +2,50 @@
 layout: post
 title: "LeetCode Templates: Trees"
 date: 2025-10-29 00:00:00 -0700
-categories: leetcode templates trees
+categories: [leetcode, templates, trees]
 permalink: /posts/2025-10-29-leetcode-templates-trees/
 tags: [leetcode, templates, trees]
 ---
 
 ## Contents
 
+- [How to Analyze Tree Problems](#how-to-analyze-tree-problems)
 - [Traversals (iterative)](#traversals-iterative)
 - [LCA (Binary Lifting)](#lca-binary-lifting)
 - [HLD (Heavy-Light Decomposition)](#hld-heavy-light-decomposition-skeleton)
 
+## How to Analyze Tree Problems
+
+1. **Rooting and parent relation**
+   - Most algorithms become easier after fixing a root and parent array.
+
+2. **Query type**
+   - single traversal output -> DFS/BFS
+   - ancestor queries -> LCA
+   - path queries with updates -> HLD + segment tree/Fenwick
+
+3. **Constraints**
+   - one query vs many queries changes preferred preprocessing.
+
+4. **Complexity planning**
+   - traversal `O(n)`
+   - binary lifting preprocess `O(n log n)`, query `O(log n)`
+   - HLD path decomposition `O(log^2 n)` with segment tree
+
 ## Traversals (iterative)
 
 ```python
+from collections import deque
+from typing import Optional
+
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
 def inorder(root: Optional[TreeNode]) -> list[int]:
     ans = []
     st = []
@@ -24,34 +54,29 @@ def inorder(root: Optional[TreeNode]) -> list[int]:
         while cur:
             st.append(cur)
             cur = cur.left
-            cur = st.pop()
-            ans.append(cur.val)
-            cur = cur.right
-            return ans
+        cur = st.pop()
+        ans.append(cur.val)
+        cur = cur.right
+    return ans
 
 
-```
-
-```python
-from collections import deque
 def level_order(root: Optional[TreeNode]) -> list[list[int]]:
     if not root:
         return []
-        res = []
-        q = deque([root])
-        while q:
-            sz = len(q)
-            res.append([])
-            for _ in range(sz):
-                u = q.popleft()
-                res[-1].append(u.val)
-                if u.left:
-                    q.append(u.left)
-                    if u.right:
-                        q.append(u.right)
-                        return res
-
-
+    res = []
+    q = deque([root])
+    while q:
+        sz = len(q)
+        level = []
+        for _ in range(sz):
+            u = q.popleft()
+            level.append(u.val)
+            if u.left:
+                q.append(u.left)
+            if u.right:
+                q.append(u.right)
+        res.append(level)
+    return res
 ```
 
 | ID | Title | Link |
@@ -62,35 +87,46 @@ def level_order(root: Optional[TreeNode]) -> list[list[int]]:
 ## LCA (Binary Lifting)
 
 ```python
-K = 17
-depth = []
-up = []  # up[u][k] = 2^k-th ancestor of u
-def dfs_lift(u: int, p: int, g: list[list[int]]):
-    up[u][0] = p
-    for k in range(1, K + 1):
-        up[u][k] = -1 if up[u][k-1] < 0 else up[up[u][k-1]][k-1]
+def build_lca(g: list[list[int]], root: int = 0):
+    n = len(g)
+    LOG = (n - 1).bit_length()
+    up = [[-1] * LOG for _ in range(n)]
+    depth = [0] * n
+
+    def dfs(u: int, p: int) -> None:
+        up[u][0] = p
+        for k in range(1, LOG):
+            prev = up[u][k - 1]
+            up[u][k] = -1 if prev == -1 else up[prev][k - 1]
         for v in g[u]:
-            if v != p:
-                depth[v] = depth[u] + 1
-                dfs_lift(v, u, g)
-                def lift(u: int, k: int) -> int:
-                    for i in range(K + 1):
-                        if k  (1 << i):
-                            u = -1 if u < 0 else up[u][i]
-                            return u
-                            def lca(a: int, b: int) -> int:
-                                if depth[a] < depth[b]:
-                                    a, b = b, a
-                                    a = lift(a, depth[a] - depth[b])
-                                    if a == b:
-                                        return a
-                                        for i in range(K, -1, -1):
-                                            if up[a][i] != up[b][i]:
-                                                a = up[a][i]
-                                                b = up[b][i]
-                                                return up[a][0]
+            if v == p:
+                continue
+            depth[v] = depth[u] + 1
+            dfs(v, u)
 
+    dfs(root, -1)
 
+    def lift(u: int, d: int) -> int:
+        for k in range(LOG):
+            if (d >> k) & 1:
+                u = up[u][k]
+                if u == -1:
+                    break
+        return u
+
+    def lca(a: int, b: int) -> int:
+        if depth[a] < depth[b]:
+            a, b = b, a
+        a = lift(a, depth[a] - depth[b])
+        if a == b:
+            return a
+        for k in range(LOG - 1, -1, -1):
+            if up[a][k] != up[b][k]:
+                a = up[a][k]
+                b = up[b][k]
+        return up[a][0]
+
+    return lca, depth, up
 ```
 
 | ID | Title | Link |
@@ -101,42 +137,46 @@ def dfs_lift(u: int, p: int, g: list[list[int]]):
 ## HLD (Heavy-Light Decomposition) skeleton
 
 ```python
-N = 200000
-g_h = [[] for _ in range(N)]
-sz_h = [0] * N
-par_h = [0] * N
-dep_h = [0] * N
-heavy_h = [-1] * N
-head_h = [0] * N
-in_h = [0] * N
-cur_t = 0
-def dfs1(u: int, p: int) -> int:
-    global cur_t
-    par_h[u] = p
-    dep_h[u] = 0 if p == -1 else dep_h[p] + 1
-    sz_h[u] = 1
-    heavy_h[u] = -1
-    best = 0
-    for v in g_h[u]:
-        if v != p:
+def hld_build(g: list[list[int]], root: int = 0):
+    n = len(g)
+    parent = [-1] * n
+    depth = [0] * n
+    size = [0] * n
+    heavy = [-1] * n
+    head = [0] * n
+    pos = [0] * n
+    cur = 0
+
+    def dfs1(u: int, p: int) -> int:
+        parent[u] = p
+        size[u] = 1
+        best = 0
+        for v in g[u]:
+            if v == p:
+                continue
+            depth[v] = depth[u] + 1
             s = dfs1(v, u)
-            sz_h[u] += s
+            size[u] += s
             if s > best:
                 best = s
-                heavy_h[u] = v
-                return sz_h[u]
-                def dfs2(u: int, h: int):
-                    global cur_t
-                    head_h[u] = h
-                    in_h[u] = cur_t
-                    cur_t += 1
-                    if heavy_h[u] != -1:
-                        dfs2(heavy_h[u], h)
-                        for v in g_h[u]:
-                            if v != par_h[u] and v != heavy_h[u]:
-                                dfs2(v, v)
+                heavy[u] = v
+        return size[u]
 
+    def dfs2(u: int, h: int) -> None:
+        nonlocal cur
+        head[u] = h
+        pos[u] = cur
+        cur += 1
+        if heavy[u] != -1:
+            dfs2(heavy[u], h)
+        for v in g[u]:
+            if v != parent[u] and v != heavy[u]:
+                dfs2(v, v)
 
+    dfs1(root, -1)
+    dfs2(root, root)
+    return parent, depth, size, heavy, head, pos
 ```
 
-> Note: HLD is rarely required on LeetCode.
+> Note: HLD appears less often in LeetCode, but the decomposition pattern is useful for advanced tree path queries.
+
