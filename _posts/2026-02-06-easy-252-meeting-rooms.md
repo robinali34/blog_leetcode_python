@@ -50,13 +50,33 @@ Sort intervals by start time. Then any overlap would appear between consecutive 
 
 ```python
 class Solution:
-def canAttendMeetings(self, intervals):
-    intervals.sort()
-    for (i = 1 i < len(intervals) i += 1) :
-    if intervals[i][0] < intervals[i - 1][1]:
-        return False
-return True
+    def canAttendMeetings(self, intervals: List[List[int]]) -> bool:
+        n = len(intervals)
+        if n < 2: return True
 
+        intervals.sort(key=lambda x: x[0])
+        i, j = 0, 1
+        while j < n:
+            if intervals[j][0] < intervals[i][1]:
+                return False
+            i, j = i + 1, j + 1
+        return True
+```
+
+```python
+class Solution:
+    def canAttendMeetings(self, intervals: List[List[int]]) -> bool:
+        n = len(intervals)
+        if n < 2: return True
+
+        intervals.sort(key=lambda x: (x[0], x[1]))
+        prev_end = intervals[0][1]
+
+        for start, end in intervals[1:]:
+            if start < prev_end:
+                return False
+            prev_end = end
+        return True
 ```
 
 - **Time:** O(n log n) — sort dominates.

@@ -92,18 +92,16 @@ This approach uses a min-heap to track the end times of meetings currently using
 
 ```python
 class Solution:
-def minMeetingRooms(self, intervals):
-    if (len(intervals) == 0) return 0
-    sort(intervals.begin(), intervals.end(), [](list[int> a, list[int> b):
-    return a[0] < b[0]
-    )
-    heapq[int, list[int>, greater<int>> allocator
-    allocator.push(intervals[0][1])
-    for(i = 1 i < len(intervals) i += 1) :
-    if intervals[i][0] >= allocator.top():
-        allocator.pop()
-    allocator.push(intervals[i][1])
-return len(allocator)
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        if not intervals: return 0
+        free_rooms = []
+        intervals.sort(key=lambda x:x[0])
+        heapq.heappush(free_rooms, intervals[0][1])
+        for i in intervals[1:]:
+            if free_rooms[0] <= i[0]:
+                heapq.heappop(free_rooms)
+            heapq.heappush(free_rooms, i[1])
+        return len(free_rooms)
 
 ```
 
@@ -132,24 +130,21 @@ This approach separates start and end times, then uses two pointers to simulate 
 
 ```python
 class Solution:
-def minMeetingRooms(self, intervals):
-    if (len(intervals) == 0) return 0
-    list[int> start(len(intervals))
-    list[int> end(len(intervals))
-    for(i = 0 i < len(intervals) i += 1) :
-    start[i] = intervals[i][0]
-    end[i] = intervals[i][1]
-start.sort()
-end.sort()
-startPointer = 0, endPointer = 0
-usedRooms = 0
-while startPointer < len(intervals):
-    if start[startPointer] >= end[endPointer]:
-        usedRooms -= 1
-        endPointer += 1
-    usedRooms += 1
-    startPointer += 1
-return usedRooms
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        if not intervals: return 0
+        used_rooms = 0
+        start_timings = sorted([i[0] for i in intervals])
+        end_timings = sorted([i[1] for i in intervals])
+        L = len(intervals)
+        end_pointer, start_pointer = 0, 0
+        while start_pointer < L:
+            if start_timings[start_pointer] >= end_timings[end_pointer]:
+                used_rooms -= 1
+                end_pointer += 1
+            used_rooms += 1
+            start_pointer += 1
+        return used_rooms
+
 
 ```
 
@@ -178,21 +173,19 @@ This approach uses bucket sort to create a timeline array. For each interval, we
 
 ```python
 class Solution:
-def minMeetingRooms(self, intervals):
-    if (len(intervals) == 0) return 0
-    MAX_TIME = 1000000
-    list[int> timeline(MAX_TIME + 1, 0)
-    # Mark start and end times
-    for interval in intervals:
-        timeline[interval[0]]++  # Meeting starts
-        timeline[interval[1]]--  # Meeting ends
-    # Compute prefix sum to find maximum concurrent meetings
-    maxRooms = 0
-    currentRooms = 0
-    for(i = 0 i <= MAX_TIME i += 1) :
-    currentRooms += timeline[i]
-    maxRooms = max(maxRooms, currentRooms)
-return maxRooms
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        if not intervals: return 0
+        MAX_TIME = 1000000
+        timeline = [0] * (MAX_TIME + 1)
+        for interval in intervals:
+            timeline[interval[0]] += 1
+            timeline[interval[1]] -= 1
+        max_rooms = 0
+        curr_rooms = 0
+        for i in range(MAX_TIME + 1):
+            curr_rooms += timeline[i]
+            max_rooms = max(max_rooms, curr_rooms)
+        return max_rooms
 
 ```
 
@@ -231,19 +224,18 @@ If the time range is large but meetings are sparse, we can use a map instead:
 
 ```python
 class Solution:
-def minMeetingRooms(self, intervals):
-    if (len(intervals) == 0) return 0
-    map<int, int> timeline
-    for interval in intervals:
-        timeline[interval[0]]++  # Meeting starts
-        timeline[interval[1]]--  # Meeting ends
-    maxRooms = 0
-    currentRooms = 0
-    for([time, change] : timeline) :
-    currentRooms += change
-    maxRooms = max(maxRooms, currentRooms)
-return maxRooms
-
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        if not intervals: return 0
+        timeline = defaultdict(int)
+        for start, end in intervals:
+            timeline[start] += 1
+            timeline[end] -= 1
+        max_rooms = 0
+        curr_rooms = 0
+        for time in sorted(timeline):
+            curr_rooms += timeline[time]
+            max_rooms = max(max_rooms, curr_rooms)
+        return max_rooms
 ```
 
 This uses O(n log n) time (map insertion) but O(n) space, making it better for sparse data.
