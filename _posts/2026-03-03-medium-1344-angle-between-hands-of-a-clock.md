@@ -121,13 +121,12 @@ Return `answer`.
 ```python
 class Solution:
     def angleClock(self, hour: int, minutes: int) -> float:
-        # Minute hand: 6 degrees per minute
-        minute_angle = minutes * 6
-
         # Hour hand: 30 degrees per hour + 0.5 degrees per minute
-        hour_angle = (hour % 12 + minutes / 60) * 30
+        hour_angle = (hour % 12) * 30 + minutes * 0.5
+        # Minute hand: 6 degrees per minute
+        minutes_angle = (minutes % 60) * 6
 
-        diff = abs(hour_angle - minute_angle)
+        diff = abs(hour_angle - minutes_angle)
         return min(diff, 360 - diff)
 ```
 
