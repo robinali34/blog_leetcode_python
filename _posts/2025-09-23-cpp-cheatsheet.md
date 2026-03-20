@@ -9,277 +9,375 @@ categories: python data-structures reference cheat-sheet programming containers 
 
 ---
 
-## 🧰 Containers
+## Quick Imports
+
+```python
+from collections import Counter, defaultdict, deque
+from functools import lru_cache
+import bisect
+import heapq
+import math
+```
+
+## 🧰 Core Containers
 
 ### ✅ Strings
 
 ```python
-len(s)                    # Length of the str
-s[i]                      # Access character at index
-s[pos:pos+len]            # Substring
-s.find("abc")             # Find position of substring (-1 if not found)
-s.replace(old, new)       # Replace substring
-s[start:end]              # Slice str
-s += "abc"                # Append
-str(x)                    # Convert to str
-int(s)                    # Convert str to int
-
-
-
-
+len(s)                     # Length
+s[i]                       # Access character
+s[l:r]                     # Slice [l, r)
+s.find("abc")              # First index or -1
+s.count("a")               # Count substring/char
+s.startswith("ab")         # Prefix check
+s.endswith("yz")           # Suffix check
+s.replace(old, new)        # Replace all
+"-".join(parts)            # Join list[str] -> str
+list(s)                    # str -> list[char]
+int("123"), str(123)       # Conversion
 ```
 
----
-
-### ✅ Lists (Python equivalent of `std::vector`)
+### ✅ Lists (`std::vector` equivalent)
 
 ```python
-len(v)                    # Length
-v.append(x)               # Add element at end
-v.pop()                   # Remove last element
-v.pop(i)                  # Remove element at index i
-v[i]                      # Access element at index
-v[0]                      # First element
-v[-1]                     # Last element
-v.clear()                 # Clear list
-v.insert(i, x)            # Insert x at index i
-v.remove(x)               # Remove first occurrence of x
-sorted(v)                 # Return sorted list
-v.sort()                  # Sort in place
-v.reverse()               # Reverse in place
-
-
-
-
+v = [1, 2, 3]
+len(v)
+v.append(x)
+v.pop()                    # pop last
+v.pop(i)                   # pop index i
+v.insert(i, x)
+v.remove(x)                # first occurrence
+v.extend([4, 5])
+v.sort()                   # in-place
+sorted(v)                  # new list
+v.reverse()
+v[::-1]                    # reversed copy
 ```
 
----
-
-### ✅ Arrays (using lists)
+### ✅ 2D Arrays
 
 ```python
-arr = [0] * 100           # Array of 100 zeros
-arr = [1, 2, 3, 4, 5]     # Initialize array
-
-
-
-
+rows, cols = 3, 4
+grid = [[0] * cols for _ in range(rows)]   # Correct
+# Avoid: [[0] * cols] * rows  (shared rows bug)
 ```
 
----
-
-### ✅ Sets
+### ✅ Set
 
 ```python
 s = set()
-s.add(x)                  # Add element
-s.remove(x)               # Remove element (raises KeyError if not found)
-s.discard(x)              # Remove element (no error if not found)
-x in s                    # Check membership
-len(s)                    # Size
-# Note: Sets don't have lower_bound/upper_bound like C += 1
-# Use sorted(set) for ordered operations
-
-
-
-
+s.add(x)
+s.discard(x)               # no error if missing
+s.remove(x)                # KeyError if missing
+x in s
 ```
 
----
-
-### ✅ Dictionaries (Maps)
+### ✅ Dict / Map
 
 ```python
-m = {}  # Empty dict
-m = dict()                # Empty dict
-m[key] = val              # Assign value
-m.get(key, default)       # Get value with default
-key in m                  # Check if key exists
-m.keys()                  # Iterate keys
-m.values()                # Iterate values
-m.items()                 # Iterate (key, value) pairs
+m = {}
+m[key] = val
+val = m.get(key, 0)
+key in m
 for k, v in m.items():
-    # Iterate key-value pairs
     pass
 
+dd = defaultdict(list)
+dd[k].append(v)
 
-
+freq = Counter(nums)       # value -> count
 ```
 
----
-
-## 🔄 Algorithms
-
-### ✅ Sorting & Searching
+## 🔄 Sorting / Searching
 
 ```python
-sorted(lst)                        # Return sorted list
-lst.sort()                         # Sort in place
-lst.sort(reverse=True)             # Sort descending
-lst.reverse()                      # Reverse in place
-import bisect
-bisect.bisect_left(lst, x)         # Lower bound (first pos >= x)
-bisect.bisect_right(lst, x)        # Upper bound (first pos > x)
-x in lst                           # Linear search
+nums.sort()
+nums.sort(reverse=True)
+nums.sort(key=lambda x: (x[0], x[1]))
 
-
-
-
+i = bisect.bisect_left(nums, x)   # first idx >= x
+j = bisect.bisect_right(nums, x)  # first idx > x
 ```
 
----
-
-### ✅ Min / Max / Others
+### Binary Search Template
 
 ```python
-min(a, b)
-max(a, b)
-a, b = b, a                       # Swap
-sum(lst)                          # Sum of elements
-lst.count(x)                      # Count occurrences of x
-from itertools import permutations
-list(permutations(lst))           # All permutations
-
-
-
-
+def lower_bound(lo: int, hi: int, ok) -> int:
+    # smallest x in [lo, hi] such that ok(x) is True
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if ok(mid):
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
 ```
 
----
+## 🧵 Stack / Queue / Heap
 
-## 📐 Math Utilities
+### ✅ Stack
+
+```python
+st = []
+st.append(x)
+x = st.pop()
+```
+
+### ✅ Queue / BFS
+
+```python
+q = deque([start])
+while q:
+    node = q.popleft()
+    for nei in graph[node]:
+        q.append(nei)
+```
+
+### ✅ Heap (Priority Queue)
+
+```python
+heap = []
+heapq.heappush(heap, x)
+x = heapq.heappop(heap)
+top = heap[0]
+
+# max heap via negatives
+heapq.heappush(heap, -x)
+mx = -heapq.heappop(heap)
+```
+
+## 📐 Math + Bit
 
 ```python
 abs(x)
-pow(a, b)
-import math
-math.sqrt(x)
-math.gcd(a, b)                    # GCD
-math.lcm(a, b)                    # LCM (Python 3.9+)
+math.gcd(a, b)
+math.lcm(a, b)             # Python 3.9+
+pow(a, b, mod)             # fast modular power
 
-
-
-
+bin(x).count("1")          # popcount
+x.bit_count()              # popcount (Python 3.8+)
+x.bit_length()             # number of bits
+x & (x - 1)                # clear lowest set bit
+x & -x                     # isolate lowest set bit
+x >> 1, x << 1
 ```
 
----
+## 🧠 Common Patterns
 
-## 🧵 Queues, Stacks, Deques
-
-### ✅ Queue (using collections.deque)
+### Prefix Sum
 
 ```python
-from collections import deque
-q = deque()
-q.append(x)                       # Add to end
-q.popleft()                       # Remove from front
-q[0]                              # Front element
-q[-1]                             # Back element
-len(q) == 0                       # Check if empty
-
-
-
-
+pre = [0]
+for x in nums:
+    pre.append(pre[-1] + x)
+# sum(nums[l:r+1]) = pre[r+1] - pre[l]
 ```
 
-### ✅ Stack (using list)
+### Difference Array (range increment)
 
 ```python
-s = []
-s.append(x)                       # Push
-s.pop()                           # Pop
-s[-1]                             # Top
-len(s) == 0                       # Check if empty
+diff = [0] * (n + 1)
+for l, r, val in updates:
+    diff[l] += val
+    if r + 1 < len(diff):
+        diff[r + 1] -= val
 
-
-
-
+arr = [0] * n
+cur = 0
+for i in range(n):
+    cur += diff[i]
+    arr[i] = cur
 ```
 
-### ✅ Deque
+### Sliding Window (longest valid window)
 
 ```python
-from collections import deque
-dq = deque()
-dq.appendleft(x)                  # Add to front
-dq.append(x)                      # Add to end
-dq.popleft()                      # Remove from front
-dq.pop()                          # Remove from end
-
-
-
-
+left = 0
+for right in range(len(nums)):
+    # add nums[right]
+    while not valid_window():
+        # remove nums[left]
+        left += 1
+    # update answer using [left, right]
 ```
 
-### ✅ Priority Queue (Heap)
+### Two Pointers (sorted array)
 
 ```python
-import heapq
-heap = []
-heapq.heappush(heap, x)           # Push (min heap)
-heapq.heappop(heap)               # Pop minimum
-heap[0]                           # Peek minimum
-# For max heap, negate values:
-heapq.heappush(heap, -x)          # Push negative for max heap
-max_val = -heapq.heappop(heap)    # Pop and negate back
-
-
-
-
+l, r = 0, len(nums) - 1
+while l < r:
+    s = nums[l] + nums[r]
+    if s == target:
+        break
+    if s < target:
+        l += 1
+    else:
+        r -= 1
 ```
 
----
-
-## 🧠 Bit Manipulation
+### Monotonic Stack (next greater)
 
 ```python
-bin(x).count('1')                 # Count 1-bits
-x.bit_length()                    # Number of bits
-x  (x - 1)                       # Remove lowest 1-bit
-x  -x                            # Isolate lowest 1-bit
-x >> 1                            # Right shift
-x << 1                            # Left shift
-
-
-
-
+res = [-1] * len(nums)
+st = []  # store indices, decreasing values
+for i, x in enumerate(nums):
+    while st and nums[st[-1]] < x:
+        res[st.pop()] = i
+    st.append(i)
 ```
 
----
+## 🌳 Trees / Graphs Templates
+
+### DFS (recursive tree)
+
+```python
+def dfs(node):
+    if not node:
+        return
+    dfs(node.left)
+    dfs(node.right)
+```
+
+### DFS (graph with visited)
+
+```python
+def dfs(u):
+    visited.add(u)
+    for v in graph[u]:
+        if v not in visited:
+            dfs(v)
+```
+
+### BFS Levels
+
+```python
+q = deque([start])
+visited = {start}
+steps = 0
+while q:
+    for _ in range(len(q)):
+        u = q.popleft()
+        if u == target:
+            return steps
+        for v in graph[u]:
+            if v not in visited:
+                visited.add(v)
+                q.append(v)
+    steps += 1
+```
+
+### Topological Sort (Kahn)
+
+```python
+indeg = [0] * n
+for u in range(n):
+    for v in graph[u]:
+        indeg[v] += 1
+
+q = deque([i for i in range(n) if indeg[i] == 0])
+order = []
+while q:
+    u = q.popleft()
+    order.append(u)
+    for v in graph[u]:
+        indeg[v] -= 1
+        if indeg[v] == 0:
+            q.append(v)
+# DAG iff len(order) == n
+```
+
+### Union-Find (DSU)
+
+```python
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.size = [1] * n
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, a, b):
+        ra, rb = self.find(a), self.find(b)
+        if ra == rb:
+            return False
+        if self.size[ra] < self.size[rb]:
+            ra, rb = rb, ra
+        self.parent[rb] = ra
+        self.size[ra] += self.size[rb]
+        return True
+```
+
+## 🧾 DP Quick Templates
+
+### 1D DP
+
+```python
+dp = [0] * (n + 1)
+dp[0] = 1
+for i in range(1, n + 1):
+    dp[i] = dp[i - 1]  # transition example
+```
+
+### 2D DP
+
+```python
+dp = [[0] * (m + 1) for _ in range(n + 1)]
+for i in range(1, n + 1):
+    for j in range(1, m + 1):
+        dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])  # example
+```
+
+### Memo DFS
+
+```python
+from functools import lru_cache
+
+@lru_cache(None)
+def solve(i, j):
+    if base_case(i, j):
+        return 0
+    return min(solve(i - 1, j), solve(i, j - 1)) + cost(i, j)
+```
 
 ## 📌 Common LeetCode Structures
 
-| Concept       | Python Equivalent              |
-|--------------|------------------------------|
-| Hash Map     | `dict` or `collections.defaultdict` |
-| Hash Set     | `set`                         |
-| Tree Map     | Use `dict` (keys are hashed) or `sortedcontainers.SortedDict` |
-| Tree Set     | Use `set` or `sortedcontainers.SortedSet` |
-| Min Heap     | `heapq` (built-in)            |
-| Max Heap     | `heapq` with negated values   |
-| Stack        | `list`                        |
-| Queue        | `collections.deque`           |
-| Deque        | `collections.deque`           |
-| StringBuilder| `list` + `''.join()` or `str` with `+=` |
-| Graph        | `list[list[int]]` or `dict[list]` |
+| Concept | Python Equivalent |
+|---|---|
+| Hash Map | `dict`, `defaultdict` |
+| Hash Set | `set` |
+| Min Heap | `heapq` |
+| Max Heap | `heapq` with negatives |
+| Queue | `collections.deque` |
+| Stack | `list` |
+| Graph | `list[list[int]]` or `defaultdict(list)` |
+| Frequency | `collections.Counter` |
+| Ordered Map/Set | `sortedcontainers` (external lib) |
 
----
-
-## ✍️ Input/Output Tips
+## ✍️ Fast I/O Tips
 
 ```python
-n = int(input())                  # Read integer
-s = input()                       # Read line as str
-s = input().strip()               # Read and strip whitespace
-# Fast reading (multiple integers on one line)
-nums = list(map(int, input().split()))
-# File I/O
-with open('input.txt', 'r') as f:
-    data = f.read()
+import sys
+input = sys.stdin.readline
 
+n = int(input().strip())
+arr = list(map(int, input().split()))
+```
 
+## ⚠️ Common Python Pitfalls in Interviews
 
+```python
+# 1) Mutable default arguments (bad)
+def f(x, memo={}): ...
 
+# 2) 2D array aliasing (bad)
+grid = [[0] * m] * n
+
+# 3) Recursion depth (for deep DFS trees/graphs)
+import sys
+sys.setrecursionlimit(10**6)
 ```
 
 ---

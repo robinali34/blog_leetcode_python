@@ -57,38 +57,39 @@ The solution uses a recursive approach:
 **Space Complexity:** O(n/k) - Recursion stack depth
 
 ```python
-/
- Definition for singly-linked list.
- struct ListNode :
-     # val = 0
-     ListNode next
-     ListNode() : val(0), next(None) :
-     ListNode(x) : val(x), next(None) :
-     ListNode(x, ListNode next) : val(x), next(next) :
-/
 class Solution:
-def reverseKGroup(self, head: 'ListNode | None', k: int) -> 'ListNode | None':
-count = 0
-ptr = head
-while count < k and ptr is not None:
-ptr = ptr.next
-count += 1
-if count == k:
-reversedHead = self.reverseLinkedList(head, k)
-head.next = self.reverseKGroup(ptr, k)
-return reversedHead
-return head
-def reverseLinkedList(self, head: 'ListNode | None', k: int) -> 'ListNode | None':
-new_head = None
-ptr = head
-while k > 0 and ptr is not None:
-next_node = ptr.next
-ptr.next = new_head
-new_head = ptr
-ptr = next_node
-k -= 1
-return new_head
+    def reverseKGroup(self, head: 'ListNode | None', k: int) -> 'ListNode | None':
+        count = 0
+        ptr = head
 
+        # Check whether at least k nodes remain.
+        while count < k and ptr is not None:
+            ptr = ptr.next
+            count += 1
+
+        # Fewer than k nodes: leave as-is.
+        if count < k:
+            return head
+
+        # Reverse exactly k nodes from head.
+        reversed_head = self.reverseLinkedList(head, k)
+
+        # head becomes the tail of this reversed block.
+        head.next = self.reverseKGroup(ptr, k)
+        return reversed_head
+
+    def reverseLinkedList(self, head: 'ListNode | None', k: int) -> 'ListNode | None':
+        new_head = None
+        ptr = head
+
+        while k > 0 and ptr is not None:
+            next_node = ptr.next
+            ptr.next = new_head
+            new_head = ptr
+            ptr = next_node
+            k -= 1
+
+        return new_head
 ```
 
 ## Step-by-Step Example

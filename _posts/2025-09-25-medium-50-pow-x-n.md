@@ -77,11 +77,10 @@ class Solution:
         if n < 0:
             n = -n
             x = 1 / x
-        result = 1
+        result = 1.0
         while n:
-            if n % 2 == 1:
+            if n & 1:
                 result *= x
-                n -= 1
             x *= x
             n //= 2
         return result

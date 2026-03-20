@@ -70,27 +70,28 @@ class Solution:
         o_cnt = sum(row.count('O') for row in board)
         if x_cnt not in (o_cnt, o_cnt + 1):
             return False
-            x_win = self.win(board, 'X')
-            o_win = self.win(board, 'O')
-            if x_win and x_cnt != o_cnt + 1:
-                return False
-                if o_win and x_cnt != o_cnt:
-                    return False
-                    if x_win and o_win:
-                        return False
-                        return True
-                        def win(self, board: list[str], p: str) -> bool:
-                            n = len(board)
-                            for i in range(n):
-                                if all(board[i][j] == p for j in range(n)):
-                                    return True
-                                    if all(board[j][i] == p for j in range(n)):
-                                        return True
-                                        if all(board[i][i] == p for i in range(n)):
-                                            return True
-                                            if all(board[i][n - 1 - i] == p for i in range(n)):
-                                                return True
-                                                return False
+        x_win = self.win(board, 'X')
+        o_win = self.win(board, 'O')
+        if x_win and o_win:
+            return False
+        if x_win and x_cnt != o_cnt + 1:
+            return False
+        if o_win and x_cnt != o_cnt:
+            return False
+        return True
+
+    def win(self, board: list[str], p: str) -> bool:
+        n = 3
+        for i in range(n):
+            if all(board[i][j] == p for j in range(n)):
+                return True
+            if all(board[j][i] == p for j in range(n)):
+                return True
+        if all(board[i][i] == p for i in range(n)):
+            return True
+        if all(board[i][n - 1 - i] == p for i in range(n)):
+            return True
+        return False
 
 
 

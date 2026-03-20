@@ -69,14 +69,16 @@ class Solution:
     def rotate(self, matrix: list[list[int]]) -> None:
         self.transpose(matrix)
         self.reflect(matrix)
+
     def transpose(self, matrix: list[list[int]]) -> None:
         n = len(matrix)
         for i in range(n):
             for j in range(i + 1, n):
                 matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
-                def reflect(self, matrix: list[list[int]]) -> None:
-                    for row in matrix:
-                        row.reverse()
+
+    def reflect(self, matrix: list[list[int]]) -> None:
+        for row in matrix:
+            row.reverse()
 
 
 ```

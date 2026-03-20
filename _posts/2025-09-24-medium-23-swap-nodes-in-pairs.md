@@ -86,11 +86,11 @@ class Solution:
     def swapPairs(self, head: ListNode) -> ListNode:
         if not head or not head.next:
             return head
-            first = head
-            second = head.next
-            first.next = self.swapPairs(second.next)
-            second.next = first
-            return second
+        first = head
+        second = head.next
+        first.next = self.swapPairs(second.next)
+        second.next = first
+        return second
 
 
 
@@ -127,7 +127,7 @@ class Solution:
             second.next = first
             pre = first
             head = first.next
-            return dummy.next
+        return dummy.next
 
 
 

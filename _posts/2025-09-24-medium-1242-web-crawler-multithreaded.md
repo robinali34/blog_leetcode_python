@@ -72,27 +72,32 @@ The solution involves:
 
 ```python
 class Solution:
-def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> list[str]:
-from threading import Lock
-from concurrent.futures import ThreadPoolExecutor
-def host(u: str) -> str:
-return u.split('/')[2]
-base = host(startUrl)
-visited = :startUrl
-lock = Lock()
-def worker(url: str):
-for nxt in htmlParser.getUrls(url):
-if host(nxt) != base:
-continue
-with lock:
-if nxt in visited:
-continue
-visited.add(nxt)
-pool.submit(worker, nxt)
-with ThreadPoolExecutor(max_workers=8) as pool:
-pool.submit(worker, startUrl)
-pool.shutdown(wait=True)
-return list(visited)
+    def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> list[str]:
+        from threading import Lock
+        from concurrent.futures import ThreadPoolExecutor
+
+        def host(url: str) -> str:
+            return url.split('/')[2]
+
+        base = host(startUrl)
+        visited = {startUrl}
+        lock = Lock()
+
+        def worker(url: str) -> None:
+            for nxt in htmlParser.getUrls(url):
+                if host(nxt) != base:
+                    continue
+                with lock:
+                    if nxt in visited:
+                        continue
+                    visited.add(nxt)
+                pool.submit(worker, nxt)
+
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            pool.submit(worker, startUrl)
+            pool.shutdown(wait=True)
+
+        return list(visited)
 
 ```
 
@@ -105,30 +110,34 @@ return list(visited)
 from threading import Lock
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 class Solution:
-def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> List[str]:
-def host(u: str) -> str:
-return u.split('/')[2]
-base = host(startUrl)
-visited = set([startUrl])
-lock = Lock()
-def worker(url: str) -> List[str]:
-next_urls = []
-for u in htmlParser.getUrls(url):
-if host(u) == base:
-with lock:
-if u in visited:
-continue
-visited.add(u)
-next_urls.append(u)
-return next_urls
-with ThreadPoolExecutor(max_workers=32) as ex:
-pending = :ex.submit(worker, startUrl)
-while pending:
-done, pending = wait(pending, return_when=FIRST_COMPLETED)
-for fut in done:
-for nxt in fut.result():
-pending.add(ex.submit(worker, nxt))
-return list(visited)
+    def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> list[str]:
+        def host(url: str) -> str:
+            return url.split('/')[2]
+
+        base = host(startUrl)
+        visited = {startUrl}
+        lock = Lock()
+
+        def worker(url: str) -> list[str]:
+            next_urls = []
+            for u in htmlParser.getUrls(url):
+                if host(u) != base:
+                    continue
+                with lock:
+                    if u in visited:
+                        continue
+                    visited.add(u)
+                next_urls.append(u)
+            return next_urls
+
+        with ThreadPoolExecutor(max_workers=32) as ex:
+            pending = {ex.submit(worker, startUrl)}
+            while pending:
+                done, pending = wait(pending, return_when=FIRST_COMPLETED)
+                for fut in done:
+                    for nxt in fut.result():
+                        pending.add(ex.submit(worker, nxt))
+        return list(visited)
 
 ```
 

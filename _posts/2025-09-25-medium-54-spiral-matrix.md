@@ -44,7 +44,7 @@ class Solution:
         result = []
         rows, cols = len(matrix), len(matrix[0])
         up, left = 0, 0
-        right, down = cols - 1, rows - 1
+        down, right = rows - 1, cols - 1
         while len(result) < rows * cols:
             # Traverse right along top row
             for col in range(left, right + 1):
@@ -86,12 +86,12 @@ class Solution:
             result.append(matrix[row][col])
             matrix[row][col] = VISITED  # Mark as visited
             # Calculate next position
-            nextRow = row + dirs[dir_idx][0]
-            nextCol = col + dirs[dir_idx][1]
+            next_row = row + dirs[dir_idx][0]
+            next_col = col + dirs[dir_idx][1]
             # Check if next position is valid and not visited
-            if (0 <= nextRow < rows and 0 <= nextCol < cols and
-                    matrix[nextRow][nextCol] != VISITED):
-                row, col = nextRow, nextCol
+            if (0 <= next_row < rows and 0 <= next_col < cols and
+                    matrix[next_row][next_col] != VISITED):
+                row, col = next_row, next_col
             else:
                 # Change direction and move
                 dir_idx = (dir_idx + 1) % 4

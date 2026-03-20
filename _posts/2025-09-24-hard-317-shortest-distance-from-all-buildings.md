@@ -7,241 +7,249 @@ categories: python shortest-distance buildings problem-solving
 
 # [Hard] 317. Shortest Distance from All Buildings
 
-<!-- Fixed Liquid syntax error -->
-
-This is a graph traversal problem that requires finding the optimal location to build a new building such that the total distance to all existing buildings is minimized. The key insight is using BFS from each building to calculate distances and finding the spot with minimum total distance.
+The previous Python snippets were malformed and had indentation/logic issues.  
+This version uses the standard correct approach: **BFS from each building** and accumulate distances to empty cells.
 
 ## Problem Description
 
 Given a 2D grid where:
-- `0` represents empty land
-- `1` represents a building  
-- `2` represents an obstacle
 
-Find the shortest distance from all buildings to a single empty land cell. Return -1 if it's impossible.
+- `0` = empty land
+- `1` = building
+- `2` = obstacle
+
+Find an empty land cell such that the sum of shortest distances from this cell to **all buildings** is minimum. Return that minimum sum, or `-1` if no such cell exists.
 
 ### Examples
 
-**Example 1:**
-```
+**Example 1**
+
+```text
 Input: grid = [[1,0,2,0,1],[0,0,0,0,0],[0,0,1,0,0]]
 Output: 7
-Explanation: The optimal location is (1,2) with total distance 7.
 ```
 
-**Example 2:**
-```
+**Example 2**
+
+```text
 Input: grid = [[1,0]]
 Output: 1
 ```
 
-**Example 3:**
-```
+**Example 3**
+
+```text
 Input: grid = [[1]]
 Output: -1
 ```
 
 ### Constraints
-- m == grid.length
-- n == grid[i].length
-- 1 <= m, n <= 50
-- grid[i][j] is either 0, 1, or 2
-- There will be at least one building in the grid
 
-## Approach
+- `m == grid.length`
+- `n == grid[i].length`
+- `1 <= m, n <= 50`
+- `grid[i][j]` is `0`, `1`, or `2`
+- At least one building exists
 
-There are three main approaches to solve this problem:
+## Approaches
 
-1. **BFS from Each Empty Land**: For each empty land, BFS to all buildings
-2. **BFS from Each Building**: For each building, BFS to all empty lands and accumulate distances
-3. **Optimized BFS with Grid Modification**: Use grid values to track reachability
+### Approach 1: BFS from each empty land (brute force)
 
-## Solution 1: BFS from Each Empty Land
+For every `0` cell:
+- Run BFS and compute shortest distance to all buildings.
+- If it can reach all buildings, update minimum sum.
 
-**Time Complexity:** O(m²n²) - For each empty land, BFS to all buildings  
-**Space Complexity:** O(mn) - For visited array and queue
+This is correct but expensive because we repeat BFS from many empty cells.
 
-```python
-from collections import deque
-class Solution:
-    def shortestDistance(self, grid: list[list[int]]) -> int:
-        rows = len(grid)
-        cols = len(grid[0])
-        totalHouses = 0
-        for row in grid:
-            for cell in row:
-                if cell == 1:
-                    totalHouses += 1
-                    minDistance = float('inf')
-                    for r in range(rows):
-                        for c in range(cols):
-                            if grid[r][c] == 0:
-                                result = self.bfs(grid, r, c, totalHouses)
-                                minDistance = min(minDistance, result)
-                                return -1 if minDistance == float('inf') else minDistance
-                                def bfs(self, grid: list[list[int]], startRow: int, startCol: int, totalHouses: int) -> int:
-                                    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-                                    rows = len(grid)
-                                    cols = len(grid[0])
-                                    distanceSum = 0
-                                    housesReached = 0
-                                    steps = 0
-                                    q = deque([(startRow, startCol)])
-                                    visited = [[False] * cols for _ in range(rows)]
-                                    visited[startRow][startCol] = True
-                                    while q and housesReached != totalHouses:
-                                        levelSize = len(q)
-                                        for _ in range(levelSize):
-                                            r, c = q.popleft()
-                                            if grid[r][c] == 1:
-                                                distanceSum += steps
-                                                housesReached += 1
-                                                continue
-                                                for dr, dc in directions:
-                                                    nr = r + dr
-                                                    nc = c + dc
-                                                    if (0 <= nr < rows and 0 <= nc < cols and
-                                                    not visited[nr][nc] and grid[nr][nc] != 2):
-                                                        visited[nr][nc] = True
-                                                        q.append((nr, nc))
-                                                        steps += 1
-                                                        if housesReached != totalHouses:
-                                                            for r in range(rows):
-                                                                for c in range(cols):
-                                                                    if grid[r][c] == 0 and visited[r][c]:
-                                                                        grid[r][c] = 2  # Mark as unreachable
-                                                                        return float('inf')
-                                                                        return distanceSum
-
-
-```
-
-## Solution 2: BFS from Each Building
-
-**Time Complexity:** O(m²n²) - For each building, BFS to all empty lands  
-**Space Complexity:** O(mn) - For distance tracking and visited array
+#### Python
 
 ```python
 from collections import deque
+from typing import List
+
+
 class Solution:
-    def shortestDistance(self, grid: list[list[int]]) -> int:
+    def shortestDistance(self, grid: List[List[int]]) -> int:
         rows, cols = len(grid), len(grid[0])
-        minDistance = float('inf')
-        totalHouses = 0
-        # distances[row][col] = [totalDistance, housesReached]
-        distances = [[[0, 0] for _ in range(cols)] for _ in range(rows)]
-        for row in range(rows):
-            for col in range(cols):
-                if grid[row][col] == 1:
-                    totalHouses += 1
-                    self.bfs(grid, distances, row, col)
-                    for row in range(rows):
-                        for col in range(cols):
-                            if distances[row][col][1] == totalHouses:
-                                minDistance = min(minDistance, distances[row][col][0])
-                                return -1 if minDistance == float('inf') else minDistance
-                                def bfs(self, grid: list[list[int]], distances: list[list[list[int]]],
-                                startRow: int, startCol: int) -> None:
-                                    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-                                    rows, cols = len(grid), len(grid[0])
-                                    q = deque([(startRow, startCol)])
-                                    vis = [[False] * cols for _ in range(rows)]
-                                    vis[startRow][startCol] = True
-                                    steps = 0
-                                    while q:
-                                        for _ in range(len(q)):
-                                            r, c = q.popleft()
-                                            if grid[r][c] == 0:
-                                                distances[r][c][0] += steps
-                                                distances[r][c][1] += 1
-                                                for dr, dc in dirs:
-                                                    nextRow = r + dr
-                                                    nextCol = c + dc
-                                                    if (0 <= nextRow < rows and 0 <= nextCol < cols and
-                                                    not vis[nextRow][nextCol] and grid[nextRow][nextCol] == 0):
-                                                        vis[nextRow][nextCol] = True
-                                                        q.append((nextRow, nextCol))
-                                                        steps += 1
-
-
-```
-
-## Solution 3: Optimized BFS with Grid Modification
-
-**Time Complexity:** O(m²n²) - For each building, BFS to all reachable empty lands  
-**Space Complexity:** O(mn) - For total distance tracking
-
-```python
-from collections import deque
-class Solution:
-    def shortestDistance(self, grid: list[list[int]]) -> int:
-        rows, cols = len(grid), len(grid[0])
+        buildings = sum(cell == 1 for row in grid for cell in row)
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-        emptyLandValue = 0
-        minDist = float('inf')
-        total = [[0] * cols for _ in range(rows)]
-        for row in range(rows):
-            for col in range(cols):
-                if grid[row][col] == 1:
-                    minDist = float('inf')
-                    q = deque([(row, col)])
-                    steps = 0
-                    while q:
-                        steps += 1
-                        for _ in range(len(q)):
-                            r, c = q.popleft()
-                            for dr, dc in dirs:
-                                nextRow = r + dr
-                                nextCol = c + dc
-                                if (0 <= nextRow < rows and 0 <= nextCol < cols and
-                                grid[nextRow][nextCol] == emptyLandValue):
-                                    grid[nextRow][nextCol] -= 1
-                                    total[nextRow][nextCol] += steps
-                                    q.append((nextRow, nextCol))
-                                    minDist = min(minDist, total[nextRow][nextCol])
-                                    emptyLandValue -= 1
-                                    return -1 if minDist == float('inf') else minDist
 
+        def bfs_from_empty(sr: int, sc: int) -> int:
+            q = deque([(sr, sc, 0)])
+            visited = [[False] * cols for _ in range(rows)]
+            visited[sr][sc] = True
+            reached = 0
+            dist_sum = 0
 
+            while q:
+                r, c, d = q.popleft()
+                if grid[r][c] == 1:
+                    reached += 1
+                    dist_sum += d
+                    continue
+
+                for dr, dc in dirs:
+                    nr, nc = r + dr, c + dc
+                    if not (0 <= nr < rows and 0 <= nc < cols):
+                        continue
+                    if visited[nr][nc] or grid[nr][nc] == 2:
+                        continue
+                    visited[nr][nc] = True
+                    q.append((nr, nc, d + 1))
+
+            return dist_sum if reached == buildings else float("inf")
+
+        ans = float("inf")
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 0:
+                    ans = min(ans, bfs_from_empty(r, c))
+
+        return -1 if ans == float("inf") else ans
 ```
 
-## Step-by-Step Example
+**Time:** `O(E * m * n)` where `E` is #empty cells (worst `O((m*n)^2)`)  
+**Space:** `O(m * n)` for BFS visited/queue
 
-Let's trace through Solution 2 with grid = `[[1,0,2,0,1],[0,0,0,0,0],[0,0,1,0,0]]`:
+---
 
-**Step 1:** Count total houses = 3
+### Approach 2: BFS from each building (recommended)
 
-**Step 2:** BFS from each building
-- Building at (0,0): Updates distances to all reachable empty lands
-- Building at (0,4): Updates distances to all reachable empty lands  
-- Building at (2,2): Updates distances to all reachable empty lands
+Instead of starting from each empty cell, start BFS from each building and accumulate:
 
-**Step 3:** Check each empty land
-- Only empty lands reachable by all 3 buildings are considered
-- Find minimum total distance among valid positions
+- `dist_sum[r][c]`: total distance from all buildings to empty cell `(r,c)`
+- `reach_count[r][c]`: how many buildings can reach `(r,c)`
 
-**Result:** Position (1,2) with total distance 7
+At the end, valid candidate cells are those with:
+- `grid[r][c] == 0`
+- `reach_count[r][c] == building_count`
 
-## Key Insights
+Pick minimum `dist_sum`.
 
-1. **BFS Level Processing**: Process each level of BFS to calculate distances correctly
-2. **Reachability Check**: Ensure all buildings can reach the chosen empty land
-3. **Distance Accumulation**: Sum distances from all buildings to each empty land
-4. **Grid Optimization**: Use grid modification to track reachability efficiently
+#### Python
 
-## Approach Comparison
+```python
+from collections import deque
+from typing import List
 
-| Approach | Pros | Cons |
-|----------|------|------|
-| **Solution 1** | Simple logic, easy to understand | Less efficient, modifies original grid |
-| **Solution 2** | Clean separation, tracks reachability | Uses extra space for distance tracking |
-| **Solution 3** | Most efficient, reuses grid space | Complex logic, harder to debug |
+
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        dist_sum = [[0] * cols for _ in range(rows)]
+        reach_count = [[0] * cols for _ in range(rows)]
+        buildings = 0
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] != 1:
+                    continue
+
+                buildings += 1
+                visited = [[False] * cols for _ in range(rows)]
+                visited[r][c] = True
+                q = deque([(r, c, 0)])
+
+                while q:
+                    cr, cc, d = q.popleft()
+                    for dr, dc in dirs:
+                        nr, nc = cr + dr, cc + dc
+                        if not (0 <= nr < rows and 0 <= nc < cols):
+                            continue
+                        if visited[nr][nc] or grid[nr][nc] != 0:
+                            continue
+
+                        visited[nr][nc] = True
+                        dist_sum[nr][nc] += d + 1
+                        reach_count[nr][nc] += 1
+                        q.append((nr, nc, d + 1))
+
+        ans = float("inf")
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] == 0 and reach_count[r][c] == buildings:
+                    ans = min(ans, dist_sum[r][c])
+        return -1 if ans == float("inf") else ans
+```
+
+**Time:** `O(B * m * n)` where `B` is #buildings (worst `O((m*n)^2)`)  
+**Space:** `O(m * n)` for `dist_sum`, `reach_count`, and BFS `visited`
+
+---
+
+### Approach 3: Optimized BFS with grid-state pruning
+
+Same BFS-from-buildings idea, but avoid visiting cells that were not reachable by previous buildings.
+
+Common trick:
+- Maintain `empty_land_value` initially `0`
+- For each building BFS, only visit cells with value `empty_land_value`
+- Mark visited empty cells by decrementing grid value (e.g., `0 -> -1 -> -2 ...`)
+
+This prunes impossible cells early and improves constants.
+
+#### Python
+
+```python
+from collections import deque
+from typing import List
+
+
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        total = [[0] * cols for _ in range(rows)]
+        empty_land_value = 0
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        min_dist = float("inf")
+
+        for r in range(rows):
+            for c in range(cols):
+                if grid[r][c] != 1:
+                    continue
+
+                min_dist = float("inf")
+                q = deque([(r, c)])
+                steps = 0
+
+                while q:
+                    steps += 1
+                    for _ in range(len(q)):
+                        cr, cc = q.popleft()
+                        for dr, dc in dirs:
+                            nr, nc = cr + dr, cc + dc
+                            if not (0 <= nr < rows and 0 <= nc < cols):
+                                continue
+                            if grid[nr][nc] != empty_land_value:
+                                continue
+
+                            grid[nr][nc] -= 1
+                            total[nr][nc] += steps
+                            min_dist = min(min_dist, total[nr][nc])
+                            q.append((nr, nc))
+
+                empty_land_value -= 1
+
+        return -1 if min_dist == float("inf") else min_dist
+```
+
+**Time:** still worst-case `O(B * m * n)`  
+**Space:** `O(m * n)` (or less auxiliary compared to approach 2)
+
+## Runtime/Space Tradeoff
+
+| Approach | Time | Space | Notes |
+|---|---:|---:|---|
+| BFS from each empty land | `O(E*m*n)` | `O(m*n)` | Easiest conceptually, often too slow |
+| BFS from each building | `O(B*m*n)` | `O(m*n)` | Clean and standard accepted approach |
+| BFS + grid-state pruning | `O(B*m*n)` | `O(m*n)` | Faster in practice due to pruning |
 
 ## Common Mistakes
 
-- **Incorrect Distance Calculation**: Not using level-by-level BFS
-- **Reachability Issues**: Not checking if all buildings can reach empty land
-- **Grid Modification**: Modifying original grid without proper restoration
-- **Boundary Conditions**: Not handling edge cases properly
+- Running BFS through buildings/obstacles (should only expand into `0` cells).
+- Not tracking how many buildings can reach each empty cell.
+- Returning min distance for a cell not reachable by all buildings.
+- Wrong BFS distance update (distance should increase per level/edge).
 
----

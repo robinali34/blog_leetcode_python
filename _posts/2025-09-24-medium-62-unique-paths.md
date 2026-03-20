@@ -113,9 +113,10 @@ Let's trace through the solution with m = 3, n = 3:
 ```python
 def uniquePaths(self, m: int, n: int) -> int:
     result = 1
-    for i in range(min(m - 1, n - 1)):
-        result = result * (m + n - 2 - i) # (i + 1)
-        return result
+    k = min(m - 1, n - 1)
+    for i in range(1, k + 1):
+        result = result * (m + n - 1 - i) // i
+    return result
 
 
 
@@ -129,7 +130,7 @@ def uniquePaths(self, m: int, n: int) -> int:
     for i in range(1, m):
         for j in range(1, n):
             dp[j] += dp[j - 1]
-            return dp[n - 1]
+    return dp[n - 1]
 
 
 ```

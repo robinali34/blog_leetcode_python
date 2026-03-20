@@ -92,26 +92,26 @@ class Solution:
 class Solution:
     def evalRPN(self, tokens: list[str]) -> int:
         n = len(tokens)
-        stack = [0] * ((n + 1) // 2)
+        stack = [0] * n
         idx = -1
         ops = {"+", "-", "*", "/"}
         for token in tokens:
-            if len(token) > 1 or token not in ops:
+            if token not in ops:
                 idx += 1
                 stack[idx] = int(token)
             else:
-                if token == '+':
+                if token == "+":
                     idx -= 1
                     stack[idx] += stack[idx + 1]
-                elif token == '-':
+                elif token == "-":
                     idx -= 1
                     stack[idx] -= stack[idx + 1]
-                elif token == '*':
+                elif token == "*":
                     idx -= 1
                     stack[idx] *= stack[idx + 1]
                 else:  # token == '/'
                     idx -= 1
-                    stack[idx] = int(stack[idx] / stack[idx + 1])  # Truncate towards zero
+                    stack[idx] = int(stack[idx] / stack[idx + 1])  # truncate toward 0
         return stack[idx]
 
 ```
