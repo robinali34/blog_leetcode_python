@@ -49,6 +49,7 @@ def knap01(wt: list[int], val: list[int], W: int) -> int:
 |---|---|---|
 | 322 | Coin Change | [Coin Change](https://leetcode.com/problems/coin-change/) |
 | 139 | Word Break | [Word Break](https://leetcode.com/problems/word-break/) |
+| 309 | [Best Time to Buy and Sell Stock with Cooldown](/2026/03/20/medium-309-best-time-to-buy-and-sell-stock-with-cooldown/) | [Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/) |
 
 ## 2D DP (grid/path)
 

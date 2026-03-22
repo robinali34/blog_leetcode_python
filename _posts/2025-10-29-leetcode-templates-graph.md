@@ -64,6 +64,7 @@ def bfs_grid(g: list[str], s: tuple[int, int], t: tuple[int, int]) -> int:
 | 200 | Number of Islands | [Number of Islands](https://leetcode.com/problems/number-of-islands/) |
 | 417 | Pacific Atlantic Water Flow | [Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/) |
 | 542 | 01 Matrix | [01 Matrix](https://leetcode.com/problems/01-matrix/) |
+| 841 | [Keys and Rooms](/2026/03/12/medium-841-keys-and-rooms/) | [Keys and Rooms](https://leetcode.com/problems/keys-and-rooms/) |
 
 ## Multi-source BFS (grids/graphs)
 
@@ -157,6 +158,7 @@ def topo_kahn(n: int, g: list[list[int]]) -> list[int]:
 | 207 | Course Schedule | [Course Schedule](https://leetcode.com/problems/course-schedule/) |
 | 210 | Course Schedule II | [Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) |
 | 269 | Alien Dictionary | [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) |
+| 797 | [All Paths From Source to Target](/2026/03/12/medium-797-all-paths-from-source-to-target/) | [All Paths From Source to Target](https://leetcode.com/problems/all-paths-from-source-to-target/) |
 
 ## Dijkstra (weights >= 0)
 

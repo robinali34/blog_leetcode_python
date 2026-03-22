@@ -17,6 +17,7 @@ Minimal, copy-paste C++ for LRU/LFU cache, Trie, time-based key-value store, and
 - [LFU Cache](#lfu-cache)
 - [Trie](#trie)
 - [Time-based Key-Value Store](#time-based-key-value-store)
+- [Hit counter (time window)](#hit-counter-time-window)
 - [Design Patterns](#design-patterns)
 
 ## Stack-based Design
@@ -250,6 +251,14 @@ def get(self, key, timestamp):
 | ID | Title | Link | Solution |
 |---|---|---|---|
 | 981 | Time Based Key-Value Store | [Link](https://leetcode.com/problems/time-based-key-value-store/) | - |
+
+## Hit counter (time window)
+
+Rolling window of timestamps: deque of hits, binary search on sorted times, or bucket counts per second — see blog for tradeoffs.
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 362 | Design Hit Counter | [Link](https://leetcode.com/problems/design-hit-counter/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/19/medium-362-design-hit-counter/) |
 
 ## Design Patterns
 

@@ -164,6 +164,8 @@ return result
 | ID | Title | Link | Solution |
 |---|---|---|---|
 | 49 | Group Anagrams | [Link](https://leetcode.com/problems/group-anagrams/) | - |
+| 242 | Valid Anagram | [Link](https://leetcode.com/problems/valid-anagram/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-242-valid-anagram/) |
+| 383 | Ransom Note | [Link](https://leetcode.com/problems/ransom-note/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-383-ransom-note/) |
 | 893 | Groups of Special-Equivalent Strings | [Link](https://leetcode.com/problems/groups-of-special-equivalent-strings/) | [Solution](https://robinali34.github.io/blog_leetcode/2026/02/15/easy-893-groups-of-special-equivalent-strings/) |
 
 ### Remove Duplicates
