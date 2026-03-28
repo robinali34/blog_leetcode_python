@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "151. Reverse Words in a String"
-date: 2026-03-29 00:00:00 -0700
+date: 2026-03-27 00:00:00 -0700
 categories: [leetcode, medium, string, two-pointers]
 tags: [leetcode, medium, string, deque, two-pointers]
-permalink: /2026/03/29/medium-151-reverse-words-in-a-string/
+permalink: /2026/03/27/medium-151-reverse-words-in-a-string/
 ---
 
 # 151. Reverse Words in a String
@@ -58,11 +58,11 @@ Output: "example good a"
 
 Scan left to right after trimming ends (or while scanning, skip duplicate spaces). Collect each word’s characters; on a space boundary after a non-empty word, push the word to the front of a structure so overall order is reversed. Finally join with a single space.
 
-Your approach uses `deque.appendleft` so the first word ends up rightmost in the final join.
+The deque approach uses `deque.appendleft` so the first word ends up rightmost in the final join.
 
 ## Solution Options
 
-### Option 1: Trim + scan + `deque` (your solution)
+### Option 1: Trim + scan + `deque`
 
 ```python
 from collections import deque
@@ -140,7 +140,7 @@ For Option 1:
 
 ## Common Mistakes
 
-- Forgetting to `appendleft` the last word after the loop (your code handles this with a final `appendleft`).
+- Forgetting to `appendleft` the last word after the loop (handled with a final `appendleft`).
 - Including empty strings when splitting naively on `' '` only.
 - Returning multiple spaces between words.
 
