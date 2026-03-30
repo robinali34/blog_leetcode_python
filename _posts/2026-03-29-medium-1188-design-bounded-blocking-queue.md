@@ -35,7 +35,9 @@ Treat capacity as **two counts**:
 
 Pair with a `collections.deque` for FIFO storage.
 
-## Python Solution (Semaphores + deque)
+Alternatively, use one **`threading.Condition`**: producers `wait` while full, consumers `wait` while empty, and `notify` / `notify_all` after changing length.
+
+## Solution Option 1: Semaphores + deque
 
 ```python
 from collections import deque
@@ -65,6 +67,48 @@ class BoundedBlockingQueue:
 
 Order of operations matters: **acquire empty slot before mutating**, **release filled after append**; symmetrically for dequeue.
 
+## Solution Option 2: `Condition` + `deque`
+
+Same logic as your snippet, with two fixes:
+
+1. **`size()` must not use `while self.cond:`** — a `Condition` is always truthy, so that loop is wrong and would not actually synchronize. Hold the condition’s lock and return `len(self.q)` (same lock as enqueue/dequeue).
+2. **`deque`** still needs `from collections import deque`.
+
+```python
+import threading
+from collections import deque
+
+
+class BoundedBlockingQueue(object):
+    def __init__(self, capacity: int):
+        self.q = deque()
+        self.capacity = capacity
+        self.cond = threading.Condition()
+
+    def enqueue(self, element: int) -> None:
+        with self.cond:
+            while len(self.q) == self.capacity:
+                self.cond.wait()
+
+            self.q.append(element)
+            self.cond.notify()
+
+    def dequeue(self) -> int:
+        with self.cond:
+            while len(self.q) == 0:
+                self.cond.wait()
+
+            val = self.q.popleft()
+            self.cond.notify()
+            return val
+
+    def size(self) -> int:
+        with self.cond:
+            return len(self.q)
+```
+
+With a **single** condition for both “full” and “empty” waiters, some designs use **`notify_all()`** instead of **`notify()`** so every waiter re-checks `len(self.q)` (avoids edge cases where the wrong waiter stays asleep). LeetCode often accepts `notify()`.
+
 ## Option: Add a `Lock` around the deque
 
 On LeetCode, semaphore-only solutions often pass. For extra clarity in real systems, guard `append` / `popleft` with `threading.Lock` so no queue operation runs concurrently with another (optional here if you keep critical sections minimal).
@@ -74,6 +118,7 @@ On LeetCode, semaphore-only solutions often pass. For extra clarity in real syst
 | Idea | Blocking | Storage |
 |------|----------|---------|
 | Two semaphores | `emptySlots` / `filledSlots` | deque (FIFO) |
+| One `Condition` | `wait` while full / empty | deque under same lock |
 | `queue.Queue(maxsize=…)` | built-in | Standard library (interview shortcut if allowed) |
 
 ## Complexity
@@ -87,7 +132,9 @@ Let `n` be capacity.
 
 - Releasing semaphores in the wrong order (deadlock or capacity violation).
 - Forgetting `from collections import deque`.
-- Calling `size()` from many threads expecting a strict snapshot — without a lock, `len(self.queue)` can be stale relative to concurrent `enqueue`/`dequeue`; LeetCode often avoids racing on `size()`.
+- Writing `size()` as `while self.cond: return len(self.q)` — wrong control flow and no mutual exclusion; use **`with self.cond:`**.
+- Using `if len(self.q) == …` instead of **`while`** after `wait()` — must recheck state after waking.
+- Calling `size()` from many threads expecting a strict snapshot — without holding the same lock as `enqueue`/`dequeue`, reads can race; the condition-based `size()` above is consistent when all paths use `with self.cond`.
 
 ## Related Problems
 
