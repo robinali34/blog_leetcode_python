@@ -54,7 +54,7 @@ Because `p != q`, `x != 0`. Some bit in `x` differs between `p` and `q`. Isolati
 
 every `num` either has that bit set or not, splitting the array into two groups—each group XORs to one of `{p, q}`.
 
-## Detailed walkthrough (English)
+## Detailed walkthrough
 
 **Working example**
 
