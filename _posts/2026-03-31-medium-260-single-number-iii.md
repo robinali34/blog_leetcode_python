@@ -48,11 +48,72 @@ Let the two singletons be `p` and `q`. Then:
 
 `x = p ^ q`
 
-Because `p != q`, `x != 0`. Some bit in `x` differs between `p` and `q`. isolating the lowest set bit:
+Because `p != q`, `x != 0`. Some bit in `x` differs between `p` and `q`. Isolating the lowest set bit:
 
 `diff = x & -x`
 
 every `num` either has that bit set or not, splitting the array into two groups—each group XORs to one of `{p, q}`.
+
+## Detailed walkthrough (English)
+
+**Working example**
+
+- **Input:** `nums = [1, 2, 1, 3, 2, 5]`
+- **Output:** `[3, 5]` (either order is acceptable)
+
+**What makes the problem special**
+
+- Exactly **two** values appear **once** (call them `a` and `b`).
+- Every other value appears **twice**, so those pairs cancel under XOR.
+
+**Step 1 — XOR the entire array**
+
+XOR everything into one accumulator `x`:
+
+- Duplicate values cancel: `y ^ y == 0`.
+- After the full pass, only contributions from `a` and `b` remain:
+
+`x = a ^ b`
+
+This does **not** tell you `a` and `b` individually—it only tells you where they differ.
+
+**Step 2 — Find one bit that separates `a` from `b`**
+
+If `a != b`, then `x != 0`, so at least one bit of `x` is `1`. That bit is `0` in one number and `1` in the other.
+
+Use the standard trick:
+
+`diff = x & (-x)`
+
+`diff` is a single bit mask: the **least significant** `1`-bit of `x`. Any `1` in `x` would work in principle, but this one is cheap to compute and enough to split the two singletons.
+
+**Step 3 — Partition `nums` into two buckets**
+
+For each `num`, test `num & diff`:
+
+- **Group A:** numbers with that bit set (`num & diff != 0`).
+- **Group B:** numbers with that bit clear (`num & diff == 0`).
+
+Crucial fact: **`a` and `b` land in different buckets**, because they disagree on the bit encoded by `diff`.  
+Duplicates still stay together: both copies of the same value always share the same bit pattern, so they always go to the **same** bucket.
+
+**Step 4 — XOR inside each bucket**
+
+Run XOR independently in each bucket:
+
+- One bucket XORs down to `a`.
+- The other XORs down to `b`.
+
+Return `[a, b]` in any order.
+
+**Sanity check on the example**
+
+Pairwise cancellation leaves `3 ^ 5`:
+
+`1 ^ 2 ^ 1 ^ 3 ^ 2 ^ 5 = 3 ^ 5 = 6` (binary `110`).
+
+The lowest separating bit is `2` (`diff = 6 & (-6) = 2`).  
+Partition by `num & 2`: values `2`, `3`, `2` share that bit; `1`, `1`, `5` do not. XOR within the two buckets yields `3` and `5` respectively.
 
 ## Python Solution
 
