@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "1328. Break a Palindrome"
-date: 2026-03-07 00:00:00 -0700
+date: 2026-04-07 00:00:00 -0700
 categories: [leetcode, medium, string, greedy]
 tags: [leetcode, medium, string, palindrome, greedy]
-permalink: /2026/03/07/medium-1328-break-a-palindrome/
+permalink: /2026/04/07/medium-1328-break-a-palindrome/
 ---
 
 # 1328. Break a Palindrome
