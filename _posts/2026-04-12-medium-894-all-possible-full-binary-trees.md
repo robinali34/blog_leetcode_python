@@ -37,13 +37,46 @@ Output: [ one full tree: root with two leaves ]
 
 - `1 <= n <= 20`
 
-## Analysis
+## Problem Summary
 
-A full binary tree on `n` nodes exists **only if `n` is odd** (even `n` → return `[]`).
+Generate **all** full binary trees with exactly `n` nodes.
 
-For `n > 1`, the root has two non-empty subtrees. If the left subtree has `i` nodes, the right has `n - 1 - i` nodes (subtract root). Both must be odd, so iterate `i = 1, 3, 5, …, n-2`.
+A **full** binary tree means every node has **either 0 or 2** children (no node with exactly one child). Return every distinct tree structure.
 
-Combine every left tree with every right tree under a new root. **Memoize** by `n` to avoid recomputing lists for the same subtree size.
+## Key Observations
+
+### 1. Valid `n` must be odd
+
+In a full binary tree, every internal node has two children, so if there are `k` internal nodes then
+
+`n = 2k + 1`
+
+(all leaves are counted in `n`). Hence `n` is always odd. If `n` is even, no such tree exists → return an empty list.
+
+### 2. Recursive structure (divide and conquer)
+
+For `n > 1`, the root uses one node. If the left subtree has `i` nodes, the right subtree must have `n - 1 - i` nodes (subtract the root). **Both** subtrees must themselves be full binary trees, so `i` and `n - 1 - i` are odd. Try every odd split `i = 1, 3, 5, …, n - 2`.
+
+### 3. Recurrence (Catalan-style growth)
+
+Let `F(n)` be the list of all full binary trees with `n` nodes. Then
+
+For each odd `i`, combine every tree in `F(i)` with every tree in `F(n - 1 - i)` under a new root (nested loops in code).
+
+The **count** of trees grows like a **Catalan-type** sequence (not plain Catalan numbers, but the same “combine left and right enumerations” flavor).
+
+### 4. Memoization
+
+`dfs(i)` is recomputed for the same `i` in many branches. Cache `memo[n] = F(n)` so each subtree size is built once.
+
+## Algorithm
+
+1. If `n` is even → return `[]`.
+2. Base case `n == 1` → return a single-node tree `[TreeNode(0)]`.
+3. For each odd `i` from `1` to `n - 2`:
+   - `left = dfs(i)`, `right = dfs(n - 1 - i)`.
+   - For each pair `(l, r)`, attach under a new root and append to the result list.
+4. Store and return `memo[n]`.
 
 ## Python Solution
 
@@ -87,9 +120,12 @@ class Solution:
 
 ## Complexity
 
-Let `F(n)` be the number of full binary trees with `n` nodes (Catalan-type growth). Generating all trees is exponential in `n`; memoization avoids recomputing the list for each subtree size repeatedly.
+Let `T(n)` be the number of distinct full binary trees with `n` nodes (odd). The algorithm enumerates **all** of them, so time and space are driven by **output size**, which grows roughly with **Catalan-type** counts (exponential in `n` in the worst case).
 
-- **Time / space:** dominated by output size (problem constraint `n <= 20` keeps it feasible).
+- **Memoization** avoids recomputing the full list `F(i)` for the same `i` many times when combining subtrees, but you still pay for **building every tree** once.
+- With `n <= 20`, this is feasible in practice.
+
+That cost is **unavoidable** in the sense that the answer itself can be huge; you must materialize every returned tree.
 
 ## Common Mistakes
 
