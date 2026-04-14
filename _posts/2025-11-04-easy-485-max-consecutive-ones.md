@@ -92,16 +92,17 @@ Use a simple counter to track consecutive ones. Reset the counter when encounter
 
 ```python
 class Solution:
-def findMaxConsecutiveOnes(self, nums):
-    maxCnt = 0, cnt = 0
-    for n in nums:
-        if n == 1:
-            cnt += 1
-            maxCnt = max(maxCnt, cnt)
-             else :
-            cnt = 0
-    return maxCnt
-
+    def findMaxConsecutiveOnes(self, nums):
+        maxCnt, cnt = 0, 0   # FIXED tuple assignment
+        
+        for n in nums:
+            if n == 1:
+                cnt += 1
+                maxCnt = max(maxCnt, cnt)
+            else:            # FIXED indentation
+                cnt = 0
+        
+        return maxCnt
 ```
 
 ## How the Algorithm Works
@@ -142,39 +143,23 @@ Maximum streak: 1 → 2 → 2 → 2 → 2 → 3
 
 ### 1. Initialize Variables
 ```python
-maxCnt = 0, cnt = 0
+maxCnt, cnt = 0, 0
 
 ```
 - `maxCnt`: Tracks the maximum consecutive ones seen so far
 - `cnt`: Tracks the current consecutive ones streak
 
-### 2. Iterate Through Array
+### 2–4. Iterate and update streak
 ```python
 for n in nums:
-
+    if n == 1:
+        cnt += 1
+        maxCnt = max(maxCnt, cnt)
+    else:
+        cnt = 0
 ```
-Process each element in the array.
-
-### 3. Handle Ones
-```python
-if n == 1:
-    cnt += 1
-    maxCnt = max(maxCnt, cnt)
-
-
-
-
-```
-- Increment current streak counter
-- Update maximum if current streak is longer
-
-### 4. Handle Zeros
-```python
-else:
-    cnt = 0
-
-```
-Reset the current streak counter to 0.
+- **Ones**: increment `cnt` and refresh `maxCnt`.
+- **Zeros**: reset `cnt` to break the streak.
 
 ## Complexity Analysis
 
@@ -199,16 +184,17 @@ While not necessary for this problem, we can use two pointers to explicitly trac
 
 ```python
 class Solution:
-def findMaxConsecutiveOnes(self, nums):
-    maxCnt = 0
-    left = 0
-    for(right = 0 right < len(nums) right += 1) :
-    if nums[right] == 0:
-        left = right + 1  # Reset window start
-         else :
-        maxCnt = max(maxCnt, right - left + 1)
-return maxCnt
+    def findMaxConsecutiveOnes(self, nums):
+        maxCnt = 0
+        left = 0
 
+        for right in range(len(nums)):
+            if nums[right] == 0:
+                left = right + 1  # Reset window start
+            else:
+                maxCnt = max(maxCnt, right - left + 1)
+
+        return maxCnt
 ```
 
 **Time Complexity:** O(n)  
@@ -218,13 +204,18 @@ return maxCnt
 
 ```python
 class Solution:
-def findMaxConsecutiveOnes(self, nums):
-    maxCnt = 0, cnt = 0
-    for n in nums:
-        (cnt + 1 if             cnt = (n == 1)  else 0)
-        maxCnt = max(maxCnt, cnt)
-    return maxCnt
-
+    def findMaxConsecutiveOnes(self, nums):
+        maxCnt, cnt = 0, 0
+        
+        for n in nums:
+            if n == 1:
+                cnt += 1
+            else:
+                cnt = 0
+            
+            maxCnt = max(maxCnt, cnt)
+        
+        return maxCnt
 ```
 
 ## Why This Solution is Optimal
@@ -248,12 +239,12 @@ If we know the array size and maximum possible, we could potentially terminate e
 
 ### Branchless Version
 ```python
-def findMaxConsecutiveOnes(self, nums):
-    maxCnt = 0, cnt = 0
+def findMaxConsecutiveOnes(nums: list[int]) -> int:
+    max_cnt = cnt = 0
     for n in nums:
-        (cnt + 1 if         cnt = (n == 1)  else 0)
-        maxCnt = max(maxCnt, cnt)
-    return maxCnt
+        cnt = cnt + 1 if n == 1 else 0
+        max_cnt = max(max_cnt, cnt)
+    return max_cnt
 
 ```
 

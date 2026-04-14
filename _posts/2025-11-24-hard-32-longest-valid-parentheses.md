@@ -114,22 +114,28 @@ Use dynamic programming to track the length of the longest valid parentheses end
 
 ```python
 class Solution:
-def longestValidParentheses(self, s):
-    maxCount = 0
-    len = s.length()
-    list[int> dp(len)
-    for (i = 1 i < len i += 1) :
-    if s[i] == ')':
-        # Case 1: Pattern "()" - simple match
-        if s[i - 1] == '(':
-            (dp[i - 2] if                     dp[i] = (i >= 2  else 0) + 2)
-        # Case 2: Pattern "))" - nested or consecutive valid substrings
-        def if(self, '('):
-            dp[i] = dp[i - 1] +
-            (dp[i - dp[i - 1] - 2] if                         ((i - dp[i - 1]) >= 2  else 0) + 2)
-        maxCount = max(maxCount, dp[i])
-return maxCount
+    def longestValidParentheses(self, s):
+        maxCount = 0
+        n = len(s)
 
+        dp = [0] * n
+
+        for i in range(1, n):
+            if s[i] == ')':
+                # Case 1: Pattern "()" - simple match
+                if s[i - 1] == '(':
+                    dp[i] = (dp[i - 2] if i >= 2 else 0) + 2
+
+                # Case 2: Pattern "))" - nested or consecutive valid substrings
+                elif s[i - 1] == ')':
+                    dp[i] = dp[i - 1]
+
+                    if i - dp[i - 1] - 1 >= 0 and s[i - dp[i - 1] - 1] == '(':
+                        dp[i] += (dp[i - dp[i - 1] - 2] if (i - dp[i - 1]) >= 2 else 0) + 2
+
+                maxCount = max(maxCount, dp[i])
+
+        return maxCount
 ```
 
 **How it works:**
@@ -148,30 +154,45 @@ Use two passes (left-to-right and right-to-left) to find the longest valid subst
 
 ```python
 class Solution:
-def longestValidParentheses(self, s):
-    left = 0, right = 0, maxLen = 0
-    len = s.length()
-    # Left to right pass
-    for (i = 0 i < len i += 1) :
-    if (s[i] == '(') left += 1
-    else right += 1
-    if left == right:
-        maxLen = max(maxLen, 2  right)
-         else if (right > left) :
-        # Invalid: more closing than opening, reset
-        left = right = 0
-# Right to left pass
-left = right = 0
-for (i = len - 1 i >= 0 i -= 1) :
-if (s[i] == '(') left += 1
-else right += 1
-if left == right:
-    maxLen = max(maxLen, 2  left)
-     else if (left > right) :
-    # Invalid: more opening than closing, reset
-    left = right = 0
-return maxLen
+    def longestValidParentheses(self, s):
+        left = 0
+        right = 0
+        maxLen = 0
 
+        n = len(s)
+
+        # Left to right pass
+        for i in range(n):
+            if s[i] == '(':
+                left += 1
+            else:
+                right += 1
+
+            if left == right:
+                maxLen = max(maxLen, 2 * right)
+            elif right > left:
+                # Invalid: more closing than opening, reset
+                left = 0
+                right = 0
+
+        # Right to left pass
+        left = 0
+        right = 0
+
+        for i in range(n - 1, -1, -1):
+            if s[i] == '(':
+                left += 1
+            else:
+                right += 1
+
+            if left == right:
+                maxLen = max(maxLen, 2 * left)
+            elif left > right:
+                # Invalid: more opening than closing, reset
+                left = 0
+                right = 0
+
+        return maxLen
 ```
 
 **How it works:**
@@ -288,7 +309,6 @@ Final: maxLen = 2
 ```python
 if s[i - 1] == '(':
     (dp[i - 2] if     dp[i] = (i >= 2  else 0) + 2)
-
 ```
 - If previous character is `'('`, we have a match
 - Add 2 for the current match
@@ -299,7 +319,6 @@ if s[i - 1] == '(':
 def if(self, '('):
     dp[i] = dp[i - 1] +
     (dp[i - dp[i - 1] - 2] if         ((i - dp[i - 1]) >= 2  else 0) + 2)
-
 ```
 - Check if there's a matching `'('` before the valid substring ending at `i-1`
 - If found, combine:
@@ -318,7 +337,6 @@ if left == right:
     maxLen = max(maxLen, 2  right)
      else if (right > left) :
     left = right = 0  # Reset: invalid state
-
 ```
 - Count opening and closing parentheses
 - When equal, we have a valid substring
@@ -333,7 +351,6 @@ if left == right:
     maxLen = max(maxLen, 2  left)
      else if (left > right) :
     left = right = 0  # Reset: invalid state
-
 ```
 - Same logic but reversed
 - Catches cases where left-to-right misses valid substrings
@@ -381,21 +398,23 @@ if left == right:
 
 ```python
 class Solution:
-def longestValidParentheses(self, s):
-    list[int> stk
-    stk.push(-1)  # Base for calculation
-    maxLen = 0
-    for (i = 0 i < s.length() i += 1) :
-    if s[i] == '(':
-        stk.push(i)
-         else :
-        stk.pop()
-        if not stk:
-            stk.push(i)  # New base
-             else :
-            maxLen = max(maxLen, i - stk.top())
-return maxLen
+    def longestValidParentheses(self, s):
+        stk = []
+        stk.append(-1)  # Base for calculation
+        maxLen = 0
 
+        for i in range(len(s)):
+            if s[i] == '(':
+                stk.append(i)
+            else:
+                stk.pop()
+
+                if not stk:
+                    stk.append(i)  # New base
+                else:
+                    maxLen = max(maxLen, i - stk[-1])
+
+        return maxLen
 ```
 
 **How it works:**

@@ -104,35 +104,38 @@ This solution uses a recursive helper function that processes both lists simulta
 ### Solution: Recursive Helper
 
 ```python
-/
- Definition for singly-linked list.
- struct ListNode :
-     val
-     ListNode next
-     ListNode() : val(0), next(None) :
-     ListNode(x) : val(x), next(None) :
-     ListNode(x, ListNode next) : val(x), next(next) :
-/
-class Solution:
-def addTwoNumbers(self, l1, l2):
-    return addTwoNumbersHelper(l1, l2, 0)
-def addTwoNumbersHelper(self, l1, l2, carry):
-    # Base case: if both lists are null and no carry
-    if l1 == None  and  l2 == None  and  carry == 0:
-        return None
-    sum = carry
-    if l1 != None:
-        sum += l1.val
-    if l2 != None:
-        sum += l2.val
-    ListNode newNode = ListNode(sum % 10)
-    newNode.next = addTwoNumbersHelper(
-    (l1.next if             l1 != None  else None,)
-    (l2.next if             l2 != None  else None,)
-    sum / 10
-    )
-    return newNode
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 
+class Solution:
+    def addTwoNumbers(self, l1, l2):
+        return self.addTwoNumbersHelper(l1, l2, 0)
+
+    def addTwoNumbersHelper(self, l1, l2, carry):
+        # Base case: if both lists are null and no carry
+        if l1 == None and l2 == None and carry == 0:
+            return None
+
+        total = carry
+
+        if l1 != None:
+            total += l1.val
+
+        if l2 != None:
+            total += l2.val
+
+        newNode = ListNode(total % 10)
+
+        newNode.next = self.addTwoNumbersHelper(
+            l1.next if l1 != None else None,
+            l2.next if l2 != None else None,
+            total // 10
+        )
+
+        return newNode
 ```
 
 ## How the Algorithm Works
@@ -205,23 +208,21 @@ Result: [8,9,9,9,0,0,0,1]
 ## Algorithm Breakdown
 
 ```python
-def addTwoNumbersHelper(self, l1, l2, carry):
-    # Base case: all digits processed and no carry
-    if l1 == None  and  l2 == None  and  carry == 0:
+def add_two_numbers_helper(l1, l2, carry: int):
+    if l1 is None and l2 is None and carry == 0:
         return None
-    # Calculate sum: carry + l1.val + l2.val
-    sum = carry
-    if (l1 != None) sum += l1.val
-    if (l2 != None) sum += l2.val
-    # Create new node with ones digit
-    ListNode newNode = ListNode(sum % 10)
-    # Recursively process next digits
-    newNode.next = addTwoNumbersHelper(
-    (l1.next if         l1 != None  else None,  # Move to next or null)
-    (l2.next if         l2 != None  else None,  # Move to next or null)
-    sum / 10                              # Pass carry forward
+    total = carry
+    if l1 is not None:
+        total += l1.val
+    if l2 is not None:
+        total += l2.val
+    node = ListNode(total % 10)
+    node.next = add_two_numbers_helper(
+        l1.next if l1 is not None else None,
+        l2.next if l2 is not None else None,
+        total // 10,
     )
-    return newNode
+    return node
 
 ```
 
@@ -243,22 +244,28 @@ def addTwoNumbersHelper(self, l1, l2, carry):
 
 ```python
 class Solution:
-def addTwoNumbers(self, l1, l2):
-    def dummy(self, 0)
-    ListNode curr = dummy
-    carry = 0
-    while l1 != None  or  l2 != None  or  carry > 0:
-        if l1 != None:
-            carry += l1.val
-            l1 = l1.next
-        if l2 != None:
-            carry += l2.val
-            l2 = l2.next
-        curr.next = ListNode(carry % 10)
-        carry /= 10
-        curr = curr.next
-    return dummy.next
+    def addTwoNumbers(self, l1, l2):
+        def dummy():
+            return ListNode(0)
 
+        dummy = ListNode(0)
+        curr = dummy
+        carry = 0
+
+        while l1 != None or l2 != None or carry > 0:
+            if l1 != None:
+                carry += l1.val
+                l1 = l1.next
+
+            if l2 != None:
+                carry += l2.val
+                l2 = l2.next
+
+            curr.next = ListNode(carry % 10)
+            carry //= 10
+            curr = curr.next
+
+        return dummy.next
 ```
 
 **Pros:**
@@ -277,29 +284,38 @@ def addTwoNumbers(self, l1, l2):
 
 ```python
 class Solution:
-def addTwoNumbers(self, l1, l2):
-    if (l1 == None) return l2
-    if (l2 == None) return l1
-    ListNode head = None
-    ListNode tail = None
-    carry = 0
-    while l1 != None  or  l2 != None  or  carry > 0:
-        sum = carry
-        if l1 != None:
-            sum += l1.val
-            l1 = l1.next
-        if l2 != None:
-            sum += l2.val
-            l2 = l2.next
-        ListNode newNode = ListNode(sum % 10)
-        if head == None:
-            head = tail = newNode
-             else :
-            tail.next = newNode
-            tail = newNode
-        carry = sum / 10
-    return head
+    def addTwoNumbers(self, l1, l2):
+        if l1 == None:
+            return l2
+        if l2 == None:
+            return l1
 
+        head = None
+        tail = None
+        carry = 0
+
+        while l1 != None or l2 != None or carry > 0:
+            total = carry
+
+            if l1 != None:
+                total += l1.val
+                l1 = l1.next
+
+            if l2 != None:
+                total += l2.val
+                l2 = l2.next
+
+            newNode = ListNode(total % 10)
+
+            if head == None:
+                head = tail = newNode
+            else:
+                tail.next = newNode
+                tail = newNode
+
+            carry = total // 10
+
+        return head
 ```
 
 ## Complexity Analysis
@@ -315,12 +331,10 @@ def addTwoNumbers(self, l1, l2):
 ### Recursive Base Case
 
 ```python
-if l1 == None  and  l2 == None  and  carry == 0:
-    return None
-
-
-
-
+def add_two_numbers_helper(l1, l2, carry: int):
+    if l1 is None and l2 is None and carry == 0:
+        return None
+    # ... compute total, ListNode, recurse
 ```
 
 **Why all three conditions?**
@@ -331,21 +345,20 @@ if l1 == None  and  l2 == None  and  carry == 0:
 ### Digit Extraction
 
 ```python
-sum = carry
-if (l1 != None) sum += l1.val
-if (l2 != None) sum += l2.val
-digit = sum % 10  # Ones digit
-newCarry = sum / 10  # Tens digit (carry)
+total = carry
+if l1 is not None:
+    total += l1.val
+if l2 is not None:
+    total += l2.val
+digit = total % 10
+new_carry = total // 10
 
 ```
 
 ### Null Handling
 
 ```python
-(l1.next if l1 != None  else None)
-
-
-
+l1.next if l1 is not None else None
 
 ```
 

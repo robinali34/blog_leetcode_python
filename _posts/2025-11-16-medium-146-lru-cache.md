@@ -85,42 +85,31 @@ We use a combination of hash map and doubly linked list to achieve O(1) operatio
 ### Solution: Using std::list with splice
 
 ```python
-#include <list>
-#include <unordered_map>
-class LRUCache:
-LRUCache(capacity) : capacity_(capacity) :
-def get(self, key):
-    it = hashMap_.find(key)
-    if it != hashMap_.end():
-        keyList_.splice(keyList_.end(), keyList_, it.second.second)
-        return it.second.first
-    return -1
-def put(self, key, value):
-    if get(key) != -1:
-        hashMap_[key].first = value
-        return
-    if len(hashMap_) >= capacity_:
-        removeKey = keyList_[0]
-        keyList_.pop_front()
-        hashMap_.erase(removeKey)
-    keyList_.append(key)
-    hashMap_[key] = :value, keyList_ -= 1.end()
-capacity_
-list<int> keyList_
-dict[int, pair<int, list<int>.iterator>> hashMap_
-/
- Your LRUCache object will be instantiated and called as such:
- LRUCache obj = new LRUCache(capacity)
- param_1 = obj.get(key)
- obj.put(key,value)
-/
+from collections import OrderedDict
 
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache: OrderedDict[int, int] = OrderedDict()
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.capacity:
+            self.cache.popitem(last=False)
 ```
 
 ### Key Points
 
-1. **`list<int> keyList_`**: Maintains the order of keys, with front being LRU and back being MRU
-2. **`unordered_map<int, pair<int, list<int>::iterator>>`**: Maps key to (value, iterator) pair
+1. **`OrderedDict`**: Maintains key order; front is LRU, back is MRU after `move_to_end`
+2. **`OrderedDict` + key map**: Same asymptotics as `unordered_map` + `list::splice` in C++
 3. **`list::splice()`**: O(1) operation to move nodes without copying
 4. **`get()` operation**: Moves accessed key to end (most recently used) using `splice()`
 5. **`put()` operation**: 
@@ -133,46 +122,33 @@ dict[int, pair<int, list<int>.iterator>> hashMap_
 Thread-safe version using mutex for concurrent access.
 
 ```python
-#include <list>
-#include <unordered_map>
-#include <mutex>
-#include <shared_mutex>
+import threading
+from collections import OrderedDict
+
 class ThreadSafeLRUCache:
-ThreadSafeLRUCache(capacity) : capacity_(capacity) :
-def get(self, key):
-    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for read+modify
-    it = hashMap_.find(key)
-    if it != hashMap_.end():
-        keyList_.splice(keyList_.end(), keyList_, it.second.second)
-        return it.second.first
-    return -1
-def put(self, key, value):
-    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for write
-    it = hashMap_.find(key)
-    if it != hashMap_.end():
-        # Key exists, update value and move to end
-        hashMap_[key].first = value
-        keyList_.splice(keyList_.end(), keyList_, it.second.second)
-        return
-    if len(hashMap_) >= capacity_:
-        removeKey = keyList_[0]
-        keyList_.pop_front()
-        hashMap_.erase(removeKey)
-    keyList_.append(key)
-    hashMap_[key] = :value, keyList_ -= 1.end()
-size_t size() :
-shared_lock<shared_mutex> lock(mtx_)
-return len(hashMap_)
-capacity_
-list<int> keyList_
-dict[int, pair<int, list<int>.iterator>> hashMap_
-mutable shared_mutex mtx_ # Use shared_mutex for read-write lock
-# Example usage:
-# ThreadSafeLRUCache cache(2)
-# cache.put(1, 1)
-# cache.put(2, 2)
-# val = cache.get(1) # returns 1
-# cache.put(3, 3) # evicts key 2
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self._cache: OrderedDict[int, int] = OrderedDict()
+        self._lock = threading.Lock()
+
+    def get(self, key: int) -> int:
+        with self._lock:
+            if key not in self._cache:
+                return -1
+            self._cache.move_to_end(key)
+            return self._cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        with self._lock:
+            if key in self._cache:
+                self._cache.move_to_end(key)
+            self._cache[key] = value
+            if len(self._cache) > self.capacity:
+                self._cache.popitem(last=False)
+
+    def size(self) -> int:
+        with self._lock:
+            return len(self._cache)
 
 ```
 

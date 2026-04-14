@@ -80,7 +80,6 @@ class Solution:
                     result = int(num1 / num2)  # Truncate towards zero
                 stack.append(result)
         return stack[-1]
-
 ```
 
 ## Solution 2: Using List with Index Tracking
@@ -113,7 +112,6 @@ class Solution:
                     idx -= 1
                     stack[idx] = int(stack[idx] / stack[idx + 1])  # truncate toward 0
         return stack[idx]
-
 ```
 
 ## Step-by-Step Example

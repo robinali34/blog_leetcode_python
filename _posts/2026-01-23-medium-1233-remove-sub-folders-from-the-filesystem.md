@@ -202,15 +202,16 @@ Result: ["/a","/c/d","/c/f"] ✓
 
 ```python
 class Solution:
-def removeSubfolders(self, folder):
-    folder.sort()
-    list[str> rtn
-    for f in folder:
-        if(not rtn  or  f.compare(0, rtn[-1].__len__(), rtn[-1]) != 0  or
-        f[rtn[-1].__len__()] != '/'):
-        rtn.append(f)
-return rtn
-
+    def removeSubfolders(self, folder):
+        folder.sort()
+        rtn = []
+        
+        for f in folder:
+            if (not rtn or
+                not (f.startswith(rtn[-1] + "/"))):
+                rtn.append(f)
+        
+        return rtn
 ```
 
 ### Algorithm Explanation:

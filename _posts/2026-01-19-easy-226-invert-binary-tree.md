@@ -104,24 +104,24 @@ This problem requires swapping the left and right children of every node in the 
 ## Solution: Recursive DFS
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def invertTree(self, root):
-    if(not root) return root
-    TreeNode tmp = root.left
-    root.left = invertTree(root.right)
-    root.right = invertTree(tmp)
-    return root
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 
+
+class Solution:
+    def invertTree(self, root):
+        if not root:
+            return root
+
+        tmp = root.left
+        root.left = self.invertTree(root.right)
+        root.right = self.invertTree(tmp)
+
+        return root
 ```
 
 ### Algorithm Explanation:
@@ -219,14 +219,17 @@ Final tree:
 
 ```python
 class Solution:
-def invertTree(self, root):
-    if (not root) return None
-    TreeNode left = invertTree(root.left)
-    TreeNode right = invertTree(root.right)
-    root.left = right
-    root.right = left
-    return root
+    def invertTree(self, root):
+        if not root:
+            return None
 
+        left = self.invertTree(root.left)
+        right = self.invertTree(root.right)
+
+        root.left = right
+        root.right = left
+
+        return root
 ```
 
 **Key Difference**: More explicit - invert subtrees first, then swap
@@ -237,22 +240,28 @@ def invertTree(self, root):
 
 ```python
 class Solution:
-def invertTree(self, root):
-    if (not root) return None
-    list[TreeNode> st
-    st.push(root)
-    while not not st:
-        TreeNode node = st.top()
-        st.pop()
-        # Swap children
-        TreeNode tmp = node.left
-        node.left = node.right
-        node.right = tmp
-        # Push children to stack
-        if node.left) st.push(node.left:
-        if node.right) st.push(node.right:
-    return root
+    def invertTree(self, root):
+        if not root:
+            return None
 
+        st = [root]
+
+        while st:
+            node = st.pop()
+
+            # Swap children
+            tmp = node.left
+            node.left = node.right
+            node.right = tmp
+
+            # Push children to stack
+            if node.left:
+                st.append(node.left)
+
+            if node.right:
+                st.append(node.right)
+
+        return root
 ```
 
 **Complexity**: 
@@ -263,22 +272,28 @@ def invertTree(self, root):
 
 ```python
 class Solution:
-def invertTree(self, root):
-    if (not root) return None
-    deque[TreeNode> q
-    q.push(root)
-    while not not q:
-        TreeNode node = q[0]
-        q.pop()
-        # Swap children
-        TreeNode tmp = node.left
-        node.left = node.right
-        node.right = tmp
-        # Enqueue children
-        if node.left) q.push(node.left:
-        if node.right) q.push(node.right:
-    return root
+    def invertTree(self, root):
+        if not root:
+            return None
 
+        q = [root]
+
+        while q:
+            node = q.pop(0)
+
+            # Swap children
+            tmp = node.left
+            node.left = node.right
+            node.right = tmp
+
+            # Enqueue children
+            if node.left:
+                q.append(node.left)
+
+            if node.right:
+                q.append(node.right)
+
+        return root
 ```
 
 **Complexity**: 

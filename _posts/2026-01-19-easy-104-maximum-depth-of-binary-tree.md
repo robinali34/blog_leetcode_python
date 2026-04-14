@@ -83,23 +83,26 @@ This problem requires finding the longest path from root to any leaf node. There
 ## Solution: Recursive DFS with Depth Tracking
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def maxDepth(self, root):
-    return dfs(root, 0)
-def dfs(self, node, maxDepth):
-    if(not node) return maxDepth
-    return max(dfs(node.left, maxDepth + 1), dfs(node.right, maxDepth + 1))
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 
+
+class Solution:
+    def maxDepth(self, root):
+        return self.dfs(root, 0)
+
+    def dfs(self, node, depth):
+        if not node:
+            return depth
+
+        return max(
+            self.dfs(node.left, depth + 1),
+            self.dfs(node.right, depth + 1)
+        )
 ```
 
 ### Algorithm Explanation:
@@ -172,12 +175,14 @@ dfs(3, 0):
 
 ```python
 class Solution:
-def maxDepth(self, root):
-    if (not root) return 0
-    leftDepth = maxDepth(root.left)
-    rightDepth = maxDepth(root.right)
-    return max(leftDepth, rightDepth) + 1
+    def maxDepth(self, root):
+        if not root:
+            return 0
 
+        leftDepth = self.maxDepth(root.left)
+        rightDepth = self.maxDepth(root.right)
+
+        return max(leftDepth, rightDepth) + 1
 ```
 
 **Key Difference**: 
@@ -191,21 +196,27 @@ def maxDepth(self, root):
 
 ```python
 class Solution:
-def maxDepth(self, root):
-    if (not root) return 0
-    deque[TreeNode> q
-    q.push(root)
-    depth = 0
-    while not not q:
-        levelSize = len(q)
-        depth += 1
-        for (i = 0 i < levelSize i += 1) :
-        TreeNode node = q[0]
-        q.pop()
-        if node.left) q.push(node.left:
-        if node.right) q.push(node.right:
-return depth
+    def maxDepth(self, root):
+        if not root:
+            return 0
 
+        q = [root]
+        depth = 0
+
+        while q:
+            levelSize = len(q)
+            depth += 1
+
+            for i in range(levelSize):
+                node = q.pop(0)
+
+                if node.left:
+                    q.append(node.left)
+
+                if node.right:
+                    q.append(node.right)
+
+        return depth
 ```
 
 **Algorithm**:
@@ -222,19 +233,25 @@ return depth
 
 ```python
 class Solution:
-def maxDepth(self, root):
-    if (not root) return 0
-    list[pair<TreeNode, int>> st
-    st.push(:root, 1)
-    maxDepth = 0
-    while not not st:
-        [node, depth] = st.top()
-        st.pop()
-        maxDepth = max(maxDepth, depth)
-        if node.right) st.push({node.right, depth + 1}:
-        if node.left) st.push({node.left, depth + 1}:
-    return maxDepth
+    def maxDepth(self, root):
+        if not root:
+            return 0
 
+        st = [(root, 1)]
+        max_depth = 0
+
+        while st:
+            node, depth = st.pop()
+
+            max_depth = max(max_depth, depth)
+
+            if node.right:
+                st.append((node.right, depth + 1))
+
+            if node.left:
+                st.append((node.left, depth + 1))
+
+        return max_depth
 ```
 
 **Complexity**: Same as recursive DFS

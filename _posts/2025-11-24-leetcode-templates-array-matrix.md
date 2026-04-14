@@ -24,12 +24,16 @@ Minimal, copy-paste C++ for two pointers, sliding window, prefix sum, binary sea
 ### Two Sum on Sorted Array
 
 ```python
-def twoSumSorted(self, a, target):
-    l = 0, r = (int)len(a) - 1
+def two_sum_sorted(a: list[int], target: int) -> bool:
+    l, r = 0, len(a) - 1
     while l < r:
-        long long sum = (long long)a[l] + a[r]
-        if (sum == target) return True
-        if (sum < target) l += 1 else r -= 1
+        s = a[l] + a[r]
+        if s == target:
+            return True
+        if s < target:
+            l += 1
+        else:
+            r -= 1
     return False
 
 ```
@@ -37,27 +41,29 @@ def twoSumSorted(self, a, target):
 ### Three Sum / Four Sum
 
 ```python
-// 3Sum
-def threeSum(self, nums):
+def three_sum(nums: list[int]) -> list[list[int]]:
     nums.sort()
-    list[list[int>> result
     n = len(nums)
-    for (i = 0 i < n - 2 i += 1) :
-    if (i > 0  and  nums[i] == nums[i-1]) continue
-    left = i + 1, right = n - 1
-    while left < right:
-        sum = nums[i] + nums[left] + nums[right]
-        if sum == 0:
-            result.append(:nums[i], nums[left], nums[right])
-            while (left < right  and  nums[left] == nums[left+1]) left += 1
-            while (left < right  and  nums[right] == nums[right-1]) right -= 1
-            left += 1
-            right -= 1
-             else if (sum < 0) :
-            left += 1
-             else :
-            right -= 1
-return result
+    result: list[list[int]] = []
+    for i in range(n - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        left, right = i + 1, n - 1
+        while left < right:
+            s = nums[i] + nums[left] + nums[right]
+            if s == 0:
+                result.append([nums[i], nums[left], nums[right]])
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1
+                left += 1
+                right -= 1
+            elif s < 0:
+                left += 1
+            else:
+                right -= 1
+    return result
 
 ```
 
@@ -78,15 +84,13 @@ return result
 
 ```python
 # Maximum sum of subarray of size k
-def maxSumSubarray(self, nums, k):
-    sum = 0
-    for (i = 0 i < k i += 1) :
-    sum += nums[i]
-maxSum = sum
-for (i = k i < len(nums) i += 1) :
-sum = sum - nums[i-k] + nums[i]
-maxSum = max(maxSum, sum)
-return maxSum
+def max_sum_subarray(nums: list[int], k: int) -> int:
+    window = sum(nums[:k])
+    best = window
+    for i in range(k, len(nums)):
+        window += nums[i] - nums[i - k]
+        best = max(best, window)
+    return best
 
 ```
 
@@ -94,14 +98,17 @@ return maxSum
 
 ```python
 # Longest subarray with sum <= k
-def longestSubarray(self, nums, k):
-    left = 0, sum = 0, maxLen = 0
-    for (right = 0 right < len(nums) right += 1) :
-    sum += nums[right]
-    while sum > k:
-        sum -= nums[left += 1]
-    maxLen = max(maxLen, right - left + 1)
-return maxLen
+def longest_subarray(nums: list[int], k: int) -> int:
+    left = 0
+    total = 0
+    max_len = 0
+    for right in range(len(nums)):
+        total += nums[right]
+        while total > k:
+            total -= nums[left]
+            left += 1
+        max_len = max(max_len, right - left + 1)
+    return max_len
 
 ```
 
@@ -120,14 +127,15 @@ return maxLen
 ### Basic Prefix Sum
 
 ```python
-def prefixSum(self, a):
-    list[int> ps(len(a)+1)
-    for (i = 0 i < (int)len(a) i += 1) :
-    ps[i+1] = ps[i] + a[i]
-return ps
-# Range sum query
-def rangeSum(self, prefix, l, r):
-    return prefix[r+1] - prefix[l]
+def prefix_sum(a: list[int]) -> list[int]:
+    ps = [0] * (len(a) + 1)
+    for i in range(len(a)):
+        ps[i + 1] = ps[i] + a[i]
+    return ps
+
+
+def range_sum(prefix: list[int], l: int, r: int) -> int:
+    return prefix[r + 1] - prefix[l]
 
 ```
 
@@ -135,16 +143,17 @@ def rangeSum(self, prefix, l, r):
 
 ```python
 # Range addition
-def getModifiedArray(self, length, updates):
-    list[int> diff(length + 1, 0)
-    for update in updates:
-        diff[update[0]] += update[2]
-        diff[update[1] + 1] -= update[2]
-    list[int> result(length)
-    result[0] = diff[0]
-    for (i = 1 i < length i += 1) :
-    result[i] = result[i-1] + diff[i]
-return result
+def get_modified_array(length: int, updates: list[list[int]]) -> list[int]:
+    diff = [0] * (length + 1)
+    for start, end, inc in updates:
+        diff[start] += inc
+        diff[end + 1] -= inc
+    result = [0] * length
+    cur = 0
+    for i in range(length):
+        cur += diff[i]
+        result[i] = cur
+    return result
 
 ```
 
@@ -164,13 +173,16 @@ return result
 ### Search in Sorted Array
 
 ```python
-def binarySearch(self, nums, target):
-    left = 0, right = len(nums) - 1
+def binary_search(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums) - 1
     while left <= right:
-        mid = left + (right - left) / 2
-        if (nums[mid] == target) return mid
-        if (nums[mid] < target) left = mid + 1
-        else right = mid - 1
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
     return -1
 
 ```
@@ -178,22 +190,21 @@ def binarySearch(self, nums, target):
 ### Search in Rotated Sorted Array
 
 ```python
-def searchRotated(self, nums, target):
-    left = 0, right = len(nums) - 1
+def search_rotated(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums) - 1
     while left <= right:
-        mid = left + (right - left) / 2
-        if (nums[mid] == target) return mid
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            return mid
         if nums[left] <= nums[mid]:
-            # Left half is sorted
-            if nums[left] <= target  and  target < nums[mid]:
+            if nums[left] <= target < nums[mid]:
                 right = mid - 1
-                 else :
+            else:
                 left = mid + 1
-             else :
-            # Right half is sorted
-            if nums[mid] < target  and  target <= nums[right]:
+        else:
+            if nums[mid] < target <= nums[right]:
                 left = mid + 1
-                 else :
+            else:
                 right = mid - 1
     return -1
 
@@ -211,46 +222,41 @@ def searchRotated(self, nums, target):
 
 ```python
 # Rotate 90 degrees clockwise
-def rotate(self, matrix):
+def rotate_matrix(matrix: list[list[int]]) -> None:
     n = len(matrix)
-    # Transpose
-    for (i = 0 i < n i += 1) :
-    for (j = i j < n j += 1) :
-    swap(matrix[i][j], matrix[j][i])
-# Reverse each row
-for (i = 0 i < n i += 1) :
-reverse(matrix[i].begin(), matrix[i].end())
+    for i in range(n):
+        for j in range(i, n):
+            matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+    for row in matrix:
+        row.reverse()
 
 ```
 
 ### Spiral Matrix
 
 ```python
-def spiralOrder(self, matrix):
-    list[int> result
-    if (not matrix) return result
-    m = len(matrix), n = matrix[0].__len__()
-    top = 0, bottom = m - 1, left = 0, right = n - 1
-    while top <= bottom  and  left <= right:
-        # Right
-        for (j = left j <= right j += 1) :
-        result.append(matrix[top][j])
-    top += 1
-    # Down
-    for (i = top i <= bottom i += 1) :
-    result.append(matrix[i][right])
-right -= 1
-# Left
-if top <= bottom:
-    for (j = right j >= left j -= 1) :
-    result.append(matrix[bottom][j])
-bottom -= 1
-# Up
-if left <= right:
-    for (i = bottom i >= top i -= 1) :
-    result.append(matrix[i][left])
-left += 1
-return result
+def spiral_order(matrix: list[list[int]]) -> list[int]:
+    if not matrix:
+        return []
+    m, n = len(matrix), len(matrix[0])
+    top, bottom, left, right = 0, m - 1, 0, n - 1
+    result: list[int] = []
+    while top <= bottom and left <= right:
+        for j in range(left, right + 1):
+            result.append(matrix[top][j])
+        top += 1
+        for i in range(top, bottom + 1):
+            result.append(matrix[i][right])
+        right -= 1
+        if top <= bottom:
+            for j in range(right, left - 1, -1):
+                result.append(matrix[bottom][j])
+            bottom -= 1
+        if left <= right:
+            for i in range(bottom, top - 1, -1):
+                result.append(matrix[i][left])
+            left += 1
+    return result
 
 ```
 
@@ -269,13 +275,13 @@ return result
 ### Merge Intervals
 
 ```python
-def merge(self, intervals):
-    intervals.sort()
-    list[list[int>> merged
+def merge_intervals(intervals: list[list[int]]) -> list[list[int]]:
+    intervals.sort(key=lambda x: x[0])
+    merged: list[list[int]] = []
     for interval in intervals:
-        if not merged  or  merged[-1][1] < interval[0]:
+        if not merged or merged[-1][1] < interval[0]:
             merged.append(interval)
-             else :
+        else:
             merged[-1][1] = max(merged[-1][1], interval[1])
     return merged
 
@@ -285,15 +291,15 @@ def merge(self, intervals):
 
 ```python
 # Jump Game II - Minimum jumps
-def jump(self, nums):
+def jump_game_ii(nums: list[int]) -> int:
     n = len(nums)
-    jumps = 0, curEnd = 0, curFar = 0
-    for (i = 0 i < n - 1 i += 1) :
-    curFar = max(curFar, i + nums[i])
-    if i == curEnd:
-        jumps += 1
-        curEnd = curFar
-return jumps
+    jumps = cur_end = cur_far = 0
+    for i in range(n - 1):
+        cur_far = max(cur_far, i + nums[i])
+        if i == cur_end:
+            jumps += 1
+            cur_end = cur_far
+    return jumps
 
 ```
 

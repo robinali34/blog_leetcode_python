@@ -114,23 +114,29 @@ We iterate through each position and expand outward from both possible centers, 
 
 ```python
 class Solution:
-def countPalindromesAroundCenter(self, s, low, high):
-    count = 0
-    while low >= 0  and  high < (int)len(s):
-        if (s[low] != s[high]) break
-        low -= 1
-        high += 1
-        count += 1
-    return count
-def countSubstrings(self, s):
-    count = 0
-    for (i = 0 i < (int)len(s) i += 1) :
-    # Count odd-length palindromes (center at i)
-    count += countPalindromesAroundCenter(s, i, i)
-    # Count even-length palindromes (center between i and i+1)
-    count += countPalindromesAroundCenter(s, i, i + 1)
-return count
+    def countPalindromesAroundCenter(self, s, low, high):
+        count = 0
 
+        while low >= 0 and high < len(s):
+            if s[low] != s[high]:
+                break
+            low -= 1
+            high += 1
+            count += 1
+
+        return count
+
+    def countSubstrings(self, s):
+        count = 0
+
+        for i in range(len(s)):
+            # Count odd-length palindromes (center at i)
+            count += self.countPalindromesAroundCenter(s, i, i)
+
+            # Count even-length palindromes (center between i and i+1)
+            count += self.countPalindromesAroundCenter(s, i, i + 1)
+
+        return count
 ```
 
 ## How the Algorithm Works
@@ -204,10 +210,11 @@ Final count: 2 + 3 + 1 = 6
 ### Helper Function: `countPalindromesAroundCenter`
 
 ```python
-def countPalindromesAroundCenter(self, s, low, high):
+def count_palindromes_around_center(s: str, low: int, high: int) -> int:
     count = 0
-    while low >= 0  and  high < (int)len(s):
-        if (s[low] != s[high]) break
+    while low >= 0 and high < len(s):
+        if s[low] != s[high]:
+            break
         low -= 1
         high += 1
         count += 1
@@ -229,12 +236,23 @@ def countPalindromesAroundCenter(self, s, low, high):
 ### Main Function: `countSubstrings`
 
 ```python
-def countSubstrings(self, s):
+def count_palindromes_around_center(s: str, low: int, high: int) -> int:
     count = 0
-    for (i = 0 i < (int)len(s) i += 1) :
-    count += countPalindromesAroundCenter(s, i, i)      # Odd-length
-    count += countPalindromesAroundCenter(s, i, i + 1) # Even-length
-return count
+    while low >= 0 and high < len(s):
+        if s[low] != s[high]:
+            break
+        low -= 1
+        high += 1
+        count += 1
+    return count
+
+
+def count_substrings(s: str) -> int:
+    total = 0
+    for i in range(len(s)):
+        total += count_palindromes_around_center(s, i, i)
+        total += count_palindromes_around_center(s, i, i + 1)
+    return total
 
 ```
 
@@ -265,28 +283,31 @@ Use DP table `dp[i][j]` to track if substring `s[i..j]` is a palindrome.
 
 ```python
 class Solution:
-def countSubstrings(self, s):
-    n = len(s)
-    list[list[bool>> dp(n, list[bool>(n, False))
-    count = 0
-    # Every single character is a palindrome
-    for (i = 0 i < n i += 1) :
-    dp[i][i] = True
-    count += 1
-# Check for palindromes of length 2
-for (i = 0 i < n - 1 i += 1) :
-if s[i] == s[i + 1]:
-    dp[i][i + 1] = True
-    count += 1
-# Check for palindromes of length >= 3
-for (len = 3 len <= n len += 1) :
-for (i = 0 i <= n - len i += 1) :
-j = i + len - 1
-if s[i] == s[j] * and  dp[i + 1][j - 1]:
-    dp[i][j] = True
-    count += 1
-return count
+    def countSubstrings(self, s):
+        n = len(s)
+        dp = [[False] * n for _ in range(n)]
+        count = 0
 
+        # Every single character is a palindrome
+        for i in range(n):
+            dp[i][i] = True
+            count += 1
+
+        # Check for palindromes of length 2
+        for i in range(n - 1):
+            if s[i] == s[i + 1]:
+                dp[i][i + 1] = True
+                count += 1
+
+        # Check for palindromes of length >= 3
+        for length in range(3, n + 1):
+            for i in range(n - length + 1):
+                j = i + length - 1
+                if s[i] == s[j] and dp[i + 1][j - 1]:
+                    dp[i][j] = True
+                    count += 1
+
+        return count
 ```
 
 **Pros:**

@@ -97,12 +97,13 @@ This is a straightforward **simulation** problem. We need to:
 
 ```python
 class Solution:
-def scoreOfString(self, s):
-    sum = 0
-    for(i = 0 i < (int)s.length() - 1 i += 1) :
-    sum += abs(s[i] - s[i + 1])
-return sum
+    def scoreOfString(self, s):
+        total = 0
 
+        for i in range(len(s) - 1):
+            total += abs(ord(s[i]) - ord(s[i + 1]))
+
+        return total
 ```
 
 ### Algorithm Explanation:
@@ -171,12 +172,13 @@ Return: 13 ✓
 
 ```python
 class Solution:
-def scoreOfString(self, s):
-    sum = 0
-    for(i = 0 i < (int)s.length() - 1 i += 1) :
-    sum += abs(s[i] - s[i + 1])
-return sum
+    def scoreOfString(self, s):
+        total = 0
 
+        for i in range(len(s) - 1):
+            total += abs(ord(s[i]) - ord(s[i + 1]))
+
+        return total
 ```
 
 The provided solution is already optimal. Alternative approaches would be similar in complexity.

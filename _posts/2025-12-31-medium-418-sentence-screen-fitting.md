@@ -106,26 +106,37 @@ This problem requires fitting a sentence on a screen row by row, where words can
 
 ```python
 class Solution:
-def wordsTyping(self, sentence, rows, cols):
-    N = len(sentence)
-    list[int> dp(N, 0)
-    list[int> next(N, 0)
-    for(i = 0 i < N i += 1) :
-    count = 0, ptr = i, cur = cols
-    while cur >= (int)sentence[ptr].__len__():
-        cur -= sentence[ptr].__len__() + 1
-        ptr += 1
-        if ptr == N:
-            count += 1
-            ptr = 0
-    dp[i] = count
-    next[i] = ptr
-count = 0, cur = 0
-for(i = 0 i < rows i += 1) :
-count += dp[cur]
-cur = next[cur]
-return count
+    def wordsTyping(self, sentence, rows, cols):
+        n = len(sentence)
 
+        dp = [0] * n
+        nxt = [0] * n
+
+        for i in range(n):
+            ptr = i
+            used = 0
+            cnt = 0
+            cur = cols
+
+            while cur >= len(sentence[ptr]):
+                cur -= len(sentence[ptr]) + 1
+                ptr += 1
+
+                if ptr == n:
+                    ptr = 0
+                    cnt += 1
+
+            dp[i] = cnt
+            nxt[i] = ptr
+
+        total = 0
+        cur = 0
+
+        for _ in range(rows):
+            total += dp[cur]
+            cur = nxt[cur]
+
+        return total
 ```
 
 ### **Algorithm Explanation:**

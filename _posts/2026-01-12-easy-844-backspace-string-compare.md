@@ -129,26 +129,45 @@ The two-pointer approach is more space-efficient and processes strings in revers
 
 ```python
 class Solution:
-def backspaceCompare(self, s, t):
-    // 1. str construct: ab#c backwards construct: ca
-    # Request: O(n) time O(1) space . in space update.
-    // 2. backwars, 2 pointers: if # move 2 backwards,  then compare
-    i = s.length() -1, j = t.length() - 1
-    skipS = 0, skipT = 0
-    while i >= 0  or  j >= 0:
-        while i >= 0:
-            if(s[i] == '#') :skipS += 1 i -= 1
-        else if(skipS > 0) :skipS -= 1 i -= 1
-    else break
-while j >=0:
-    if(t[j] == '#') :skipT += 1 j -= 1
-else if(skipT > 0) :skipT -= 1 j -= 1
-else break
-if(i >= 0  and  j>= 0  and  s[i] != t[j]) return False
-i -= 1
-j -= 1
-return i == j
+    def backspaceCompare(self, s, t):
+        i, j = len(s) - 1, len(t) - 1
+        skipS, skipT = 0, 0
 
+        while i >= 0 or j >= 0:
+
+            # find next valid char in s
+            while i >= 0:
+                if s[i] == '#':
+                    skipS += 1
+                    i -= 1
+                elif skipS > 0:
+                    skipS -= 1
+                    i -= 1
+                else:
+                    break
+
+            # find next valid char in t
+            while j >= 0:
+                if t[j] == '#':
+                    skipT += 1
+                    j -= 1
+                elif skipT > 0:
+                    skipT -= 1
+                    j -= 1
+                else:
+                    break
+
+            # compare
+            if i >= 0 and j >= 0:
+                if s[i] != t[j]:
+                    return False
+            elif i >= 0 or j >= 0:
+                return False
+
+            i -= 1
+            j -= 1
+
+        return True
 ```
 
 ### **Algorithm Explanation:**
@@ -240,18 +259,20 @@ Return: i == j → -1 == -1 → true
 
 ```python
 class Solution:
-def backspaceCompare(self, s, t):
-    return buildString(s) == buildString(t)
-def buildString(self, str):
-    str result
-    for c in str:
-        if c == '#':
-            if not not result:
-                result.pop()
-             else :
-            result.append(c)
-    return result
+    def backspaceCompare(self, s, t):
+        return self.buildString(s) == self.buildString(t)
 
+    def buildString(self, s):
+        result = []
+
+        for c in s:
+            if c == '#':
+                if result:
+                    result.pop()
+            else:
+                result.append(c)
+
+        return result
 ```
 
 **Time Complexity:** O(n + m)  

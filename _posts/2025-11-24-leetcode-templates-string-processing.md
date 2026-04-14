@@ -8,7 +8,7 @@ tags: [leetcode, templates, string, algorithms]
 ---
 
 {% raw %}
-Minimal, copy-paste C++ for sliding window, two pointers, string matching, manipulation, and parsing. See also [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/) for KMP and rolling hash.
+Minimal, copy-paste Python for sliding window, two pointers, string matching, manipulation, and parsing. See also [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/) for KMP and rolling hash.
 
 ## Contents
 
@@ -23,41 +23,56 @@ Minimal, copy-paste C++ for sliding window, two pointers, string matching, manip
 ### Longest Substring Without Repeating Characters
 
 ```python
-def lengthOfLongestSubstring(self, s):
-    list[int> cnt(256, 0)
-    dup = 0, best = 0
-    for (l = 0, r = 0 r < len(s) r += 1) :
-    dup += (cnt += 1[(unsigned char)s[r]] == 2)
-    while dup > 0:
-        dup -= (cnt -= 1[(unsigned char)s[l += 1]] == 1)
-    best = max(best, r - l + 1)
-return best
+def length_of_longest_substring(s: str) -> int:
+    cnt = [0] * 256
+    dup = 0
+    best = 0
+    l = 0
+    for r in range(len(s)):
+        idx = ord(s[r]) % 256
+        cnt[idx] += 1
+        if cnt[idx] == 2:
+            dup += 1
+        while dup > 0:
+            j = ord(s[l]) % 256
+            cnt[j] -= 1
+            if cnt[j] == 1:
+                dup -= 1
+            l += 1
+        best = max(best, r - l + 1)
+    return best
 
 ```
 
 ### Minimum Window Substring
 
 ```python
-def minWindow(self, s, t):
-    dict[char, int> need, window
-    for (char c : t) need[c]++
-    left = 0, right = 0
+def min_window(s: str, t: str) -> str:
+    from collections import Counter
+
+    need = Counter(t)
+    window: dict[str, int] = {}
+    left = right = 0
     valid = 0
-    start = 0, len = INT_MAX
+    start, min_len = 0, 10**9
     while right < len(s):
-        char c = s[right += 1]
-        if need.count(c):
-            window[c]++
-            if (window[c] == need[c]) valid += 1
+        c = s[right]
+        right += 1
+        if c in need:
+            window[c] = window.get(c, 0) + 1
+            if window[c] == need[c]:
+                valid += 1
         while valid == len(need):
-            if right - left < len:
+            if right - left < min_len:
                 start = left
-                len = right - left
-            char d = s[left += 1]
-            if need.count(d):
-                if (window[d] == need[d]) valid -= 1
-                window[d]--
-    ("" if     return len == INT_MAX  else s.substr(start, len))
+                min_len = right - left
+            d = s[left]
+            left += 1
+            if d in need:
+                if window[d] == need[d]:
+                    valid -= 1
+                window[d] -= 1
+    return "" if min_len == 10**9 else s[start : start + min_len]
 
 ```
 
@@ -72,12 +87,14 @@ def minWindow(self, s, t):
 ### Valid Palindrome
 
 ```python
-def isPalindrome(self, s):
-    left = 0, right = len(s) - 1
+def is_palindrome(s: str) -> bool:
+    left, right = 0, len(s) - 1
     while left < right:
-        while (left < right  and  not isalnum(s[left])) left += 1
-        while (left < right  and  not isalnum(s[right])) right -= 1
-        if tolower(s[left]) != tolower(s[right]):
+        while left < right and not s[left].isalnum():
+            left += 1
+        while left < right and not s[right].isalnum():
+            right -= 1
+        if s[left].lower() != s[right].lower():
             return False
         left += 1
         right -= 1
@@ -88,10 +105,12 @@ def isPalindrome(self, s):
 ### Reverse String
 
 ```python
-def reverseString(self, s):
-    left = 0, right = len(s) - 1
+def reverse_string_list(s: list[str]) -> None:
+    left, right = 0, len(s) - 1
     while left < right:
-        swap(s[left += 1], s[right -= 1])
+        s[left], s[right] = s[right], s[left]
+        left += 1
+        right -= 1
 
 ```
 
@@ -107,33 +126,41 @@ def reverseString(self, s):
 ### KMP Algorithm
 
 ```python
-def buildKMP(self, pattern):
+def build_kmp_lps(pattern: str) -> list[int]:
     m = len(pattern)
-    list[int> lps(m, 0)
-    len = 0, i = 1
+    lps = [0] * m
+    length = 0
+    i = 1
     while i < m:
-        if pattern[i] == pattern[len]:
-            lps[i += 1] = len += 1
-             else :
-            if len != 0:
-                len = lps[len - 1]
-                 else :
-                lps[i += 1] = 0
+        if pattern[i] == pattern[length]:
+            length += 1
+            lps[i] = length
+            i += 1
+        else:
+            if length != 0:
+                length = lps[length - 1]
+            else:
+                lps[i] = 0
+                i += 1
     return lps
-def kmpSearch(self, text, pattern):
-    n = len(text), m = len(pattern)
-    list[int> lps = buildKMP(pattern)
-    i = 0, j = 0
+
+
+def kmp_search(text: str, pattern: str) -> int:
+    n, m = len(text), len(pattern)
+    if m == 0:
+        return 0
+    lps = build_kmp_lps(pattern)
+    i = j = 0
     while i < n:
         if text[i] == pattern[j]:
             i += 1
             j += 1
         if j == m:
-            return i - j # Found at index i - j
-             else if (i < n  and  text[i] != pattern[j]) :
+            return i - j
+        if i < n and text[i] != pattern[j]:
             if j != 0:
                 j = lps[j - 1]
-                 else :
+            else:
                 i += 1
     return -1
 
@@ -148,16 +175,15 @@ def kmpSearch(self, text, pattern):
 ### Group Anagrams
 
 ```python
-def groupAnagrams(self, strs):
-    dict[str, list[str>> groups
-    for str in strs:
-        str key = str
-        key.sort()
-        groups[key].append(str)
-    list[list[str>> result
-    for ([key, values] : groups) :
-    result.append(values)
-return result
+from collections import defaultdict
+
+
+def group_anagrams(strs: list[str]) -> list[list[str]]:
+    groups: dict[tuple[str, ...], list[str]] = defaultdict(list)
+    for w in strs:
+        key = tuple(sorted(w))
+        groups[key].append(w)
+    return list(groups.values())
 
 ```
 
@@ -172,28 +198,27 @@ return result
 
 ```python
 # Remove All Adjacent Duplicates
-def removeDuplicates(self, s):
-    str result
+def remove_adjacent_duplicates(s: str) -> str:
+    st: list[str] = []
     for c in s:
-        if not not result  and  result[-1] == c:
-            result.pop()
-             else :
-            result.append(c)
-    return result
+        if st and st[-1] == c:
+            st.pop()
+        else:
+            st.append(c)
+    return "".join(st)
+
+
 # Remove All Adjacent Duplicates II (k duplicates)
-def removeDuplicates(self, s, k):
-    list[pair<char, int>> st
+def remove_adjacent_duplicates_k(s: str, k: int) -> str:
+    st: list[list] = []  # [char, count]
     for c in s:
-        if not not st  and  st[-1].first == c:
-            st[-1].second += 1
-            if st[-1].second == k:
+        if st and st[-1][0] == c:
+            st[-1][1] += 1
+            if st[-1][1] == k:
                 st.pop()
-             else :
-            st.append(:c, 1)
-    str result
-    for ([c, count] : st) :
-    result.append(count, c)
-return result
+        else:
+            st.append([c, 1])
+    return "".join(ch * cnt for ch, cnt in st)
 
 ```
 
@@ -206,13 +231,18 @@ return result
 ### Run-Length Encoding
 
 ```python
-# Two-pointer grouping for consecutive runs
-def runLengthEncode(self, s):
-    str result
-    for (j = 0, k = 0 j < (int)len(s) j = k) :
-    while (k < (int)len(s)  and  s[k] == s[j]) k += 1
-    result += to_string(k - j) + s[j]
-return result
+# Two-pointer grouping for consecutive runs (illustrative RLE)
+def run_length_encode(s: str) -> str:
+    parts: list[str] = []
+    j = 0
+    n = len(s)
+    while j < n:
+        k = j
+        while k < n and s[k] == s[j]:
+            k += 1
+        parts.append(str(k - j) + s[j])
+        j = k
+    return "".join(parts)
 
 ```
 
@@ -226,50 +256,48 @@ return result
 ### Valid Word Abbreviation
 
 ```python
-def validWordAbbreviation(self, word, abbr):
-    i = 0, j = 0
-    n = len(word), m = len(abbr)
-    while i < n  and  j < m:
-        if isdigit(abbr[j]):
-            if (abbr[j] == '0') return False # Leading zero
+def valid_word_abbreviation(word: str, abbr: str) -> bool:
+    i = j = 0
+    n, m = len(word), len(abbr)
+    while i < n and j < m:
+        if abbr[j].isdigit():
+            if abbr[j] == "0":
+                return False
             num = 0
-            while j < m  and  isdigit(abbr[j]):
-                num = num  10 + (abbr[j] - '0')
+            while j < m and abbr[j].isdigit():
+                num = num * 10 + int(abbr[j])
                 j += 1
             i += num
-             else :
-            if (word[i] != abbr[j]) return False
+        else:
+            if word[i] != abbr[j]:
+                return False
             i += 1
             j += 1
-    return i == n  and  j == m
+    return i == n and j == m
 
 ```
 
 ### Decode String
 
 ```python
-def decodeString(self, s):
-    list[int> numStack
-    list[str> strStack
-    str current
+def decode_string(s: str) -> str:
+    num_stack: list[int] = []
+    str_stack: list[str] = []
+    current = ""
     num = 0
     for c in s:
-        if isdigit(c):
-            num = num  10 + (c - '0')
-             else if (c == '[') :
-            numStack.push(num)
-            strStack.push(current)
+        if c.isdigit():
+            num = num * 10 + int(c)
+        elif c == "[":
+            num_stack.append(num)
+            str_stack.append(current)
             num = 0
             current = ""
-             else if (c == ']') :
-            repeat = numStack.top()
-            numStack.pop()
-            str temp = current
-            current = strStack.top()
-            strStack.pop()
-            while repeat -= 1:
-                current += temp
-             else :
+        elif c == "]":
+            repeat = num_stack.pop()
+            prev = str_stack.pop()
+            current = prev + current * repeat
+        else:
             current += c
     return current
 

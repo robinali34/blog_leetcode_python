@@ -118,14 +118,19 @@ Use the partition algorithm from quicksort to find the kth largest element witho
 ## Solution 1: Min Heap
 
 ```python
-class Solution:
-def findKthLargest(self, nums, k):
-    heapq[int, list[int>, greater<>> minHeap
-    for num in nums:
-        minHeap.push(num)
-        if len(minHeap) > k) minHeap.pop(:
-    return minHeap.top()
+import heapq
 
+class Solution:
+    def findKthLargest(self, nums, k):
+        minHeap = []
+
+        for num in nums:
+            heapq.heappush(minHeap, num)
+
+            if len(minHeap) > k:
+                heapq.heappop(minHeap)
+
+        return minHeap[0]
 ```
 
 ### Algorithm Explanation:
@@ -222,20 +227,34 @@ Final: Top of heap = 5 (2nd largest)
 
 ```python
 class Solution:
-def findKthLargest(self, nums, k):
-    N = len(nums)
-    return quickSelect(nums, 0, N - 1, N - k)
-def quickSelect(self, nums, l, r, k):
-    if(l == r) return nums[k]
-    pivot = nums[l], i = l - 1, j = r + 1
-    while i < j:
-        do i += 1 while(nums[i] < pivot)
-        do j -= 1 while(nums[j] > pivot)
-        if i < j:
-        swap(nums[i], nums[j])
-    if k <= j) return quickSelect(nums, l, j, k:
-    else return quickSelect(nums, j + 1, r, k)
+    def findKthLargest(self, nums, k):
+        n = len(nums)
+        return self.quickSelect(nums, 0, n - 1, n - k)
 
+    def quickSelect(self, nums, l, r, k):
+        if l == r:
+            return nums[k]
+
+        pivot = nums[l]
+        i = l - 1
+        j = r + 1
+
+        while i < j:
+            i += 1
+            while nums[i] < pivot:
+                i += 1
+
+            j -= 1
+            while nums[j] > pivot:
+                j -= 1
+
+            if i < j:
+                nums[i], nums[j] = nums[j], nums[i]
+
+        if k <= j:
+            return self.quickSelect(nums, l, j, k)
+        else:
+            return self.quickSelect(nums, j + 1, r, k)
 ```
 
 ### Algorithm Explanation:

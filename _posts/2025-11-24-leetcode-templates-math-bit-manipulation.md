@@ -8,7 +8,7 @@ tags: [leetcode, templates, math, bit-manipulation]
 ---
 
 {% raw %}
-Minimal, copy-paste C++ for bit operations, fast exponentiation, GCD/LCM, primes, and number theory. See also [Math & Geometry](/posts/2025-10-29-leetcode-templates-math-geometry/).
+Minimal, copy-paste Python for bit operations, fast exponentiation, GCD/LCM, primes, and number theory. See also [Math & Geometry](/posts/2025-10-29-leetcode-templates-math-geometry/).
 
 ## Contents
 
@@ -25,29 +25,34 @@ Minimal, copy-paste C++ for bit operations, fast exponentiation, GCD/LCM, primes
 
 ```python
 # Set bit at position i
-def setBit(self, num, i):
+def set_bit(num: int, i: int) -> int:
     return num | (1 << i)
-# Clear bit at position i
-def clearBit(self, num, i):
-    return num  ~(1 << i)
-# Toggle bit at position i
-def toggleBit(self, num, i):
+
+
+def clear_bit(num: int, i: int) -> int:
+    return num & ~(1 << i)
+
+
+def toggle_bit(num: int, i: int) -> int:
     return num ^ (1 << i)
-# Check if bit is set
-def isBitSet(self, num, i):
-    return (num >> i)  1
-# Count set bits
-def countSetBits(self, num):
+
+
+def is_bit_set(num: int, i: int) -> int:
+    return (num >> i) & 1
+
+
+def count_set_bits(num: int) -> int:
     count = 0
     while num:
-        count += num  1
+        count += num & 1
         num >>= 1
     return count
-# Count set bits (Brian Kernighan's algorithm)
-def countSetBitsFast(self, num):
+
+
+def count_set_bits_kernighan(num: int) -> int:
     count = 0
     while num:
-        num = (num - 1)
+        num &= num - 1
         count += 1
     return count
 
@@ -56,30 +61,34 @@ def countSetBitsFast(self, num):
 ### Common Bit Tricks
 
 ```python
-# Get lowest set bit
-def lowestSetBit(self, num):
-    return num  (-num)
-    # Clear lowest set bit
-    def clearLowestSetBit(self, num):
-        return num  (num - 1)
-        # Check if power of 2
-    def isPowerOfTwo(self, num):
-        return num > 0  and  (num  (num - 1)) == 0
-        # Get next power of 2
-    def nextPowerOfTwo(self, num):
-        num -= 1
-        num |= num >> 1
-        num |= num >> 2
-        num |= num >> 4
-        num |= num >> 8
-        num |= num >> 16
-        return num + 1
-        # Swap two numbers
-    def swap(self, a, b):
-        a ^= b
-        b ^= a
-        a ^= b
+def lowest_set_bit(num: int) -> int:
+    return num & (-num)
 
+
+def clear_lowest_set_bit(num: int) -> int:
+    return num & (num - 1)
+
+
+def is_power_of_two(num: int) -> bool:
+    return num > 0 and (num & (num - 1)) == 0
+
+
+def next_power_of_two(num: int) -> int:
+    num -= 1
+    num |= num >> 1
+    num |= num >> 2
+    num |= num >> 4
+    num |= num >> 8
+    num |= num >> 16
+    num |= num >> 32
+    return num + 1
+
+
+def xor_swap(a: int, b: int) -> tuple[int, int]:
+    a ^= b
+    b ^= a
+    a ^= b
+    return a, b
 
 ```
 
@@ -101,17 +110,19 @@ def lowestSetBit(self, num):
 
 ```python
 # Single Number (all appear twice except one)
-def singleNumber(self, nums):
+def single_number(nums: list[int]) -> int:
     result = 0
     for num in nums:
         result ^= num
     return result
+
+
 # Single Number II (all appear three times except one)
-def singleNumberII(self, nums):
-    ones = 0, twos = 0
+def single_number_ii(nums: list[int]) -> int:
+    ones, twos = 0, 0
     for num in nums:
-        ones = (ones ^ num)  ~twos
-        twos = (twos ^ num)  ~ones
+        ones = (ones ^ num) & ~twos
+        twos = (twos ^ num) & ~ones
     return ones
 
 ```
@@ -119,11 +130,8 @@ def singleNumberII(self, nums):
 ### Gray Code
 
 ```python
-def grayCode(self, n):
-    list[int> result
-    for (i = 0 i < (1 << n) i += 1) :
-    result.append(i ^ (i >> 1))
-return result
+def gray_code(n: int) -> list[int]:
+    return [i ^ (i >> 1) for i in range(1 << n)]
 
 ```
 
@@ -139,18 +147,18 @@ return result
 
 ```python
 # Fast exponentiation: x^n
-def myPow(self, x, n):
-    long long N = n
+def my_pow(x: float, n: int) -> float:
+    N = n
     if N < 0:
         x = 1 / x
         N = -N
-    double result = 1
-    double current = x
+    result = 1.0
+    current = x
     while N > 0:
         if N % 2 == 1:
-            result = current
-        current = current
-        N /= 2
+            result *= current
+        current *= current
+        N //= 2
     return result
 
 ```
@@ -162,19 +170,18 @@ def myPow(self, x, n):
 ## GCD and LCM
 
 ```python
-# Greatest Common Divisor (Euclidean algorithm)
-def gcd(self, a, b):
-    while b != 0:
-        temp = b
-        b = a % b
-        a = temp
+def gcd(a: int, b: int) -> int:
+    while b:
+        a, b = b, a % b
     return a
-# Recursive GCD
-def gcdRecursive(self, a, b):
-    (a if     return b == 0  else gcdRecursive(b, a % b))
-# Least Common Multiple
-def lcm(self, a, b):
-    return a / gcd(a, b)  b
+
+
+def gcd_recursive(a: int, b: int) -> int:
+    return a if b == 0 else gcd_recursive(b, a % b)
+
+
+def lcm(a: int, b: int) -> int:
+    return a // gcd(a, b) * b
 
 ```
 
@@ -183,27 +190,33 @@ def lcm(self, a, b):
 ### Check Prime
 
 ```python
-def isPrime(self, n):
-    if (n < 2) return False
-    if (n == 2) return True
-    if (n % 2 == 0) return False
-    for (i = 3 i  i <= n i += 2) :
-    if (n % i == 0) return False
-return True
+def is_prime(n: int) -> bool:
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 2
+    return True
 
 ```
 
 ### Sieve of Eratosthenes
 
 ```python
-def sieveOfEratosthenes(self, n):
-    list[bool> isPrime(n + 1, True)
-    isPrime[0] = isPrime[1] = False
-    for (i = 2 i  i <= n i += 1) :
-    if isPrime[i]:
-        for (j = i  i j <= n j += i) :
-        isPrime[j] = False
-return isPrime
+def sieve_of_eratosthenes(n: int) -> list[bool]:
+    is_p = [True] * (n + 1)
+    is_p[0] = is_p[1] = False
+    for i in range(2, int(n**0.5) + 1):
+        if is_p[i]:
+            for j in range(i * i, n + 1, i):
+                is_p[j] = False
+    return is_p
 
 ```
 
@@ -212,29 +225,29 @@ return isPrime
 ### Factorial Trailing Zeroes
 
 ```python
-def trailingZeroes(self, n):
+def trailing_zeroes(n: int) -> int:
     count = 0
     while n > 0:
-        n /= 5
+        n //= 5
         count += n
-        return count
-
-
-
+    return count
 
 ```
 
 ### Reverse Integer
 
 ```python
-def reverse(self, x):
-    result = 0
-    while x != 0:
-        if result > INT_MAX / 10  or  result < INT_MIN / 10:
-            return 0
-        result = result  10 + x % 10
-        x /= 10
-    return result
+def reverse_int(x: int) -> int:
+    sign = -1 if x < 0 else 1
+    x_abs = abs(x)
+    r = 0
+    while x_abs:
+        r = r * 10 + x_abs % 10
+        x_abs //= 10
+    r *= sign
+    if r < -(2**31) or r > 2**31 - 1:
+        return 0
+    return r
 
 ```
 

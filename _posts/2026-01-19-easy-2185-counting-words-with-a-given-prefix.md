@@ -178,18 +178,24 @@ Return: 2
 
 ```python
 class Solution:
-def prefixCount(self, words, pref):
-    cnt = 0
-    prel = pref.length()
-    for word in words:
-        if(word.length() < prel) continue
-        bool match = True
-        for(i = 0 i < prel i += 1) :
-        if word[i] != pref[i]:
-            match = False
-            break
-    if(match) cnt += 1
-return cnt
+    def prefixCount(self, words, pref):
+        cnt = 0
+        prel = len(pref)
+
+        for word in words:
+            if len(word) < prel:
+                continue
+
+            match = True
+            for i in range(prel):
+                if word[i] != pref[i]:
+                    match = False
+                    break
+
+            if match:
+                cnt += 1
+
+        return cnt
 
 ```
 

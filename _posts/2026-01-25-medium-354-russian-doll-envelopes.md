@@ -93,22 +93,33 @@ If we have envelopes `[5,4]` and `[5,5]`, we want to consider `[5,5]` before `[5
 
 ```python
 class Solution:
-def maxEnvelopes(self, envelopes):
-    if(not envelopes) return 0
-    N = len(envelopes)
-    sort(envelopes.begin(), envelopes.end(), [](e1, e2) :
-    return e1[0] < e2[0] * or  (e1[0] == e2[0] * and  e1[1] > e2[1])
-    )
-    list[int> dp = :envelopes[0][1]
-for(i = 1 i < N i += 1) :
-num = envelopes[i][1]
-if num > dp[-1]:
-    dp.append(num)
-     else :
-    it = lower_bound(dp.begin(), dp.end(), num)
-    it = num
-return len(dp)
-
+    def maxEnvelopes(self, envelopes):
+        if not envelopes:
+            return 0
+        
+        envelopes.sort(key=lambda x: (x[0], -x[1]))
+        
+        N = len(envelopes)
+        dp = []
+        
+        for i in range(N):
+            num = envelopes[i][1]
+            
+            if not dp or num > dp[-1]:
+                dp.append(num)
+            else:
+                # lower_bound equivalent
+                left, right = 0, len(dp) - 1
+                while left < right:
+                    mid = (left + right) // 2
+                    if dp[mid] >= num:
+                        right = mid
+                    else:
+                        left = mid + 1
+                
+                dp[left] = num
+        
+        return len(dp)
 ```
 
 ### Algorithm Explanation:
@@ -217,18 +228,20 @@ Chain: [2,3] → [5,4] → [6,7]
 
 ```python
 class Solution:
-def maxEnvelopes(self, envelopes):
-    if(not envelopes) return 0
-    envelopes.sort()
-    n = len(envelopes)
-    list[int> dp(n, 1)
-    for(i = 1 i < n i += 1) :
-    for(j = 0 j < i j += 1) :
-    if(envelopes[i][0] > envelopes[j][0] * and
-    envelopes[i][1] > envelopes[j][1]) :
-    dp[i] = max(dp[i], dp[j] + 1)
-return max_element(dp.begin(), dp.end())
-
+    def maxEnvelopes(self, envelopes):
+        if not envelopes:
+            return 0
+        
+        envelopes.sort()
+        n = len(envelopes)
+        dp = [1] * n
+        
+        for i in range(n):
+            for j in range(i):
+                if envelopes[i][0] > envelopes[j][0] and envelopes[i][1] > envelopes[j][1]:
+                    dp[i] = max(dp[i], dp[j] + 1)
+        
+        return max(dp)
 ```
 
 **Time Complexity:** O(n²)  

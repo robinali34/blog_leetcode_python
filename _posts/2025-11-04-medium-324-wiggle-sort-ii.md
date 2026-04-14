@@ -65,24 +65,30 @@ Steps:
 
 ```python
 class Solution:
-def wiggleSort(self, nums):
-    n = len(nums)
-    midIt = nums.begin() + n / 2
-    nth_element(nums.begin(), midIt, nums.end())
-    median = midIt
-    vi = [n](i) :return (1 + 2  i) % (n | 1)
-left = 0, right = n - 1, i = 0
-while i <= right:
-    if nums[vi(i)] > median:
-        swap(nums[vi(left)], nums[vi(i)])
-        left += 1
-        i += 1
-         else if(nums[vi(i)] < median) :
-        swap(nums[vi(i)], nums[vi(right)])
-        right -= 1
-         else :
-        i += 1
+    def wiggleSort(self, nums):
+        n = len(nums)
 
+        nums.sort()
+        midIt = n // 2
+        median = nums[midIt]
+
+        def vi(i):
+            return (1 + 2 * i) % (n | 1)
+
+        left = 0
+        right = n - 1
+        i = 0
+
+        while i <= right:
+            if nums[vi(i)] > median:
+                nums[vi(left)], nums[vi(i)] = nums[vi(i)], nums[vi(left)]
+                left += 1
+                i += 1
+            elif nums[vi(i)] < median:
+                nums[vi(i)], nums[vi(right)] = nums[vi(right)], nums[vi(i)]
+                right -= 1
+            else:
+                i += 1
 ```
 
 ## Why Virtual Indexing Works

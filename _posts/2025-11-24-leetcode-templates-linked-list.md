@@ -8,7 +8,7 @@ tags: [leetcode, templates, linked-list]
 ---
 
 {% raw %}
-Minimal, copy-paste C++ for traversal, two pointers, dummy node, reversal, merge, cycle detection, and circular list.
+Minimal, copy-paste Python for traversal, two pointers, dummy node, reversal, merge, cycle detection, and circular list.
 
 ## Contents
 
@@ -26,120 +26,126 @@ Minimal, copy-paste C++ for traversal, two pointers, dummy node, reversal, merge
 ### Standard Definition
 
 ```python
-# Standard ListNode definition used in LeetCode
-struct ListNode :
-val
-ListNode next
-ListNode() : val(0), next(None) :
-ListNode(x) : val(x), next(None) :
-ListNode(x, ListNode next) : val(x), next(next) :
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
 
 ```
 
 ### Alternative Definitions
 
 ```python
-# Without default constructor
-struct ListNode :
-val
-ListNode next
-ListNode(x) : val(x), next(None) :
-# With pointer initialization
-struct ListNode :
-val
-ListNode next
-ListNode(x = 0) : val(x), next(None) :
+# Optional typing style
+from typing import Optional
+
+
+class ListNode:
+    def __init__(self, val: int = 0, next: Optional["ListNode"] = None):
+        self.val = val
+        self.next = next
 
 ```
 
 ### Common Construction Methods
 
 ```python
-# Method 1: Manual construction
-def createList(self, values):
-    if (not values) return None
-    ListNode head = ListNode(values[0])
-    ListNode cur = head
-    for (i = 1 i < len(values) i += 1) :
-    cur.next = ListNode(values[i])
-    cur = cur.next
-return head
-# Method 2: Recursive construction
-def createListRecursive(self, values, index):
-    if (index >= len(values)) return None
-    ListNode node = ListNode(values[index])
-    node.next = createListRecursive(values, index + 1)
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def create_list(values: list[int]) -> ListNode | None:
+    if not values:
+        return None
+    head = ListNode(values[0])
+    cur = head
+    for x in values[1:]:
+        cur.next = ListNode(x)
+        cur = cur.next
+    return head
+
+
+def create_list_recursive(values: list[int], index: int = 0) -> ListNode | None:
+    if index >= len(values):
+        return None
+    node = ListNode(values[index])
+    node.next = create_list_recursive(values, index + 1)
     return node
-# Method 3: Using dummy node
-def createListWithDummy(self, values):
-    ListNode dummy = ListNode(0)
-    ListNode cur = dummy
+
+
+def create_list_dummy(values: list[int]) -> ListNode | None:
+    dummy = ListNode(0)
+    cur = dummy
     for val in values:
         cur.next = ListNode(val)
         cur = cur.next
     return dummy.next
-# Method 4: Create list from array
-def createListFromArray(self, arr[], n):
-    if (n == 0) return None
-    ListNode head = ListNode(arr[0])
-    ListNode cur = head
-    for (i = 1 i < n i += 1) :
-    cur.next = ListNode(arr[i])
-    cur = cur.next
-return head
 
 ```
 
 ### Utility Functions
 
 ```python
-# Print linked list (for debugging)
-def printList(self, head):
-    ListNode cur = head
-    while cur != None:
-        cout << cur.val
-        if (cur.next != None) cout << " . "
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def print_list(head: ListNode | None) -> None:
+    parts: list[str] = []
+    cur = head
+    while cur:
+        parts.append(str(cur.val))
         cur = cur.next
-    cout << endl
-# Get length of linked list
-def getLength(self, head):
-    length = 0
-    ListNode cur = head
-    while cur != None:
-        length += 1
+    print(" -> ".join(parts))
+
+
+def get_length(head: ListNode | None) -> int:
+    n = 0
+    cur = head
+    while cur:
+        n += 1
         cur = cur.next
-    return length
-# Convert linked list to vector
-def listToVector(self, head):
-    list[int> result
-    ListNode cur = head
-    while cur != None:
-        result.append(cur.val)
+    return n
+
+
+def list_to_array(head: ListNode | None) -> list[int]:
+    out: list[int] = []
+    cur = head
+    while cur:
+        out.append(cur.val)
         cur = cur.next
-    return result
-# Delete entire linked list (free memory)
-def deleteList(self, head):
-    while head != None:
-        ListNode temp = head
-        head = head.next
-        delete temp
+    return out
 
 ```
 
 ### Example Usage
 
 ```python
-# Example: Create list [1, 2, 3, 4, 5]
-list[int> values = :1, 2, 3, 4, 5
-ListNode head = createList(values)
-# Print the list
-printList(head)  # Output: 1 . 2 . 3 . 4 . 5
-# Get length
-len = getLength(head)  # len = 5
-# Convert to vector
-list[int> vec = listToVector(head)  # vec = [1, 2, 3, 4, 5]
-# Clean up
-deleteList(head)
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def create_list(values: list[int]) -> ListNode | None:
+    if not values:
+        return None
+    h = ListNode(values[0])
+    c = h
+    for x in values[1:]:
+        c.next = ListNode(x)
+        c = c.next
+    return h
+
+
+head = create_list([1, 2, 3, 4, 5])
+# print_list(head)  # 1 -> 2 -> 3 -> 4 -> 5
+# get_length(head) == 5
+# list_to_array(head) == [1, 2, 3, 4, 5]
 
 ```
 
@@ -148,49 +154,68 @@ deleteList(head)
 ### Traversal
 
 ```python
-# Iterative traversal
-def traverse(self, head):
-    ListNode cur = head
-    while cur != None:
-        # Process cur.val
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def traverse(head: ListNode | None) -> None:
+    cur = head
+    while cur:
+        _ = cur.val
         cur = cur.next
-# Recursive traversal
-def traverseRecursive(self, head):
-    if (head == None) return
-    # Process head.val
-    traverseRecursive(head.next)
+
+
+def traverse_recursive(head: ListNode | None) -> None:
+    if not head:
+        return
+    _ = head.val
+    traverse_recursive(head.next)
 
 ```
 
 ### Insertion
 
 ```python
-# Insert at head
-def insertAtHead(self, head, val):
-    ListNode newNode = ListNode(val)
-    newNode.next = head
-    return newNode
-# Insert after node
-def insertAfter(self, node, val):
-    ListNode newNode = ListNode(val)
-    newNode.next = node.next
-    node.next = newNode
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def insert_at_head(head: ListNode | None, val: int) -> ListNode:
+    node = ListNode(val, head)
+    return node
+
+
+def insert_after(node: ListNode, val: int) -> None:
+    node.next = ListNode(val, node.next)
 
 ```
 
 ### Deletion
 
 ```python
-# Delete node (given node to delete, not head)
-def deleteNode(self, node):
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def delete_node_copy(node: ListNode) -> None:
+    assert node.next
     node.val = node.next.val
     node.next = node.next.next
-# Delete node with value
-def deleteNode(self, head, val):
-    if (head == None) return None
-    if (head.val == val) return head.next
-    ListNode cur = head
-    while cur.next != None:
+
+
+def delete_value(head: ListNode | None, val: int) -> ListNode | None:
+    if not head:
+        return None
+    if head.val == val:
+        return head.next
+    cur = head
+    while cur.next:
         if cur.next.val == val:
             cur.next = cur.next.next
             break
@@ -209,47 +234,57 @@ def deleteNode(self, head, val):
 ### Fast and Slow Pointers
 
 ```python
-# Find middle node
-def findMiddle(self, head):
-    ListNode slow = head
-    ListNode fast = head
-    while fast != None  and  fast.next != None:
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def find_middle(head: ListNode | None) -> ListNode | None:
+    slow = fast = head
+    while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
     return slow
-# Find kth node from end
-def findKthFromEnd(self, head, k):
-    ListNode fast = head
-    for (i = 0 i < k i += 1) :
-    if (fast == None) return None
-    fast = fast.next
-ListNode slow = head
-while fast != None:
-    slow = slow.next
-    fast = fast.next
-return slow
+
+
+def find_kth_from_end(head: ListNode | None, k: int) -> ListNode | None:
+    fast = head
+    for _ in range(k):
+        if fast is None:
+            return None
+        fast = fast.next
+    slow = head
+    while fast:
+        slow = slow.next
+        fast = fast.next
+    return slow
 
 ```
 
 ### Two Pointers for Partitioning
 
 ```python
-# Partition list around value x
-def partition(self, head, x):
-    ListNode less = ListNode(0)
-    ListNode greater = ListNode(0)
-    ListNode lessCur = less
-    ListNode greaterCur = greater
-    while head != None:
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def partition(head: ListNode | None, x: int) -> ListNode | None:
+    less = ListNode(0)
+    greater = ListNode(0)
+    less_cur, greater_cur = less, greater
+    while head:
         if head.val < x:
-            lessCur.next = head
-            lessCur = lessCur.next
-             else :
-            greaterCur.next = head
-            greaterCur = greaterCur.next
+            less_cur.next = head
+            less_cur = less_cur.next
+        else:
+            greater_cur.next = head
+            greater_cur = greater_cur.next
         head = head.next
-    greaterCur.next = None
-    lessCur.next = greater.next
+    greater_cur.next = None
+    less_cur.next = greater.next
     return less.next
 
 ```
@@ -264,15 +299,19 @@ def partition(self, head, x):
 Use dummy node to simplify edge cases (empty list, head deletion).
 
 ```python
-# Remove elements with dummy node
-def removeElements(self, head, val):
-    ListNode dummy = ListNode(0)
-    dummy.next = head
-    ListNode cur = dummy
-    while cur.next != None:
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def remove_elements(head: ListNode | None, val: int) -> ListNode | None:
+    dummy = ListNode(0, head)
+    cur = dummy
+    while cur.next:
         if cur.next.val == val:
             cur.next = cur.next.next
-             else :
+        else:
             cur = cur.next
     return dummy.next
 
@@ -292,67 +331,78 @@ def removeElements(self, head, val):
 ### Reverse Entire List
 
 ```python
-# Iterative reversal
-def reverseList(self, head):
-    ListNode prev = None
-    ListNode cur = head
-    while cur != None:
-        ListNode next = cur.next
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def reverse_list(head: ListNode | None) -> ListNode | None:
+    prev, cur = None, head
+    while cur:
+        nxt = cur.next
         cur.next = prev
         prev = cur
-        cur = next
+        cur = nxt
     return prev
-# Recursive reversal
-def reverseListRecursive(self, head):
-    if (head == None  or  head.next == None) return head
-    ListNode newHead = reverseListRecursive(head.next)
+
+
+def reverse_list_recursive(head: ListNode | None) -> ListNode | None:
+    if not head or not head.next:
+        return head
+    new_head = reverse_list_recursive(head.next)
     head.next.next = head
     head.next = None
-    return newHead
+    return new_head
 
 ```
 
 ### Reverse Between Positions
 
 ```python
-# Reverse nodes from position left to right
-def reverseBetween(self, head, left, right):
-    ListNode dummy = ListNode(0)
-    dummy.next = head
-    ListNode prev = dummy
-    # Move to left position
-    for (i = 1 i < left i += 1) :
-    prev = prev.next
-# Reverse
-ListNode cur = prev.next
-for (i = 0 i < right - left i += 1) :
-ListNode next = cur.next
-cur.next = next.next
-next.next = prev.next
-prev.next = next
-return dummy.next
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def reverse_between(head: ListNode | None, left: int, right: int) -> ListNode | None:
+    dummy = ListNode(0, head)
+    prev = dummy
+    for _ in range(left - 1):
+        prev = prev.next
+    cur = prev.next
+    for _ in range(right - left):
+        nxt = cur.next
+        cur.next = nxt.next
+        nxt.next = prev.next
+        prev.next = nxt
+    return dummy.next
 
 ```
 
 ### Reverse in Groups
 
 ```python
-# Reverse nodes in k-group
-def reverseKGroup(self, head, k):
-    ListNode cur = head
-    count = 0
-    while cur != None  and  count < k:
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def reverse_k_group(head: ListNode | None, k: int) -> ListNode | None:
+    cur = head
+    for _ in range(k):
+        if cur is None:
+            return head
         cur = cur.next
-        count += 1
-    if count == k:
-        cur = reverseKGroup(cur, k)
-        while count -= 1 > 0:
-            ListNode next = head.next
-            head.next = cur
-            cur = head
-            head = next
-        head = cur
-    return head
+    prev, cur = None, head
+    for _ in range(k):
+        nxt = cur.next
+        cur.next = prev
+        prev, cur = cur, nxt
+    head.next = reverse_k_group(cur, k)
+    return prev
 
 ```
 
@@ -368,19 +418,24 @@ def reverseKGroup(self, head, k):
 ### Merge Two Sorted Lists
 
 ```python
-# Merge two sorted lists
-def mergeTwoLists(self, list1, list2):
-    ListNode dummy = ListNode(0)
-    ListNode cur = dummy
-    while list1 != None  and  list2 != None:
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def merge_two_lists(list1: ListNode | None, list2: ListNode | None) -> ListNode | None:
+    dummy = ListNode(0)
+    cur = dummy
+    while list1 and list2:
         if list1.val <= list2.val:
             cur.next = list1
             list1 = list1.next
-             else :
+        else:
             cur.next = list2
             list2 = list2.next
         cur = cur.next
-    (list1 if     cur.next = (list1 != None)  else list2)
+    cur.next = list1 or list2
     return dummy.next
 
 ```
@@ -388,16 +443,36 @@ def mergeTwoLists(self, list1, list2):
 ### Merge K Sorted Lists
 
 ```python
-# Merge k sorted lists using divide and conquer
-def mergeKLists(self, lists):
-    if (not lists) return None
-    return mergeKListsHelper(lists, 0, len(lists) - 1)
-def mergeKListsHelper(self, lists, left, right):
-    if (left == right) return lists[left]
-    mid = left + (right - left) / 2
-    ListNode leftList = mergeKListsHelper(lists, left, mid)
-    ListNode rightList = mergeKListsHelper(lists, mid + 1, right)
-    return mergeTwoLists(leftList, rightList)
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def merge_two_lists(a: ListNode | None, b: ListNode | None) -> ListNode | None:
+    dummy = ListNode(0)
+    cur = dummy
+    while a and b:
+        if a.val <= b.val:
+            cur.next, a = a, a.next
+        else:
+            cur.next, b = b, b.next
+        cur = cur.next
+    cur.next = a or b
+    return dummy.next
+
+
+def merge_k_lists(lists: list[ListNode | None]) -> ListNode | None:
+    if not lists:
+        return None
+
+    def helper(lo: int, hi: int) -> ListNode | None:
+        if lo == hi:
+            return lists[lo]
+        mid = (lo + hi) // 2
+        return merge_two_lists(helper(lo, mid), helper(mid + 1, hi))
+
+    return helper(0, len(lists) - 1)
 
 ```
 
@@ -412,29 +487,35 @@ def mergeKListsHelper(self, lists, left, right):
 ### Detect Cycle (Floyd's Algorithm)
 
 ```python
-# Detect cycle using Floyd's cycle detection
-def hasCycle(self, head):
-    if (head == None  or  head.next == None) return False
-    ListNode slow = head
-    ListNode fast = head
-    while fast != None  and  fast.next != None:
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def has_cycle(head: ListNode | None) -> bool:
+    if not head or not head.next:
+        return False
+    slow, fast = head, head
+    while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
-        if (slow == fast) return True
+        if slow is fast:
+            return True
     return False
-# Find cycle start node
-def detectCycle(self, head):
-    ListNode slow = head
-    ListNode fast = head
-    # Find meeting point
-    while fast != None  and  fast.next != None:
+
+
+def detect_cycle(head: ListNode | None) -> ListNode | None:
+    slow, fast = head, head
+    while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
-        if (slow == fast) break
-    if (fast == None  or  fast.next == None) return None
-    # Find cycle start
+        if slow is fast:
+            break
+    else:
+        return None
     slow = head
-    while slow != fast:
+    while slow is not fast:
         slow = slow.next
         fast = fast.next
     return slow
@@ -451,25 +532,25 @@ def detectCycle(self, head):
 ### Insert into Sorted Circular List
 
 ```python
-# Insert into sorted circular linked list
-def insert(self, head, insertVal):
-    if head == None:
-        ListNode newNode = ListNode(insertVal)
-        newNode.next = newNode
-        return newNode
-    ListNode prev = head
-    ListNode cur = head.next
-    while cur != head:
-        # Normal insertion point
-        if prev.val <= insertVal  and  insertVal <= cur.val:
+class ListNode:
+    def __init__(self, val: int = 0, next=None):
+        self.val = val
+        self.next = next
+
+
+def insert_circular(head: ListNode | None, insert_val: int) -> ListNode:
+    if not head:
+        node = ListNode(insert_val)
+        node.next = node
+        return node
+    prev, cur = head, head.next
+    while cur is not head:
+        if prev.val <= insert_val <= cur.val:
             break
-        # At the boundary (largest to smallest)
-        if prev.val > cur.val  and  (insertVal >= prev.val  or  insertVal <= cur.val):
+        if prev.val > cur.val and (insert_val >= prev.val or insert_val <= cur.val):
             break
-        prev = cur
-        cur = cur.next
-    prev.next = ListNode(insertVal)
-    prev.next.next = cur
+        prev, cur = cur, cur.next
+    prev.next = ListNode(insert_val, cur)
     return head
 
 ```

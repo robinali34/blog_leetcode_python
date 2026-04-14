@@ -82,16 +82,19 @@ This problem is a variation of the prefix sum technique, but uses modulo arithme
 
 ```python
 class Solution:
-def subarraysDivByK(self, nums, k):
-    prefixMod = 0, cnt = 0
-    list[int> prefixMods(k, 0)
-    prefixMods[0] = 1
-    for num in nums:
-        prefixMod = (prefixMod + num % k + k) % k
-        cnt += prefixMods[prefixMod]
-        prefixMods[prefixMod]++
-    return cnt
-
+    def subarraysDivByK(self, nums, k):
+        prefixMod = 0
+        cnt = 0
+        
+        prefixMods = [0] * k
+        prefixMods[0] = 1
+        
+        for num in nums:
+            prefixMod = (prefixMod + num % k + k) % k
+            cnt += prefixMods[prefixMod]
+            prefixMods[prefixMod] += 1
+        
+        return cnt
 ```
 
 ### Algorithm Breakdown:

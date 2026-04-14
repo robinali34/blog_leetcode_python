@@ -92,17 +92,19 @@ The key insight is to preprocess the array once during construction, storing all
 ### Solution: Hash Map Approach (Optimized for Multiple Picks)
 
 ```python
-class Solution:
-dict[int, list[int>> pos
-Solution(list[int> nums) :
-# Preprocess: store all indices for each value
-for(i = 0 i < (int)len(nums) i += 1) :
-pos[nums[i]].append(i)
-def pick(self, target):
-    indices = pos[target]
-    # Randomly select one index from the stored indices
-    return indices[rand() % len(indices)]
+from collections import defaultdict
+import random
 
+
+class Solution:
+    def __init__(self, nums: list[int]):
+        self.pos: dict[int, list[int]] = defaultdict(list)
+        for i, x in enumerate(nums):
+            self.pos[x].append(i)
+
+    def pick(self, target: int) -> int:
+        indices = self.pos[target]
+        return indices[random.randrange(len(indices))]
 ```
 
 ## How the Algorithm Works
@@ -161,10 +163,14 @@ pick(3): Randomly select from [2, 3, 4]
 ### Constructor: Build Index Map
 
 ```python
-Solution(list[int> nums) :
-for(i = 0 i < (int)len(nums) i += 1) :
-pos[nums[i]].append(i)
+from collections import defaultdict
 
+
+def build_index_map(nums: list[int]) -> dict[int, list[int]]:
+    pos: dict[int, list[int]] = defaultdict(list)
+    for i, x in enumerate(nums):
+        pos[x].append(i)
+    return pos
 ```
 
 **Why:**
@@ -175,10 +181,12 @@ pos[nums[i]].append(i)
 ### Pick Function: Random Selection
 
 ```python
-def pick(self, target):
-    indices = pos[target]
-    return indices[rand() % len(indices)]
+import random
 
+
+def pick_from_map(pos: dict[int, list[int]], target: int) -> int:
+    indices = pos[target]
+    return indices[random.randrange(len(indices))]
 ```
 
 **Why:**
@@ -191,18 +199,22 @@ def pick(self, target):
 ### Solution 1: Reservoir Sampling (O(n) per pick)
 
 ```python
-class Solution:
-list[int> nums
-Solution(list[int> nums) : nums(nums) :
-def pick(self, target):
-    rtn = -1
-    for(i = 0, cnt = 0 i < (int)len(nums) i += 1) :
-    if nums[i] == target:
-        cnt += 1
-        if rand() % cnt == 0:
-            rtn = i
-return rtn
+import random
 
+
+class Solution:
+    def __init__(self, nums: list[int]):
+        self.nums = nums
+
+    def pick(self, target: int) -> int:
+        rtn = -1
+        cnt = 0
+        for i, x in enumerate(self.nums):
+            if x == target:
+                cnt += 1
+                if random.randrange(cnt) == 0:
+                    rtn = i
+        return rtn
 ```
 
 **Time Complexity:** O(n) per `pick()` call  
@@ -243,20 +255,22 @@ return rtn
 **Use when:** Memory is critical or only few picks needed
 
 ```python
-class Solution:
-list[int> nums
-Solution(list[int> nums) : nums(nums) :
-def pick(self, target):
-    count = 0
-    result = -1
-    for(i = 0 i < (int)len(nums) i += 1) :
-    if nums[i] == target:
-        count += 1
-        # With probability 1/count, select current index
-        if rand() % count == 0:
-            result = i
-return result
+import random
 
+
+class Solution:
+    def __init__(self, nums: list[int]):
+        self.nums = nums
+
+    def pick(self, target: int) -> int:
+        count = 0
+        result = -1
+        for i, x in enumerate(self.nums):
+            if x == target:
+                count += 1
+                if random.randrange(count) == 0:
+                    result = i
+        return result
 ```
 
 **How Reservoir Sampling Works:**
@@ -273,18 +287,16 @@ return result
 ### Approach 3: Two-Pass (Less Efficient)
 
 ```python
-class Solution:
-list[int> nums
-Solution(list[int> nums) : nums(nums) :
-def pick(self, target):
-    # First pass: collect all indices
-    list[int> indices
-    for(i = 0 i < len(nums) i += 1) :
-    if nums[i] == target:
-        indices.append(i)
-# Second pass: random selection
-return indices[rand() % len(indices)]
+import random
 
+
+class Solution:
+    def __init__(self, nums: list[int]):
+        self.nums = nums
+
+    def pick(self, target: int) -> int:
+        indices = [i for i, x in enumerate(self.nums) if x == target]
+        return indices[random.randrange(len(indices))]
 ```
 
 **Why not optimal:**
@@ -319,10 +331,6 @@ Reservoir Sampling:
 
 ```python
 rand() % len(indices)
-
-
-
-
 ```
 
 **Why this works:**
@@ -330,14 +338,13 @@ rand() % len(indices)
 - `% size` maps to range [0, size-1]
 - Uniform distribution (assuming good RNG)
 
-**Note:** For better randomness, consider:
+**Note:** For better randomness, use Python’s `random` module (e.g. `random.randrange`) instead of a fixed `rand()` implementation.
 ```python
-#include <random>
-std.random_device rd
-std.mt19937 gen(rd())
-std.uniform_int_distribution<> dis(0, len(indices) - 1)
-return indices[dis(gen)]
+import random
 
+indices = [2, 3, 4]
+idx = random.randrange(len(indices))  # uniform in [0, len(indices))
+value = indices[idx]
 ```
 
 ## Common Mistakes

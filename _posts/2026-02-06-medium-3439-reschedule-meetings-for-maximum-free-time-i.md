@@ -59,17 +59,22 @@ Precompute prefix sums of meeting durations, then for each window of `k` consecu
 
 ```python
 class Solution:
-def maxFreeTime(self, eventTime, k, startTime, endTime):
-    n = len(startTime), rtn = 0
-    list[int> sum(n + 1)
-    for (i = 0 i < n i += 1) :
-    sum[i + 1] = sum[i] + endTime[i] - startTime[i]
-for (i = k - 1 i < n i += 1) :
-(eventTime if             right = i == n - 1  else startTime[i + 1])
-(0 if             left = i == k - 1  else endTime[i - k])
-rtn = max(rtn, right - left - (sum[i + 1] - sum[i - k + 1]))
-return rtn
-
+    def maxFreeTime(self, eventTime, k, startTime, endTime):
+        n = len(startTime)
+        rtn = 0
+        
+        sum_arr = [0] * (n + 1)
+        
+        for i in range(n):
+            sum_arr[i + 1] = sum_arr[i] + (endTime[i] - startTime[i])
+        
+        for i in range(k - 1, n):
+            right = eventTime if i == n - 1 else startTime[i + 1]
+            left = 0 if i == k - 1 else endTime[i - k]
+            
+            rtn = max(rtn, right - left - (sum_arr[i + 1] - sum_arr[i - k + 1]))
+        
+        return rtn
 ```
 
 - **Indexing:** Window of `k` meetings ending at index `i` = meetings `[i-k+1, i]`. Their total duration = `sum[i+1] - sum[i-k+1]`. Span: `[left, right]` with `left` = `endTime[i-k]` (or 0 if no meeting before), `right` = `startTime[i+1]` (or `eventTime` if no meeting after).
@@ -81,18 +86,34 @@ Same formula; maintain the total duration of the current `k` meetings with a run
 
 ```python
 class Solution:
-def maxFreeTime(self, eventTime, k, startTime, endTime):
-    n = len(startTime), rtn = 0, t = 0
-    list[int> sum(n + 1)
-    for (i = 0 i < n i += 1) :
-    t += endTime[i] - startTime[i]
-    (0 if             left = i <= k - 1  else endTime[i - k])
-    (eventTime if             right = i == n - 1  else startTime[i + 1])
-    rtn = max(rtn, right - left - t)
-    if i >= k - 1:
-        t -= endTime[i - k + 1] - startTime[i - k + 1]
-return rtn
-
+    def maxFreeTime(self, eventTime, k, startTime, endTime):
+        n = len(startTime)
+        rtn = 0
+        t = 0
+        
+        # sliding window sum of event durations
+        for i in range(n):
+            t += endTime[i] - startTime[i]
+            
+            # left boundary
+            if i <= k - 1:
+                left = 0
+            else:
+                left = endTime[i - k]
+            
+            # right boundary
+            if i == n - 1:
+                right = eventTime
+            else:
+                right = startTime[i + 1]
+            
+            if i >= k - 1:
+                rtn = max(rtn, right - left - t)
+            
+            if i >= k - 1:
+                t -= endTime[i - k + 1] - startTime[i - k + 1]
+        
+        return rtn
 ```
 
 - **Running sum:** `t` is the total duration of meetings in the current window. When `i >= k - 1`, subtract the duration of meeting `i - k + 1` so that `t` stays the sum of the last `k` meetings. (The `vector<int> sum(n+1)` in the code is unused; removing it gives O(1) space.)
@@ -103,16 +124,22 @@ return rtn
 Remove the unused `sum` to make space O(1):
 
 ```python
-n = len(startTime), rtn = 0, t = 0
-for (i = 0 i < n i += 1) :
-t += endTime[i] - startTime[i]
-(0 if     left = i <= k - 1  else endTime[i - k])
-(eventTime if     right = i == n - 1  else startTime[i + 1])
-rtn = max(rtn, right - left - t)
-if i >= k - 1:
-t -= endTime[i - k + 1] - startTime[i - k + 1]
-return rtn
+n = len(startTime)
+rtn = 0
+t = 0
 
+for i in range(n):
+    t += endTime[i] - startTime[i]
+    
+    left = 0 if i <= k - 1 else endTime[i - k]
+    right = eventTime if i == n - 1 else startTime[i + 1]
+    
+    rtn = max(rtn, right - left - t)
+    
+    if i >= k - 1:
+        t -= endTime[i - k + 1] - startTime[i - k + 1]
+
+return rtn
 ```
 
 ## Comparison

@@ -79,27 +79,23 @@ Use DFS with a hash map for employee lookup. Create a hash map from employee ID 
 **Space Complexity:** O(n) - Hash map + recursion stack
 
 ```python
-/
-# Definition for Employee.
-class Employee:
-id
-importance
-list[int> subordinates
-/
 class Solution:
-dict[int, Employee> emap
-def dfs(self, id):
-    Employee employee = emap[id]
-    rtn = employee.importance
-    for subid in employee.subordinates:
-        rtn += dfs(subid)
-    return rtn
-def getImportance(self, employees, id):
-    emap.clear()
-    for e in employees:
-        emap[e.id] = e
-    return dfs(id)
+    def dfs(self, emp_id):
+        employee = self.emap[emp_id]
+        total = employee.importance
 
+        for sub_id in employee.subordinates:
+            total += self.dfs(sub_id)
+
+        return total
+
+    def getImportance(self, employees, id):
+        self.emap = {}
+
+        for e in employees:
+            self.emap[e.id] = e
+
+        return self.dfs(id)
 ```
 
 ### How Solution 1 Works
@@ -117,23 +113,28 @@ def getImportance(self, employees, id):
 **Space Complexity:** O(n)
 
 ```python
-class Solution:
-def getImportance(self, employees, id):
-    dict[int, Employee> emap
-    for e in employees:
-        emap[e.id] = e
-    total = 0
-    deque[int> q
-    q.push(id)
-    while not not q:
-        currId = q[0]
-        q.pop()
-        Employee emp = emap[currId]
-        total += emp.importance
-        for subId in emp.subordinates:
-            q.push(subId)
-    return total
+from collections import deque
 
+class Solution:
+    def getImportance(self, employees, id):
+        emap = {}
+
+        for e in employees:
+            emap[e.id] = e
+
+        total = 0
+        q = deque([id])
+
+        while q:
+            currId = q.popleft()
+            emp = emap[currId]
+
+            total += emp.importance
+
+            for subId in emp.subordinates:
+                q.append(subId)
+
+        return total
 ```
 
 ### How Solution 2 Works

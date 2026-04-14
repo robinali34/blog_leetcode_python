@@ -93,23 +93,24 @@ The key insight is to use dynamic programming to track the minimum cost to trave
 
 ```python
 class Solution:
-def mincostTickets(self, days, costs):
-    lastDay = days[-1]
-    list[int> dp(lastDay + 1, 0)
-    set[int> travelDays(days.begin(), days.end())
-    for (i = 1 i <= lastDay i += 1) :
-    if travelDays.find(i) == travelDays.end():
-        # Not a travel day - cost stays the same as previous day
-        dp[i] = dp[i - 1]
-         else :
-        # Travel day - choose minimum cost among three options
-        dp[i] = min(:
-        dp[i - 1] + costs[0],           # Buy 1-day pass
-        dp[max(0, i - 7)] + costs[1],   # Buy 7-day pass
-        dp[max(0, i - 30)] + costs[2]   # Buy 30-day pass
-        )
-return dp[lastDay]
+    def mincostTickets(self, days, costs):
+        lastDay = days[-1]
+        dp = [0] * (lastDay + 1)
+        travelDays = set(days)
 
+        for i in range(1, lastDay + 1):
+            if i not in travelDays:
+                # Not a travel day - cost stays the same as previous day
+                dp[i] = dp[i - 1]
+            else:
+                # Travel day - choose minimum cost among three options
+                dp[i] = min(
+                    dp[i - 1] + costs[0],           # 1-day pass
+                    dp[max(0, i - 7)] + costs[1],   # 7-day pass
+                    dp[max(0, i - 30)] + costs[2]   # 30-day pass
+                )
+
+        return dp[lastDay]
 ```
 
 ## How the Algorithm Works
@@ -211,9 +212,9 @@ Total: $11
 ### Initialization
 
 ```python
-lastDay = days[-1]
-list[int> dp(lastDay + 1, 0)
-set[int> travelDays(days.begin(), days.end())
+last_day = days[-1]
+dp = [0] * (last_day + 1)
+travel_days = set(days)
 
 ```
 
@@ -225,15 +226,15 @@ set[int> travelDays(days.begin(), days.end())
 ### Main DP Loop
 
 ```python
-for (i = 1 i <= lastDay i += 1) :
-if travelDays.find(i) == travelDays.end():
-    dp[i] = dp[i - 1]
-     else :
-    dp[i] = min(:
-    dp[i - 1] + costs[0],
-    dp[max(0, i - 7)] + costs[1],
-    dp[max(0, i - 30)] + costs[2]
-    )
+for i in range(1, last_day + 1):
+    if i not in travel_days:
+        dp[i] = dp[i - 1]
+    else:
+        dp[i] = min(
+            dp[i - 1] + costs[0],
+            dp[max(0, i - 7)] + costs[1],
+            dp[max(0, i - 30)] + costs[2],
+        )
 
 ```
 
@@ -258,24 +259,28 @@ if travelDays.find(i) == travelDays.end():
 **Space Complexity:** O(n)
 
 ```python
+import bisect
+
+
 class Solution:
-list[int> days, costs, memo
-durations[3] = :1, 7, 30
-def dp(self, i):
-    if (i >= len(days)) return 0
-    if (memo[i] != -1) return memo[i]
-    memo[i] = INT_MAX
-    for (k = 0 k < 3 k += 1) :
-    # Find first day after current pass expires
-    j = upper_bound(days.begin(), days.end(),
-    days[i] + durations[k] - 1) - days.begin()
-    memo[i] = min(memo[i], dp(j) + costs[k])
-return memo[i]
-def mincostTickets(self, days, costs):
-    this.days = days
-    this.costs = costs
-    memo.assign(len(days), -1)
-    return dp(0)
+    def mincostTickets(self, days: list[int], costs: list[int]) -> int:
+        n = len(days)
+        durations = (1, 7, 30)
+        memo: list[int] = [-1] * n
+
+        def dp(i: int) -> int:
+            if i >= n:
+                return 0
+            if memo[i] != -1:
+                return memo[i]
+            best = 10**9
+            for k in range(3):
+                nxt = bisect.bisect_right(days, days[i] + durations[k] - 1)
+                best = min(best, dp(nxt) + costs[k])
+            memo[i] = best
+            return best
+
+        return dp(0)
 
 ```
 
@@ -333,7 +338,7 @@ Where `n` = last travel day (≤365), `m` = number of travel days
 ### Why Set for Travel Days?
 
 ```python
-set[int> travelDays(days.begin(), days.end())
+travel_days = set(days)
 
 ```
 

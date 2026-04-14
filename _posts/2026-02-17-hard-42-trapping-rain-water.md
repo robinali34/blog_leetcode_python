@@ -87,17 +87,25 @@ For each index, scan left and right to find the max height on each side.
 {% raw %}
 ```python
 class Solution:
-def trap(self, height):
-    n = len(height)
-    water = 0
-    for (i = 0 i < n i += 1) :
-        leftMax = 0, rightMax = 0
-    for (l = 0 l <= i l += 1) :
-        leftMax = max(leftMax, height[l])
-    for r in range(i, n):
-        rightMax = max(rightMax, height[r])
-        water += min(leftMax, rightMax) - height[i]
-return water
+    def trap(self, height):
+        n = len(height)
+        water = 0
+        
+        for i in range(n):
+            leftMax = 0
+            rightMax = 0
+            
+            # max to the left of i
+            for l in range(i + 1):
+                leftMax = max(leftMax, height[l])
+            
+            # max to the right of i
+            for r in range(i, n):
+                rightMax = max(rightMax, height[r])
+            
+            water += min(leftMax, rightMax) - height[i]
+        
+        return water
 
 ```
 {% endraw %}
@@ -112,21 +120,56 @@ Precompute `leftMax[i]` and `rightMax[i]` in two linear passes, then compute wat
 {% raw %}
 ```python
 class Solution:
-def trap(self, height):
-    n = len(height)
-    if (n == 0):
-        return 0
-    list[int> leftMax(n), rightMax(n)
-    water = 0
-    leftMax[0] = height[0]
-    for i in range(1, n):
-        leftMax[i] = max(leftMax[i - 1], height[i])
+    def trap(self, height):
+        n = len(height)
+        if n == 0:
+            return 0
+        
+        leftMax = [0] * n
+        rightMax = [0] * n
+        
+        water = 0
+        
+        # build leftMax
+        leftMax[0] = height[0]
+        for i in range(1, n):
+            leftMax[i] = max(leftMax[i - 1], height[i])
+        
+        # build rightMax
         rightMax[n - 1] = height[n - 1]
-    for (i = n - 2 i >= 0 i -= 1):
-        rightMax[i] = max(rightMax[i + 1], height[i])
-    for i in range(0, n):
-        water += min(leftMax[i], rightMax[i]) - height[i]
-    return water
+        for i in range(n - 2, -1, -1):
+            rightMax[i] = max(rightMax[i + 1], height[i])
+        
+        # calculate water
+        for i in range(n):
+            water += min(leftMax[i], rightMax[i]) - height[i]
+        
+        return waterclass Solution:
+    def trap(self, height):
+        n = len(height)
+        if n == 0:
+            return 0
+        
+        leftMax = [0] * n
+        rightMax = [0] * n
+        
+        water = 0
+        
+        # build leftMax
+        leftMax[0] = height[0]
+        for i in range(1, n):
+            leftMax[i] = max(leftMax[i - 1], height[i])
+        
+        # build rightMax
+        rightMax[n - 1] = height[n - 1]
+        for i in range(n - 2, -1, -1):
+            rightMax[i] = max(rightMax[i + 1], height[i])
+        
+        # calculate water
+        for i in range(n):
+            water += min(leftMax[i], rightMax[i]) - height[i]
+        
+        return water
 
 ```
 {% endraw %}
@@ -143,27 +186,54 @@ The smaller side always determines the bottleneck. Move the pointer on the small
 {% raw %}
 ```python
 class Solution:
-def trap(self, height):
-    n = len(height)
-    if (n == 0) return 0
-    l = 0, r = n - 1
-    leftMax = 0, rightMax = 0
-    water = 0
-    while l < r:
-        if height[l] < height[r]:
-            if height[l] >= leftMax:
-            leftMax = height[l]
-        else:
-        water += leftMax - height[l]
-        l += 1
-         else :
-        if height[r] >= rightMax:
-        rightMax = height[r]
-    else:
-    water += rightMax - height[r]
-    r -= 1
-return water
-
+    def trap(self, height):
+        n = len(height)
+        if n == 0:
+            return 0
+        
+        l, r = 0, n - 1
+        leftMax, rightMax = 0, 0
+        water = 0
+        
+        while l < r:
+            if height[l] < height[r]:
+                if height[l] >= leftMax:
+                    leftMax = height[l]
+                else:
+                    water += leftMax - height[l]
+                l += 1
+            else:
+                if height[r] >= rightMax:
+                    rightMax = height[r]
+                else:
+                    water += rightMax - height[r]
+                r -= 1
+        
+        return waterclass Solution:
+    def trap(self, height):
+        n = len(height)
+        if n == 0:
+            return 0
+        
+        l, r = 0, n - 1
+        leftMax, rightMax = 0, 0
+        water = 0
+        
+        while l < r:
+            if height[l] < height[r]:
+                if height[l] >= leftMax:
+                    leftMax = height[l]
+                else:
+                    water += leftMax - height[l]
+                l += 1
+            else:
+                if height[r] >= rightMax:
+                    rightMax = height[r]
+                else:
+                    water += rightMax - height[r]
+                r -= 1
+        
+        return water
 ```
 {% endraw %}
 
@@ -177,21 +247,44 @@ Process bars left to right. When a taller bar is found, pop shorter bars from th
 {% raw %}
 ```python
 class Solution:
-def trap(self, height):
-    n = len(height)
-    water = 0
-    list[int> st
-    for (i = 0 i < n i += 1) :
-        while not not st  and  height[i] > height[st.top()]:
-            top = st.top()
-            st.pop()
-            if (not st):
-                break
-            distance = i - st.top() - 1
-            boundedHeight = min(height[i], height[st.top()]) - height[top]
-            water += distance  boundedHeight
-        st.push(i)
-return water
+    def trap(self, height):
+        n = len(height)
+        water = 0
+        st = []  # stack to store indices
+        
+        for i in range(n):
+            while st and height[i] > height[st[-1]]:
+                top = st.pop()
+                
+                if not st:
+                    break
+                
+                distance = i - st[-1] - 1
+                boundedHeight = min(height[i], height[st[-1]]) - height[top]
+                water += distance * boundedHeight
+            
+            st.append(i)
+        
+        return waterclass Solution:
+    def trap(self, height):
+        n = len(height)
+        water = 0
+        st = []  # stack to store indices
+        
+        for i in range(n):
+            while st and height[i] > height[st[-1]]:
+                top = st.pop()
+                
+                if not st:
+                    break
+                
+                distance = i - st[-1] - 1
+                boundedHeight = min(height[i], height[st[-1]]) - height[top]
+                water += distance * boundedHeight
+            
+            st.append(i)
+        
+        return water
 
 ```
 {% endraw %}

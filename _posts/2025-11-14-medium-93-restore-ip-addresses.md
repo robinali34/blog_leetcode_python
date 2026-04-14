@@ -138,51 +138,60 @@ def restoreIpAddresses(self, s):
 ### Solution 2: Further Optimized with String Building
 
 ```python
-using namespace std
 class Solution:
-def isValid(self, segment):
-    len = segment.length()
-    if (len == 1) return True
-    if (segment[0] == '0') return False
-    if (len == 2) return True
-    return len == 3  and  segment <= "255"
-void backtrack(
-string_view s,
-start,
-list[int> segments,
-list[str> result
-) :
-remainingLen = (int)s.length() - start
-remainingCnt = 4 - (int)len(segments)
-if remainingLen > remainingCnt * 3  or  remainingLen < remainingCnt:
-    return
-if len(segments) == 3:
-    lastSegment = s.substr(start)
-    if isValid(lastSegment):
-        # Build IP more efficiently by pre-calculating size
-        str ip
-        totalLen = (int)s.length() + 3
-        ip.reserve(totalLen)
-        pos = 0
-        for segLen in segments:
-            ip.append(s.substr(pos, segLen))
-            pos += segLen
-            ip += '.'
-        ip.append(s.substr(start))
-        result.append(move(ip))
-    return
-for (len = 1 len <= 3  and  len <= remainingLen len += 1) :
-segments.append(len)
-if isValid(s.substr(start, len)):
-    backtrack(s, start + len, segments, result)
-segments.pop()
-def restoreIpAddresses(self, s):
-    list[int> segments
-    segments.reserve(3)
-    list[str> result
-    backtrack(string_view(s), 0, segments, result)
-    return result
+    def isValid(self, segment):
+        length = len(segment)
 
+        if length == 1:
+            return True
+
+        if segment[0] == '0':
+            return False
+
+        if length == 2:
+            return True
+
+        return length == 3 and int(segment) <= 255
+
+    def backtrack(self, s, start, segments, result):
+        remainingLen = len(s) - start
+        remainingCnt = 4 - len(segments)
+
+        if remainingLen > remainingCnt * 3 or remainingLen < remainingCnt:
+            return
+
+        if len(segments) == 3:
+            lastSegment = s[start:]
+
+            if self.isValid(lastSegment):
+                ip = ""
+                pos = 0
+
+                for segLen in segments:
+                    ip += s[pos:pos + segLen] + "."
+                    pos += segLen
+
+                ip += s[start:]
+                result.append(ip)
+
+            return
+
+        for length in range(1, 4):
+            if length <= remainingLen:
+                segments.append(length)
+
+                if self.isValid(s[start:start + length]):
+                    self.backtrack(s, start + length, segments, result)
+
+                segments.pop()
+
+    def restoreIpAddresses(self, s):
+        segments = []
+        result = []
+
+        self.backtrack(s, 0, segments, result)
+
+        return result
 ```
 
 ## Key Optimizations (Python20)

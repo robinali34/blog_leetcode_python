@@ -78,21 +78,22 @@ def solve(self, s: str) -> int:
     dup = 0
     best = 0
     l = 0
+
     for r in range(len(s)):
         cnt[ord(s[r])] += 1
+
         if cnt[ord(s[r])] == 2:
             dup += 1
-            while dup > 0:
-                cnt[ord(s[l])] -= 1
-                if cnt[ord(s[l])] == 1:
-                    dup -= 1
-                    l += 1
-                    best = max(best, r - l + 1)
-                    return best
 
+        while dup > 0:
+            cnt[ord(s[l])] -= 1
+            if cnt[ord(s[l])] == 1:
+                dup -= 1
+            l += 1
 
+        best = max(best, r - l + 1)
 
-
+    return best
 ```
 
 Examples: 3 Longest Substring Without Repeating Characters; 713 Subarray Product Less Than K (positive product, shrink while ≥ k); 76 Minimum Window Substring; 424 Longest Repeating Character Replacement.
@@ -110,17 +111,19 @@ Examples: 3 Longest Substring Without Repeating Characters; 713 Subarray Product
 # Classic: two-sum on sorted array, or merging
 def twoSum(self, a: list[int], target: int) -> bool:
     l, r = 0, len(a) - 1
+
     while l < r:
         s = a[l] + a[r]
+
         if s == target:
             return True
-            if s < target:
-                l += 1
-            else:
-                r -= 1
-                return False
 
+        if s < target:
+            l += 1
+        else:
+            r -= 1
 
+    return False
 ```
 
 Examples: 15 3Sum; 11 Container With Most Water; 125 Valid Palindrome.
@@ -139,13 +142,13 @@ def binsearch(self, lo: int, hi: int, good: callable) -> int:
     # [lo, hi] - find minimum x where good(x) is True
     while lo < hi:
         mid = (lo + hi) // 2
+
         if good(mid):
             hi = mid
         else:
             lo = mid + 1
-            return lo
 
-
+    return lo
 ```
 
 Examples: 33 Search in Rotated Sorted Array; 34 First/Last Position; 162 Find Peak Element; 875 Koko Eating Bananas.
@@ -163,11 +166,11 @@ Examples: 33 Search in Rotated Sorted Array; 34 First/Last Position; 162 Find Pe
 # range sum queries
 def prefix(a: list[int]) -> list[int]:
     ps = [0] * (len(a) + 1)
+
     for i in range(len(a)):
         ps[i + 1] = ps[i] + a[i]
-        return ps
 
-
+    return ps
 ```
 
 Examples: 560 Subarray Sum Equals K; 238 Product of Array Except Self; 525 Contiguous Array; 370 Range Addition.
@@ -184,13 +187,11 @@ Examples: 560 Subarray Sum Equals K; 238 Product of Array Except Self; 525 Conti
 ```python
 # count frequencies and check uniqueness, etc.
 from collections import defaultdict
+
 freq = defaultdict(int)
+
 for x in nums:
     freq[x] += 1
-
-
-
-
 ```
 
 Examples: 1 Two Sum; 49 Group Anagrams; 981 Time Based Key-Value Store; 359 Logger Rate Limiter.
@@ -207,18 +208,21 @@ Examples: 1 Two Sum; 49 Group Anagrams; 981 Time Based Key-Value Store; 359 Logg
 ```python
 # Next Greater Element (circular if needed)
 def nextGreater(a: list[int]) -> list[int]:
-n = len(a)
-ans = [-1] * n
-st = []
-for i in range(2  n):
-idx = i % n
-while st and a[st[-1]] < a[idx]:
-ans[st[-1]] = a[idx]
-st.pop()
-if i < n:
-st.append(idx)
-return ans
+    n = len(a)
+    ans = [-1] * n
+    st = []
 
+    for i in range(2 * n):
+        idx = i % n
+
+        while st and a[st[-1]] < a[idx]:
+            ans[st[-1]] = a[idx]
+            st.pop()
+
+        if i < n:
+            st.append(idx)
+
+    return ans
 ```
 
 Examples: 739 Daily Temperatures; 84 Largest Rectangle in Histogram; 239 Sliding Window Maximum.
@@ -244,24 +248,30 @@ Examples: 739 Daily Temperatures; 84 Largest Rectangle in Histogram; 239 Sliding
 # Grid BFS template (4-direction)
 ```python
 from collections import deque
+
 def bfsGrid(self, g: list[str], s: tuple[int, int], t: tuple[int, int]) -> int:
     m, n = len(g), len(g[0])
+
     q = deque([s])
     dist = [[-1] * n for _ in range(m)]
     dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
     dist[s[0]][s[1]] = 0
+
     while q:
         x, y = q.popleft()
+
         if (x, y) == t:
             return dist[x][y]
-            for dx, dy in dirs:
-                nx, ny = x + dx, y + dy
-                if 0 <= nx < m and 0 <= ny < n and g[nx][ny] != '#' and dist[nx][ny] == -1:
-                    dist[nx][ny] = dist[x][y] + 1
-                    q.append((nx, ny))
-                    return -1
 
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
 
+            if 0 <= nx < m and 0 <= ny < n and g[nx][ny] != '#' and dist[nx][ny] == -1:
+                dist[nx][ny] = dist[x][y] + 1
+                q.append((nx, ny))
+
+    return -1
 ```
 
 | ID | Title | Link |
@@ -278,14 +288,14 @@ def dfs(self, i: int, nums: list[int], cur: list[int], out: list[list[int]]) -> 
     if i == len(nums):
         out.append(cur[:])
         return
-        self.dfs(i + 1, nums, cur, out)  # skip
-        cur.append(nums[i])
-        self.dfs(i + 1, nums, cur, out)  # take
-        cur.pop()
 
+    # skip
+    self.dfs(i + 1, nums, cur, out)
 
-
-
+    # take
+    cur.append(nums[i])
+    self.dfs(i + 1, nums, cur, out)
+    cur.pop()
 ```
 
 | ID | Title | Link |
@@ -305,84 +315,97 @@ def inorder(self, root: TreeNode) -> list[int]:
     ans = []
     st = []
     cur = root
+
     while cur or st:
         while cur:
             st.append(cur)
             cur = cur.left
-            cur = st.pop()
-            ans.append(cur.val)
-            cur = cur.right
-            return ans
 
+        cur = st.pop()
+        ans.append(cur.val)
+        cur = cur.right
 
+    return ans
 ```
 
 # Level-order (BFS)
 ```python
 from collections import deque
+
 def levelOrder(self, root: TreeNode) -> list[list[int]]:
     if not root:
         return []
-        res = []
-        q = deque([root])
-        while q:
-            sz = len(q)
-            level = []
-            for _ in range(sz):
-                u = q.popleft()
-                level.append(u.val)
-                if u.left:
-                    q.append(u.left)
-                    if u.right:
-                        q.append(u.right)
-                        res.append(level)
-                        return res
 
+    res = []
+    q = deque([root])
 
+    while q:
+        sz = len(q)
+        level = []
+
+        for _ in range(sz):
+            u = q.popleft()
+            level.append(u.val)
+
+            if u.left:
+                q.append(u.left)
+
+            if u.right:
+                q.append(u.right)
+
+        res.append(level)
+
+    return res
 ```
 
 ## LCA (Binary Lifting)
 
 ```python
 K = 17  # adjust for n (e.g., 17 for n<=1e5)
-depth = []
-up = []
+
 class LCA:
     def __init__(self, n: int):
         self.K = K
         self.depth = [0] * n
         self.up = [[-1] * (K + 1) for _ in range(n)]
+
     def dfsLift(self, u: int, p: int, g: list[list[int]]) -> None:
         self.up[u][0] = p
+
         for k in range(1, self.K + 1):
-            if self.up[u][k-1] < 0:
+            if self.up[u][k - 1] < 0:
                 self.up[u][k] = -1
             else:
-                self.up[u][k] = self.up[self.up[u][k-1]][k-1]
-                for v in g[u]:
-                    if v != p:
-                        self.depth[v] = self.depth[u] + 1
-                        self.dfsLift(v, u, g)
-                        def lift(self, u: int, k: int) -> int:
-                            for i in range(self.K + 1):
-                                if k  (1 << i):
-                                    if u < 0:
-                                        return -1
-                                        u = self.up[u][i]
-                                        return u
-                                        def lca(self, a: int, b: int) -> int:
-                                            if self.depth[a] < self.depth[b]:
-                                                a, b = b, a
-                                                a = self.lift(a, self.depth[a] - self.depth[b])
-                                                if a == b:
-                                                    return a
-                                                    for i in range(self.K, -1, -1):
-                                                        if self.up[a][i] != self.up[b][i]:
-                                                            a = self.up[a][i]
-                                                            b = self.up[b][i]
-                                                            return self.up[a][0]
+                self.up[u][k] = self.up[self.up[u][k - 1]][k - 1]
 
+        for v in g[u]:
+            if v != p:
+                self.depth[v] = self.depth[u] + 1
+                self.dfsLift(v, u, g)
 
+    def lift(self, u: int, k: int) -> int:
+        for i in range(self.K + 1):
+            if k & (1 << i):
+                if u < 0:
+                    return -1
+                u = self.up[u][i]
+        return u
+
+    def lca(self, a: int, b: int) -> int:
+        if self.depth[a] < self.depth[b]:
+            a, b = b, a
+
+        a = self.lift(a, self.depth[a] - self.depth[b])
+
+        if a == b:
+            return a
+
+        for i in range(self.K, -1, -1):
+            if self.up[a][i] != self.up[b][i]:
+                a = self.up[a][i]
+                b = self.up[b][i]
+
+        return self.up[a][0]
 ```
 
 | ID | Title | Link |
@@ -395,78 +418,121 @@ class LCA:
 ```python
 # Heavy-Light Decomposition for path queries on a tree
 # Build: dfs1 (sizes, heavy child), dfs2 (head/in), then segtree over in[]
-class HLD:
-def __init__(self, n: int, g: list[list[int]]):
-self.n = n
-self.g = g
-self.szH = [0] * n
-self.parH = [-1] * n
-self.depH = [0] * n
-self.heavyH = [-1] * n
-self.headH = [0] * n
-self.inH = [0] * n
-self.curT = 0
-def dfs1(self, u: int, p: int) -> int:
-self.parH[u] = p
-self.depH[u] = 0 if p == -1 else self.depH[p] + 1
-self.szH[u] = 1
-self.heavyH[u] = -1
-best = 0
-for v in self.g[u]:
-if v != p:
-s = self.dfs1(v, u)
-self.szH[u] += s
-if s > best:
-best = s
-self.heavyH[u] = v
-return self.szH[u]
-def dfs2(self, u: int, h: int) -> None:
-self.headH[u] = h
-self.inH[u] = self.curT
-self.curT += 1
-if self.heavyH[u] != -1:
-self.dfs2(self.heavyH[u], h)
-for v in self.g[u]:
-if v != self.parH[u] and v != self.heavyH[u]:
-self.dfs2(v, v)
-# Example segment tree over values on nodes (mapped by inH[])
-class SegTree:
-def __init__(self, n: int):
-self.n = n
-self.st = [0] * (4  n)
-def upd(self, p: int, v: int, i: int = 1, l: int = 0, r: int = None) -> None:
-if r is None:
-r = self.n - 1
-if l == r:
-self.st[i] = v
-return
-m = (l + r) // 2
-if p <= m:
-self.upd(p, v, 2  i, l, m)
-else:
-self.upd(p, v, 2  i + 1, m + 1, r)
-self.st[i] = self.st[2  i] + self.st[2  i + 1]
-def qry(self, ql: int, qr: int, i: int = 1, l: int = 0, r: int = None) -> int:
-if r is None:
-r = self.n - 1
-if qr < l or r < ql:
-return 0
-if ql <= l and r <= qr:
-return self.st[i]
-m = (l + r) // 2
-return self.qry(ql, qr, 2  i, l, m) + self.qry(ql, qr, 2  i + 1, m + 1, r)
-def queryPath(self, a: int, b: int, seg: SegTree, hld: HLD) -> int:
-res = 0
-while hld.headH[a] != hld.headH[b]:
-if hld.depH[hld.headH[a]] < hld.depH[hld.headH[b]]:
-a, b = b, a
-res += seg.qry(hld.inH[hld.headH[a]], hld.inH[a], 1, 0, seg.n - 1)
-a = hld.parH[hld.headH[a]]
-if hld.depH[a] > hld.depH[b]:
-a, b = b, a
-res += seg.qry(hld.inH[a], hld.inH[b], 1, 0, seg.n - 1)
-return res
 
+class HLD:
+    def __init__(self, n: int, g: list[list[int]]):
+        self.n = n
+        self.g = g
+        self.szH = [0] * n
+        self.parH = [-1] * n
+        self.depH = [0] * n
+        self.heavyH = [-1] * n
+        self.headH = [0] * n
+        self.inH = [0] * n
+        self.curT = 0
+
+    def dfs1(self, u: int, p: int) -> int:
+        self.parH[u] = p
+        self.depH[u] = 0 if p == -1 else self.depH[p] + 1
+        self.szH[u] = 1
+        self.heavyH[u] = -1
+
+        best = 0
+        heavy = -1
+
+        for v in self.g[u]:
+            if v != p:
+                s = self.dfs1(v, u)
+                self.szH[u] += s
+                if s > best:
+                    best = s
+                    heavy = v
+
+        self.heavyH[u] = heavy
+        return self.szH[u]
+
+    def dfs2(self, u: int, h: int) -> None:
+        self.headH[u] = h
+        self.inH[u] = self.curT
+        self.curT += 1
+
+        if self.heavyH[u] != -1:
+            self.dfs2(self.heavyH[u], h)
+
+        for v in self.g[u]:
+            if v != self.parH[u] and v != self.heavyH[u]:
+                self.dfs2(v, v)
+
+
+class SegTree:
+    def __init__(self, n: int):
+        self.n = n
+        self.st = [0] * (4 * n)
+
+    def upd(self, p: int, v: int, i: int = 1, l: int = 0, r: int = None) -> None:
+        if r is None:
+            r = self.n - 1
+
+        if l == r:
+            self.st[i] = v
+            return
+
+        m = (l + r) // 2
+
+        if p <= m:
+            self.upd(p, v, 2 * i, l, m)
+        else:
+            self.upd(p, v, 2 * i + 1, m + 1, r)
+
+        self.st[i] = self.st[2 * i] + self.st[2 * i + 1]
+
+    def qry(self, ql: int, qr: int, i: int = 1, l: int = 0, r: int = None) -> int:
+        if r is None:
+            r = self.n - 1
+
+        if qr < l or r < ql:
+            return 0
+
+        if ql <= l and r <= qr:
+            return self.st[i]
+
+        m = (l + r) // 2
+
+        return (
+            self.qry(ql, qr, 2 * i, l, m) +
+            self.qry(ql, qr, 2 * i + 1, m + 1, r)
+        )
+
+
+def queryPath(a: int, b: int, seg: SegTree, hld: HLD) -> int:
+    res = 0
+
+    while hld.headH[a] != hld.headH[b]:
+        if hld.depH[hld.headH[a]] < hld.depH[hld.headH[b]]:
+            a, b = b, a
+
+        res += seg.qry(
+            hld.inH[hld.headH[a]],
+            hld.inH[a],
+            1,
+            0,
+            seg.n - 1
+        )
+
+        a = hld.parH[hld.headH[a]]
+
+    if hld.depH[a] > hld.depH[b]:
+        a, b = b, a
+
+    res += seg.qry(
+        hld.inH[a],
+        hld.inH[b],
+        1,
+        0,
+        seg.n - 1
+    )
+
+    return res
 ```
 
 | ID | Title | Link |
@@ -480,23 +546,28 @@ class DSU:
     def __init__(self, n: int):
         self.p = list(range(n))
         self.r = [0] * n
+
     def find(self, x: int) -> int:
         if self.p[x] != x:
             self.p[x] = self.find(self.p[x])
-            return self.p[x]
-            def unite(self, a: int, b: int) -> bool:
-                a = self.find(a)
-                b = self.find(b)
-                if a == b:
-                    return False
-                    if self.r[a] < self.r[b]:
-                        a, b = b, a
-                        self.p[b] = a
-                        if self.r[a] == self.r[b]:
-                            self.r[a] += 1
-                            return True
+        return self.p[x]
 
+    def unite(self, a: int, b: int) -> bool:
+        a = self.find(a)
+        b = self.find(b)
 
+        if a == b:
+            return False
+
+        if self.r[a] < self.r[b]:
+            a, b = b, a
+
+        self.p[b] = a
+
+        if self.r[a] == self.r[b]:
+            self.r[a] += 1
+
+        return True
 ```
 
 | ID | Title | Link |
@@ -509,21 +580,25 @@ class DSU:
 
 ```python
 import heapq
+
 def mergeK(lists: list[list[int]]) -> list[int]:
     # T = (val, list_idx, pos)
     pq = []
+
     for i, lst in enumerate(lists):
         if lst:
             heapq.heappush(pq, (lst[0], i, 0))
-            out = []
-            while pq:
-                v, i, j = heapq.heappop(pq)
-                out.append(v)
-                if j + 1 < len(lists[i]):
-                    heapq.heappush(pq, (lists[i][j + 1], i, j + 1))
-                    return out
 
+    out = []
 
+    while pq:
+        v, i, j = heapq.heappop(pq)
+        out.append(v)
+
+        if j + 1 < len(lists[i]):
+            heapq.heappush(pq, (lists[i][j + 1], i, j + 1))
+
+    return out
 ```
 
 | ID | Title | Link |
@@ -535,28 +610,34 @@ def mergeK(lists: list[list[int]]) -> list[int]:
 
 ```python
 from collections import deque
+
 def topoKahn(n: int, g: list[list[int]]) -> list[int]:
     indeg = [0] * n
+
     for u in range(n):
         for v in g[u]:
             indeg[v] += 1
-            q = deque()
-            for i in range(n):
-                if not indeg[i]:
-                    q.append(i)
-                    order = []
-                    while q:
-                        u = q.popleft()
-                        order.append(u)
-                        for v in g[u]:
-                            indeg[v] -= 1
-                            if indeg[v] == 0:
-                                q.append(v)
-                                if len(order) != n:
-                                    order.clear()
-                                    return order
 
+    q = deque()
+    for i in range(n):
+        if indeg[i] == 0:
+            q.append(i)
 
+    order = []
+
+    while q:
+        u = q.popleft()
+        order.append(u)
+
+        for v in g[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+
+    if len(order) != n:
+        return []
+
+    return order
 ```
 
 | ID | Title | Link |
@@ -569,22 +650,26 @@ def topoKahn(n: int, g: list[list[int]]) -> list[int]:
 
 ```python
 import heapq
+
 def dijkstra(n: int, g: list[list[tuple[int, int]]], s: int) -> list[int]:
     INF = 1 << 60
     dist = [INF] * n
     dist[s] = 0
+
     pq = [(0, s)]
+
     while pq:
         d, u = heapq.heappop(pq)
+
         if d != dist[u]:
             continue
-            for v, w in g[u]:
-                if dist[v] > d + w:
-                    dist[v] = d + w
-                    heapq.heappush(pq, (dist[v], v))
-                    return dist
 
+        for v, w in g[u]:
+            if dist[v] > d + w:
+                dist[v] = d + w
+                heapq.heappush(pq, (dist[v], v))
 
+    return dist
 ```
 
 | ID | Title | Link |
@@ -707,34 +792,42 @@ class TarjanSCC:
         self.comp = [-1] * n
         self.st = []
         self.in_stack = [False] * n
+
     def addEdge(self, u: int, v: int) -> None:
         self.g[u].append(v)
+
     def dfs(self, u: int) -> None:
         self.tin[u] = self.low[u] = self.timer
         self.timer += 1
+
         self.st.append(u)
         self.in_stack[u] = True
+
         for v in self.g[u]:
             if self.tin[v] == -1:
                 self.dfs(v)
                 self.low[u] = min(self.low[u], self.low[v])
+
             elif self.in_stack[v]:
                 self.low[u] = min(self.low[u], self.tin[v])
-                if self.low[u] == self.tin[u]:
-                    while True:
-                        v = self.st.pop()
-                        self.in_stack[v] = False
-                        self.comp[v] = self.compCnt
-                        if v == u:
-                            break
-                            self.compCnt += 1
-                            def run(self) -> int:
-                                for i in range(self.n):
-                                    if self.tin[i] == -1:
-                                        self.dfs(i)
-                                        return self.compCnt
 
+        if self.low[u] == self.tin[u]:
+            while True:
+                v = self.st.pop()
+                self.in_stack[v] = False
+                self.comp[v] = self.compCnt
 
+                if v == u:
+                    break
+
+            self.compCnt += 1
+
+    def run(self) -> int:
+        for i in range(self.n):
+            if self.tin[i] == -1:
+                self.dfs(i)
+
+        return self.compCnt
 ```
 
 | ID | Title | Link |
@@ -761,17 +854,16 @@ class TarjanSCC:
 # Interval scheduling: select max non-overlapping
 def schedule(self, iv: list[tuple[int, int]]) -> int:
     iv.sort(key=lambda x: x[1])
+
     cnt = 0
-    end = -109
+    end = -10**9
+
     for s, e in iv:
         if s >= end:
             cnt += 1
             end = e
-            return cnt
 
-
-
-
+    return cnt
 ```
 {% endraw %}
 

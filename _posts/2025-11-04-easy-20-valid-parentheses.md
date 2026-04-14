@@ -116,19 +116,19 @@ Use a stack to track opening brackets. When encountering a closing bracket, chec
 
 ```python
 class Solution:
-def isValid(self, s):
-    list[char> st
-    dict[char, char> map = {}
-    :'', ':',
-    :']', '[',
-    :')', '('
-for c in s:
-    if c == '{'  or  c == '['  or  c == '(':
-        st.push(c)
-         else :
-        if(not st  or  st.top() != map[c]) return False
-        st.pop()
-return not st
+    def isValid(self, s: str) -> bool:
+        st: list[str] = []
+        close_to_open = {")": "(", "]": "[", "}": "{"}
+
+        for c in s:
+            if c in "([{":
+                st.append(c)
+            else:
+                if not st or st[-1] != close_to_open[c]:
+                    return False
+                st.pop()
+
+        return len(st) == 0
 
 ```
 
@@ -211,24 +211,16 @@ Result: false ✗
 
 ### 1. Initialize Stack and Map
 ```python
-list[char> st
-dict[char, char> map = {}
-:'', ':',
-:']', '[',
-:')', '('
-
+st: list[str] = []
+close_to_open = {")": "(", "]": "[", "}": "{"}
 ```
 - **Stack**: Stores opening brackets
 - **Map**: Maps closing brackets to their corresponding opening brackets
 
 ### 2. Process Opening Brackets
 ```python
-if c == '{'  or  c == '['  or  c == '(':
-    st.push(c)
-
-
-
-
+if c in "([{":
+    st.append(c)
 ```
 - Push opening brackets onto stack
 - They will be matched later when closing brackets appear
@@ -236,9 +228,9 @@ if c == '{'  or  c == '['  or  c == '(':
 ### 3. Process Closing Brackets
 ```python
 else:
-    if(not st  or  st.top() != map[c]) return False
+    if not st or st[-1] != close_to_open[c]:
+        return False
     st.pop()
-
 ```
 - **Check if stack is empty**: No opening bracket to match
 - **Check if top matches**: Most recent opening bracket must match current closing bracket
@@ -246,11 +238,7 @@ else:
 
 ### 4. Final Validation
 ```python
-return not st
-
-
-
-
+return len(st) == 0
 ```
 - If stack is empty, all brackets were matched
 - If stack has remaining elements, some opening brackets were never closed
@@ -267,20 +255,20 @@ return not st
 ### Approach 1: Without Hash Map (Explicit Checks)
 
 ```python
-def isValid(self, s):
-    list[char> st
-    for c in s:
-        if c == '('  or  c == '['  or  c == '{':
-            st.push(c)
-             else :
-            if(not st) return False
-            char top = st.top()
-            st.pop()
-            if((c == ')'  and  top != '(')  or
-            (c == ']'  and  top != '[')  or
-            (c == ''  and  top != ':')) :
-            return False
-return not st
+class Solution:
+    def isValid(self, s: str) -> bool:
+        st: list[str] = []
+        for c in s:
+            if c in "([{":
+                st.append(c)
+            else:
+                if not st:
+                    return False
+                want = {"(": ")", "[": "]", "{": "}"}[st[-1]]
+                if c != want:
+                    return False
+                st.pop()
+        return len(st) == 0
 
 ```
 
@@ -290,20 +278,20 @@ return not st
 ### Approach 2: Using String as Stack
 
 ```python
-def isValid(self, s):
-    str stack = ""
-    for c in s:
-        if c == '('  or  c == '['  or  c == '{':
-            stack += c
-             else :
-            if(not stack) return False
-            char last = stack[-1]
-            stack.pop()
-            if((c == ')'  and  last != '(')  or
-            (c == ']'  and  last != '[')  or
-            (c == ''  and  last != ':')) :
-            return False
-return not stack
+class Solution:
+    def isValid(self, s: str) -> bool:
+        stack = ""
+        for c in s:
+            if c in "([{":
+                stack += c
+            else:
+                if not stack:
+                    return False
+                last = stack[-1]
+                stack = stack[:-1]
+                if (c == ")" and last != "(") or (c == "]" and last != "[") or (c == "}" and last != "{"):
+                    return False
+        return len(stack) == 0
 
 ```
 
@@ -316,12 +304,15 @@ return not stack
 
 ```python
 # Only works for single bracket type like "()"
-def isValid(self, s):
+def is_valid_single_type(s: str) -> bool:
     count = 0
     for c in s:
-        if(c == '(') count += 1
-        else count -= 1
-        if(count < 0) return False
+        if c == "(":
+            count += 1
+        else:
+            count -= 1
+        if count < 0:
+            return False
     return count == 0
 
 ```
@@ -352,11 +343,11 @@ def isValid(self, s):
 
 ## Common Mistakes
 
-1. **Not checking stack empty**: Forgetting to check `st.empty()` before `st.top()`
+1. **Not checking stack empty**: Forgetting to check `not st` before reading `st[-1]`
 2. **Wrong map direction**: Mapping opening → closing instead of closing → opening
 3. **Not returning false immediately**: Continuing after finding a mismatch
 4. **Forgetting final check**: Not checking if stack is empty at the end
-5. **Using wrong comparison**: Comparing `st.top() == c` instead of `st.top() == map[c]`
+5. **Using wrong comparison**: Comparing `st[-1] == c` instead of `st[-1] == close_to_open[c]`
 
 ## Detailed Example Walkthrough
 
@@ -465,8 +456,9 @@ For very large strings, consider using a string as stack (if your use case allow
 ### Branch Prediction
 The hash map lookup is very fast, but explicit checks might be slightly faster due to branch prediction:
 ```python
-if c == ')':
-    if(not st  or  st.top() != '(') return False
+if c == ")":
+    if not st or st[-1] != "(":
+        return False
     st.pop()
 
 ```
@@ -509,14 +501,10 @@ This problem demonstrates the **Stack for Matching** pattern:
 The solution easily extends to other bracket types:
 
 ```python
-dict[char, char> map = {}
-:'', ':',
-:']', '[',
-:')', '(',
-:'>', '<'  # Add new type
-# Check also includes '<'
-if c == '{'  or  c == '['  or  c == '('  or  c == '<':
-    st.push(c)
+close_to_open = {")": "(", "]": "[", "}": "{", ">": "<"}
+# Opening set also includes '<' for angle brackets
+if c in "([{<":
+    st.append(c)
 
 ```
 

@@ -78,24 +78,29 @@ Use a monotonic deque (double-ended queue) that maintains indices of elements in
 Use a deque (double-ended queue) to maintain indices of elements in decreasing order of their values. This allows O(1) access to the maximum element in the current window.
 
 ```python
-class Solution:
-def maxSlidingWindow(self, nums, k):
-    list[int> rtn
-    deque<int> q
-    for(i = 0 i < (int)len(nums) i += 1) :
-    # Remove indices outside the current window
-    while not not q  and  q[0] < i - k + 1:
-        q.pop_front()
-    # Remove indices whose values are smaller than current element
-    # (they can never be the maximum)
-    while not not q  and  nums[q[-1]] < nums[i]:
-        q.pop()
-    q.append(i)
-    # Add maximum when window is complete
-    if i >= k - 1:
-        rtn.append(nums[q[0]])
-return rtn
+from collections import deque
 
+class Solution:
+    def maxSlidingWindow(self, nums, k):
+        rtn = []
+        q = deque()  # will store indices
+        
+        for i in range(len(nums)):
+            # Remove indices outside the window
+            while q and q[0] < i - k + 1:
+                q.popleft()
+            
+            # Remove smaller values (they can't be max)
+            while q and nums[q[-1]] < nums[i]:
+                q.pop()
+            
+            q.append(i)
+            
+            # Add result once window is full
+            if i >= k - 1:
+                rtn.append(nums[q[0]])
+        
+        return rtn
 ```
 
 ## How the Algorithm Works
@@ -158,33 +163,26 @@ Step 7: [7:7]           (removed 6, max = 7)
 
 ### 1. Initialize
 ```python
-list[int> rtn
-deque<int> q
+from collections import deque
 
+rtn: list[int] = []
+q: deque[int] = deque()
 ```
 - `rtn`: Result array to store maximums
 - `q`: Deque storing indices in decreasing order of values
 
 ### 2. Remove Out-of-Window Indices
 ```python
-while not not q  and  q[0] < i - k + 1:
-    q.pop_front()
-
-
-
-
+while q and q[0] < i - k + 1:
+    q.popleft()
 ```
 - Window starts at `i - k + 1`
 - Remove indices that are before the window start
 
 ### 3. Remove Smaller Elements
 ```python
-while not not q  and  nums[q[-1]] < nums[i]:
+while q and nums[q[-1]] < nums[i]:
     q.pop()
-
-
-
-
 ```
 - Remove indices whose values are smaller than `nums[i]`
 - These elements can never be the maximum in any future window
@@ -193,10 +191,6 @@ while not not q  and  nums[q[-1]] < nums[i]:
 ### 4. Add Current Index
 ```python
 q.append(i)
-
-
-
-
 ```
 - Add current index to deque
 
@@ -204,13 +198,9 @@ q.append(i)
 ```python
 if i >= k - 1:
     rtn.append(nums[q[0]])
-
-
-
-
 ```
 - When window is complete (i >= k - 1), add maximum to result
-- Maximum is always at `q.front()`
+- Maximum is always at `q[0]` (front of deque)
 
 ## Complexity Analysis
 
@@ -230,14 +220,9 @@ if i >= k - 1:
 ### Approach 1: Brute Force (TLE for large inputs)
 
 ```python
-def maxSlidingWindow(self, nums, k):
-    list[int> rtn
-    for(i = 0 i <= (int)len(nums) - k i += 1) :
-    maxVal = INT_MIN
-    for(j = i j < i + k j += 1) :
-    maxVal = max(maxVal, nums[j])
-rtn.append(maxVal)
-return rtn
+def max_sliding_window_bruteforce(nums: list[int], k: int) -> list[int]:
+    n = len(nums)
+    return [max(nums[i : i + k]) for i in range(n - k + 1)]
 
 ```
 
@@ -247,17 +232,19 @@ return rtn
 ### Approach 2: Using Priority Queue (Max Heap)
 
 ```python
-def maxSlidingWindow(self, nums, k):
-    list[int> rtn
-    heapq[pair<int, int>> pq  # :value, index
-for(i = 0 i < (int)len(nums) i += 1) :
-pq.push(:nums[i], i)
-# Remove elements outside window
-while pq.top().second <= i - k:
-    pq.pop()
-if i >= k - 1:
-    rtn.append(pq.top().first)
-return rtn
+import heapq
+
+def max_sliding_window_heap(nums: list[int], k: int) -> list[int]:
+    # Lazy heap: store (-value, index); stale entries skipped when index too old
+    heap: list[tuple[int, int]] = []
+    out: list[int] = []
+    for i, x in enumerate(nums):
+        heapq.heappush(heap, (-x, i))
+        while heap and heap[0][1] <= i - k:
+            heapq.heappop(heap)
+        if i >= k - 1:
+            out.append(-heap[0][0])
+    return out
 
 ```
 
@@ -267,15 +254,19 @@ return rtn
 ### Approach 3: Using Multiset
 
 ```python
-def maxSlidingWindow(self, nums, k):
-    list[int> rtn
-    multiset<int> window
-    for(i = 0 i < (int)len(nums) i += 1) :
-    window.insert(nums[i])
-    if i >= k - 1:
-        rtn.append(window.rbegin())  # Maximum element
-        window.erase(window.find(nums[i - k + 1]))  # Remove leftmost
-return rtn
+import bisect
+
+def max_sliding_window_sorted_window(nums: list[int], k: int) -> list[int]:
+    window: list[int] = []
+    out: list[int] = []
+    for i, x in enumerate(nums):
+        bisect.insort(window, x)
+        if i >= k:
+            j = bisect.bisect_left(window, nums[i - k])
+            window.pop(j)
+        if i >= k - 1:
+            out.append(window[-1])
+    return out
 
 ```
 
@@ -317,11 +308,13 @@ return rtn
 
 ### Early Termination Check
 ```python
-# Optional: If k == 1, just return the array
-if(k == 1) return nums
-# Optional: If k == len(nums), return max element
-if k == len(nums):
-    return :max_element(nums.begin(), nums.end())
+def max_sliding_window_with_shortcuts(nums: list[int], k: int) -> list[int]:
+    if k == 1:
+        return nums
+    if k == len(nums):
+        return [max(nums)]
+    # ... otherwise use the deque solution above
+    raise NotImplementedError
 
 ```
 

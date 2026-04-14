@@ -95,21 +95,23 @@ This is a classic **greedy interval scheduling** problem. The key insight is to 
 
 ```python
 class Solution:
-def eraseOverlapIntervals(self, intervals):
-    if(not intervals) return 0
-    sort(intervals.begin(), intervals.end(), [](u, v) :
-    return u[1] < v[1]
-    )
-    N = len(intervals)
-    right = intervals[0][1]
-    removals = 0
-    for(i = 1 i < N i += 1) :
-    if intervals[i][0] < right:
-        removals += 1
-         else :
-        right = intervals[i][1]
-return removals
+    def eraseOverlapIntervals(self, intervals):
+        if not intervals:
+            return 0
 
+        intervals.sort(key=lambda x: x[1])
+
+        N = len(intervals)
+        right = intervals[0][1]
+        removals = 0
+
+        for i in range(1, N):
+            if intervals[i][0] < right:
+                removals += 1
+            else:
+                right = intervals[i][1]
+
+        return removals
 ```
 
 ### **Algorithm Explanation:**

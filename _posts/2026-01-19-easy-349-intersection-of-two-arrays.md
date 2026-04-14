@@ -82,15 +82,16 @@ This problem requires finding common elements between two arrays, with each elem
 
 ```python
 class Solution:
-def intersection(self, nums1, nums2):
-    set[int> seen(nums1.begin(), nums1.end())
-    list[int> rtn
-    for num in nums2:
-        if num in seen:
-            rtn.emplace_back(num)
-            seen.erase(num)
-    return rtn
+    def intersection(self, nums1, nums2):
+        seen = set(nums1)
+        rtn = []
 
+        for num in nums2:
+            if num in seen:
+                rtn.append(num)
+                seen.remove(num)
+
+        return rtn
 ```
 
 ### Algorithm Explanation:
@@ -189,24 +190,28 @@ Result: [9, 4] ✓
 
 ```python
 class Solution:
-def intersection(self, nums1, nums2):
-    nums1.sort()
-    nums2.sort()
-    list[int> result
-    i = 0, j = 0
-    while i < len(nums1)  and  j < len(nums2):
-        if nums1[i] < nums2[j]:
-            i += 1
-             else if (nums1[i] > nums2[j]) :
-            j += 1
-             else :
-            # Found intersection
-            if not result  or  result[-1] != nums1[i]:
-                result.append(nums1[i])
-            i += 1
-            j += 1
-    return result
+    def intersection(self, nums1, nums2):
+        nums1.sort()
+        nums2.sort()
 
+        result = []
+
+        i = 0
+        j = 0
+
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] < nums2[j]:
+                i += 1
+            elif nums1[i] > nums2[j]:
+                j += 1
+            else:
+                # Found intersection
+                if not result or result[-1] != nums1[i]:
+                    result.append(nums1[i])
+                i += 1
+                j += 1
+
+        return result
 ```
 
 **Complexity:**
@@ -220,17 +225,20 @@ def intersection(self, nums1, nums2):
 
 ```python
 class Solution:
-def intersection(self, nums1, nums2):
-    bool present[1001] = :False
-for num in nums1:
-    present[num] = True
-list[int> result
-for num in nums2:
-    if present[num]:
-        result.append(num)
-        present[num] = False # Mark as added
-return result
+    def intersection(self, nums1, nums2):
+        present = [False] * 1001
 
+        for num in nums1:
+            present[num] = True
+
+        result = []
+
+        for num in nums2:
+            if present[num]:
+                result.append(num)
+                present[num] = False  # Mark as added
+
+        return result
 ```
 
 **Complexity:**
@@ -244,15 +252,17 @@ return result
 
 ```python
 class Solution:
-def intersection(self, nums1, nums2):
-    set[int> set1(nums1.begin(), nums1.end())
-    set[int> set2(nums2.begin(), nums2.end())
-    list[int> result
-    for num in set1:
-        if set2.count(num):
-            result.append(num)
-    return result
+    def intersection(self, nums1, nums2):
+        set1 = set(nums1)
+        set2 = set(nums2)
 
+        result = []
+
+        for num in set1:
+            if num in set2:
+                result.append(num)
+
+        return result
 ```
 
 **Complexity:**

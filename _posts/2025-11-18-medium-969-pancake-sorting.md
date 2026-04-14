@@ -88,29 +88,37 @@ The key insight is to use a greedy strategy: place the largest unsorted element 
 
 ```python
 class Solution:
-def flip(self, subarr, k):
-    i = 0
-    while i < k / 2:
-        tmp = subarr[i]
-        subarr[i] = subarr[k - i - 1]
-        subarr[k - i - 1] = tmp
-        i += 1
-def find(self, arr, target):
-    for(i = 0 i < (int)len(arr) i += 1) :
-    if(arr[i] == target) return i
-return -1
-def pancakeSort(self, arr):
-    list[int> rtn
-    for(valueToSort = (int)len(arr) valueToSort > 0 valueToSort -= 1) :
-    idx = find(arr, valueToSort)
-    if(idx == valueToSort - 1) continue
-    if idx != 0:
-        rtn.append(idx + 1)
-        flip(arr, idx + 1)
-    rtn.append(valueToSort)
-    flip(arr, valueToSort)
-return rtn
+    def flip(self, subarr, k):
+        i = 0
+        while i < k // 2:
+            tmp = subarr[i]
+            subarr[i] = subarr[k - i - 1]
+            subarr[k - i - 1] = tmp
+            i += 1
 
+    def find(self, arr, target):
+        for i in range(len(arr)):
+            if arr[i] == target:
+                return i
+        return -1
+
+    def pancakeSort(self, arr):
+        rtn = []
+
+        for valueToSort in range(len(arr), 0, -1):
+            idx = self.find(arr, valueToSort)
+
+            if idx == valueToSort - 1:
+                continue
+
+            if idx != 0:
+                rtn.append(idx + 1)
+                self.flip(arr, idx + 1)
+
+            rtn.append(valueToSort)
+            self.flip(arr, valueToSort)
+
+        return rtn
 ```
 
 ## How the Algorithm Works
@@ -197,7 +205,6 @@ def pancakeSort(self, arr):
     rtn.append(valueToSort)  # k = valueToSort
     flip(arr, valueToSort)      # Reverse first valueToSort elements
 return rtn
-
 ```
 
 ### Helper Functions
@@ -209,10 +216,6 @@ def flip(self, subarr, k):
     while i < k / 2:
         swap(subarr[i], subarr[k - i - 1])
         i += 1
-
-
-
-
 ```
 
 Reverses the first `k` elements by swapping elements from both ends.
@@ -223,7 +226,6 @@ def find(self, arr, target):
     for(i = 0 i < len(arr) i += 1) :
     if(arr[i] == target) return i
 return -1  # Should never happen given constraints
-
 ```
 
 Linear search to find the index of target value.
@@ -245,21 +247,28 @@ Linear search to find the index of target value.
 
 ```python
 class Solution:
-def pancakeSort(self, arr):
-    list[int> result
-    for(size = len(arr) size > 1 size -= 1) :
-    # Find index of maximum in unsorted portion
-    maxIdx = max_element(arr.begin(), arr.begin() + size) - arr.begin()
-    if(maxIdx == size - 1) continue  # Already in place
-    # Bring max to front
-    if maxIdx > 0:
-        result.append(maxIdx + 1)
-        reverse(arr.begin(), arr.begin() + maxIdx + 1)
-    # Move max to correct position
-    result.append(size)
-    reverse(arr.begin(), arr.begin() + size)
-return result
+    def pancakeSort(self, arr):
+        result = []
 
+        n = len(arr)
+
+        for size in range(n, 1, -1):
+            # Find index of maximum in unsorted portion
+            maxIdx = arr.index(max(arr[:size]))
+
+            if maxIdx == size - 1:
+                continue  # Already in place
+
+            # Bring max to front
+            if maxIdx > 0:
+                result.append(maxIdx + 1)
+                arr[:maxIdx + 1] = reversed(arr[:maxIdx + 1])
+
+            # Move max to correct position
+            result.append(size)
+            arr[:size] = reversed(arr[:size])
+
+        return result
 ```
 
 **Pros:**
@@ -278,28 +287,41 @@ Instead of linear search, maintain a position map:
 
 ```python
 class Solution:
-def pancakeSort(self, arr):
-    list[int> result
-    n = len(arr)
-    # Create position map: value . index
-    list[int> pos(n + 1)
-    for(i = 0 i < n i += 1) :
-    pos[arr[i]] = i
-for(val = n val >= 1 val -= 1) :
-idx = pos[val]
-if(idx == val - 1) continue
-if idx != 0:
-    result.append(idx + 1)
-    flip(arr, idx + 1, pos)
-result.append(val)
-flip(arr, val, pos)
-return result
-def flip(self, arr, k, pos):
-    for(i = 0 i < k / 2 i += 1) :
-    swap(arr[i], arr[k - 1 - i])
-    pos[arr[i]] = i
-    pos[arr[k - 1 - i]] = k - 1 - i
+    def pancakeSort(self, arr):
+        result = []
+        n = len(arr)
 
+        # Create position map: value -> index
+        pos = [0] * (n + 1)
+
+        for i in range(n):
+            pos[arr[i]] = i
+
+        for val in range(n, 0, -1):
+            idx = pos[val]
+
+            if idx == val - 1:
+                continue
+
+            if idx != 0:
+                result.append(idx + 1)
+                self.flip(arr, idx + 1, pos)
+
+            result.append(val)
+            self.flip(arr, val, pos)
+
+        return result
+
+    def flip(self, arr, k, pos):
+        i = 0
+        j = k - 1
+
+        while i < j:
+            arr[i], arr[j] = arr[j], arr[i]
+            pos[arr[i]] = i
+            pos[arr[j]] = j
+            i += 1
+            j -= 1
 ```
 
 **Pros:**

@@ -93,30 +93,41 @@ This is an interactive problem that requires an elimination strategy. The key in
 ## Solution: Elimination Strategy
 
 ```python
-/
- # This is the Master's API interface.
- # You should not implement it, or speculate about its implementation
- class Master:
-     guess(str word)
-/
-class Solution:
-def findSecretWord(self, words, master):
-    set[str> cand(words.begin(), words.end())
-    while not not cand:
-        str guess = cand.begin()
-        matches = master.guess(guess)
-        if matches == 6:
-        return
-        list[str> list
-        for s in words:
-            if match(s, guess) != matches:
-            cand.erase(s)
-def match(self, a, b):
-    cnt = 0
-    for(i = 0 i < 6 i += 1) :
-    cnt += (a[i] == b[i])
-return cnt
+# This is the Master's API interface.
+# You should not implement it, or speculate about its implementation
+class Master:
+    def guess(self, word: str) -> int:
+        pass
 
+
+class Solution:
+    def findSecretWord(self, words, master):
+        cand = set(words)
+        
+        while cand:
+            guess = next(iter(cand))
+            
+            matches = master.guess(guess)
+            
+            if matches == 6:
+                return
+            
+            newCand = set()
+            
+            for s in words:
+                if self.match(s, guess) == matches:
+                    newCand.add(s)
+            
+            cand = newCand
+    
+    def match(self, a, b):
+        cnt = 0
+        
+        for i in range(6):
+            if a[i] == b[i]:
+                cnt += 1
+        
+        return cnt
 ```
 
 ### Algorithm Breakdown:
@@ -248,34 +259,48 @@ A more sophisticated approach is to pick the word that minimizes the maximum num
 
 ```python
 class Solution:
-def findSecretWord(self, words, master):
-    list[str> cand = words
-    while not not cand:
-        # Pick word that minimizes maximum remaining candidates
-        str guess = cand[0]
-        minMax = len(cand)
-        for word in cand:
-            list[int> count(7, 0)
-            for other in cand:
-                count[match(word, other)]++
-            maxCount = max_element(count.begin(), count.end())
-            if maxCount < minMax:
-                minMax = maxCount
-                guess = word
-        matches = master.guess(guess)
-        if(matches == 6) return
-        # Filter candidates
-        list[str> newCand
-        for word in cand:
-            if match(word, guess) == matches:
-                newCand.append(word)
-        cand = newCand
-def match(self, a, b):
-    cnt = 0
-    for(i = 0 i < 6 i += 1) :
-    cnt += (a[i] == b[i])
-return cnt
-
+    def findSecretWord(self, words, master):
+        cand = words
+        
+        while cand:
+            # Pick word that minimizes maximum remaining candidates
+            guess = cand[0]
+            minMax = len(cand)
+            
+            for word in cand:
+                count = [0] * 7
+                
+                for other in cand:
+                    count[self.match(word, other)] += 1
+                
+                maxCount = max(count)
+                
+                if maxCount < minMax:
+                    minMax = maxCount
+                    guess = word
+            
+            matches = master.guess(guess)
+            
+            if matches == 6:
+                return
+            
+            # Filter candidates
+            newCand = []
+            
+            for word in cand:
+                if self.match(word, guess) == matches:
+                    newCand.append(word)
+            
+            cand = newCand
+    
+    def match(self, a, b):
+        cnt = 0
+        
+        for i in range(6):
+            if a[i] == b[i]:
+                cnt += 1
+        
+        return cnt
 ```
 
 This strategy picks the word that, in the worst case, leaves the fewest remaining candidates, leading to faster convergence.

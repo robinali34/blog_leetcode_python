@@ -118,20 +118,37 @@ This problem requires finding the minimum length subarray with sum >= target. Tw
 
 ```python
 class Solution:
-def minSubArrayLen(self, target, nums):
-    if(not nums) return 0
-    N = len(nums)
-    rtn = INT_MAX
-    list[int> sums(N + 1, 0)
-    for(i = 1 i <= N i += 1) :
-    sums[i] = sums[i - 1] + nums[i - 1]
-for(i = 1 i <= N i += 1) :
-currTarget = target + sums[i - 1]
-it = lower_bound(sums.begin(), sums.end(), currTarget)
-if it != sums.end():
-    rtn = min(rtn, (int)(it - sums.begin()) - (i - 1))
-(0 if         return rtn == INT_MAX else rtn)
-
+    def minSubArrayLen(self, target, nums):
+        if not nums:
+            return 0
+        
+        N = len(nums)
+        rtn = float('inf')
+        
+        sums = [0] * (N + 1)
+        
+        for i in range(1, N + 1):
+            sums[i] = sums[i - 1] + nums[i - 1]
+        
+        for i in range(1, N + 1):
+            currTarget = target + sums[i - 1]
+            
+            # lower_bound equivalent in Python
+            left, right = i, N
+            pos = N + 1
+            
+            while left <= right:
+                mid = (left + right) // 2
+                if sums[mid] >= currTarget:
+                    pos = mid
+                    right = mid - 1
+                else:
+                    left = mid + 1
+            
+            if pos <= N:
+                rtn = min(rtn, pos - (i - 1))
+        
+        return 0 if rtn == float('inf') else rtn
 ```
 
 ### Algorithm Explanation:
@@ -225,20 +242,27 @@ Result: min(4, 4, 3, 3, 2) = 2 ✓
 
 ```python
 class Solution:
-def minSubArrayLen(self, target, nums):
-    if(not nums) return 0
-    N = len(nums)
-    rtn = INT_MAX
-    start = 0, end = 0, sum = 0
-    while end < N:
-        sum += nums[end]
-        while sum >= target:
-            rtn = min(rtn, end - start + 1)
-            sum -= nums[start]
-            start += 1
-        end += 1
-    (0 if         return rtn == INT_MAX  else rtn)
-
+    def minSubArrayLen(self, target, nums):
+        if not nums:
+            return 0
+        
+        N = len(nums)
+        rtn = float('inf')
+        start = 0
+        end = 0
+        total = 0
+        
+        while end < N:
+            total += nums[end]
+            
+            while total >= target:
+                rtn = min(rtn, end - start + 1)
+                total -= nums[start]
+                start += 1
+            
+            end += 1
+        
+        return 0 if rtn == float('inf') else rtn
 ```
 
 ### Algorithm Explanation:

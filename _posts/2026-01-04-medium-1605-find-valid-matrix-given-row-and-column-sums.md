@@ -137,21 +137,28 @@ This is a **greedy algorithm** problem. The key insight is to fill the matrix ce
 
 ```python
 class Solution:
-def restoreMatrix(self, rowSum, colSum):
-    N = len(rowSum), M = len(colSum)
-    list[list[int>> matrix(N, list[int>(M, 0))
-    i = 0, j = 0
-    while i < N  and  j < M:
-        v = min(rowSum[i], colSum[j])
-        matrix[i][j] = v
-        rowSum[i] -= v
-        colSum[j] -= v
-        if rowSum[i] == 0:
-            i += 1
-        if colSum[j] == 0:
-            j += 1
-    return matrix
+    def restoreMatrix(self, rowSum, colSum):
+        N = len(rowSum)
+        M = len(colSum)
 
+        matrix = [[0] * M for _ in range(N)]
+
+        i = 0
+        j = 0
+
+        while i < N and j < M:
+            v = min(rowSum[i], colSum[j])
+            matrix[i][j] = v
+
+            rowSum[i] -= v
+            colSum[j] -= v
+
+            if rowSum[i] == 0:
+                i += 1
+            if colSum[j] == 0:
+                j += 1
+
+        return matrix
 ```
 
 ### **Algorithm Explanation:**

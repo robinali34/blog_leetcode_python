@@ -89,17 +89,22 @@ This problem is a classic application of the prefix sum technique combined with 
 
 ```python
 class Solution:
-def subarraySum(self, nums, k):
-    cnt = 0, sum = 0
-    dict[int, int> prefixSum
-    prefixSum[0] = 1
-    for num in nums:
-        sum += num
-        if sum - k in prefixSum:
-            cnt += prefixSum[sum - k]
-        prefixSum[sum]++
-    return cnt
-
+    def subarraySum(self, nums, k):
+        cnt = 0
+        s = 0
+        
+        prefixSum = {}
+        prefixSum[0] = 1
+        
+        for num in nums:
+            s += num
+            
+            if s - k in prefixSum:
+                cnt += prefixSum[s - k]
+            
+            prefixSum[s] = prefixSum.get(s, 0) + 1
+        
+        return cnt
 ```
 
 ### Algorithm Breakdown:

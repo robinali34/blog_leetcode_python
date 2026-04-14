@@ -79,43 +79,27 @@ Use two multisets (two-heaps pattern): maintain a small multiset (for smaller ha
 **Time Complexity:** O(n log k) - Each insertion/deletion is O(log k)  
 **Space Complexity:** O(k) - Two multisets store window elements
 
-Use two multisets to maintain a balanced structure: `lo` contains the smaller half, `hi` contains the larger half. The median is the maximum of `lo` (odd k) or average of max(lo) and min(hi) (even k).
+Use a sorted window and `bisect` for insert/remove (same idea as two balanced multisets, implemented with sorted order).
 
 ```python
-class Solution:
-def medianSlidingWindow(self, nums, k):
-    list[double> res
-    multiset<int> lo, hi
-    balance = []() :
-    while len(lo) > len(hi) + 1:
-        hi.insert(prev(lo.end()))
-        lo.erase(prev(lo.end()))
-    while len(lo) < len(hi):
-        lo.insert(hi.begin())
-        hi.erase(hi.begin())
-getMedian = []() . double :
-if(k % 2 == 0) return ((double)prev(lo.end()) + hi.begin()) / 2.0
-else return prev(lo.end())
-for(i = 0 i < len(nums) i += 1) :
-# Insert new element
-if not lo  or  nums[i] <= *prev(lo.end()):
-lo.insert(nums[i])
-else:
-hi.insert(nums[i])
-balance()
-# Remove element leaving window
-if i >= k:
-    out = nums[i - k]
-    if lo.find(out) != lo.end():
-    lo.erase(lo.find(out))
-else:
-hi.erase(hi.find(out))
-balance()
-# Calculate median when window is complete
-if i >= k - 1:
-res.append(getMedian())
-return res
+import bisect
 
+class Solution:
+    def medianSlidingWindow(self, nums: list[int], k: int) -> list[float]:
+        window = sorted(nums[:k])
+
+        def median() -> float:
+            if k % 2 == 1:
+                return float(window[k // 2])
+            return (window[k // 2 - 1] + window[k // 2]) / 2.0
+
+        res = [median()]
+        for i in range(k, len(nums)):
+            out = nums[i - k]
+            window.pop(bisect.bisect_left(window, out))
+            bisect.insort(window, nums[i])
+            res.append(median())
+        return res
 ```
 
 ## How Solution 1 Works
@@ -176,25 +160,30 @@ Maintain a single multiset and a pointer to the median element. When adding/remo
 
 ```python
 class Solution:
-def medianSlidingWindow(self, nums, k):
-    list[double> medians
-    multiset<int> window(nums.begin(), nums.begin() + k)
-    mid = next(window.begin(), k / 2)
-    for (i = k i += 1) :
-    # Calculate median
-    medians.append(((double)(mid) + next(mid, k % 2 - 1))  0.5)
-    if i == len(nums):
-    break
-    # Insert new element
-    window.insert(nums[i])
-    if nums[i] < *mid:
-    mid -= 1  # Median moved left
-    # Remove element leaving window
-    if nums[i - k] <= *mid:
-    mid += 1  # Median moved right
-    window.erase(window.lower_bound(nums[i - k]))
-return medians
+    def medianSlidingWindow(self, nums, k):
+        medians = []
 
+        window = sorted(nums[:k])
+
+        def get_mid():
+            if k % 2 == 1:
+                return window[k // 2]
+            else:
+                return (window[k // 2 - 1] + window[k // 2]) / 2.0
+
+        medians.append(get_mid())
+
+        for i in range(k, len(nums)):
+            # remove outgoing element
+            window.remove(nums[i - k])
+
+            # insert incoming element
+            window.append(nums[i])
+            window.sort()
+
+            medians.append(get_mid())
+
+        return medians
 ```
 
 ## How Solution 2 Works
@@ -223,22 +212,14 @@ return medians
 ### Median Calculation Trick
 
 ```python
-medians.append(((double)(mid) + next(mid, k % 2 - 1))  0.5)
-
-```
-
-- **k is odd**: `k % 2 - 1 = 0` → `*mid` (use same element twice, divide by 2)
-  - Actually, for odd k, we should use `*mid` directly, but this formula works
-- **k is even**: `k % 2 - 1 = -1` → `(*mid + *prev(mid)) / 2.0`
-
-**Correction for odd k:**
-```python
 if k % 2 == 1:
-medians.append(mid)
+    medians.append(float(window[k // 2]))
 else:
-medians.append(((double)(mid) + prev(mid))  0.5)
-
+    medians.append((window[k // 2 - 1] + window[k // 2]) / 2.0)
 ```
+
+- **k is odd**: use the single middle element `window[k // 2]`.
+- **k is even**: average the two middle elements `window[k // 2 - 1]` and `window[k // 2]`.
 
 ## Algorithm Breakdown
 
@@ -246,84 +227,60 @@ medians.append(((double)(mid) + prev(mid))  0.5)
 
 #### 1. Insert New Element
 ```python
-if not lo  or  nums[i] <= *prev(lo.end()):
-lo.insert(nums[i])
-else:
-hi.insert(nums[i])
+import bisect
 
+bisect.insort(window, nums[i])
 ```
-- Insert into appropriate multiset based on comparison with max of `lo`
+- Keep `window` sorted after each insert (multiset behavior).
 
 #### 2. Balance the Two Multisets
 ```python
-balance = []() :
+# After each add/remove, rebalance lo/hi so sizes differ by at most 1
 while len(lo) > len(hi) + 1:
-    hi.insert(prev(lo.end()))
-    lo.erase(prev(lo.end()))
+    bisect.insort(hi, lo.pop())
 while len(lo) < len(hi):
-    lo.insert(hi.begin())
-    hi.erase(hi.begin())
-
+    bisect.insort(lo, hi.pop(0))
 ```
-- Maintain: `lo.size() == hi.size()` (even k) or `lo.size() == hi.size() + 1` (odd k)
+- Maintain: `len(lo) == len(hi)` (even k) or `len(lo) == len(hi) + 1` (odd k) when using two sorted halves.
 
 #### 3. Remove Element Leaving Window
 ```python
 if i >= k:
     out = nums[i - k]
-    if lo.find(out) != lo.end():
-        lo.erase(lo.find(out))
-    else:
-        hi.erase(hi.find(out))
-        balance()
-
-
+    window.pop(bisect.bisect_left(window, out))
 ```
-- Find and remove element from appropriate multiset
+- Remove one occurrence of the value leaving the window (`bisect_left` + `pop`).
 
 #### 4. Calculate Median
 ```python
-getMedian = []() . double :
 if k % 2 == 0:
-return ((double)prev(lo.end()) + hi.begin()) / 2.0
+    median = (window[k // 2 - 1] + window[k // 2]) / 2.0
 else:
-return prev(lo.end())
-
+    median = float(window[k // 2])
 ```
 
 ### Solution 2: Single Multiset with Iterator
 
 #### 1. Initialize
 ```python
-multiset<int> window(nums.begin(), nums.begin() + k)
-mid = next(window.begin(), k / 2)
-
-
-
-
+window = sorted(nums[:k])
+# Median index: k // 2 (odd k) or k//2-1 and k//2 for even k
 ```
-- Create multiset with first k elements
-- Set `mid` to point to median position
+- Start with the first `k` elements sorted.
 
 #### 2. Insert and Adjust
 ```python
-window.insert(nums[i])
-if nums[i] < *mid:
-mid -= 1  # New element is smaller, median moved left
-
+bisect.insort(window, nums[i])
+# If tracking an index into window, adjust when order changes
 ```
-- Insert new element
-- Adjust median iterator if needed
+- Insert new element in sorted order.
 
 #### 3. Remove and Adjust
 ```python
-if nums[i - k] <= *mid:
-mid += 1  # Removed element was <= median, median moved right
-window.erase(window.lower_bound(nums[i - k]))
-
+out = nums[i - k]
+window.pop(bisect.bisect_left(window, out))
 ```
-- Adjust median iterator before removal
-- Remove element using `lower_bound` to handle duplicates
+- Remove one occurrence of the outgoing value, then recompute median from `window`.
 
 ## Complexity Analysis
 
@@ -374,28 +331,30 @@ window.erase(window.lower_bound(nums[i - k]))
 
 ```python
 class Solution:
-def medianSlidingWindow(self, nums, k):
-    list[double> medians
-    multiset<int> window(nums.begin(), nums.begin() + k)
-    mid = next(window.begin(), k / 2)
-    for (i = k i += 1) :
-    # Calculate median
-    if k % 2 == 1:
-        medians.append(mid)
-         else :
-        medians.append(((double)(mid) + prev(mid))  0.5)
-    if i == len(nums):
-    break
-    # Insert new element
-    window.insert(nums[i])
-    if nums[i] < *mid:
-    mid -= 1
-    # Remove element leaving window
-    if nums[i - k] <= *mid:
-    mid += 1
-    window.erase(window.lower_bound(nums[i - k]))
-return medians
+    def medianSlidingWindow(self, nums, k):
+        medians = []
 
+        window = sorted(nums[:k])
+
+        def get_median():
+            if k % 2 == 1:
+                return window[k // 2]
+            else:
+                return (window[k // 2 - 1] + window[k // 2]) / 2.0
+
+        medians.append(get_median())
+
+        for i in range(k, len(nums)):
+            # remove outgoing element
+            window.remove(nums[i - k])
+
+            # insert incoming element
+            window.append(nums[i])
+            window.sort()
+
+            medians.append(get_median())
+
+        return medians
 ```
 
 ## Related Problems
@@ -428,15 +387,16 @@ This problem demonstrates the **Two-Heaps/Multisets Pattern**:
 
 ### Solution 1: Pre-allocate Result
 ```python
-list[double> res
-res.reserve(len(nums) - k + 1)  # Pre-allocate space
-
+# Optional: reserve space for the output (length is known)
+res: list[float] = [0.0] * (len(nums) - k + 1)
 ```
 
 ### Solution 2: Early Exit
 ```python
-if k == 1:
-    return list[double>(nums.begin(), nums.end())
+def median_sliding_window_early_k1(nums: list[int], k: int) -> list[float]:
+    if k == 1:
+        return [float(x) for x in nums]
+    raise NotImplementedError
 
 ```
 

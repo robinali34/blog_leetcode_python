@@ -86,41 +86,59 @@ Use recursion to handle nested parentheses. When encountering `(`, recursively e
 
 ```python
 class Solution:
-def parseExpr(self, s, idx):
-    char op = '+'
-    list[int> stk
-    for( idx < (int)len(s) idx += 1) :
-    if(iswspace(s[idx])) continue
-    long num = 0
-    if s[idx] == '(':
-        num = parseExpr(s, idx += 1)
-         else if(isdigit(s[idx])) :
-        num = parseNum(s, idx)
-        idx -= 1
-         else if(s[idx] == ')') :
-        break
-         else :
-        continue
-    switch(op) :
-    case '+': stk.append(num) break
-    case '-': stk.append(-num) break
-    case '': stk[-1] = num break
-    case '/': stk[-1] /= num break
-if idx + 1 < len(s):
-    op = s[idx + 1]
-rtn = 0
-for(num: stk) rtn += num
-return rtn
-def parseNum(self, s, idx):
-    long num = 0
-    while idx < (int)len(s)  and  isdigit(s[idx]):
-        num = (num  10) + (s[idx] - '0')
-        idx += 1
-    return num
-def calculate(self, s):
-    idx = 0
-    return parseExpr(s, idx)
+    def parseExpr(self, s, idx):
+        op = '+'
+        stk = []
 
+        while idx < len(s):
+            if s[idx].isspace():
+                idx += 1
+                continue
+
+            num = 0
+
+            if s[idx] == '(':
+                idx += 1
+                num = self.parseExpr(s, idx)
+
+            elif s[idx].isdigit():
+                num = self.parseNum(s, idx)
+
+            elif s[idx] == ')':
+                break
+
+            else:
+                op = s[idx]
+                idx += 1
+                continue
+
+            if op == '+':
+                stk.append(num)
+            elif op == '-':
+                stk.append(-num)
+            elif op == '*':
+                stk[-1] = num
+            elif op == '/':
+                stk[-1] = stk[-1] // num
+
+        rtn = 0
+        for num in stk:
+            rtn += num
+
+        return rtn
+
+    def parseNum(self, s, idx):
+        num = 0
+
+        while idx < len(s) and s[idx].isdigit():
+            num = num * 10 + (ord(s[idx]) - ord('0'))
+            idx += 1
+
+        return num
+
+    def calculate(self, s):
+        idx = 0
+        return self.parseExpr(s, idx)
 ```
 
 ## Solution 2: Optimized Iterative Approach
@@ -132,53 +150,61 @@ Use an iterative approach with a stack to handle parentheses. When encountering 
 
 ```python
 class Solution:
-def calculate(self, s):
-    list[int> nums
-    list[char> ops
-    num = 0
-    char op = '+'
-    for(i = 0 i < len(s) i += 1) :
-    char c = s[i]
-    if isdigit(c):
-        num = num  10 + (c - '0')
-    if (not isdigit(c)  and  not isspace(c))  or  i == len(s) - 1:
-        if c == '(':
-            nums.push(0)
-            ops.push(op)
-            num = 0
-            op = '+'
-             else :
-            # Apply current operation
-            if op == '+':
-                nums.push(num)
-                 else if(op == '-') :
-                nums.push(-num)
-                 else if(op == '') :
-                top = nums.top()
-                nums.pop()
-                nums.push(top  num)
-                 else if(op == '/') :
-                top = nums.top()
-                nums.pop()
-                nums.push(top / num)
-            if c == ')':
-                # Evaluate expression inside parentheses
-                sum = 0
-                while not not ops  and  ops.top() != '(':
-                    sum += nums.top()
-                    nums.pop()
-                ops.pop() # Remove '('
-                num = sum
-                ('+' if                         op = not ops  else ops.top())
-                 else :
-                op = c
-                num = 0
-result = 0
-while not not nums:
-    result += nums.top()
-    nums.pop()
-return result
+    def calculate(self, s):
+        nums = []
+        ops = []
 
+        num = 0
+        op = '+'
+
+        for i in range(len(s)):
+            c = s[i]
+
+            if c.isdigit():
+                num = num * 10 + (ord(c) - ord('0'))
+
+            if (not c.isdigit() and not c.isspace()) or i == len(s) - 1:
+
+                if c == '(':
+                    nums.append(0)
+                    ops.append(op)
+                    num = 0
+                    op = '+'
+
+                else:
+                    # Apply current operation
+                    if op == '+':
+                        nums.append(num)
+                    elif op == '-':
+                        nums.append(-num)
+                    elif op == '*':
+                        top = nums.pop()
+                        nums.append(top * num)
+                    elif op == '/':
+                        top = nums.pop()
+                        nums.append(top // num)
+
+                    if c == ')':
+                        # Evaluate expression inside parentheses
+                        total = 0
+
+                        while ops and ops[-1] != '(':
+                            total += nums.pop()
+
+                        ops.pop()  # Remove '('
+                        num = total
+
+                        op = '+' if not ops else ops[-1]
+
+                    else:
+                        op = c
+                        num = 0
+
+        result = 0
+        while nums:
+            result += nums.pop()
+
+        return result
 ```
 
 ## Solution 3: Simplified Optimized Approach
@@ -190,62 +216,62 @@ A cleaner iterative solution that uses a single stack to track both numbers and 
 
 ```python
 class Solution:
-def calculate(self, s):
-    list[int> stk
-    num = 0
-    char sign = '+'
-    for(i = 0 i < len(s) i += 1) :
-    char c = s[i]
-    if isdigit(c):
-        num = num  10 + (c - '0')
-    if c == '(':
-        # Push current state
-        stk.push(0)
-        (1 if                 stk.push(sign == '+'  else -1))
+    def calculate(self, s):
+        stk = []
         num = 0
         sign = '+'
-         else if(c == ')') :
-        # Evaluate expression inside parentheses
-        val = num
-        multiplier = stk.top() stk.pop()
-        prevSum = stk.top() stk.pop()
-        num = prevSum + multiplier  val
-        sign = '+'
-         else if(c == '+'  or  c == '-'  or  c == ''  or  c == '/') :
-        # Process previous operation
-        if sign == '+':
-            stk.push(num)
-             else if(sign == '-') :
-            stk.push(-num)
-             else if(sign == '') :
-            top = stk.top()
-            stk.pop()
-            stk.push(top  num)
-             else if(sign == '/') :
-            top = stk.top()
-            stk.pop()
-            stk.push(top / num)
-        sign = c
-        num = 0
-# Process last number
-if sign == '+':
-    stk.push(num)
-     else if(sign == '-') :
-    stk.push(-num)
-     else if(sign == '') :
-    top = stk.top()
-    stk.pop()
-    stk.push(top  num)
-     else if(sign == '/') :
-    top = stk.top()
-    stk.pop()
-    stk.push(top / num)
-result = 0
-while not not stk:
-    result += stk.top()
-    stk.pop()
-return result
 
+        for i in range(len(s)):
+            c = s[i]
+
+            if c.isdigit():
+                num = num * 10 + (ord(c) - ord('0'))
+
+            if c == '(':
+                stk.append(0)
+                stk.append(1 if sign == '+' else -1)
+                num = 0
+                sign = '+'
+
+            elif c == ')':
+                val = num
+                multiplier = stk.pop()
+                prevSum = stk.pop()
+                num = prevSum + multiplier * val
+                sign = '+'
+
+            elif c in "+-*/":
+                if sign == '+':
+                    stk.append(num)
+                elif sign == '-':
+                    stk.append(-num)
+                elif sign == '*':
+                    top = stk.pop()
+                    stk.append(top * num)
+                elif sign == '/':
+                    top = stk.pop()
+                    stk.append(top // num)
+
+                sign = c
+                num = 0
+
+        # process last number
+        if sign == '+':
+            stk.append(num)
+        elif sign == '-':
+            stk.append(-num)
+        elif sign == '*':
+            top = stk.pop()
+            stk.append(top * num)
+        elif sign == '/':
+            top = stk.pop()
+            stk.append(top // num)
+
+        result = 0
+        while stk:
+            result += stk.pop()
+
+        return result
 ```
 
 ## How the Algorithms Work

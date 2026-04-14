@@ -225,25 +225,29 @@ Where n is the input length and m is the decoded string length.
 ### Approach 1: Recursive Solution
 ```python
 class Solution:
-def decodeString(self, s: str, i: list[int]) -> str:
-result = ""
-while i[0] < len(s) and s[i[0]] != ']':
-if s[i[0]].isdigit():
-k = 0
-while i[0] < len(s) and s[i[0]].isdigit():
-k = k  10 + int(s[i[0]])
-i[0] += 1
-i[0] += 1  # skip '['
-decoded = self.decodeString(s, i)
-i[0] += 1  # skip ']'
-result += decoded  k
-else:
-result += s[i[0]]
-i[0] += 1
-return result
-def decodeString(self, s: str) -> str:
-return self.decodeString(s, [0])
+    def decodeHelper(self, s: str, i: list[int]) -> str:
+        result = ""
+        
+        while i[0] < len(s) and s[i[0]] != ']':
+            if s[i[0]].isdigit():
+                k = 0
+                while i[0] < len(s) and s[i[0]].isdigit():
+                    k = k * 10 + int(s[i[0]])   # FIXED
+                    i[0] += 1
+                
+                i[0] += 1  # skip '['
+                decoded = self.decodeHelper(s, i)
+                i[0] += 1  # skip ']'
+                
+                result += decoded * k   # FIXED
+            else:
+                result += s[i[0]]
+                i[0] += 1
+        
+        return result
 
+    def decodeString(self, s: str) -> str:
+        return self.decodeHelper(s, [0])
 ```
 
 **Time Complexity:** O(n + m)  

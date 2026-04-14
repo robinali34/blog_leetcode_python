@@ -105,21 +105,45 @@ This problem requires applying a quadratic function to each element and returnin
 
 ```python
 class Solution:
-def sortTransformedArray(self, nums, a, b, c):
-    if(not nums) return :
-N = len(nums)
-list[int> rtn(N, 0)
-fn = [](x) :
-return a  x  x + b  x + c
-i = 0, j = N - 1
-(N - 1 if         index = a >= 0  else 0)
-while i <=j:
-    if a >= 0:
-        (fn(nums[i += 1]) if                 rtn[index -= 1] = fn(nums[i]) >= fn(nums[j])  else fn(nums[j -= 1]))
-         else :
-        (fn(nums[i += 1]) if                 rtn[index += 1] = fn(nums[i]) <= fn(nums[j])  else fn(nums[j -= 1]))
-return rtn
+    def sortTransformedArray(self, nums, a, b, c):
+        def f(x):
+            return a * x * x + b * x + c
 
+        n = len(nums)
+        res = [0] * n
+
+        i, j = 0, n - 1
+
+        # fill direction depends on parabola shape
+        if a >= 0:
+            idx = n - 1
+            step = -1
+        else:
+            idx = 0
+            step = 1
+
+        while i <= j:
+            left = f(nums[i])
+            right = f(nums[j])
+
+            if a >= 0:
+                if left > right:
+                    res[idx] = left
+                    i += 1
+                else:
+                    res[idx] = right
+                    j -= 1
+                idx += step
+            else:
+                if left < right:
+                    res[idx] = left
+                    i += 1
+                else:
+                    res[idx] = right
+                    j -= 1
+                idx += step
+
+        return res
 ```
 
 ### **Algorithm Explanation:**

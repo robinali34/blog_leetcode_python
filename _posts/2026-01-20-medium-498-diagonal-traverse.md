@@ -80,29 +80,39 @@ Whenever the next move would go **out of bounds**, we “bounce” by:
 {% raw %}
 ```python
 class Solution:
-def findDiagonalOrder(self, mat):
-    M = len(mat), N = mat[0].__len__()
-    TOTAL = M  N
-    row = 0, col = 0, dirIdx = 0
-    list[int> rtn(TOTAL)
-    for(i = 0 i < TOTAL i += 1) :
-    rtn[i] = mat[row][col]
-    nextRow = row + DIRS[dirIdx][0]
-    nextCol = col + DIRS[dirIdx][1]
-    if nextRow < 0  or  nextRow >= M  or  nextCol < 0  or  nextCol >= N:
-        dirIdx = 1 - dirIdx
-        if dirIdx == 0:
-            if(row == M - 1) col += 1
-            else row += 1
-             else :
-            if(col == N - 1) row += 1
-            else col += 1
-         else:
-        row = nextRow
-        col = nextCol
-return rtn
-list[list[int>> DIRS = ::-1, 1, :1, -1
-
+    def findDiagonalOrder(self, mat):
+        M, N = len(mat), len(mat[0])
+        TOTAL = M * N
+        
+        row, col, dirIdx = 0, 0, 0
+        rtn = [0] * TOTAL
+        
+        DIRS = [(-1, 1), (1, -1)]
+        
+        for i in range(TOTAL):
+            rtn[i] = mat[row][col]
+            
+            nextRow = row + DIRS[dirIdx][0]
+            nextCol = col + DIRS[dirIdx][1]
+            
+            if nextRow < 0 or nextRow >= M or nextCol < 0 or nextCol >= N:
+                dirIdx = 1 - dirIdx
+                
+                if dirIdx == 0:
+                    if row == M - 1:
+                        col += 1
+                    else:
+                        row += 1
+                else:
+                    if col == N - 1:
+                        row += 1
+                    else:
+                        col += 1
+            else:
+                row = nextRow
+                col = nextCol
+        
+        return rtn
 ```
 {% endraw %}
 

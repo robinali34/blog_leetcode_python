@@ -107,17 +107,16 @@ Uses stack for counts but `s.erase()` which is inefficient.
 
 ```python
 class Solution:
-def removeDuplicates(self, s, k):
-    list[pair<int, char>> counts
-    for(i = 0 i < (int)len(s) i += 1) :
-    if not counts  or  s[i] != counts[-1].second:
-        counts.append(:1, s[i])
-         else if(counts += 1[-1].first == k) :
-        counts.pop()
-s = ""
-for p in counts:
-    s += str(p.first, p.second)
-return s
+    def removeDuplicates(self, s: str, k: int) -> str:
+        stack: list[list] = []  # [char, count]
+        for ch in s:
+            if stack and stack[-1][0] == ch:
+                stack[-1][1] += 1
+                if stack[-1][1] == k:
+                    stack.pop()
+            else:
+                stack.append([ch, 1])
+        return "".join(c * n for c, n in stack)
 
 ```
 
@@ -125,34 +124,38 @@ return s
 
 ```python
 class Solution:
-def removeDuplicates(self, s, k):
-    left = 0
-    list[int> stk
-    for(right = 0 right < (int)len(s) right += 1, left += 1) :
-    s[left] = s[right]
-    if left == 0  or  s[left] != s[left - 1]:
-        stk.push(1)
-         else if(stk += 1.top() == k) :
-        stk.pop()
-        left -= k
-return s.substr(0, left)
+    def removeDuplicates(self, s: str, k: int) -> str:
+        # Same stack pattern as Solution 1; in-place two-pointer in Python is awkward.
+        stack: list[list] = []
+        for ch in s:
+            if stack and stack[-1][0] == ch:
+                stack[-1][1] += 1
+                if stack[-1][1] == k:
+                    stack.pop()
+            else:
+                stack.append([ch, 1])
+        return "".join(c * n for c, n in stack)
 
 ```
 
 ## Solution 3: Stack with String Erase (Not Recommended)
 
 ```python
-class Solution:
-def removeDuplicates(self, s, k):
-    list[int> stk
-    for(i = 0 i < (int)len(s) i += 1) :
-    if i == 0  or  s[i] != s[i - 1]:
-        stk.push(1)
-         else if(stk += 1.top() == k) :
-        stk.pop()
-        s.erase(i - k + 1, k)
-        i = i - k
-return s
+def remove_duplicates_erase_style(s: str, k: int) -> str:
+    """Illustrative only: repeated scans; O(n^2) worst case — not recommended."""
+    t = list(s)
+    changed = True
+    while changed:
+        changed = False
+        i = 0
+        while i <= len(t) - k:
+            if all(t[i] == t[i + j] for j in range(k)):
+                del t[i : i + k]
+                changed = True
+                i = max(0, i - k + 1)
+            else:
+                i += 1
+    return "".join(t)
 
 ```
 
@@ -284,16 +287,15 @@ Actually, I think there might be an off-by-one issue. Let me document what the c
 ### Solution 1: Vector of Pairs
 
 ```python
-list[pair<int, char>> counts
-for(i = 0 i < len(s) i += 1) :
-if not counts  or  s[i] != counts[-1].second:
-    counts.append(:1, s[i])  # New sequence
-     else if(counts += 1[-1].first == k) :
-    counts.pop()  # Remove k-length sequence
-# Reconstruct str
-s = ""
-for p in counts:
-    s += str(p.first, p.second)
+counts: list[list] = []
+for ch in s:
+    if not counts or ch != counts[-1][0]:
+        counts.append([ch, 1])
+    else:
+        counts[-1][1] += 1
+        if counts[-1][1] == k:
+            counts.pop()
+result = "".join(c * n for c, n in counts)
 
 ```
 
@@ -306,16 +308,16 @@ for p in counts:
 ### Solution 2: In-Place Two Pointers
 
 ```python
-left = 0  # Write pointer
-list[int> stk  # Count stack
-for(right = 0 right < len(s) right += 1, left += 1) :
-s[left] = s[right]  # Write current character
-if left == 0  or  s[left] != s[left - 1]:
-    stk.push(1)  # New sequence
-     else if(stk += 1.top() == k) :
-    stk.pop()  # Remove k-length sequence
-    left -= k  # Move write pointer back
-return s.substr(0, left)
+def build_from_stack(s: str, k: int) -> str:
+    stack: list[list] = []
+    for ch in s:
+        if stack and stack[-1][0] == ch:
+            stack[-1][1] += 1
+            if stack[-1][1] == k:
+                stack.pop()
+        else:
+            stack.append([ch, 1])
+    return "".join(c * n for c, n in stack)
 
 ```
 
@@ -346,8 +348,8 @@ return s.substr(0, left)
 ### Why Vector of Pairs Works
 
 ```python
-if not counts  or  s[i] != counts[-1].second:
-    counts.append(:1, s[i])
+if not counts or ch != counts[-1][0]:
+    counts.append([ch, 1])
 
 ```
 

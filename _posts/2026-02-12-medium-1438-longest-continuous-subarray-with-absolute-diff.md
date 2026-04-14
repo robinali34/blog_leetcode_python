@@ -62,18 +62,24 @@ Two common sliding-window techniques:
 
 {% raw %}
 ```python
-class Solution:
-def longestSubarray(self, nums, limit):
-    multiset<int> ms
-    left = 0, rtn = 0
-    for (right = 0 right < (int)len(nums) right += 1) :
-    ms.insert(nums[right])
-    while *ms.rbegin() - *ms.begin() > limit:
-        ms.erase(ms.find(nums[left]))
-        left += 1
-    rtn = max(rtn, right - left + 1)
-return rtn
+import bisect
 
+class Solution:
+    def longestSubarray(self, nums, limit):
+        ms = []  # sorted list
+        left = 0
+        res = 0
+        
+        for right in range(len(nums)):
+            bisect.insort(ms, nums[right])
+            
+            while ms[-1] - ms[0] > limit:
+                ms.pop(bisect.bisect_left(ms, nums[left]))
+                left += 1
+            
+            res = max(res, right - left + 1)
+        
+        return res
 ```
 {% endraw %}
 
@@ -81,25 +87,73 @@ return rtn
 
 {% raw %}
 ```python
+from collections import deque
+
 class Solution:
-def longestSubarray(self, nums, limit):
-    deque<int> increase, decrease # store values (or indices)
-    left = 0, rtn = 0
-    for (right = 0 right < (int)len(nums) right += 1) :
-    val = nums[right]
-    # maintain increasing deque for min
-    while not not increase  and  increase[-1] > val) increase.pop(:
-    increase.append(val)
-    # maintain decreasing deque for max
-    while not not decrease  and  decrease[-1] < val) decrease.pop(:
-    decrease.append(val)
-    # shrink window while invalid
-    while decrease[0] - increase[0] > limit:
-        if nums[left] == decrease[0]) decrease.pop_front(:
-        if nums[left] == increase[0]) increase.pop_front(:
-        left += 1
-    rtn = max(rtn, right - left + 1)
-return rtn
+    def longestSubarray(self, nums, limit):
+        increase = deque()  # increasing -> keeps min at front
+        decrease = deque()  # decreasing -> keeps max at front
+        
+        left = 0
+        res = 0
+        
+        for right in range(len(nums)):
+            val = nums[right]
+            
+            # maintain decreasing deque (max at front)
+            while decrease and decrease[-1] < val:
+                decrease.pop()
+            decrease.append(val)
+            
+            # maintain increasing deque (min at front)
+            while increase and increase[-1] > val:
+                increase.pop()
+            increase.append(val)
+            
+            # shrink window if invalid
+            while decrease[0] - increase[0] > limit:
+                if nums[left] == decrease[0]:
+                    decrease.popleft()
+                if nums[left] == increase[0]:
+                    increase.popleft()
+                left += 1
+            
+            res = max(res, right - left + 1)
+        
+        return resfrom collections import deque
+
+class Solution:
+    def longestSubarray(self, nums, limit):
+        increase = deque()  # increasing -> keeps min at front
+        decrease = deque()  # decreasing -> keeps max at front
+        
+        left = 0
+        res = 0
+        
+        for right in range(len(nums)):
+            val = nums[right]
+            
+            # maintain decreasing deque (max at front)
+            while decrease and decrease[-1] < val:
+                decrease.pop()
+            decrease.append(val)
+            
+            # maintain increasing deque (min at front)
+            while increase and increase[-1] > val:
+                increase.pop()
+            increase.append(val)
+            
+            # shrink window if invalid
+            while decrease[0] - increase[0] > limit:
+                if nums[left] == decrease[0]:
+                    decrease.popleft()
+                if nums[left] == increase[0]:
+                    increase.popleft()
+                left += 1
+            
+            res = max(res, right - left + 1)
+        
+        return res
 
 ```
 {% endraw %}

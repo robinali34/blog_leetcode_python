@@ -87,14 +87,15 @@ This problem requires removing all occurrences of `val` from the array **in-plac
 
 ```python
 class Solution:
-def removeElement(self, nums, val):
-    last = 0
-    for(curr = 0 curr < (int)len(nums) curr += 1) :
-    if nums[curr] != val:
-        nums[last] = nums[curr]
-        last += 1
-return last
-
+    def removeElement(self, nums, val):
+        last = 0
+        
+        for curr in range(len(nums)):
+            if nums[curr] != val:
+                nums[last] = nums[curr]
+                last += 1
+        
+        return last
 ```
 
 ### Algorithm Explanation:
@@ -197,16 +198,17 @@ Result: return 5, nums = [0,1,3,0,4,_,_,_] ✓
 
 ```python
 class Solution:
-def removeElement(self, nums, val):
-    left = 0, right = len(nums)
-    while left < right:
-        if nums[left] == val:
-            nums[left] = nums[right - 1]
-            right -= 1
-             else :
-            left += 1
-    return right
-
+    def removeElement(self, nums, val):
+        left, right = 0, len(nums)
+        
+        while left < right:
+            if nums[left] == val:
+                nums[left] = nums[right - 1]
+                right -= 1
+            else:
+                left += 1
+        
+        return right
 ```
 
 **Time Complexity:** O(n)  

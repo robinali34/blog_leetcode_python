@@ -89,20 +89,25 @@ This problem requires computing the product of all elements except the current o
 
 ```python
 class Solution:
-def productExceptSelf(self, nums):
-    len = len(nums)
-    list[int> L(len, 0), R(len, 0)
-    list[int> answer(len)
-    L[0] = 1
-    for (i = 1 i < len i += 1) :
-    L[i] = nums[i - 1] * L[i - 1]
-R[len - 1] = 1
-for (i = len - 2 i >= 0 i -= 1) :
-R[i] = nums[i + 1] * R[i + 1]
-for (i = 0 i < len i += 1):
-answer[i] = L[i] * R[i]
-return answer
-
+    def productExceptSelf(self, nums):
+        n = len(nums)
+        
+        L = [0] * n
+        R = [0] * n
+        answer = [0] * n
+        
+        L[0] = 1
+        for i in range(1, n):
+            L[i] = nums[i - 1] * L[i - 1]
+        
+        R[n - 1] = 1
+        for i in range(n - 2, -1, -1):
+            R[i] = nums[i + 1] * R[i + 1]
+        
+        for i in range(n):
+            answer[i] = L[i] * R[i]
+        
+        return answer
 ```
 
 ### Algorithm Explanation:
@@ -203,19 +208,21 @@ We can optimize space by using the output array itself to store left products, t
 
 ```python
 class Solution:
-def productExceptSelf(self, nums):
-    len = len(nums)
-    list[int> answer(len, 1)
-    # Build left products in answer array
-    for (i = 1 i < len i += 1) :
-    answer[i] = nums[i - 1] * answer[i - 1]
-# Build right products on the fly and multiply
-right = 1
-for (i = len - 1 i >= 0 i -= 1) :
-answer[i] = right
-right = nums[i]
-return answer
-
+    def productExceptSelf(self, nums):
+        n = len(nums)
+        answer = [1] * n
+        
+        # Build left products in answer array
+        for i in range(1, n):
+            answer[i] = nums[i - 1] * answer[i - 1]
+        
+        # Build right products on the fly and multiply
+        right = 1
+        for i in range(n - 1, -1, -1):
+            answer[i] = answer[i] * right
+            right = nums[i]
+        
+        return answer
 ```
 
 **Space Complexity:** O(1) extra space (excluding output array)

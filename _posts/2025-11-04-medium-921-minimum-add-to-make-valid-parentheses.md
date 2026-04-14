@@ -86,18 +86,20 @@ Use counters to track unmatched opening and closing parentheses. When we see a c
 
 ```python
 class Solution:
-def minAddToMakeValid(self, s):
-    left = 0, right = 0
-    for ch in s:
-        if ch == '(':
-            left += 1
-             else if (ch == ')') :
-            if left > 0:
-                left -= 1
-                 else :
-                right += 1
-    return left + right
+    def minAddToMakeValid(self, s):
+        left = 0
+        right = 0
 
+        for ch in s:
+            if ch == '(':
+                left += 1
+            elif ch == ')':
+                if left > 0:
+                    left -= 1
+                else:
+                    right += 1
+
+        return left + right
 ```
 
 ## How the Algorithm Works
@@ -163,49 +165,21 @@ Total: 4 additions
 
 ## Algorithm Breakdown
 
-### 1. Initialize Counters
+### Single pass over `s`
 ```python
-left = 0, right = 0
-
+def min_add_greedy(s: str) -> int:
+    left = right = 0
+    for ch in s:
+        if ch == "(":
+            left += 1
+        elif left > 0:
+            left -= 1
+        else:
+            right += 1
+    return left + right
 ```
-- **`left`**: Tracks unmatched opening parentheses
-- **`right`**: Tracks unmatched closing parentheses (need to add opening)
-
-### 2. Process Opening Parentheses
-```python
-if ch == '(':
-    left += 1
-
-
-
-
-```
-- Increment `left` counter
-- This represents an opening that needs to be closed later
-
-### 3. Process Closing Parentheses
-```python
-def if(self, ')'):
-    if left > 0:
-        left -= 1
-         else :
-        right += 1
-
-```
-- **If `left > 0`**: Match with existing opening → decrement `left`
-- **If `left == 0`**: No opening to match → increment `right` (need to add an opening)
-
-### 4. Calculate Final Answer
-```python
-return left + right
-
-
-
-
-```
-- **`right`**: Number of opening parentheses to add (for unmatched closing)
-- **`left`**: Number of closing parentheses to add (for unmatched opening)
-- **Sum**: Total minimum additions needed
+- **`left`**: Unmatched `(` → need that many `)` at the end.
+- **`right`**: Unmatched `)` → need that many `(` inserted.
 
 ## Complexity Analysis
 
@@ -219,18 +193,17 @@ return left + right
 ### Approach 1: Stack-Based (More Verbose)
 
 ```python
-def minAddToMakeValid(self, s):
-    list[char> st
-    minAdd = 0
+def min_add_stack(s: str) -> int:
+    st: list[str] = []
+    min_add = 0
     for c in s:
-        if c == '(':
-            st.push(c)
-             else :
-            if not st:
-                minAdd += 1  # Need to add '('
-                 else :
-                st.pop()  # Match found
-    return minAdd + len(st)  # Add ')' for remaining '('
+        if c == "(":
+            st.append(c)
+        elif st:
+            st.pop()
+        else:
+            min_add += 1
+    return min_add + len(st)
 
 ```
 
@@ -240,18 +213,17 @@ def minAddToMakeValid(self, s):
 ### Approach 2: Stack-Based (More Verbose)
 
 ```python
-def minAddToMakeValid(self, s):
-    list[char> st
-    right = 0
+def min_add_stack_alt(s: str) -> int:
+    st: list[str] = []
+    extra_close = 0
     for c in s:
-        if c == '(':
-            st.push(c)
-             else :
-            if not st:
-                right += 1  # Need to add '('
-                 else :
-                st.pop()  # Match found
-    return right + len(st)  # Add ')' for remaining '('
+        if c == "(":
+            st.append(c)
+        elif st:
+            st.pop()
+        else:
+            extra_close += 1
+    return extra_close + len(st)
 
 ```
 
@@ -470,24 +442,20 @@ This problem demonstrates the **Greedy Counter Pattern**:
 If we had multiple bracket types like `()[]{}`, we'd need a stack:
 
 ```python
-def minAddToMakeValid(self, s):
-    list[char> st
-    minAdd = 0
+def min_add_multi_type(s: str) -> int:
+    pairs = {")": "(", "]": "[", "}": "{"}
+    st: list[str] = []
+    min_add = 0
     for c in s:
-        if c == '('  or  c == '['  or  c == '{':
-            st.push(c)
-             else :
-            if not st:
-                minAdd += 1  # Need to add opening
-                 else :
-                char top = st.top()
-                if((c == ')'  and  top == '(')  or
-                (c == ']'  and  top == '[')  or
-                (c == ''  and  top == ':')) :
-                st.pop()
-                 else :
-                minAdd += 1  # Mismatch, need to add opening
-return minAdd + len(st)  # Add closing for remaining
+        if c in "([{":
+            st.append(c)
+        elif not st:
+            min_add += 1
+        elif st[-1] == pairs[c]:
+            st.pop()
+        else:
+            min_add += 1
+    return min_add + len(st)
 
 ```
 

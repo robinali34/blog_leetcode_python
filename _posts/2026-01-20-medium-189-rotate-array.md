@@ -74,16 +74,16 @@ This solution rotates the array by 1 step, `k` times.
 
 ```python
 class Solution:
-def rotate(self, nums, k):
-    k %= len(nums)
-    temp, previous
-    for (i = 0 i < k i += 1) :
-    previous = nums[len(nums) - 1]
-    for (j = 0 j < len(nums) j += 1) :
-    temp = nums[j]
-    nums[j] = previous
-    previous = temp
-
+    def rotate(self, nums, k):
+        k %= len(nums)
+        
+        for i in range(k):
+            previous = nums[len(nums) - 1]
+            
+            for j in range(len(nums)):
+                temp = nums[j]
+                nums[j] = previous
+                previous = temp
 ```
 
 ### Explanation

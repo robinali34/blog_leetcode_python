@@ -90,25 +90,34 @@ The key challenge is that with negative numbers, a simple sliding window approac
 ## Solution: Monotonic Deque with Prefix Sum
 
 ```python
-class Solution:
-def shortestSubarray(self, nums, k):
-    if(not nums) return -1
-    N = len(nums)
-    list[long> preSum(N + 1)
-    for(i = 0 i < N i += 1) :
-    preSum[i + 1] = preSum[i] + nums[i]
-rtn = INT_MAX
-deque<int> q
-for(i = 0 i <= N i += 1) :
-long curSum = preSum[i]
-while not not q  and  curSum - preSum[q[0]] >= k:
-    rtn = min(rtn, i - q[0])
-    q.pop_front()
-while not not q  and  preSum[q[-1]] >= curSum:
-    q.pop()
-q.append(i)
-(-1 if         return rtn == INT_MAX else rtn)
+from collections import deque
 
+class Solution:
+    def shortestSubarray(self, nums, k):
+        if not nums:
+            return -1
+        
+        N = len(nums)
+        preSum = [0] * (N + 1)
+        
+        for i in range(N):
+            preSum[i + 1] = preSum[i] + nums[i]
+        
+        rtn = float('inf')
+        q = deque()
+        
+        for i in range(N + 1):
+            curSum = preSum[i]
+            
+            while q and curSum - preSum[q[0]] >= k:
+                rtn = min(rtn, i - q.popleft())
+            
+            while q and preSum[q[-1]] >= curSum:
+                q.pop()
+            
+            q.append(i)
+        
+        return -1 if rtn == float('inf') else rtn
 ```
 
 ### Algorithm Explanation:

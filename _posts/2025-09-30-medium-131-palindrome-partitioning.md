@@ -123,10 +123,6 @@ def isPalindrome(self, s: str, start: int, end: int) -> bool:
 isPal = [[False] * n for _ in range(n)]
 # Precompute all palindrome substrings
 # Time: O(n²), Space: O(n²)
-
-
-
-
 ```
 
 ## Common Mistakes

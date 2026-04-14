@@ -8,7 +8,7 @@ tags: [leetcode, templates, design, data-structures]
 ---
 
 {% raw %}
-Minimal, copy-paste C++ for LRU/LFU cache, Trie, time-based key-value store, and common design patterns.
+Minimal, copy-paste Python for LRU/LFU cache, Trie, time-based key-value store, and common design patterns.
 
 ## Contents
 
@@ -27,14 +27,26 @@ Maintain a primary stack for data and an auxiliary stack to track the minimum va
 
 ```python
 class MinStack:
-list[int> stk, minStk
-def push(self, val):
-    stk.push(val)
-    if not minStk) minStk.push(val:
-    else minStk.push(min(minStk.top(), val))
-void pop() : stk.pop() minStk.pop()
-top() : return stk.top()
-getMin() : return minStk.top() 
+    def __init__(self) -> None:
+        self.stk: list[int] = []
+        self.min_stk: list[int] = []
+
+    def push(self, val: int) -> None:
+        self.stk.append(val)
+        if not self.min_stk:
+            self.min_stk.append(val)
+        else:
+            self.min_stk.append(min(self.min_stk[-1], val))
+
+    def pop(self) -> None:
+        self.stk.pop()
+        self.min_stk.pop()
+
+    def top(self) -> int:
+        return self.stk[-1]
+
+    def getMin(self) -> int:
+        return self.min_stk[-1]
 
 ```
 
@@ -47,37 +59,28 @@ getMin() : return minStk.top()
 Least Recently Used cache using hash map + doubly linked list.
 
 ```python
+from collections import OrderedDict
+
+
 class LRUCache:
-capacity_
-list<int> keyList_
-dict[int, pair<int, list<int>.iterator>> hashMap_
-def insert(self, key, value):
-    keyList_.append(key)
-    hashMap_[key] = make_pair(value, keyList_ -= 1.end())
-LRUCache(capacity) : capacity_(capacity) :
-def get(self, key):
-    it = hashMap_.find(key)
-    if it != hashMap_.end():
-        keyList_.splice(keyList_.end(), keyList_, it.second.second)
-        return it.second.first
-    return -1
-def put(self, key, value):
-    if get(key) != -1:
-        hashMap_[key].first = value
-        return
-    if len(hashMap_) < capacity_:
-        insert(key, value)
-         else :
-        removeKey = keyList_[0]
-        keyList_.pop_front()
-        hashMap_.erase(removeKey)
-        insert(key, value)
-/
- Your LRUCache object will be instantiated and called as such:
- LRUCache obj = new LRUCache(capacity)
- param_1 = obj.get(key)
- obj.put(key,value)
-/
+    """LRU via OrderedDict (move_to_end on access)."""
+
+    def __init__(self, capacity: int) -> None:
+        self.capacity = capacity
+        self.cache: OrderedDict[int, int] = OrderedDict()
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.capacity:
+            self.cache.popitem(last=False)
 
 ```
 
@@ -86,48 +89,36 @@ def put(self, key, value):
 Thread-safe version using mutex for concurrent access.
 
 ```python
-#include <mutex>
-#include <shared_mutex>
+import threading
+from collections import OrderedDict
+
+
 class ThreadSafeLRUCache:
-capacity_
-list<int> keyList_
-dict[int, pair<int, list<int>.iterator>> hashMap_
-mutable shared_mutex mtx_ # Use shared_mutex for read-write lock
-def insert(self, key, value):
-    keyList_.append(key)
-    hashMap_[key] = make_pair(value, keyList_ -= 1.end())
-bool exists(key) :
-return hashMap_.find(key) != hashMap_.end()
-ThreadSafeLRUCache(capacity) : capacity_(capacity) :
-def get(self, key):
-    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for read+modify
-    it = hashMap_.find(key)
-    if it != hashMap_.end():
-        keyList_.splice(keyList_.end(), keyList_, it.second.second)
-        return it.second.first
-    return -1
-def put(self, key, value):
-    unique_lock<shared_mutex> lock(mtx_) # Exclusive lock for write
-    if exists(key):
-        hashMap_[key].first = value
-        keyList_.splice(keyList_.end(), keyList_, hashMap_[key].second)
-        return
-    if len(hashMap_) < capacity_:
-        insert(key, value)
-         else :
-        removeKey = keyList_[0]
-        keyList_.pop_front()
-        hashMap_.erase(removeKey)
-        insert(key, value)
-size_t size() :
-shared_lock<shared_mutex> lock(mtx_)
-return len(hashMap_)
-# Example usage:
-# ThreadSafeLRUCache cache(2)
-# cache.put(1, 1)
-# cache.put(2, 2)
-# val = cache.get(1) # returns 1
-# cache.put(3, 3) # evicts key 2
+    def __init__(self, capacity: int) -> None:
+        self.capacity = capacity
+        self.cache: OrderedDict[int, int] = OrderedDict()
+        self._lock = threading.Lock()
+
+    def get(self, key: int) -> int:
+        with self._lock:
+            if key not in self.cache:
+                return -1
+            self.cache.move_to_end(key)
+            return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        with self._lock:
+            if key in self.cache:
+                self.cache[key] = value
+                self.cache.move_to_end(key)
+                return
+            self.cache[key] = value
+            if len(self.cache) > self.capacity:
+                self.cache.popitem(last=False)
+
+    def size(self) -> int:
+        with self._lock:
+            return len(self.cache)
 
 ```
 
@@ -140,40 +131,47 @@ return len(hashMap_)
 Least Frequently Used cache.
 
 ```python
+from collections import defaultdict, OrderedDict
+
+
 class LFUCache:
-capacity, minFreq
-dict[int, pair<int, int>> keyValFreq # key . :value, frequency
-dict[int, list<int>> freqKeys # frequency . list of keys
-dict[int, list<int>.iterator> keyIter # key . iterator in freqKeys list
-def updateFreq(self, key):
-    freq = keyValFreq[key].second
-    freqKeys[freq].erase(keyIter[key])
-    if freqKeys[freq].empty()  and  freq == minFreq:
-        minFreq += 1
-    freq += 1
-    keyValFreq[key].second = freq
-    freqKeys[freq].append(key)
-    keyIter[key] = freqKeys -= 1[freq].end()
-LFUCache(capacity) : capacity(capacity), minFreq(0) :
-def get(self, key):
-    if (keyValFreq.find(key) == keyValFreq.end()) return -1
-    updateFreq(key)
-    return keyValFreq[key].first
-def put(self, key, value):
-    if (capacity == 0) return
-    if keyValFreq.find(key) != keyValFreq.end():
-        keyValFreq[key].first = value
-        updateFreq(key)
-         else :
-        if len(keyValFreq) >= capacity:
-            evictKey = freqKeys[minFreq].front()
-            freqKeys[minFreq].pop_front()
-            keyValFreq.erase(evictKey)
-            keyIter.erase(evictKey)
-        keyValFreq[key] = :value, 1
-    freqKeys[1].append(key)
-    keyIter[key] = freqKeys -= 1[1].end()
-    minFreq = 1
+    def __init__(self, capacity: int) -> None:
+        self.capacity = capacity
+        self.min_freq = 0
+        self.key_val: dict[int, int] = {}
+        self.key_freq: dict[int, int] = {}
+        self.freq_keys: dict[int, OrderedDict[int, None]] = defaultdict(OrderedDict)
+
+    def _touch(self, key: int) -> None:
+        f = self.key_freq[key]
+        self.freq_keys[f].pop(key)
+        if not self.freq_keys[f] and f == self.min_freq:
+            self.min_freq += 1
+        f += 1
+        self.key_freq[key] = f
+        self.freq_keys[f][key] = None
+
+    def get(self, key: int) -> int:
+        if key not in self.key_val:
+            return -1
+        self._touch(key)
+        return self.key_val[key]
+
+    def put(self, key: int, value: int) -> None:
+        if self.capacity == 0:
+            return
+        if key in self.key_val:
+            self.key_val[key] = value
+            self._touch(key)
+            return
+        if len(self.key_val) >= self.capacity:
+            k, _ = self.freq_keys[self.min_freq].popitem(last=False)
+            del self.key_val[k]
+            del self.key_freq[k]
+        self.key_val[key] = value
+        self.key_freq[key] = 1
+        self.freq_keys[1][key] = None
+        self.min_freq = 1
 
 ```
 
@@ -186,36 +184,39 @@ def put(self, key, value):
 Prefix tree for efficient string operations.
 
 ```python
+class TrieNode:
+    def __init__(self) -> None:
+        self.children: dict[str, TrieNode] = {}
+        self.is_end = False
+
+
 class Trie:
-struct TrieNode :
-list[TrieNode> children
-bool isEnd
-TrieNode() : children(26, None), isEnd(False) :
-TrieNode root
-Trie() :
-root = new TrieNode()
-def insert(self, word):
-    TrieNode node = root
-    for c in word:
-        idx = c - 'a'
-        if not node.children[idx]:
-            node.children[idx] = new TrieNode()
-        node = node.children[idx]
-    node.isEnd = True
-def search(self, word):
-    TrieNode node = root
-    for c in word:
-        idx = c - 'a'
-        if (not node.children[idx]) return False
-        node = node.children[idx]
-    return node.isEnd
-def startsWith(self, prefix):
-    TrieNode node = root
-    for c in prefix:
-        idx = c - 'a'
-        if (not node.children[idx]) return False
-        node = node.children[idx]
-    return True
+    def __init__(self) -> None:
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        node = self.root
+        for c in word:
+            if c not in node.children:
+                node.children[c] = TrieNode()
+            node = node.children[c]
+        node.is_end = True
+
+    def search(self, word: str) -> bool:
+        node = self.root
+        for c in word:
+            if c not in node.children:
+                return False
+            node = node.children[c]
+        return node.is_end
+
+    def startsWith(self, prefix: str) -> bool:
+        node = self.root
+        for c in prefix:
+            if c not in node.children:
+                return False
+            node = node.children[c]
+        return True
 
 ```
 
@@ -227,24 +228,25 @@ def startsWith(self, prefix):
 ## Time-based Key-Value Store
 
 ```python
+import bisect
+from collections import defaultdict
+
+
 class TimeMap:
-dict[str, list[pair<int, str>>> store
-TimeMap() :
-def set(self, key, value, timestamp):
-    store[key].append(:timestamp, value)
-def get(self, key, timestamp):
-    if (store.find(key) == store.end()) return ""
-    pairs = store[key]
-    left = 0, right = len(pairs) - 1
-    str result = ""
-    while left <= right:
-        mid = left + (right - left) / 2
-        if pairs[mid].first <= timestamp:
-            result = pairs[mid].second
-            left = mid + 1
-             else :
-            right = mid - 1
-    return result
+    def __init__(self) -> None:
+        self.store: dict[str, list[tuple[int, str]]] = defaultdict(list)
+
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        self.store[key].append((timestamp, value))
+
+    def get(self, key: str, timestamp: int) -> str:
+        pairs = self.store.get(key)
+        if not pairs:
+            return ""
+        i = bisect.bisect_right(pairs, (timestamp, chr(0x10FFFF))) - 1
+        if i < 0:
+            return ""
+        return pairs[i][1]
 
 ```
 
@@ -265,15 +267,21 @@ Rolling window of timestamps: deque of hits, binary search on sorted times, or b
 ### Random Pick with Weight
 
 ```python
+import bisect
+import random
+
+
 class Solution:
-list[int> prefixSum
-Solution(list[int> w) :
-prefixSum.append(0)
-for weight in w:
-    prefixSum.append(prefixSum[-1] + weight)
-def pickIndex(self):
-    target = rand() % prefixSum[-1]
-    return upper_bound(prefixSum.begin(), prefixSum.end(), target) - prefixSum.begin() - 1
+    def __init__(self, w: list[int]) -> None:
+        self.prefix: list[int] = []
+        s = 0
+        for x in w:
+            s += x
+            self.prefix.append(s)
+
+    def pickIndex(self) -> int:
+        t = random.randint(1, self.prefix[-1])
+        return bisect.bisect_left(self.prefix, t)
 
 ```
 
@@ -281,20 +289,30 @@ def pickIndex(self):
 
 ```python
 class TicTacToe:
-list[int> rows, cols
-diagonal, antiDiagonal
-n
-TicTacToe(n) : n(n), rows(n, 0), cols(n, 0), diagonal(0), antiDiagonal(0) :
-def move(self, row, col, player):
-    (1 if         add = (player == 1)  else -1)
-    rows[row] += add
-    cols[col] += add
-    if (row == col) diagonal += add
-    if (row + col == n - 1) antiDiagonal += add
-    if (abs(rows[row]) == n  or  abs(cols[col]) == n  or
-    abs(diagonal) == n  or  abs(antiDiagonal) == n) :
-    return player
-return 0
+    def __init__(self, n: int) -> None:
+        self.n = n
+        self.rows = [0] * n
+        self.cols = [0] * n
+        self.diag = 0
+        self.anti = 0
+
+    def move(self, row: int, col: int, player: int) -> int:
+        add = 1 if player == 1 else -1
+        self.rows[row] += add
+        self.cols[col] += add
+        if row == col:
+            self.diag += add
+        if row + col == self.n - 1:
+            self.anti += add
+        n = self.n
+        if (
+            abs(self.rows[row]) == n
+            or abs(self.cols[col]) == n
+            or abs(self.diag) == n
+            or abs(self.anti) == n
+        ):
+            return player
+        return 0
 
 ```
 

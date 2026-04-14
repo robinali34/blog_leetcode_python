@@ -101,14 +101,19 @@ For each booking, add `seats` to every flight in `[first, last]`.
 
 ```python
 class Solution:
-def corpFlightBookings(self, bookings, n):
-    list[int> rtn(n)
-    for booking in bookings:
-        left = booking[0] - 1, right = booking[1] - 1, seats = booking[2]
-        while left <= right:
-            rtn[left += 1] += seats
-    return rtn
-
+    def corpFlightBookings(self, bookings, n):
+        rtn = [0] * n
+        
+        for booking in bookings:
+            left = booking[0] - 1
+            right = booking[1] - 1
+            seats = booking[2]
+            
+            while left <= right:
+                rtn[left] += seats
+                left += 1
+        
+        return rtn
 ```
 
 - **Time:** O(m × L), where m = bookings.length, L = average range length (worst O(n)).
@@ -120,16 +125,22 @@ Mark each range with a +d at the start and -d at the position after the end; the
 
 ```python
 class Solution:
-def corpFlightBookings(self, bookings, n):
-    list[int> rtn(n + 1)
-    for b in bookings:
-        first = b[0] - 1, last = b[1], seats = b[2]
-        rtn[first] += seats
-        rtn[last] -= seats
-    partial_sum(rtn.begin(), rtn.end(), rtn.begin())
-    rtn.pop()
-    return rtn
-
+    def corpFlightBookings(self, bookings, n):
+        rtn = [0] * (n + 1)
+        
+        for b in bookings:
+            first = b[0] - 1
+            last = b[1]
+            seats = b[2]
+            
+            rtn[first] += seats
+            rtn[last] -= seats
+        
+        for i in range(1, n + 1):
+            rtn[i] += rtn[i - 1]
+        
+        rtn.pop()
+        return rtn
 ```
 
 - **Indexing:** Flights 1..n → indices 0..n-1. Booking `[first, last]` (1-indexed) → indices `first-1 .. last-1`. We add at `first-1` and subtract at `last` so that the prefix sum at index `i` is the total seats for flight `i+1`. The extra `rtn[n]` is only used for the subtraction; we drop it with `pop_back()`.
@@ -153,16 +164,22 @@ Same difference-array idea; use `inclusive_scan` instead of `partial_sum`. Both 
 
 ```python
 class Solution:
-def corpFlightBookings(self, bookings, n):
-    list[int> rtn(n + 1)
-    for b in bookings:
-        first = b[0] - 1, last = b[1], seats = b[2]
-        rtn[first] += seats
-        rtn[last] -= seats
-    inclusive_scan(rtn.begin(), rtn.end(), rtn.begin())
-    rtn.pop()
-    return rtn
-
+    def corpFlightBookings(self, bookings, n):
+        rtn = [0] * (n + 1)
+        
+        for b in bookings:
+            first = b[0] - 1
+            last = b[1]
+            seats = b[2]
+            
+            rtn[first] += seats
+            rtn[last] -= seats
+        
+        for i in range(1, n + 1):
+            rtn[i] += rtn[i - 1]
+        
+        rtn.pop()
+        return rtn
 ```
 
 Include `<numeric>` (and optionally `<execution>` for `std::execution::par`). Time and space same as the `partial_sum` version.
@@ -173,16 +190,19 @@ Use a single array of length `n`. Only subtract at index `booking[1]` when `book
 
 ```python
 class Solution:
-def corpFlightBookings(self, bookings, n):
-    list[int> nums(n)
-    for booking in bookings:
-        nums[booking[0] - 1] += booking[2]
-        if booking[1] < n:
-            nums[booking[1]] -= booking[2]
-    for (i = 1 i < n i += 1) :
-    nums[i] += nums[i - 1]
-return nums
-
+    def corpFlightBookings(self, bookings, n):
+        nums = [0] * n
+        
+        for booking in bookings:
+            nums[booking[0] - 1] += booking[2]
+            
+            if booking[1] < n:
+                nums[booking[1]] -= booking[2]
+        
+        for i in range(1, n):
+            nums[i] += nums[i - 1]
+        
+        return nums
 ```
 
 - **Indexing:** Add at `first - 1`; subtract at `last` only when `last < n` (so we never write to index `n`). Then `nums[i] += nums[i-1]` is the inclusive prefix sum in place.

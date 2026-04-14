@@ -93,28 +93,44 @@ This problem requires finding the first and last occurrence of a target in a sor
 
 ```python
 class Solution:
-def searchRange(self, nums, target):
-    if(not nums) return :-1, -1
-left = lowerBound(nums, target)
-if left == len(nums)  or  nums[left] != target:
-    return :-1, -1
-right = upperBound(nums, target) - 1
-return :left, right
-def lowerBound(self, nums, target):
-    left = 0, right = len(nums)
-    while left < right:
-        mid = left + (right - left) / 2
-        if(nums[mid] < target) left = mid + 1
-        else right = mid
-    return left
-def upperBound(self, nums, target):
-    left = 0, right = len(nums)
-    while left < right:
-        mid = left + (right - left) / 2
-        if(nums[mid] <= target) left = mid + 1
-        else right = mid
-    return left
-
+    def searchRange(self, nums, target):
+        if not nums:
+            return [-1, -1]
+        
+        left = self.lowerBound(nums, target)
+        
+        if left == len(nums) or nums[left] != target:
+            return [-1, -1]
+        
+        right = self.upperBound(nums, target) - 1
+        
+        return [left, right]
+    
+    def lowerBound(self, nums, target):
+        left, right = 0, len(nums)
+        
+        while left < right:
+            mid = left + (right - left) // 2
+            
+            if nums[mid] < target:
+                left = mid + 1
+            else:
+                right = mid
+        
+        return left
+    
+    def upperBound(self, nums, target):
+        left, right = 0, len(nums)
+        
+        while left < right:
+            mid = left + (right - left) // 2
+            
+            if nums[mid] <= target:
+                left = mid + 1
+            else:
+                right = mid
+        
+        return left
 ```
 
 ### Algorithm Breakdown:

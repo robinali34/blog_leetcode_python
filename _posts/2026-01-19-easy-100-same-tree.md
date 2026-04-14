@@ -97,22 +97,26 @@ This problem requires checking if two binary trees are identical in both structu
 ## Solution: Recursive DFS
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def isSameTree(self, p, q):
-    if(not p  and  not q) return True
-    if(not p  or  not q  or  p.val != q.val) return False
-    return isSameTree(p.left, q.left)  and  isSameTree(p.right, q.right)
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 
+
+class Solution:
+    def isSameTree(self, p, q):
+        if not p and not q:
+            return True
+
+        if not p or not q or p.val != q.val:
+            return False
+
+        return (
+            self.isSameTree(p.left, q.left)
+            and self.isSameTree(p.right, q.right)
+        )
 ```
 
 ### Algorithm Explanation:
@@ -228,13 +232,20 @@ isSameTree(1, 1):
 
 ```python
 class Solution:
-def isSameTree(self, p, q):
-    if (not p  and  not q) return True
-    if (not p  or  not q) return False
-    if (p.val != q.val) return False
-    return isSameTree(p.left, q.left)  and
-    isSameTree(p.right, q.right)
+    def isSameTree(self, p, q):
+        if not p and not q:
+            return True
 
+        if not p or not q:
+            return False
+
+        if p.val != q.val:
+            return False
+
+        return (
+            self.isSameTree(p.left, q.left)
+            and self.isSameTree(p.right, q.right)
+        )
 ```
 
 **Key Difference**: Separates null checks and value check for clarity
@@ -245,19 +256,25 @@ def isSameTree(self, p, q):
 
 ```python
 class Solution:
-def isSameTree(self, p, q):
-    list[pair<TreeNode, TreeNode>> st
-    st.push(:p, q)
-    while not not st:
-        [node1, node2] = st.top()
-        st.pop()
-        if (not node1  and  not node2) continue
-        if (not node1  or  not node2) return False
-        if (node1.val != node2.val) return False
-        st.push(:node1.right, node2.right)
-        st.push(:node1.left, node2.left)
-    return True
+    def isSameTree(self, p, q):
+        st = [(p, q)]
 
+        while st:
+            node1, node2 = st.pop()
+
+            if not node1 and not node2:
+                continue
+
+            if not node1 or not node2:
+                return False
+
+            if node1.val != node2.val:
+                return False
+
+            st.append((node1.right, node2.right))
+            st.append((node1.left, node2.left))
+
+        return True
 ```
 
 **Complexity**: 
@@ -268,19 +285,25 @@ def isSameTree(self, p, q):
 
 ```python
 class Solution:
-def isSameTree(self, p, q):
-    deque[pair<TreeNode, TreeNode>> q_nodes
-    q_nodes.push(:p, q)
-    while not not q_nodes:
-        [node1, node2] = q_nodes[0]
-        q_nodes.pop()
-        if (not node1  and  not node2) continue
-        if (not node1  or  not node2) return False
-        if (node1.val != node2.val) return False
-        q_nodes.push(:node1.left, node2.left)
-        q_nodes.push(:node1.right, node2.right)
-    return True
+    def isSameTree(self, p, q):
+        q_nodes = [(p, q)]
 
+        while q_nodes:
+            node1, node2 = q_nodes.pop(0)
+
+            if not node1 and not node2:
+                continue
+
+            if not node1 or not node2:
+                return False
+
+            if node1.val != node2.val:
+                return False
+
+            q_nodes.append((node1.left, node2.left))
+            q_nodes.append((node1.right, node2.right))
+
+        return True
 ```
 
 **Complexity**: 

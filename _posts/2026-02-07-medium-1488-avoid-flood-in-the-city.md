@@ -67,23 +67,43 @@ Explanation: Lakes 1 and 2 are full after day 2; only one dry day (day 3). We ca
 
 ```python
 class Solution:
-def avoidFlood(self, rains):
-    list[int> rtn(len(rains), 1)
-    set<int> st
-    dict[int, int> mp
-    for (i = 0 i < len(rains) i += 1) :
-    if rains[i] == 0:
-        st.insert(i)
-         else :
-        rtn[i] = -1
-        if rains[i] in mp:
-            it = st.lower_bound(mp[rains[i]])
-            if (it == st.end()) return :
-        rtn[it] = rains[i]
-        st.erase(it)
-    mp[rains[i]] = i
-return rtn
-
+    def avoidFlood(self, rains):
+        n = len(rains)
+        res = [1] * n
+        
+        st = set()          # will store dry day indices (we will maintain sorted list behavior separately)
+        mp = {}             # lake -> last filled day
+        
+        dry_days = []       # we still need ordering support
+        
+        import bisect
+        
+        for i in range(n):
+            if rains[i] == 0:
+                st.add(i)
+                dry_days.append(i)
+                res[i] = 1
+            else:
+                res[i] = -1
+                
+                if rains[i] in mp:
+                    last = mp[rains[i]]
+                    
+                    # same logic as your lower_bound(mp[lake])
+                    it = bisect.bisect_right(dry_days, last)
+                    
+                    if it == len(dry_days):
+                        return []
+                    
+                    dry_day = dry_days[it]
+                    res[dry_day] = rains[i]
+                    
+                    # erase(it)
+                    dry_days.pop(it)
+                
+                mp[rains[i]] = i
+        
+        return res
 ```
 
 ### Algorithm Breakdown

@@ -103,27 +103,41 @@ This is a shortest path problem with a constraint on the number of stops (edges)
 ## Solution 1: BFS Level-by-Level
 
 ```python
-class Solution:
-def findCheapestPrice(self, n, flights, src, dst, k):
-    list[list[pair<int, int>>> adj(n)
-    for(e: flights) adj[e[0]].append(:e[1], e[2])
-    list[long long> prices(n, LONG_LONG_MAX)
-    deque[pair<int, int>> q
-    q.push(:src, 0)
-    stop = 0
-    while stop <= k  and  not not q:
-        sz = len(q)
-        while sz -= 1:
-            [node, price] = q[0]
-            q.pop()
-            for([neighbor, currPrice]: adj[node]) :
-            long long newPrice = price + currPrice
-            if(newPrice >= prices[neighbor]) continue
-            prices[neighbor] = newPrice
-            q.push(:neighbor, newPrice)
-    stop += 1
-(-1 if         return prices[dst] == LONG_LONG_MAX else prices[dst])
+from collections import deque
 
+class Solution:
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        adj = [[] for _ in range(n)]
+        
+        for e in flights:
+            adj[e[0]].append((e[1], e[2]))
+        
+        INF = float('inf')
+        prices = [INF] * n
+        
+        q = deque()
+        q.append((src, 0))
+        
+        stop = 0
+        
+        while stop <= k and q:
+            sz = len(q)
+            
+            for _ in range(sz):
+                node, price = q.popleft()
+                
+                for neighbor, currPrice in adj[node]:
+                    newPrice = price + currPrice
+                    
+                    if newPrice >= prices[neighbor]:
+                        continue
+                    
+                    prices[neighbor] = newPrice
+                    q.append((neighbor, newPrice))
+            
+            stop += 1
+        
+        return -1 if prices[dst] == INF else prices[dst]
 ```
 
 ### Algorithm Breakdown:
@@ -151,17 +165,23 @@ def findCheapestPrice(self, n, flights, src, dst, k):
 
 ```python
 class Solution:
-def findCheapestPrice(self, n, flights, src, dst, k):
-    list[int> dist(n, INT_MAX)
-    dist[src] = 0
-    for(i = 0 i <= k i += 1) :
-    list[int> tmp(dist)
-    for flight in flights:
-        if dist[flight[0]] != INT_MAX:
-            tmp[flight[1]] = min(tmp[flight[1]], dist[flight[0]] + flight[2])
-    dist = tmp
-(-1 if         return dist[dst] == INT_MAX  else dist[dst])
-
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        INF = float('inf')
+        dist = [INF] * n
+        dist[src] = 0
+        
+        for i in range(k + 1):
+            tmp = dist[:]
+            
+            for flight in flights:
+                u, v, w = flight
+                
+                if dist[u] != INF:
+                    tmp[v] = min(tmp[v], dist[u] + w)
+            
+            dist = tmp
+        
+        return -1 if dist[dst] == INF else dist[dst]
 ```
 
 ### Algorithm Breakdown:
@@ -187,23 +207,35 @@ def findCheapestPrice(self, n, flights, src, dst, k):
 ## Solution 3: Dijkstra's Algorithm with Stops Tracking
 
 ```python
+import heapq
+
 class Solution:
-def findCheapestPrice(self, n, flights, src, dst, k):
-    list[list[pair<int, int>>> adj(n)
-    for(e: flights) adj[e[0]].append(:e[1], e[2])
-    list[int> stops(n, INT_MAX)
-    heapq[list[int>, list[list[int>>, greater<>> pq
-    pq.push(:0, src, 0) # dist node stops
-    while not not pq:
-        tmp = pq.top()
-        pq.pop()
-        dist = tmp[0], node = tmp[1], steps = tmp[2]
-        if(steps >= stops[node] * or  steps > k + 1) continue
-        stops[node] = steps
-        if(node == dst) return dist
-        for([neighbor, price]: adj[node]) :
-        pq.push(:dist + price, neighbor, steps + 1)
-return -1
+    def findCheapestPrice(self, n, flights, src, dst, k):
+        adj = [[] for _ in range(n)]
+        
+        for e in flights:
+            adj[e[0]].append((e[1], e[2]))
+        
+        INF = float('inf')
+        stops = [INF] * n
+        
+        pq = [(0, src, 0)]  # dist, node, steps
+        
+        while pq:
+            dist, node, steps = heapq.heappop(pq)
+            
+            if steps > k + 1 or steps >= stops[node]:
+                continue
+            
+            stops[node] = steps
+            
+            if node == dst:
+                return dist
+            
+            for neighbor, price in adj[node]:
+                heapq.heappush(pq, (dist + price, neighbor, steps + 1))
+        
+        return -1
 
 ```
 

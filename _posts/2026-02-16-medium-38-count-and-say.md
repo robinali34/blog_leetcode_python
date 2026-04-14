@@ -93,16 +93,44 @@ Build each term from the previous one, iterating from term 2 to term `n`. For ea
 {% raw %}
 ```python
 class Solution:
-def countAndSay(self, n):
-    str curr = "1"
-    for (i = 2 i <= n i += 1) :
-    str next
-    for (j = 0, k = 0 j < len(curr) j = k) :
-    while k < len(curr)  and  curr[k] == curr[j]:
-    k += 1
-    next += to_string(k - j) + curr[j]
-curr = next
-return curr
+    def countAndSay(self, n):
+        curr = "1"
+        
+        for _ in range(2, n + 1):
+            nxt = ""
+            i = 0
+            
+            while i < len(curr):
+                j = i
+                
+                while i < len(curr) and curr[i] == curr[j]:
+                    i += 1
+                
+                count = i - j
+                nxt += str(count) + curr[j]
+            
+            curr = nxt
+        
+        return currclass Solution:
+    def countAndSay(self, n):
+        curr = "1"
+        
+        for _ in range(2, n + 1):
+            nxt = ""
+            i = 0
+            
+            while i < len(curr):
+                j = i
+                
+                while i < len(curr) and curr[i] == curr[j]:
+                    i += 1
+                
+                count = i - j
+                nxt += str(count) + curr[j]
+            
+            curr = nxt
+        
+        return curr
 
 ```
 {% endraw %}

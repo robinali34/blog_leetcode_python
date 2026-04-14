@@ -101,21 +101,23 @@ The key insight is that a valid square has exactly **two unique distances**:
 Additionally, we must check that no two points are the same (distance = 0).
 
 ```python
-#include <vector>
-#include <unordered_set>
 class Solution:
-def validSquare(self, p1, p2, p3, p4):
-    set[int> distances
-    list[list[int>> points = :p1, p2, p3, p4
-for(i = 0 i < 4 i += 1) :
-for(j = i + 1 j < 4 j += 1) :
-dx = points[i][0] - points[j][0]
-dy = points[i][1] - points[j][1]
-distSq = dx  dx + dy  dy
-if(distSq == 0) return False # Duplicate points
-distances.insert(distSq)
-return len(distances) == 2
+    def validSquare(self, p1, p2, p3, p4):
+        distances = set()
+        points = [p1, p2, p3, p4]
 
+        for i in range(4):
+            for j in range(i + 1, 4):
+                dx = points[i][0] - points[j][0]
+                dy = points[i][1] - points[j][1]
+                distSq = dx * dx + dy * dy
+
+                if distSq == 0:
+                    return False  # Duplicate points
+
+                distances.add(distSq)
+
+        return len(distances) == 2
 ```
 
 ## How the Algorithm Works
@@ -207,24 +209,37 @@ A more rigorous approach would also verify that `diagonal² = 2 × side²`:
 
 ```python
 class Solution:
-def validSquare(self, p1, p2, p3, p4):
-    dict[int, int> distCount
-    list[list[int>> points = :p1, p2, p3, p4
-for(i = 0 i < 4 i += 1) :
-for(j = i + 1 j < 4 j += 1) :
-dx = points[i][0] - points[j][0]
-dy = points[i][1] - points[j][1]
-distSq = dx  dx + dy  dy
-if(distSq == 0) return False
-distCount[distSq]++
-if(len(distCount) != 2) return False
-side = 0, diagonal = 0
-for([dist, count] : distCount) :
-if(count == 4) side = dist
-else if(count == 2) diagonal = dist
-else return False
-return diagonal == 2  side # Verify diagonal² = 2 × side²
+    def validSquare(self, p1, p2, p3, p4):
+        distCount = {}
 
+        points = [p1, p2, p3, p4]
+
+        for i in range(4):
+            for j in range(i + 1, 4):
+                dx = points[i][0] - points[j][0]
+                dy = points[i][1] - points[j][1]
+                distSq = dx * dx + dy * dy
+
+                if distSq == 0:
+                    return False
+
+                distCount[distSq] = distCount.get(distSq, 0) + 1
+
+        if len(distCount) != 2:
+            return False
+
+        side = 0
+        diagonal = 0
+
+        for dist, count in distCount.items():
+            if count == 4:
+                side = dist
+            elif count == 2:
+                diagonal = dist
+            else:
+                return False
+
+        return diagonal == 2 * side
 ```
 
 However, the simpler solution (checking `distances.size() == 2`) is sufficient because:

@@ -83,42 +83,55 @@ Use multi-source BFS with a level marker (sentinel value or separate level track
 This solution uses BFS starting from all rotten oranges simultaneously. A special marker `{-1, -1}` is used to separate levels (minutes).
 
 ```python
-class Solution:
-def orangesRotting(self, grid):
-    deque[pair<int, int>> cache
-    freshOranges = 0
-    ROWS = len(grid), COLS = grid[0].__len__()
-    # Find all rotten oranges and count fresh oranges
-    for (r = 0 r < ROWS r += 1) :
-    for (c = 0 c < COLS c += 1) :
-    if grid[r][c] == 2:
-        cache.push(:r, c)
-         else if(grid[r][c] == 1) :
-        freshOranges += 1
-# Add level separator
-cache.push(:-1, -1)
-minutesElapsed = -1
-dirs[4][2] = ::-1, 0, :1, 0, :0, 1, :0, -1
-while not not cache:
-    [row, col] = cache[0]
-    cache.pop()
-    if row == -1:
-        # Level separator encountered
-        minutesElapsed += 1
-        if not not cache:
-            # Add separator for next level
-            cache.push(:-1, -1)
-         else :
-        # Process current rotten orange
-        for d in dirs:
-            nr = row + d[0]
-            nc = col + d[1]
-            if nr >= 0  and  nr < ROWS  and  nc >= 0  and  nc < COLS  and  grid[nr][nc] == 1:
-                grid[nr][nc] = 2  # Mark as rotten
-                freshOranges -= 1
-                cache.push(:nr, nc)
-(minutesElapsed if         return freshOranges == 0  else -1)
+from collections import deque
 
+class Solution:
+    def orangesRotting(self, grid):
+        cache = deque()
+        freshOranges = 0
+
+        ROWS = len(grid)
+        COLS = len(grid[0])
+
+        # Find all rotten oranges and count fresh oranges
+        for r in range(ROWS):
+            for c in range(COLS):
+                if grid[r][c] == 2:
+                    cache.append((r, c))
+                elif grid[r][c] == 1:
+                    freshOranges += 1
+
+        # Add level separator
+        cache.append((-1, -1))
+
+        minutesElapsed = -1
+
+        dirs = [(-1, 0), (1, 0), (0, 1), (0, -1)]
+
+        while cache:
+            row, col = cache.popleft()
+
+            if row == -1:
+                # Level separator encountered
+                minutesElapsed += 1
+
+                if cache:
+                    # Add separator for next level
+                    cache.append((-1, -1))
+            else:
+                # Process current rotten orange
+                for d in dirs:
+                    nr = row + d[0]
+                    nc = col + d[1]
+
+                    if (0 <= nr < ROWS and 0 <= nc < COLS and
+                        grid[nr][nc] == 1):
+
+                        grid[nr][nc] = 2  # Mark as rotten
+                        freshOranges -= 1
+                        cache.append((nr, nc))
+
+        return minutesElapsed if freshOranges == 0 else -1
 ```
 
 ### How Solution 1 Works
@@ -152,35 +165,48 @@ The `{-1, -1}` marker acts as a level separator:
 This approach processes each level explicitly by tracking queue size.
 
 ```python
-class Solution:
-def orangesRotting(self, grid):
-    deque[pair<int, int>> q
-    freshOranges = 0
-    ROWS = len(grid), COLS = grid[0].__len__()
-    dirs[4][2] = ::-1, 0, :1, 0, :0, 1, :0, -1
-# Find all rotten oranges and count fresh oranges
-for (r = 0 r < ROWS r += 1) :
-for (c = 0 c < COLS c += 1) :
-if grid[r][c] == 2:
-    q.push(:r, c)
-     else if(grid[r][c] == 1) :
-    freshOranges += 1
-minutes = 0
-while not not q  and  freshOranges > 0:
-    levelSize = len(q)
-    for(i = 0 i < levelSize i += 1) :
-    [row, col] = q[0]
-    q.pop()
-    for d in dirs:
-        nr = row + d[0]
-        nc = col + d[1]
-        if nr >= 0  and  nr < ROWS  and  nc >= 0  and  nc < COLS  and  grid[nr][nc] == 1:
-            grid[nr][nc] = 2
-            freshOranges -= 1
-            q.push(:nr, nc)
-if(freshOranges > 0) minutes += 1
-(minutes if         return freshOranges == 0  else -1)
+from collections import deque
 
+class Solution:
+    def orangesRotting(self, grid):
+        q = deque()
+        freshOranges = 0
+
+        ROWS = len(grid)
+        COLS = len(grid[0])
+
+        dirs = [(-1, 0), (1, 0), (0, 1), (0, -1)]
+
+        # Find all rotten oranges and count fresh oranges
+        for r in range(ROWS):
+            for c in range(COLS):
+                if grid[r][c] == 2:
+                    q.append((r, c))
+                elif grid[r][c] == 1:
+                    freshOranges += 1
+
+        minutes = 0
+
+        while q and freshOranges > 0:
+            levelSize = len(q)
+
+            for _ in range(levelSize):
+                row, col = q.popleft()
+
+                for d in dirs:
+                    nr = row + d[0]
+                    nc = col + d[1]
+
+                    if (0 <= nr < ROWS and 0 <= nc < COLS and
+                        grid[nr][nc] == 1):
+
+                        grid[nr][nc] = 2
+                        freshOranges -= 1
+                        q.append((nr, nc))
+
+            minutes += 1
+
+        return minutes if freshOranges == 0 else -1
 ```
 
 ### How Solution 2 Works
@@ -197,37 +223,47 @@ if(freshOranges > 0) minutes += 1
 This approach maintains a separate distance/time array to track when each orange rots.
 
 ```python
-class Solution:
-def orangesRotting(self, grid):
-    ROWS = len(grid), COLS = grid[0].__len__()
-    deque[pair<int, int>> q
-    list[list[int>> time(ROWS, list[int>(COLS, -1))
-    freshOranges = 0
-    dirs[4][2] = ::-1, 0, :1, 0, :0, 1, :0, -1
-# Initialize: add rotten oranges to queue
-for (r = 0 r < ROWS r += 1) :
-for (c = 0 c < COLS c += 1) :
-if grid[r][c] == 2:
-    q.push(:r, c)
-    time[r][c] = 0
-     else if(grid[r][c] == 1) :
-    freshOranges += 1
-maxTime = 0
-while not not q:
-    [row, col] = q[0]
-    q.pop()
-    for d in dirs:
-        nr = row + d[0]
-        nc = col + d[1]
-        if(nr >= 0  and  nr < ROWS  and  nc >= 0  and  nc < COLS  and
-        grid[nr][nc] == 1  and  time[nr][nc] == -1) :
-        time[nr][nc] = time[row][col] + 1
-        maxTime = max(maxTime, time[nr][nc])
-        grid[nr][nc] = 2
-        freshOranges -= 1
-        q.push(:nr, nc)
-(maxTime if         return freshOranges == 0  else -1)
+from collections import deque
 
+class Solution:
+    def orangesRotting(self, grid):
+        ROWS = len(grid)
+        COLS = len(grid[0])
+
+        q = deque()
+        time = [[-1 for _ in range(COLS)] for _ in range(ROWS)]
+        freshOranges = 0
+
+        dirs = [(-1, 0), (1, 0), (0, 1), (0, -1)]
+
+        # Initialize: add rotten oranges to queue
+        for r in range(ROWS):
+            for c in range(COLS):
+                if grid[r][c] == 2:
+                    q.append((r, c))
+                    time[r][c] = 0
+                elif grid[r][c] == 1:
+                    freshOranges += 1
+
+        maxTime = 0
+
+        while q:
+            row, col = q.popleft()
+
+            for d in dirs:
+                nr = row + d[0]
+                nc = col + d[1]
+
+                if (0 <= nr < ROWS and 0 <= nc < COLS and
+                    grid[nr][nc] == 1 and time[nr][nc] == -1):
+
+                    time[nr][nc] = time[row][col] + 1
+                    maxTime = max(maxTime, time[nr][nc])
+                    grid[nr][nc] = 2
+                    freshOranges -= 1
+                    q.append((nr, nc))
+
+        return maxTime if freshOranges == 0 else -1
 ```
 
 ### How Solution 3 Works

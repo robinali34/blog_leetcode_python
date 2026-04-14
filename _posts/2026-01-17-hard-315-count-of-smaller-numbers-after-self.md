@@ -94,40 +94,50 @@ This problem requires counting inversions (smaller elements to the right). We ne
 ### **Solution: Fenwick Tree (Binary Indexed Tree) with Coordinate Compression**
 
 ```python
-class FrenwickTree:
-FrenwickTree(n): sums_(n + 1, 0):
-def update(self, i, delta):
-    while i < len(sums_):
-        sums_[i] += delta
-        i += lowbit(i)
-def query(self, i):
-    sum = 0
-    while i > 0:
-        sum += sums_[i]
-        i -= lowbit(i)
-    return sum
-list[int> sums_
-def lowbit(self, x):
-    return x  (-x)
-class Solution:
-def countSmaller(self, nums):
-    # Get rank order
-    list[int> sorted(nums)
-    sorted.sort()
-    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end())
-    dict[int, int> ranks
-    rank = 1
-    for num in sorted:
-        ranks[num] = rank += 1
-    list[int> rtn
-    # Update pre-fix sum while iterate, add ranks by 1 when encouter
-    FrenwickTree tree(len(ranks))
-    for(i = len(nums) - 1 i >= 0 i -= 1) :
-    rtn.append(tree.query(ranks[nums[i]] - 1))
-    tree.update(ranks[nums[i]], 1)
-rtn.reverse()
-return rtn
+class FenwickTree:
+    def __init__(self, n):
+        self.sums_ = [0] * (n + 1)
 
+    def lowbit(self, x):
+        return x & (-x)
+
+    def update(self, i, delta):
+        while i < len(self.sums_):
+            self.sums_[i] += delta
+            i += self.lowbit(i)
+
+    def query(self, i):
+        total = 0
+        while i > 0:
+            total += self.sums_[i]
+            i -= self.lowbit(i)
+        return total
+
+
+class Solution:
+    def countSmaller(self, nums):
+        # Get rank order
+        sorted_vals = sorted(nums)
+        sorted_vals = list(dict.fromkeys(sorted_vals))  # remove duplicates
+
+        ranks = {}
+        rank = 1
+        for num in sorted_vals:
+            ranks[num] = rank
+            rank += 1
+
+        res = []
+
+        # Fenwick Tree
+        tree = FenwickTree(len(ranks))
+
+        # Process from right to left
+        for i in range(len(nums) - 1, -1, -1):
+            res.append(tree.query(ranks[nums[i]] - 1))
+            tree.update(ranks[nums[i]], 1)
+
+        res.reverse()
+        return res
 ```
 
 ### **Algorithm Explanation:**
@@ -251,44 +261,55 @@ Count inversions during merge sort by tracking how many elements from the right 
 
 ```python
 class Solution:
-def countSmaller(self, nums):
-    n = len(nums)
-    list[int> res(n, 0)
-    list[pair<int, int>> indexed
-    for (i = 0 i < n i += 1) :
-    indexed.append(:nums[i], i)
-mergeSort(indexed, 0, n - 1, res)
-return res
-def mergeSort(self, list[pair<int, arr, l, r, res):
-    if (l >= r) return
-    mid = l + (r - l) / 2
-    mergeSort(arr, l, mid, res)
-    mergeSort(arr, mid + 1, r, res)
-    merge(arr, l, mid, r, res)
-def merge(self, list[pair<int, arr, l, mid, r, res):
-    list[pair<int, int>> temp
-    i = l, j = mid + 1
-    rightCount = 0 # Count of elements from right subarray already merged
-    while i <= mid  and  j <= r:
-        if arr[i].first > arr[j].first:
-            # Right element is smaller, will be placed before left elements
-            rightCount += 1
-            temp.append(arr[j += 1])
-             else :
-            # Left element is smaller/equal, add count of right elements already merged
-            res[arr[i].second] += rightCount
-            temp.append(arr[i += 1])
-    # Remaining left elements: all right elements were smaller
-    while i <= mid:
-        res[arr[i].second] += rightCount
-        temp.append(arr[i += 1])
-    # Remaining right elements: no left elements to count
-    while j <= r:
-        temp.append(arr[j += 1])
-    # Copy back to original array
-    for (k = 0 k < len(temp) k += 1) :
-    arr[l + k] = temp[k]
+    def countSmaller(self, nums):
+        n = len(nums)
+        res = [0] * n
+        indexed = []
 
+        for i in range(n):
+            indexed.append((nums[i], i))
+
+        self.mergeSort(indexed, 0, n - 1, res)
+        return res
+
+    def mergeSort(self, arr, l, r, res):
+        if l >= r:
+            return
+
+        mid = l + (r - l) // 2
+
+        self.mergeSort(arr, l, mid, res)
+        self.mergeSort(arr, mid + 1, r, res)
+        self.merge(arr, l, mid, r, res)
+
+    def merge(self, arr, l, mid, r, res):
+        temp = []
+
+        i = l
+        j = mid + 1
+        rightCount = 0  # elements from right already placed
+
+        while i <= mid and j <= r:
+            if arr[i][0] > arr[j][0]:
+                rightCount += 1
+                temp.append(arr[j])
+                j += 1
+            else:
+                res[arr[i][1]] += rightCount
+                temp.append(arr[i])
+                i += 1
+
+        while i <= mid:
+            res[arr[i][1]] += rightCount
+            temp.append(arr[i])
+            i += 1
+
+        while j <= r:
+            temp.append(arr[j])
+            j += 1
+
+        for k in range(len(temp)):
+            arr[l + k] = temp[k]
 ```
 
 **Algorithm Explanation:**
@@ -305,48 +326,72 @@ Similar to Fenwick Tree but using explicit segment tree structure.
 
 ```python
 class SegmentTree:
-n
-list[int> tree
-def update(self, node, l, r, idx):
-    if l == r:
-        tree[node]++
-        return
-    mid = l + (r - l) / 2
-    if idx <= mid:
-        update(2  node + 1, l, mid, idx)
-         else :
-        update(2  node + 2, mid + 1, r, idx)
-    tree[node] = tree[2  node + 1] + tree[2  node + 2]
-def query(self, node, l, r, ql, qr):
-    if (qr < l  or  r < ql) return 0
-    if (ql <= l  and  r <= qr) return tree[node]
-    mid = l + (r - l) / 2
-    return query(2  node + 1, l, mid, ql, qr) +
-    query(2  node + 2, mid + 1, r, ql, qr)
-SegmentTree(size) : n(size), tree(4  size, 0) :
-def update(self, idx):
-    update(0, 0, n - 1, idx)
-def query(self, l, r):
-    return query(0, 0, n - 1, l, r)
-class Solution:
-def countSmaller(self, nums):
-    n = len(nums)
-    list[int> res(n, 0)
-    # Coordinate compression
-    list[int> sorted(nums.begin(), nums.end())
-    sorted.sort()
-    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end())
-    SegmentTree st(len(sorted))
-    # Process from right to left
-    for (i = n - 1 i >= 0 i -= 1) :
-    rank = lower_bound(sorted.begin(), sorted.end(), nums[i]) - sorted.begin()
-    # Query count of elements < nums[i]
-    if rank > 0:
-        res[i] = st.query(0, rank - 1)
-    # Mark nums[i] as seen
-    st.update(rank)
-return res
+    def __init__(self, size):
+        self.n = size
+        self.tree = [0] * (4 * size)
 
+    def update(self, node, l, r, idx):
+        if l == r:
+            self.tree[node] += 1
+            return
+
+        mid = l + (r - l) // 2
+
+        if idx <= mid:
+            self.update(2 * node + 1, l, mid, idx)
+        else:
+            self.update(2 * node + 2, mid + 1, r, idx)
+
+        self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]
+
+    def query(self, node, l, r, ql, qr):
+        if qr < l or r < ql:
+            return 0
+
+        if ql <= l and r <= qr:
+            return self.tree[node]
+
+        mid = l + (r - l) // 2
+
+        return (
+            self.query(2 * node + 1, l, mid, ql, qr)
+            + self.query(2 * node + 2, mid + 1, r, ql, qr)
+        )
+
+
+class Solution:
+    def countSmaller(self, nums):
+        n = len(nums)
+        res = [0] * n
+
+        # Coordinate compression
+        sorted_vals = sorted(nums)
+        sorted_vals = list(dict.fromkeys(sorted_vals))  # remove duplicates
+
+        def lower_bound(arr, x):
+            l, r = 0, len(arr)
+            while l < r:
+                m = (l + r) // 2
+                if arr[m] < x:
+                    l = m + 1
+                else:
+                    r = m
+            return l
+
+        st = SegmentTree(len(sorted_vals))
+
+        # Process from right to left
+        for i in range(n - 1, -1, -1):
+            rank = lower_bound(sorted_vals, nums[i])
+
+            # Query count of elements < nums[i]
+            if rank > 0:
+                res[i] = st.query(0, 0, len(sorted_vals) - 1, 0, rank - 1)
+
+            # Mark nums[i] as seen
+            st.update(0, 0, len(sorted_vals) - 1, rank)
+
+        return res
 ```
 
 **Time Complexity:** O(n log n)  
@@ -357,38 +402,51 @@ return res
 Use an augmented BST that tracks the count of smaller elements.
 
 ```python
-struct Node:
-val, count, left_count
-Node left, right
-Node(val): val(val), count(1), left_count(0), left:None, right:None :
-~Node() :delete left delete right
-less_or_equal() const:return count + left_count
-class Solution:
-def countSmaller(self, nums):
-    if(not nums) return :
-nums.reverse()
-unique_ptr<Node> root:Node(nums[0])
-list[int> rtn:0
-for(i = 1 i < len(nums) i += 1) :
-rtn.emplace_back(insert(root.get(), nums[i]))
-rtn.reverse()
-return rtn
-def insert(self, root, val):
-    if root.val == val:
-        root.count += 1
-        return root.left_count
-         else if(val < root.val) :
-        root.left_count += 1
-        if not root.left:
-            root.left = Node(val)
-            return 0
-        return insert(root.left, val)
-         else :
-        if not root.right:
-            root.right = Node(val)
-            return root.less_or_equal()
-        return root.less_or_equal() + insert(root.right, val)
+class Node:
+    def __init__(self, val):
+        self.val = val
+        self.count = 1
+        self.left_count = 0
+        self.left = None
+        self.right = None
 
+    def less_or_equal(self):
+        return self.count + self.left_count
+
+
+class Solution:
+    def countSmaller(self, nums):
+        if not nums:
+            return []
+
+        nums.reverse()
+
+        root = Node(nums[0])
+        res = [0]
+
+        for i in range(1, len(nums)):
+            res.append(self.insert(root, nums[i]))
+
+        res.reverse()
+        return res
+
+    def insert(self, root, val):
+        if root.val == val:
+            root.count += 1
+            return root.left_count
+
+        elif val < root.val:
+            root.left_count += 1
+            if not root.left:
+                root.left = Node(val)
+                return 0
+            return self.insert(root.left, val)
+
+        else:
+            if not root.right:
+                root.right = Node(val)
+                return root.less_or_equal()
+            return root.less_or_equal() + self.insert(root.right, val)
 ```
 
 **Algorithm Explanation:**
@@ -420,19 +478,24 @@ Maintain a sorted list and use binary search to find insertion position.
 
 ```python
 class Solution:
-def countSmaller(self, nums):
-    n = len(nums)
-    list[int> res(n, 0)
-    list[int> sortedList
-    # Process from right to left
-    for (i = n - 1 i >= 0 i -= 1) :
-    # Find position where nums[i] should be inserted
-    it = lower_bound(sortedList.begin(), sortedList.end(), nums[i])
-    # Count of elements smaller than nums[i]
-    res[i] = it - sortedList.begin()
-    # Insert nums[i] at correct position
-    sortedList.insert(it, nums[i])
-return res
+    def countSmaller(self, nums):
+        n = len(nums)
+        res = [0] * n
+        sortedList = []
+
+        # Process from right to left
+        for i in range(n - 1, -1, -1):
+            # Find position where nums[i] should be inserted
+            import bisect
+            it = bisect.bisect_left(sortedList, nums[i])
+
+            # Count of elements smaller than nums[i]
+            res[i] = it
+
+            # Insert nums[i] at correct position
+            sortedList.insert(it, nums[i])
+
+        return res
 
 ```
 

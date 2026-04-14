@@ -105,18 +105,21 @@ This problem requires finding the maximum distance between two occurrences of th
 
 ```python
 class Solution:
-def maxLengthBetweenEqualCharacters(self, s):
-    dict[char, int> LeftIdx, RightIdx
-    maxLen = -1
-    for(i = 0 i < (int)s.length() i += 1) :
-    if not s[i] in LeftIdx:
-        LeftIdx[s[i]] = i
-         else :
-        RightIdx[s[i]] = i
-for([c, idx]: RightIdx) :
-maxLen = max(maxLen, RightIdx[c] - LeftIdx[c] - 1)
-return maxLen
+    def maxLengthBetweenEqualCharacters(self, s):
+        left_idx = {}
+        right_idx = {}
+        max_len = -1
 
+        for i in range(len(s)):
+            if s[i] not in left_idx:
+                left_idx[s[i]] = i
+            else:
+                right_idx[s[i]] = i
+
+        for c in right_idx:
+            max_len = max(max_len, right_idx[c] - left_idx[c] - 1)
+
+        return max_len
 ```
 
 ### Algorithm Explanation:
@@ -222,17 +225,19 @@ Return: 4 ✓
 
 ```python
 class Solution:
-def maxLengthBetweenEqualCharacters(self, s):
-    list[int> first(26, -1)
-    maxLen = -1
-    for(i = 0 i < (int)s.length() i += 1) :
-    c = s[i] - 'a'
-    if first[c] == -1:
-        first[c] = i
-         else :
-        maxLen = max(maxLen, i - first[c] - 1)
-return maxLen
+    def maxLengthBetweenEqualCharacters(self, s):
+        first = [-1] * 26
+        max_len = -1
 
+        for i in range(len(s)):
+            c = ord(s[i]) - ord('a')
+
+            if first[c] == -1:
+                first[c] = i
+            else:
+                max_len = max(max_len, i - first[c] - 1)
+
+        return max_len
 ```
 
 **Pros**: More efficient, single pass, uses array instead of hash map  
@@ -242,15 +247,22 @@ return maxLen
 
 ```python
 class Solution:
-def maxLengthBetweenEqualCharacters(self, s):
-    dict[char, int> lastIdx
-    for(i = 0 i < (int)s.length() i += 1) :
-    lastIdx[s[i]] = i
-maxLen = -1
-for(i = 0 i < (int)s.length() i += 1) :
-if lastIdx[s[i]] != i:
-    maxLen = max(maxLen, lastIdx[s[i]] - i - 1)
-return maxLen
+    def maxLengthBetweenEqualCharacters(self, s):
+        last_idx = {}
+        n = len(s)
+
+        # store last occurrence of each character
+        for i in range(n):
+            last_idx[s[i]] = i
+
+        max_len = -1
+
+        # compute best distance
+        for i in range(n):
+            if last_idx[s[i]] != i:
+                max_len = max(max_len, last_idx[s[i]] - i - 1)
+
+        return max_len
 
 ```
 

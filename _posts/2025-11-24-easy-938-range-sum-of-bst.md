@@ -72,25 +72,25 @@ The key insight is to leverage BST properties to prune branches that cannot cont
 ### Solution: Recursive DFS with Pruning
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def rangeSumBST(self, root, low, high):
-    if(root == None) return 0
-    if root.val > high:
-        return rangeSumBST(root.left, low, high)
-         else if(root.val < low) :
-        return rangeSumBST(root.right, low, high)
-    return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 
+class Solution:
+    def rangeSumBST(self, root, low, high):
+        if root == None:
+            return 0
+
+        if root.val > high:
+            return self.rangeSumBST(root.left, low, high)
+
+        elif root.val < low:
+            return self.rangeSumBST(root.right, low, high)
+
+        return root.val + self.rangeSumBST(root.left, low, high) + self.rangeSumBST(root.right, low, high)
 ```
 
 ## How the Algorithm Works
@@ -175,7 +175,6 @@ Sum = 32
 
 ```python
 if(root == None) return 0
-
 ```
 
 **Why:** Empty subtree contributes 0 to the sum.
@@ -185,10 +184,6 @@ if(root == None) return 0
 ```python
 if root.val > high:
     return rangeSumBST(root.left, low, high)
-
-
-
-
 ```
 
 **Why:** If current value > high, all values in right subtree are also > high (BST property). Only search left subtree.
@@ -196,7 +191,6 @@ if root.val > high:
 ```python
 def if(self, low):
     return rangeSumBST(root.right, low, high)
-
 ```
 
 **Why:** If current value < low, all values in left subtree are also < low (BST property). Only search right subtree.
@@ -205,10 +199,6 @@ def if(self, low):
 
 ```python
 return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
-
-
-
-
 ```
 
 **Why:** Current node is in range `[low, high]`, so:
@@ -232,25 +222,31 @@ return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, lo
 
 ```python
 class Solution:
-def rangeSumBST(self, root, low, high):
-    if(root == None) return 0
-    list[TreeNode> stk
-    stk.push(root)
-    sum = 0
-    while not not stk:
-        TreeNode node = stk.top()
-        stk.pop()
-        if(node == None) continue
-        if node.val > high:
-            stk.push(node.left)
-             else if(node.val < low) :
-            stk.push(node.right)
-             else :
-            sum += node.val
-            stk.push(node.left)
-            stk.push(node.right)
-    return sum
+    def rangeSumBST(self, root, low, high):
+        if root == None:
+            return 0
 
+        stk = []
+        stk.append(root)
+        total = 0
+
+        while stk:
+            node = stk[-1]
+            stk.pop()
+
+            if node == None:
+                continue
+
+            if node.val > high:
+                stk.append(node.left)
+            elif node.val < low:
+                stk.append(node.right)
+            else:
+                total += node.val
+                stk.append(node.left)
+                stk.append(node.right)
+
+        return total
 ```
 
 **Pros:**
@@ -268,15 +264,19 @@ def rangeSumBST(self, root, low, high):
 
 ```python
 class Solution:
-def rangeSumBST(self, root, low, high):
-    if(root == None) return 0
-    sum = 0
-    if root.val >= low  and  root.val <= high:
-        sum += root.val
-    sum += rangeSumBST(root.left, low, high)
-    sum += rangeSumBST(root.right, low, high)
-    return sum
+    def rangeSumBST(self, root, low, high):
+        if root == None:
+            return 0
 
+        total = 0
+
+        if root.val >= low and root.val <= high:
+            total += root.val
+
+        total += self.rangeSumBST(root.left, low, high)
+        total += self.rangeSumBST(root.right, low, high)
+
+        return total
 ```
 
 **Pros:**
@@ -313,10 +313,6 @@ For node with value v:
 
 ```python
 return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
-
-
-
-
 ```
 
 **Breakdown:**

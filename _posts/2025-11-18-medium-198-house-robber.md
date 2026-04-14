@@ -77,16 +77,22 @@ This is a classic dynamic programming problem. The key insight is that for each 
 
 ```python
 class Solution:
-def rob(self, nums):
-    if(len(nums) <= 0) return 0
-    if(len(nums) == 1) return nums[0]
-    list[int> dp(len(nums) + 1)
-    dp[0] = 0
-    dp[1] = nums[0]
-    for(i = 1 i < (int)len(nums) i += 1) :
-    dp[i + 1] = max(dp[i - 1] + nums[i], dp[i])
-return dp[len(nums)]
+    def rob(self, nums):
+        if len(nums) <= 0:
+            return 0
 
+        if len(nums) == 1:
+            return nums[0]
+
+        dp = [0] * (len(nums) + 1)
+
+        dp[0] = 0
+        dp[1] = nums[0]
+
+        for i in range(1, len(nums)):
+            dp[i + 1] = max(dp[i - 1] + nums[i], dp[i])
+
+        return dp[len(nums)]
 ```
 
 ## How the Algorithm Works
@@ -188,17 +194,22 @@ Instead of storing the entire DP array, we only need the previous two values:
 
 ```python
 class Solution:
-def rob(self, nums):
-    if(not nums) return 0
-    if(len(nums) == 1) return nums[0]
-    prev2 = 0        # dp[i-2]
-    prev1 = nums[0]  # dp[i-1]
-    for(i = 1 i < (int)len(nums) i += 1) :
-    current = max(prev2 + nums[i], prev1)
-    prev2 = prev1
-    prev1 = current
-return prev1
+    def rob(self, nums):
+        if not nums:
+            return 0
 
+        if len(nums) == 1:
+            return nums[0]
+
+        prev2 = 0        # dp[i-2]
+        prev1 = nums[0]  # dp[i-1]
+
+        for i in range(1, len(nums)):
+            current = max(prev2 + nums[i], prev1)
+            prev2 = prev1
+            prev1 = current
+
+        return prev1
 ```
 
 **Pros:**
@@ -219,16 +230,22 @@ Standard 0-indexed approach:
 
 ```python
 class Solution:
-def rob(self, nums):
-    if(not nums) return 0
-    if(len(nums) == 1) return nums[0]
-    list[int> dp(len(nums))
-    dp[0] = nums[0]
-    dp[1] = max(nums[0], nums[1])
-    for(i = 2 i < (int)len(nums) i += 1) :
-    dp[i] = max(dp[i-1], dp[i-2] + nums[i])
-return dp[len(nums) - 1]
+    def rob(self, nums):
+        if not nums:
+            return 0
 
+        if len(nums) == 1:
+            return nums[0]
+
+        dp = [0] * len(nums)
+
+        dp[0] = nums[0]
+        dp[1] = max(nums[0], nums[1])
+
+        for i in range(2, len(nums)):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+
+        return dp[len(nums) - 1]
 ```
 
 ## Complexity Analysis
@@ -262,8 +279,6 @@ This ensures we never rob two adjacent houses while maximizing the total amount.
 dp[0] = 0           # No houses
 dp[1] = nums[0]     # First house
 dp[i+1] = max(...)  # Current house at index i
-
-
 ```
 
 **0-Indexed (Standard):**
@@ -271,8 +286,6 @@ dp[i+1] = max(...)  # Current house at index i
 dp[0] = nums[0]     # First house
 dp[1] = max(nums[0], nums[1])  # First two houses
 dp[i] = max(...)    # Current house at index i
-
-
 ```
 
 Both approaches are correct; 1-indexed makes base cases simpler.
@@ -287,7 +300,6 @@ for(i = 1 i < (int)len(nums) i += 1)
 The `(int)` cast prevents comparison warnings between `int` and `size_t`. Alternatively:
 ```python
 for(size_t i = 1 i < len(nums) i += 1)
-
 ```
 
 ## Common Mistakes

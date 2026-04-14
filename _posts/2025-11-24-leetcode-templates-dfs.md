@@ -8,7 +8,7 @@ tags: [leetcode, templates, dfs, graph, traversal]
 ---
 
 {% raw %}
-Minimal, copy-paste C++ for graph DFS, grid DFS, tree DFS, memoization, and iterative DFS. See also [Graph](/posts/2025-10-29-leetcode-templates-graph/) and [Backtracking](/posts/2025-11-24-leetcode-templates-backtracking/).
+Minimal, copy-paste Python for graph DFS, grid DFS, tree DFS, memoization, and iterative DFS. See also [Graph](/posts/2025-10-29-leetcode-templates-graph/) and [Backtracking](/posts/2025-11-24-leetcode-templates-backtracking/).
 
 ## Contents
 
@@ -24,20 +24,22 @@ Depth-First Search explores as far as possible before backtracking.
 
 ```python
 # DFS on graph (adjacency list)
-def dfs(self, graph, node, visited):
+def dfs_graph(graph: list[list[int]], node: int, visited: list[bool]) -> None:
     visited[node] = True
-    # Process node
-    cout << node << " "
-    # Explore neighbors
+    # process node
     for neighbor in graph[node]:
         if not visited[neighbor]:
-            dfs(graph, neighbor, visited)
-# DFS with return value
-def dfs(self, graph, node, target, visited):
-    if (node == target) return True
+            dfs_graph(graph, neighbor, visited)
+
+
+def dfs_find_target(
+    graph: list[list[int]], node: int, target: int, visited: list[bool]
+) -> bool:
+    if node == target:
+        return True
     visited[node] = True
     for neighbor in graph[node]:
-        if not visited[neighbor] * and  dfs(graph, neighbor, target, visited):
+        if not visited[neighbor] and dfs_find_target(graph, neighbor, target, visited):
             return True
     return False
 
@@ -49,39 +51,44 @@ DFS for 2D grid problems (connected components, paths).
 
 ```python
 # DFS on 2D grid (4-directional)
-def dfsGrid(self, grid, i, j):
-    m = len(grid), n = grid[0].__len__()
-    if i < 0  or  i >= m  or  j < 0  or  j >= n  or  grid[i][j] != '1':
+DIRS = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+
+def dfs_grid(grid: list[list[str]], i: int, j: int) -> None:
+    m, n = len(grid), len(grid[0])
+    if i < 0 or i >= m or j < 0 or j >= n or grid[i][j] != "1":
         return
-    grid[i][j] = '0' # Mark as visited
-    # Explore 4 directions
-    dfsGrid(grid, i + 1, j)
-    dfsGrid(grid, i - 1, j)
-    dfsGrid(grid, i, j + 1)
-    dfsGrid(grid, i, j - 1)
-# Number of Islands using DFS
-def numIslands(self, grid):
-    m = len(grid), n = grid[0].__len__()
+    grid[i][j] = "0"
+    for di, dj in DIRS:
+        dfs_grid(grid, i + di, j + dj)
+
+
+def num_islands(grid: list[list[str]]) -> int:
+    m, n = len(grid), len(grid[0])
     count = 0
-    for (i = 0 i < m i += 1) :
-    for (j = 0 j < n j += 1) :
-    if grid[i][j] == '1':
-        count += 1
-        dfsGrid(grid, i, j)
-return count
-# Word Search
-def dfsWordSearch(self, board, i, j, word, idx):
-    if (idx == len(word)) return True
-    if (i < 0  or  i >= len(board)  or  j < 0  or  j >= board[0].__len__()) return False
-    if (board[i][j] != word[idx]) return False
-    char temp = board[i][j]
-    board[i][j] = '#' # Mark as visited
-    list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-for ([dx, dy] : dirs) :
-if dfsWordSearch(board, i + dx, j + dy, word, idx + 1):
-    return True
-board[i][j] = temp # Backtrack
-return False
+    for i in range(m):
+        for j in range(n):
+            if grid[i][j] == "1":
+                count += 1
+                dfs_grid(grid, i, j)
+    return count
+
+
+def dfs_word_search(board: list[list[str]], i: int, j: int, word: str, idx: int) -> bool:
+    if idx == len(word):
+        return True
+    if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]):
+        return False
+    if board[i][j] != word[idx]:
+        return False
+    temp = board[i][j]
+    board[i][j] = "#"
+    for di, dj in DIRS:
+        if dfs_word_search(board, i + di, j + dj, word, idx + 1):
+            board[i][j] = temp
+            return True
+    board[i][j] = temp
+    return False
 
 ```
 
@@ -100,37 +107,54 @@ return False
 DFS for tree problems (preorder, inorder, postorder).
 
 ```python
-# Preorder DFS
-def preorder(self, root, result):
-    if (not root) return
+class TreeNode:
+    def __init__(self, val: int = 0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+def preorder(root: TreeNode | None, result: list[int]) -> None:
+    if not root:
+        return
     result.append(root.val)
     preorder(root.left, result)
     preorder(root.right, result)
-# Inorder DFS
-def inorder(self, root, result):
-    if (not root) return
+
+
+def inorder(root: TreeNode | None, result: list[int]) -> None:
+    if not root:
+        return
     inorder(root.left, result)
     result.append(root.val)
     inorder(root.right, result)
-# Postorder DFS
-def postorder(self, root, result):
-    if (not root) return
+
+
+def postorder(root: TreeNode | None, result: list[int]) -> None:
+    if not root:
+        return
     postorder(root.left, result)
     postorder(root.right, result)
     result.append(root.val)
-# Path Sum
-def hasPathSum(self, root, targetSum):
-    if (not root) return False
-    if not root.left  and  not root.right:
-        return root.val == targetSum
-    return hasPathSum(root.left, targetSum - root.val)  or
-    hasPathSum(root.right, targetSum - root.val)
-# Sum Root to Leaf Numbers
-def sumNumbers(self, root, 0):
-    if (not root) return 0
-    sum = sum  10 + root.val
-    if (not root.left  and  not root.right) return sum
-    return sumNumbers(root.left, sum) + sumNumbers(root.right, sum)
+
+
+def has_path_sum(root: TreeNode | None, target_sum: int) -> bool:
+    if not root:
+        return False
+    if not root.left and not root.right:
+        return root.val == target_sum
+    return has_path_sum(root.left, target_sum - root.val) or has_path_sum(
+        root.right, target_sum - root.val
+    )
+
+
+def sum_numbers(root: TreeNode | None, cur: int = 0) -> int:
+    if not root:
+        return 0
+    cur = cur * 10 + root.val
+    if not root.left and not root.right:
+        return cur
+    return sum_numbers(root.left, cur) + sum_numbers(root.right, cur)
 
 ```
 
@@ -152,21 +176,22 @@ def sumNumbers(self, root, 0):
 DFS with caching to avoid recomputation.
 
 ```python
-# DFS with memoization (e.g., Longest Increasing Path)
-dfsWithMemo(list[list[int>> matrix, i, j,
-list[list[int>> memo, prev) :
-m = len(matrix), n = matrix[0].__len__()
-if i < 0  or  i >= m  or  j < 0  or  j >= n  or  matrix[i][j] <= prev:
-    return 0
-if memo[i][j] != -1:
-    return memo[i][j]
-result = 1
-list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-for ([dx, dy] : dirs) :
-result = max(result, 1 + dfsWithMemo(matrix, i + dx, j + dy,
-memo, matrix[i][j]))
-memo[i][j] = result
-return result
+DIRS4 = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+
+def dfs_with_memo(
+    matrix: list[list[int]], i: int, j: int, memo: list[list[int]], prev: int
+) -> int:
+    m, n = len(matrix), len(matrix[0])
+    if i < 0 or i >= m or j < 0 or j >= n or matrix[i][j] <= prev:
+        return 0
+    if memo[i][j] != -1:
+        return memo[i][j]
+    best = 1
+    for di, dj in DIRS4:
+        best = max(best, 1 + dfs_with_memo(matrix, i + di, j + dj, memo, matrix[i][j]))
+    memo[i][j] = best
+    return best
 
 ```
 
@@ -179,34 +204,38 @@ return result
 DFS using stack instead of recursion.
 
 ```python
-# Iterative DFS on graph
-def dfsIterative(self, graph, start):
-    list[int> st
-    list[bool> visited(len(graph), False)
-    st.push(start)
-    while not not st:
-        node = st.top()
-        st.pop()
-        if (visited[node]) continue
+class TreeNode:
+    def __init__(self, val: int = 0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+def dfs_iterative(graph: list[list[int]], start: int) -> None:
+    st: list[int] = [start]
+    visited = [False] * len(graph)
+    while st:
+        node = st.pop()
+        if visited[node]:
+            continue
         visited[node] = True
-        # Process node
-        cout << node << " "
-        # Push neighbors in reverse order to maintain order
-        for (i = graph[node].__len__() - 1 i >= 0 i -= 1) :
-        if not visited[graph[node][i]]:
-            st.push(graph[node][i])
-# Iterative DFS on tree
-def preorderIterative(self, root):
-    list[int> result
-    if (not root) return result
-    list[TreeNode> st
-    st.push(root)
-    while not not st:
-        TreeNode node = st.top()
-        st.pop()
+        for nei in reversed(graph[node]):
+            if not visited[nei]:
+                st.append(nei)
+
+
+def preorder_iterative(root: TreeNode | None) -> list[int]:
+    if not root:
+        return []
+    result: list[int] = []
+    st: list[TreeNode] = [root]
+    while st:
+        node = st.pop()
         result.append(node.val)
-        if node.right) st.push(node.right:
-        if node.left) st.push(node.left:
+        if node.right:
+            st.append(node.right)
+        if node.left:
+            st.append(node.left)
     return result
 
 ```

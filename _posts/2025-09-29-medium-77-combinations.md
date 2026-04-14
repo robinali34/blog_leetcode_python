@@ -71,8 +71,6 @@ class Solution:
                     path.append(i)
                     self.dfs(n, k, result, path, i + 1)
                     path.pop()
-
-
 ```
 
 ## Step-by-Step Example
@@ -133,10 +131,6 @@ def backtrack(self, parameters) -> None:
         backtrack(updated_parameters)
         # Undo choice (backtrack)
         undo_choice(choice)
-
-
-
-
 ```
 
 ## Alternative Approaches
@@ -151,14 +145,12 @@ def combine(self, n: int, k: int) -> list[list[int]]:
         i = k - 1
         while i >= 0 and combination[i] == n - k + i + 1:
             i -= 1
-            if i < 0:
-                break
-                combination[i] += 1
-                for j in range(i + 1, k):
-                    combination[j] = combination[j - 1] + 1
-                    return result
-
-
+        if i < 0:
+            break
+            combination[i] += 1
+        for j in range(i + 1, k):
+            combination[j] = combination[j - 1] + 1
+    return result
 ```
 
 ### Mathematical Approach (Using Next Permutation)
@@ -166,10 +158,6 @@ def combine(self, n: int, k: int) -> list[list[int]]:
 def combine(self, n: int, k: int) -> list[list[int]]:
     from itertools import combinations
     return list(combinations(range(1, n + 1), k))
-
-
-
-
 ```
 
 ## Optimization Techniques
@@ -180,17 +168,13 @@ def dfs(self, n: int, k: int, result: list[list[int]], path: list[int], start: i
     # Early termination: not enough numbers left
     if len(path) + (n - start + 1) < k:
         return
-        if len(path) == k:
-            result.append(path[:])
-            return
-            for i in range(start, n + 1):
-                path.append(i)
-                self.dfs(n, k, result, path, i + 1)
-                path.pop()
-
-
-
-
+    if len(path) == k:
+        result.append(path[:])
+        return
+    for i in range(start, n + 1):
+        path.append(i)
+        self.dfs(n, k, result, path, i + 1)
+        path.pop()
 ```
 
 ## Common Mistakes

@@ -96,18 +96,19 @@ This problem requires finding the next greater element for each position in the 
 
 ```python
 class Solution:
-def dailyTemperatures(self, temperatures):
-    n = len(temperatures)
-    list[int> rtn(n, 0)
-    list[int> s
-    for(i = 0 i < n i += 1) :
-    while not not s  and  temperatures[i] > temperatures[s.top()]:
-        prev = s.top()
-        s.pop()
-        rtn[prev] = i - prev
-    s.push(i)
-return rtn
-
+    def dailyTemperatures(self, temperatures):
+        n = len(temperatures)
+        rtn = [0] * n
+        s = []
+        
+        for i in range(n):
+            while s and temperatures[i] > temperatures[s[-1]]:
+                prev = s.pop()
+                rtn[prev] = i - prev
+            
+            s.append(i)
+        
+        return rtn
 ```
 
 ### Algorithm Explanation:
@@ -149,17 +150,23 @@ Result: [1,1,4,2,1,1,0,0]
 
 ```python
 class Solution:
-def dailyTemperatures(self, temperatures):
-    N = len(temperatures)
-    list[int> rtn(N, 0)
-    for(i = N - 2 i >= 0 i -= 1) :
-    j = i + 1
-    while j < N  and  temperatures[j] <= temperatures[i]:
-        if(rtn[j] == 0) j = N
-        else j += rtn[j]
-    if(j < N) rtn[i] = j - i
-return rtn
-
+    def dailyTemperatures(self, temperatures):
+        N = len(temperatures)
+        rtn = [0] * N
+        
+        for i in range(N - 2, -1, -1):
+            j = i + 1
+            
+            while j < N and temperatures[j] <= temperatures[i]:
+                if rtn[j] == 0:
+                    j = N
+                else:
+                    j += rtn[j]
+            
+            if j < N:
+                rtn[i] = j - i
+        
+        return rtn
 ```
 
 ### Algorithm Explanation:

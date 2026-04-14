@@ -106,50 +106,68 @@ This is a **greedy matching** problem where we need to find the leftmost availab
 ### **Solution: Segment Tree for Leftmost Query**
 
 ```python
-struct SegmentTree :
-n
-list[int> tree
-SegmentTree(list[int> baskets) :
-n = len(baskets)
-tree.resize(4n)
-build(1, 0, n-1, baskets)
-def build(self, node, l, r, baskets):
-    if l == r:
-        tree[node] = baskets[l]
-         else :
-        mid = (l + r) / 2
-        build(node2, l, mid, baskets)
-        build(node2+1, mid+1, r, baskets)
-        tree[node] = max(tree[node2], tree[node2+1])
-# Find leftmost index >= l with value >= val
-def query(self, node, l, r, val):
-    if (tree[node] < val) return -1 # no basket in this range can hold fruit
-    if (l == r) return l # found
-    mid = (l + r) / 2
-    left = query(node2, l, mid, val)
-    if (left != -1) return left
-    return query(node2+1, mid+1, r, val)
-def update(self, node, l, r, idx):
-    if l == r:
-        tree[node] = 0 # mark basket used
-         else :
-        mid = (l + r) / 2
-        if idx <= mid) update(node*2, l, mid, idx:
-        else update(node2+1, mid+1, r, idx)
-        tree[node] = max(tree[node2], tree[node2+1])
-class Solution:
-def numOfUnplacedFruits(self, fruits, baskets):
-    n = len(baskets)
-    SegmentTree st(baskets)
-    unplaced = 0
-    for f in fruits:
-        idx = st.query(1, 0, n-1, f)
-        if idx == -1:
-            unplaced += 1
-             else :
-            st.update(1, 0, n-1, idx) # mark basket used
-    return unplaced
+class SegmentTree:
+    def __init__(self, baskets):
+        self.n = len(baskets)
+        self.tree = [0] * (4 * self.n)
+        self.build(1, 0, self.n - 1, baskets)
 
+    def build(self, node, l, r, baskets):
+        if l == r:
+            self.tree[node] = baskets[l]
+        else:
+            mid = (l + r) // 2
+            self.build(node * 2, l, mid, baskets)
+            self.build(node * 2 + 1, mid + 1, r, baskets)
+            self.tree[node] = max(self.tree[node * 2], self.tree[node * 2 + 1])
+
+    # Find leftmost index >= l with value >= val
+    def query(self, node, l, r, val):
+        if self.tree[node] < val:
+            return -1  # no basket in this range can hold fruit
+
+        if l == r:
+            return l
+
+        mid = (l + r) // 2
+
+        left = self.query(node * 2, l, mid, val)
+        if left != -1:
+            return left
+
+        return self.query(node * 2 + 1, mid + 1, r, val)
+
+    def update(self, node, l, r, idx):
+        if l == r:
+            self.tree[node] = 0  # mark basket used
+        else:
+            mid = (l + r) // 2
+
+            if idx <= mid:
+                self.update(node * 2, l, mid, idx)
+            else:
+                self.update(node * 2 + 1, mid + 1, r, idx)
+
+            self.tree[node] = max(self.tree[node * 2], self.tree[node * 2 + 1])
+
+
+class Solution:
+    def numOfUnplacedFruits(self, fruits, baskets):
+        n = len(baskets)
+
+        st = SegmentTree(baskets)
+
+        unplaced = 0
+
+        for f in fruits:
+            idx = st.query(1, 0, n - 1, f)
+
+            if idx == -1:
+                unplaced += 1
+            else:
+                st.update(1, 0, n - 1, idx)
+
+        return unplaced
 ```
 
 ### **Algorithm Explanation:**
@@ -275,20 +293,24 @@ Simple approach for small inputs:
 
 ```python
 class Solution:
-def numOfUnplacedFruits(self, fruits, baskets):
-    n = len(baskets)
-    list[bool> used(n, False)
-    unplaced = 0
-    for f in fruits:
-        bool placed = False
-        for (j = 0 j < n j += 1) :
-        if not used[j] * and  baskets[j] >= f:
-            used[j] = True
-            placed = True
-            break
-    if (not placed) unplaced += 1
-return unplaced
+    def numOfUnplacedFruits(self, fruits, baskets):
+        n = len(baskets)
+        used = [False] * n
+        unplaced = 0
 
+        for f in fruits:
+            placed = False
+
+            for j in range(n):
+                if not used[j] and baskets[j] >= f:
+                    used[j] = True
+                    placed = True
+                    break
+
+            if not placed:
+                unplaced += 1
+
+        return unplaced
 ```
 
 **Time Complexity:** O(n × m) - Too slow for large inputs  

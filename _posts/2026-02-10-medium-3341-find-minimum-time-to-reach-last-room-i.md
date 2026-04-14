@@ -67,31 +67,43 @@ Since this transition cost is nonnegative and depends only on the current best t
 
 {% raw %}
 ```python
-class Solution:
-def minTimeToReach(self, moveTime):
-    n = (int)len(moveTime)
-    m = (int)moveTime[0].__len__()
-    list[list[long long>> dist(n, list[long long>(m, LLONG_MAX))
-    dist[0][0] = 0
-    using State = pair<long long, pair<int,int>> # (time, (i,j))
-    heapq[State, list[State>, greater<>> pq
-    pq.emplace(0, make_pair(0, 0))
-    dirs[4][2] = ::0,1,:0,-1,:1,0,:-1,0
-while not not pq:
-    [t, pos] = pq.top()
-    pq.pop()
-    [i, j] = pos
-    if (t != dist[i][j]) continue
-    if (i == n - 1  and  j == m - 1) return (int)t
-    for d in dirs:
-        ni = i + d[0], nj = j + d[1]
-        if (ni < 0  or  ni >= n  or  nj < 0  or  nj >= m) continue
-        long long nt = max(t, (long long)moveTime[ni][nj]) + 1
-        if nt < dist[ni][nj]:
-            dist[ni][nj] = nt
-            pq.emplace(nt, make_pair(ni, nj))
-return (int)dist[n - 1][m - 1]
+import heapq
 
+class Solution:
+    def minTimeToReach(self, moveTime):
+        n, m = len(moveTime), len(moveTime[0])
+        
+        INF = float('inf')
+        dist = [[INF] * m for _ in range(n)]
+        dist[0][0] = 0
+        
+        # (time, i, j)
+        pq = [(0, 0, 0)]
+        
+        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        
+        while pq:
+            t, i, j = heapq.heappop(pq)
+            
+            if t != dist[i][j]:
+                continue
+            
+            if i == n - 1 and j == m - 1:
+                return t
+            
+            for di, dj in dirs:
+                ni, nj = i + di, j + dj
+                
+                if ni < 0 or ni >= n or nj < 0 or nj >= m:
+                    continue
+                
+                nt = max(t, moveTime[ni][nj]) + 1
+                
+                if nt < dist[ni][nj]:
+                    dist[ni][nj] = nt
+                    heapq.heappush(pq, (nt, ni, nj))
+        
+        return dist[n - 1][m - 1]
 ```
 {% endraw %}
 

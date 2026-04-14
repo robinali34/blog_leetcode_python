@@ -105,32 +105,52 @@ This problem requires counting all valid unlock patterns of length between `m` a
 
 ```python
 class Solution:
-def numberOfPatterns(self, m, n):
-    used.resize(9, False)
-    rtn = 0
-    for(len = m len <= n len += 1) :
-    rtn += claPatterns(-1, len)
-    for(i = 0 i < 9 i += 1) used[i] = False
-return rtn
-list[bool> used
-def isValid(self, idx, last):
-    if(used[idx]) return False
-    if(last == -1) return True
-    if((idx + last) % 2 == 1) return True
-    mid = (idx + last) / 2
-    if(mid == 4) return used[mid]
-    if((idx % 3 != last % 3)  and  (idx / 3 != last / 3)) return True
-    return used[mid]
-def claPatterns(self, last, len):
-    if(len == 0) return 1
-    sum = 0
-    for(i = 0 i < 9 i += 1) :
-    if isValid(i, last):
-        used[i] = True
-        sum += claPatterns(i, len - 1)
-        used[i] = False
-return sum
+    def numberOfPatterns(self, m, n):
+        self.used = [False] * 9
+        self.rtn = 0
 
+        for length in range(m, n + 1):
+            self.rtn += self.claPatterns(-1, length)
+
+        return self.rtn
+
+    def isValid(self, idx, last):
+        if self.used[idx]:
+            return False
+
+        if last == -1:
+            return True
+
+        # middle point between last and idx
+        mid = (idx + last) // 2
+
+        # if move is not a straight line skip middle check
+        if (idx + last) % 2 == 1:
+            return True
+
+        # special center case
+        if mid == 4:
+            return not self.used[mid]
+
+        # same row or same column check
+        if (idx % 3 != last % 3) and (idx // 3 != last // 3):
+            return True
+
+        return not self.used[mid]
+
+    def claPatterns(self, last, length):
+        if length == 0:
+            return 1
+
+        total = 0
+
+        for i in range(9):
+            if self.isValid(i, last):
+                self.used[i] = True
+                total += self.claPatterns(i, length - 1)
+                self.used[i] = False
+
+        return total
 ```
 
 ### **Algorithm Explanation:**

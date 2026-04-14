@@ -89,20 +89,23 @@ This problem requires finding the first character that appears exactly once. The
 
 ```python
 class Solution:
-def firstUniqChar(self, s):
-    once = 0, multi = 0
-    idx = -1
-    for ch in s:
-        bit = 1 << (ch - 'a')
-        multi |= once  bit
-        once ^= bit
-        once = ~multi
-    for(i = 0 i < (int)s.length() i += 1) :
-    bit = 1 << (s[i] - 'a')
-    if once & bit:
-        return i
-return -1
+    def firstUniqChar(self, s):
+        once = 0
+        multi = 0
+        idx = -1
 
+        for ch in s:
+            bit = 1 << (ord(ch) - ord('a'))
+            multi |= once & bit
+            once ^= bit
+            once &= ~multi
+
+        for i in range(len(s)):
+            bit = 1 << (ord(s[i]) - ord('a'))
+            if once & bit:
+                return i
+
+        return -1
 ```
 
 ### Algorithm Explanation:
@@ -166,21 +169,25 @@ Second Pass:
 
 ```python
 class Solution:
-def firstUniqChar(self, s):
-    list[int> cnt(26, 0)
-    list[int> idx(26, -1)
-    for(i = 0 i < (int)s.length() i += 1) :
-    # log first idx
-    curr = s[i] - 'a'
-    if cnt[curr] == 0:
-        idx[curr] = i
-    cnt[curr]++
-minIdx = INT_MAX
-for(i = 0 i < 26 i += 1):
-if cnt[i] == 1:
-    minIdx = min(minIdx, idx[i])
-(-1 if         return minIdx == INT_MAX  else minIdx)
+    def firstUniqChar(self, s):
+        cnt = [0] * 26
+        idx = [-1] * 26
 
+        for i in range(len(s)):
+            curr = ord(s[i]) - ord('a')
+
+            if cnt[curr] == 0:
+                idx[curr] = i
+
+            cnt[curr] += 1
+
+        minIdx = float('inf')
+
+        for i in range(26):
+            if cnt[i] == 1:
+                minIdx = min(minIdx, idx[i])
+
+        return -1 if minIdx == float('inf') else minIdx
 ```
 
 ### Algorithm Explanation:
@@ -284,15 +291,17 @@ Second Pass:
 
 ```python
 class Solution:
-def firstUniqChar(self, s):
-    list[int> count(26, 0)
-    for c in s:
-        count[c - 'a']++
-    for(i = 0 i < s.length() i += 1) :
-    if count[s[i] - 'a'] == 1:
-        return i
-return -1
+    def firstUniqChar(self, s):
+        count = [0] * 26
 
+        for c in s:
+            count[ord(c) - ord('a')] += 1
+
+        for i in range(len(s)):
+            if count[ord(s[i]) - ord('a')] == 1:
+                return i
+
+        return -1
 ```
 
 **Pros**: Simple, clear, easy to understand  
@@ -302,15 +311,20 @@ return -1
 
 ```python
 class Solution:
-def firstUniqChar(self, s):
-    dict[char, int> count
-    for c in s:
-        count[c]++
-    for(i = 0 i < s.length() i += 1) :
-    if count[s[i]] == 1:
-        return i
-return -1
+    def firstUniqChar(self, s):
+        count = {}
 
+        for c in s:
+            if c in count:
+                count[c] += 1
+            else:
+                count[c] = 1
+
+        for i in range(len(s)):
+            if count[s[i]] == 1:
+                return i
+
+        return -1
 ```
 
 **Pros**: Works for any character set  

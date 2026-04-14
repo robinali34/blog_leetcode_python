@@ -101,28 +101,36 @@ Before diving into the solution, here are 5 important clarifications and assumpt
 This solution uses **Legendre's three-square theorem** and **Lagrange's four-square theorem** to determine the minimum number of perfect squares needed.
 
 ```python
-class Solution:
-def isSquare(self, n):
-    sq = (int) sqrt(n)
-    return n == sq  sq
-def numSquares(self, n):
-    # Reduce n by removing factors of 4
-    while n % 4 == 0:
-        n /= 4
-    # Legendre's three-square theorem: n = 4^a(8b + 7)
-    # If n ≡ 7 (mod 8), then n requires 4 squares
-    if n % 8 == 7:
-        return 4
-    # Check if n is a perfect square (requires 1 square)
-    if isSquare(n):
-        return 1
-    # Check if n can be expressed as sum of 2 squares
-    for(i = 1 i  i <= n i += 1) :
-    if isSquare(n - i * i):
-        return 2
-# Otherwise, requires 3 squares (Legendre's theorem)
-return 3
+import math
 
+class Solution:
+    def isSquare(self, n):
+        sq = int(math.sqrt(n))
+        return n == sq * sq
+
+    def numSquares(self, n):
+        # Reduce n by removing factors of 4
+        while n % 4 == 0:
+            n //= 4
+
+        # Legendre's three-square theorem: n = 4^a(8b + 7)
+        # If n ≡ 7 (mod 8), then n requires 4 squares
+        if n % 8 == 7:
+            return 4
+
+        # Check if n is a perfect square (requires 1 square)
+        if self.isSquare(n):
+            return 1
+
+        # Check if n can be expressed as sum of 2 squares
+        i = 1
+        while i * i <= n:
+            if self.isSquare(n - i * i):
+                return 2
+            i += 1
+
+        # Otherwise, requires 3 squares (Legendre's theorem)
+        return 3
 ```
 
 ### How Solution 1 Works
@@ -163,20 +171,25 @@ Bottom-up DP approach similar to coin change problem.
 
 ```python
 class Solution:
-def numSquares(self, n):
-    list[int> dp(n + 1, INT_MAX)
-    dp[0] = 0
-    # Generate all perfect squares up to n
-    list[int> squares
-    for(i = 1 i  i <= n i += 1) :
-    squares.append(i  i)
-# Fill DP array
-for(i = 1 i <= n i += 1) :
-for sq in squares:
-    if(sq > i) break
-    dp[i] = min(dp[i], dp[i - sq] + 1)
-return dp[n]
+    def numSquares(self, n):
+        dp = [float('inf')] * (n + 1)
+        dp[0] = 0
 
+        # Generate all perfect squares up to n
+        squares = []
+        i = 1
+        while i * i <= n:
+            squares.append(i * i)
+            i += 1
+
+        # Fill DP array
+        for i in range(1, n + 1):
+            for sq in squares:
+                if sq > i:
+                    break
+                dp[i] = min(dp[i], dp[i - sq] + 1)
+
+        return dp[n]
 ```
 
 ### How Solution 2 Works
@@ -212,28 +225,36 @@ Treat as a graph problem where we find the shortest path from `n` to `0`.
 
 ```python
 class Solution:
-def numSquares(self, n):
-    deque[int> q
-    set[int> visited
-    q.push(n)
-    visited.insert(n)
-    level = 0
-    while not not q:
-        size = len(q)
-        level += 1
-        while size -= 1:
-            curr = q[0]
-            q.pop()
-            # Try subtracting each perfect square
-            for(i = 1 i  i <= curr i += 1) :
-            next = curr - i  i
-            if next == 0:
-                return level
-            if visited.find(next) == visited.end():
-                visited.insert(next)
-                q.push(next)
-return level
+    def numSquares(self, n):
+        from collections import deque
 
+        q = deque([n])
+        visited = set([n])
+
+        level = 0
+
+        while q:
+            size = len(q)
+            level += 1
+
+            for _ in range(size):
+                curr = q.popleft()
+
+                # Try subtracting each perfect square
+                i = 1
+                while i * i <= curr:
+                    next_val = curr - i * i
+
+                    if next_val == 0:
+                        return level
+
+                    if next_val not in visited:
+                        visited.add(next_val)
+                        q.append(next_val)
+
+                    i += 1
+
+        return level
 ```
 
 ### How Solution 3 Works
@@ -259,16 +280,21 @@ Pre-compute perfect squares and use static array for better performance.
 
 ```python
 class Solution:
-def numSquares(self, n):
-    static list[int> dp(1, 0)
-    while len(dp) <= n:
-        m = len(dp)
-        minSquares = INT_MAX
-        for(i = 1 i  i <= m i += 1) :
-        minSquares = min(minSquares, dp[m - i  i] + 1)
-    dp.append(minSquares)
-return dp[n]
+    def numSquares(self, n):
+        dp = [0]  # dp[0] = 0
 
+        while len(dp) <= n:
+            m = len(dp)
+            minSquares = float('inf')
+
+            i = 1
+            while i * i <= m:
+                minSquares = min(minSquares, dp[m - i * i] + 1)
+                i += 1
+
+            dp.append(minSquares)
+
+        return dp[n]
 ```
 
 ### How Solution 4 Works

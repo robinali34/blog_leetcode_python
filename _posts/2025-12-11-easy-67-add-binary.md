@@ -93,21 +93,33 @@ This solution ensures the longer string is processed first, and uses a single ca
 
 ```python
 class Solution:
-def addBinary(self, a, b):
-    n = len(a), m = len(b)
-    if n < m:
-    return addBinary(b, a)
-    str rtn
-    carry = 0, j = m - 1
-    for(i = n - 1 i >= 0 i -= 1) :
-    if (a[i] == '1') carry += 1
-    if(j >= 0  and  b[j -= 1] == '1') carry += 1
-    ('1' if             rtn.append((carry % 2)  else '0'))
-    carry /= 2
-if carry == 1) rtn.append('1':
-rtn.reverse()
-return rtn
+    def addBinary(self, a, b):
+        n = len(a)
+        m = len(b)
 
+        if n < m:
+            return self.addBinary(b, a)
+
+        rtn = []
+        carry = 0
+        j = m - 1
+
+        for i in range(n - 1, -1, -1):
+            if a[i] == '1':
+                carry += 1
+
+            if j >= 0 and b[j] == '1':
+                carry += 1
+                j -= 1
+
+            rtn.append(chr((carry % 2) + ord('0')))
+            carry //= 2
+
+        if carry == 1:
+            rtn.append('1')
+
+        rtn.reverse()
+        return ''.join(rtn)
 ```
 
 ### How Solution 1 Works
@@ -138,24 +150,28 @@ This is the more traditional approach that processes both strings simultaneously
 
 ```python
 class Solution:
-def addBinary(self, a, b):
-    str result
-    i = a.length() - 1
-    j = b.length() - 1
-    carry = 0
-    while i >= 0  or  j >= 0  or  carry:
-        sum = carry
-        if i >= 0:
-            sum += a[i] - '0'
-            i -= 1
-        if j >= 0:
-            sum += b[j] - '0'
-            j -= 1
-        result.append((sum % 2) + '0')
-        carry = sum / 2
-    result.reverse()
-    return result
+    def addBinary(self, a, b):
+        result = []
+        i = len(a) - 1
+        j = len(b) - 1
+        carry = 0
 
+        while i >= 0 or j >= 0 or carry:
+            total = carry
+
+            if i >= 0:
+                total += ord(a[i]) - ord('0')
+                i -= 1
+
+            if j >= 0:
+                total += ord(b[j]) - ord('0')
+                j -= 1
+
+            result.append(chr((total % 2) + ord('0')))
+            carry = total // 2
+
+        result.reverse()
+        return ''.join(result)
 ```
 
 ### How Solution 2 Works
@@ -176,20 +192,25 @@ This approach uses language built-ins to convert, add, and convert back. Not rec
 
 ```python
 class Solution:
-def addBinary(self, a, b):
-    # Convert binary strings to integers
-    long long num1 = stoll(a, None, 2)
-    long long num2 = stoll(b, None, 2)
-    # Add and convert back to binary
-    long long sum = num1 + num2
-    if (sum == 0) return "0"
-    str result
-    while sum > 0:
-        result.append((sum % 2) + '0')
-        sum /= 2
-    result.reverse()
-    return result
+    def addBinary(self, a, b):
+        # Convert binary strings to integers
+        num1 = int(a, 2)
+        num2 = int(b, 2)
 
+        # Add and convert back to binary
+        total = num1 + num2
+
+        if total == 0:
+            return "0"
+
+        result = []
+
+        while total > 0:
+            result.append(chr((total % 2) + ord('0')))
+            total //= 2
+
+        result.reverse()
+        return ''.join(result)
 ```
 
 **Note:** This approach has limitations:
@@ -206,19 +227,26 @@ A variation that explicitly handles bit operations.
 
 ```python
 class Solution:
-def addBinary(self, a, b):
-    str result
-    i = len(a) - 1, j = len(b) - 1
-    carry = 0
-    while i >= 0  or  j >= 0  or  carry:
-        ((a[i -= 1] - '0') if             bit1 = (i >= 0)  else 0)
-        ((b[j -= 1] - '0') if             bit2 = (j >= 0)  else 0)
-        sum = bit1 + bit2 + carry
-        result.append((sum  1) + '0')  # sum % 2 using bitwise AND
-        carry = sum >> 1  # sum / 2 using right shift
-    result.reverse()
-    return result
+    def addBinary(self, a, b):
+        result = []
+        i = len(a) - 1
+        j = len(b) - 1
+        carry = 0
 
+        while i >= 0 or j >= 0 or carry:
+            bit1 = ord(a[i]) - ord('0') if i >= 0 else 0
+            bit2 = ord(b[j]) - ord('0') if j >= 0 else 0
+
+            total = bit1 + bit2 + carry
+
+            result.append(chr((total % 2) + ord('0')))
+            carry = total // 2
+
+            i -= 1
+            j -= 1
+
+        result.reverse()
+        return ''.join(result)
 ```
 
 ### Key Differences

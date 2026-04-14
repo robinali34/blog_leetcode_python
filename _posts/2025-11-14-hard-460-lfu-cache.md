@@ -103,130 +103,53 @@ When there's a tie in frequency, we use the least recently used key (front of th
 ### Solution: Optimized Python20 Version
 
 ```python
-using namespace std
-class LFUCache:
-# frequency . list of (key, value) pairs (most recent at back)
-dict[int, list<pair<int, int>>> frequencies_
-# key . (frequency, iterator to node in frequencies list)
-dict[int, pair<int, list<pair<int, int>>.iterator>> cache_
-capacity_
-min_frequency_
-# Insert key-value pair with given frequency
-def insert(self, key, frequency, value):
-    frequencies_[frequency].emplace_back(key, value)
-    cache_[key] = :frequency, frequencies_ -= 1[frequency].end()
-# Remove key from its current frequency list
-def removeFromFrequency(self, frequency, list<pair<int, it):
-    frequencies_[frequency].erase(it)
-    if frequencies_[frequency].empty():
-        frequencies_.erase(frequency)
-        if min_frequency_ == frequency:
-            min_frequency_ += 1
-explicit LFUCache(capacity)
-: capacity_(capacity)
-, min_frequency_(0)
-:
-cache_.reserve(capacity_)
-frequencies_.reserve(capacity_)
-def get(self, key):
-    it = cache_.find(key)
-    if it == cache_.end():
-        return -1
-    # Get current frequency and iterator
-    [freq, iter] = it.second
-    [key_val, value] = iter
-    # Remove from current frequency list
-    removeFromFrequency(freq, iter)
-    # Insert with incremented frequency
-    insert(key, freq + 1, value)
-    return value
-def put(self, key, value):
-    if capacity_ <= 0:
-        return
-    it = cache_.find(key)
-    if it != cache_.end():
-        # Update existing key
-        it.second.second.second = value  # Update value in place
-        get(key)  # Increment frequency by calling get
-        return
-    # Check capacity
-    if len(cache_) >= capacity_:
-        # Evict least frequently used (and least recently used if tie)
-        # min_frequency_ list's front is the LRU item
-        [lfu_key, _] = frequencies_[min_frequency_].front()
-        cache_.erase(lfu_key)
-        frequencies_[min_frequency_].pop_front()
-        if frequencies_[min_frequency_].empty():
-            frequencies_.erase(min_frequency_)
-    # Insert new key with frequency 1
-    min_frequency_ = 1
-    insert(key, 1, value)
+from collections import defaultdict, OrderedDict
 
+class LFUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.min_freq = 0
+        self.key_to_val: dict[int, int] = {}
+        self.key_to_freq: dict[int, int] = {}
+        self.freq_to_keys: dict[int, OrderedDict] = defaultdict(OrderedDict)
+
+    def _touch(self, key: int) -> None:
+        f = self.key_to_freq[key]
+        del self.freq_to_keys[f][key]
+        if not self.freq_to_keys[f]:
+            del self.freq_to_keys[f]
+            if self.min_freq == f:
+                self.min_freq += 1
+        f += 1
+        self.key_to_freq[key] = f
+        self.freq_to_keys[f][key] = None
+
+    def get(self, key: int) -> int:
+        if key not in self.key_to_val:
+            return -1
+        self._touch(key)
+        return self.key_to_val[key]
+
+    def put(self, key: int, value: int) -> None:
+        if self.capacity <= 0:
+            return
+        if key in self.key_to_val:
+            self.key_to_val[key] = value
+            self._touch(key)
+            return
+        if len(self.key_to_val) >= self.capacity:
+            k, _ = self.freq_to_keys[self.min_freq].popitem(last=False)
+            del self.key_to_val[k]
+            del self.key_to_freq[k]
+        self.key_to_val[key] = value
+        self.key_to_freq[key] = 1
+        self.freq_to_keys[1][key] = None
+        self.min_freq = 1
 ```
 
 ### Alternative: More Explicit Version
 
-```python
-using namespace std
-class LFUCache:
-struct Node :
-key
-value
-frequency
-# frequency . list of nodes (most recent at back)
-dict[int, list<Node>> freq_lists_
-# key . iterator in frequency list
-dict[int, list<Node>.iterator> cache_
-capacity_
-min_freq_
-def promote(self, key):
-    node = cache_[key]
-    old_freq = node.frequency
-    new_freq = old_freq + 1
-    # Remove from old frequency list
-    freq_lists_[old_freq].erase(cache_[key])
-    if freq_lists_[old_freq].empty():
-        freq_lists_.erase(old_freq)
-        if min_freq_ == old_freq:
-            min_freq_ += 1
-    # Add to new frequency list
-    freq_lists_[new_freq].emplace_back(node)
-    cache_[key] = freq_lists_ -= 1[new_freq].end()
-    cache_[key].frequency = new_freq
-explicit LFUCache(capacity)
-: capacity_(capacity)
-, min_freq_(0)
-:
-cache_.reserve(capacity_)
-freq_lists_.reserve(capacity_)
-def get(self, key):
-    it = cache_.find(key)
-    if it == cache_.end():
-        return -1
-    promote(key)
-    return cache_[key].value
-def put(self, key, value):
-    if (capacity_ <= 0) return
-    it = cache_.find(key)
-    if it != cache_.end():
-        # Update existing
-        it.second.value = value
-        promote(key)
-        return
-    # Evict if needed
-    if len(cache_) >= capacity_:
-        lfu_list = freq_lists_[min_freq_]
-        lfu_key = lfu_list[0].key
-        cache_.erase(lfu_key)
-        lfu_list.pop_front()
-        if not lfu_list:
-            freq_lists_.erase(min_freq_)
-    # Insert new
-    min_freq_ = 1
-    freq_lists_[1].emplace_back(Node:key, value, 1)
-    cache_[key] = freq_lists_ -= 1[1].end()
-
-```
+Same idea: `freq_to_keys[f]` is an `OrderedDict` of keys at frequency `f` (FIFO order for LRU tie-break). On eviction, pop from `freq_to_keys[min_freq]` from the left.
 
 ## Key Optimizations (Python20)
 

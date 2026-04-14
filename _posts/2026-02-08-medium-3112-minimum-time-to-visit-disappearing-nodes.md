@@ -116,32 +116,50 @@ This is a shortest path problem with time constraints. We need to find the minim
 ### Solution 1: Using long long with LLONG_MAX
 
 ```python
-class Solution:
-def minimumTime(self, n, edges, disappear):
-    if disappear[0] == 0) return list[int>(n, -1:
-    list[list[pair<int, int>>> adjs(n)
-    for e in edges:
-        u = e[0], v = e[1], d = e[2]
-        adjs[u].emplace_back(v, d)
-        adjs[v].emplace_back(u, d)
-    list[long long> dist(n, LLONG_MAX)
-    heapq[pair<long long, int>, list[pair<long long, int>>, greater<>> pq
-    dist[0] = 0
-    pq.emplace(:0, 0)
-    while not not pq:
-        [t, u] = pq.top() pq.pop()
-        if(t > dist[u]) continue
-        if(t >= disappear[u]) continue
-        for([v, w]: adjs[u]) :
-        long long nt = t + w
-        if dist[v] > nt  and  nt < disappear[v]:
-            dist[v] = nt
-            pq.emplace(:dist[v], v)
-list[int> rtn(n, -1)
-for(i = 0 i < n i += 1) :
-if(dist[i] != LLONG_MAX) rtn[i] = dist[i]
-return rtn
+import heapq
 
+class Solution:
+    def minimumTime(self, n, edges, disappear):
+        # adjacency list
+        adj = [[] for _ in range(n)]
+        
+        for u, v, w in edges:
+            adj[u].append((v, w))
+            adj[v].append((u, w))
+        
+        INF = float('inf')
+        dist = [INF] * n
+        
+        # if start already disappears at time 0
+        if disappear[0] == 0:
+            return [-1] * n
+        
+        dist[0] = 0
+        pq = [(0, 0)]  # (time, node)
+        
+        while pq:
+            t, u = heapq.heappop(pq)
+            
+            if t > dist[u]:
+                continue
+            
+            if t >= disappear[u]:
+                continue
+            
+            for v, w in adj[u]:
+                nt = t + w
+                
+                if nt < dist[v] and nt < disappear[v]:
+                    dist[v] = nt
+                    heapq.heappush(pq, (nt, v))
+        
+        # build result
+        res = [-1] * n
+        for i in range(n):
+            if dist[i] != INF:
+                res[i] = dist[i]
+        
+        return res
 ```
 
 **Key Points:**
@@ -153,28 +171,37 @@ return rtn
 ### Solution 2: Using int with -1 (Cleaner)
 
 ```python
-class Solution:
-def minimumTime(self, n, edges, disappear):
-    list[list[pair<int, int>>> adj(n)
-    for e in edges:
-        u = e[0], v = e[1], w = e[2]
-        adj[u].emplace_back(v, w)
-        adj[v].emplace_back(u, w)
-    list[int> dis(n, -1)
-    dis[0] = 0
-    heapq[pair<int, int>, list[pair<int, int>>, greater<>> pq
-    pq.emplace(0, 0)
-    while not not pq:
-        [du, u] = pq.top()
-        pq.pop()
-        if(dis[u] != -1  and  du > dis[u]) continue
-        for([v, w]: adj[u]) :
-        nd = du + w
-        if nd < disappear[v] * and  (dis[v] == -1  or  nd < dis[v]):
-            dis[v] = nd
-            pq.emplace(nd, v)
-return dis
+import heapq
+from collections import defaultdict
 
+class Solution:
+    def minimumTime(self, n, edges, disappear):
+        adj = defaultdict(list)
+        
+        for u, v, w in edges:
+            adj[u].append((v, w))
+            adj[v].append((u, w))
+        
+        dist = [float('inf')] * n
+        dist[0] = 0
+        
+        pq = [(0, 0)]  # (time, node)
+        
+        while pq:
+            du, u = heapq.heappop(pq)
+            
+            if du > dist[u]:
+                continue
+            
+            for v, w in adj[u]:
+                nd = du + w
+                
+                # must arrive before node disappears
+                if nd < disappear[v] and nd < dist[v]:
+                    dist[v] = nd
+                    heapq.heappush(pq, (nd, v))
+        
+        return dist
 ```
 
 **Key Points:**

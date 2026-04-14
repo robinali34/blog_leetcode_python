@@ -99,23 +99,24 @@ This problem asks us to find the longest palindrome we can construct from the gi
 
 ```python
 class Solution:
-def longestPalindrome(self, s):
-    maskl = 0  # [a - z]
-    maskU = 0  # [A - Z]
-    rtn = 0
-    for c in s:
-        if 'a' <= c  and  c <= 'z':
-            bit = 1 << (c - 'a')
-            if maskl & bit:
-                rtn += 2
-            maskl ^= bit
-             else :
-            bit = 1 << (c - 'A')
-            if maskU & bit:
-                rtn += 2
-            maskU ^= bit
-    (rtn + 1 if         return (maskl  or  maskU)  else rtn)
+    def longestPalindrome(self, s):
+        maskl = 0  # [a - z]
+        maskU = 0  # [A - Z]
+        rtn = 0
 
+        for c in s:
+            if 'a' <= c <= 'z':
+                bit = 1 << (ord(c) - ord('a'))
+                if maskl & bit:
+                    rtn += 2
+                maskl ^= bit
+            else:
+                bit = 1 << (ord(c) - ord('A'))
+                if maskU & bit:
+                    rtn += 2
+                maskU ^= bit
+
+        return rtn + 1 if (maskl or maskU) else rtn
 ```
 
 ### Algorithm Explanation:
@@ -202,18 +203,24 @@ Final: maskl = 3 (bits for 'a' and 'b' are set)
 
 ```python
 class Solution:
-def longestPalindrome(self, s):
-    dict[char, int> count
-    for c in s:
-        count[c]++
-    result = 0
-    bool hasOdd = False
-    for([ch, freq]: count) :
-    result += (freq / 2)  2  # Add pairs
-    if freq % 2 == 1:
-        hasOdd = True
-(result + 1 if         return hasOdd  else result)
+    def longestPalindrome(self, s):
+        count = {}
 
+        for c in s:
+            if c in count:
+                count[c] += 1
+            else:
+                count[c] = 1
+
+        result = 0
+        hasOdd = False
+
+        for ch, freq in count.items():
+            result += (freq // 2) * 2
+            if freq % 2 == 1:
+                hasOdd = True
+
+        return result + 1 if hasOdd else result
 ```
 
 ### Algorithm Explanation:
@@ -236,18 +243,21 @@ def longestPalindrome(self, s):
 
 ```python
 class Solution:
-def longestPalindrome(self, s):
-    count[128] = :  # ASCII covers all characters
-    for c in s:
-        count[c]++
-    result = 0
-    bool hasOdd = False
-    for(i = 0 i < 128 i += 1) :
-    result += (count[i] / 2)  2
-    if count[i] % 2 == 1:
-        hasOdd = True
-(result + 1 if         return hasOdd  else result)
+    def longestPalindrome(self, s):
+        count = [0] * 128  # ASCII covers all characters
 
+        for c in s:
+            count[ord(c)] += 1
+
+        result = 0
+        hasOdd = False
+
+        for i in range(128):
+            result += (count[i] // 2) * 2
+            if count[i] % 2 == 1:
+                hasOdd = True
+
+        return result + 1 if hasOdd else result
 ```
 
 **Pros**: Simple, direct array access  

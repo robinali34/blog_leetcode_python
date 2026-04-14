@@ -94,18 +94,19 @@ This problem simulates a single-server queue system where customers arrive and w
 
 ```python
 class Solution:
-def averageWaitingTime(self, customers):
-    long long t = 0, totalTime = 0
-    for c in customers:
-        arrival = c[0], order = c[1]
-        if t > arrival:
-            totalTime += t - arrival
-             else :
-            t = arrival
-        totalTime += order
-        t += order
-    return (double) totalTime / len(customers)
+    def averageWaitingTime(self, customers):
+        t = 0
+        total_time = 0
 
+        for arrival, order in customers:
+            if t < arrival:
+                t = arrival  # waiter is idle until customer arrives
+
+            waiting_time = t - arrival + order
+            total_time += waiting_time
+            t += order  # finish current order
+
+        return total_time / len(customers)
 ```
 
 ### Algorithm Explanation:
@@ -165,14 +166,16 @@ Average: (2 + 6 + 7) / 3 = 5.0 ✓
 
 ```python
 class Solution:
-def averageWaitingTime(self, customers):
-    long long t = 0, totalTime = 0
-    for c in customers:
-        arrival = c[0], order = c[1]
-        t = max(t, (long long)arrival) + order
-        totalTime += t - arrival
-    return (double) totalTime / len(customers)
-
+    def averageWaitingTime(self, customers):
+        t = 0
+        totalTime = 0
+        
+        for c in customers:
+            arrival, order = c[0], c[1]
+            t = max(t, arrival) + order
+            totalTime += t - arrival
+        
+        return totalTime / len(customers)
 ```
 
 ### Algorithm Explanation:

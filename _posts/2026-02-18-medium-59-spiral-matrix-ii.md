@@ -97,20 +97,32 @@ Iterate over layers from `0` to `(n+1)/2 - 1`. For each layer, fill the four sid
 {% raw %}
 ```python
 class Solution:
-def generateMatrix(self, n):
-    list[list[int>> rtn(n, list[int>(n))
-    cnt = 1
-    for (layer = 0 layer < (n + 1) / 2 layer += 1) :
-    for (ptr = layer ptr < n - layer ptr += 1)
-    rtn[layer][ptr] = cnt += 1
-    for (ptr = layer + 1 ptr < n - layer ptr += 1)
-    rtn[ptr][n - layer - 1] = cnt += 1
-    for (ptr = n - layer - 2 ptr >= layer ptr -= 1)
-    rtn[n - layer - 1][ptr] = cnt += 1
-    for (ptr = n - layer - 2 ptr > layer ptr -= 1)
-    rtn[ptr][layer] = cnt += 1
-return rtn
-
+    def generateMatrix(self, n):
+        rtn = [[0] * n for _ in range(n)]
+        cnt = 1
+        
+        for layer in range((n + 1) // 2):
+            # top row (left → right)
+            for ptr in range(layer, n - layer):
+                rtn[layer][ptr] = cnt
+                cnt += 1
+            
+            # right column (top → bottom)
+            for ptr in range(layer + 1, n - layer):
+                rtn[ptr][n - layer - 1] = cnt
+                cnt += 1
+            
+            # bottom row (right → left)
+            for ptr in range(n - layer - 2, layer - 1, -1):
+                rtn[n - layer - 1][ptr] = cnt
+                cnt += 1
+            
+            # left column (bottom → top)
+            for ptr in range(n - layer - 2, layer, -1):
+                rtn[ptr][layer] = cnt
+                cnt += 1
+        
+        return rtn
 ```
 {% endraw %}
 
@@ -124,21 +136,30 @@ Instead of explicit layer logic, use direction vectors and rotate when hitting a
 {% raw %}
 ```python
 class Solution:
-def generateMatrix(self, n):
-    list[list[int>> mat(n, list[int>(n, 0))
-    dirs[4][2] = ::0,1,:1,0,:0,-1,:-1,0
-d = 0, r = 0, c = 0
-for (num = 1 num <= n  n num += 1) :
-mat[r][c] = num
-nr = r + dirs[d][0], nc = c + dirs[d][1]
-if nr < 0  or  nr >= n  or  nc < 0  or  nc >= n  or  mat[nr][nc] != 0:
-    d = (d + 1) % 4
-    nr = r + dirs[d][0]
-    nc = c + dirs[d][1]
-r = nr
-c = nc
-return mat
-
+    def generateMatrix(self, n):
+        mat = [[0] * n for _ in range(n)]
+        
+        # right, down, left, up
+        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        
+        d = 0  # direction index
+        r, c = 0, 0
+        
+        for num in range(1, n * n + 1):
+            mat[r][c] = num
+            
+            nr = r + dirs[d][0]
+            nc = c + dirs[d][1]
+            
+            # change direction if out of bounds or already filled
+            if nr < 0 or nr >= n or nc < 0 or nc >= n or mat[nr][nc] != 0:
+                d = (d + 1) % 4
+                nr = r + dirs[d][0]
+                nc = c + dirs[d][1]
+            
+            r, c = nr, nc
+        
+        return mat
 ```
 {% endraw %}
 

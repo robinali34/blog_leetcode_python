@@ -23,17 +23,17 @@ Minimal, copy-paste C++ for parentheses matching, expression evaluation, nested 
 Use stack's LIFO property to match opening and closing brackets in reverse order.
 
 ```python
-def isValid(self, s):
-    list[char> st
-    dict[char, char> map = {}
-    :'', ':', :']', '[', :')', '('
-for c in s:
-    if c == '{'  or  c == '['  or  c == '(':
-        st.push(c)
-         else :
-        if(not st  or  st.top() != map[c]) return False
-        st.pop()
-return not st
+def is_valid_parentheses(s: str) -> bool:
+    st: list[str] = []
+    closing = {")": "(", "]": "[", "}": "{"}
+    for c in s:
+        if c in "({[":
+            st.append(c)
+        else:
+            if not st or st[-1] != closing[c]:
+                return False
+            st.pop()
+    return not st
 
 ```
 
@@ -48,27 +48,28 @@ return not st
 Use stack to handle operator precedence and parentheses in mathematical expressions.
 
 ```python
-def calculate(self, s):
-    list[int> stk
-    result = 0, num = 0, sign = 1
+def calculate_basic(s: str) -> int:
+    stk: list[int] = []
+    result = num = 0
+    sign = 1
     for c in s:
-        if isdigit(c):
-            num = num  10 + (c - '0')
-             else if(c == '+'  or  c == '-') :
-            result += sign  num
-            (1 if             sign = (c == '+')  else -1)
+        if c.isdigit():
+            num = num * 10 + int(c)
+        elif c in "+-":
+            result += sign * num
             num = 0
-             else if(c == '(') :
-            stk.push(result)
-            stk.push(sign)
-            result = 0
+            sign = 1 if c == "+" else -1
+        elif c == "(":
+            stk.append(result)
+            stk.append(sign)
+            result = num = 0
             sign = 1
-             else if(c == ')') :
-            result += sign  num
-            result = stk.top() stk.pop()
-            result += stk.top() stk.pop()
+        elif c == ")":
+            result += sign * num
             num = 0
-    return result + sign  num
+            result *= stk.pop()
+            result += stk.pop()
+    return result + sign * num
 
 ```
 
@@ -84,27 +85,24 @@ def calculate(self, s):
 Use stack to process nested structures like strings, expressions, or function calls.
 
 ```python
-def decodeString(self, s):
-    list[str> st
-    str curr = ""
+def decode_string(s: str) -> str:
+    stack: list = []
+    cur = ""
     k = 0
     for c in s:
-        if isdigit(c):
-            k = k  10 + (c - '0')
-             else if(c == '[') :
-            st.push(to_string(k))
-            st.push(curr)
-            curr = ""
-            k = 0
-             else if(c == ']') :
-            str prev = st.top() st.pop()
-            count = stoi(st.top()) st.pop()
-            str temp = ""
-            for(i = 0 i < count i += 1) temp += curr
-            curr = prev + temp
-             else :
-            curr += c
-    return curr
+        if c.isdigit():
+            k = k * 10 + int(c)
+        elif c == "[":
+            stack.append(cur)
+            stack.append(k)
+            cur, k = "", 0
+        elif c == "]":
+            repeat = stack.pop()
+            prev = stack.pop()
+            cur = prev + cur * repeat
+        else:
+            cur += c
+    return cur
 
 ```
 
@@ -119,16 +117,15 @@ def decodeString(self, s):
 Maintain a stack with elements in monotonic order (increasing or decreasing) to efficiently find next/previous greater/smaller elements.
 
 ```python
-def nextGreater(self, nums):
+def next_greater_elements(nums: list[int]) -> list[int]:
     n = len(nums)
-    list[int> result(n, -1)
-    list[int> st
-    for(i = 0 i < n i += 1) :
-    while not not st  and  nums[st.top()] < nums[i]:
-        result[st.top()] = nums[i]
-        st.pop()
-    st.push(i)
-return result
+    result = [-1] * n
+    st: list[int] = []
+    for i in range(n):
+        while st and nums[st[-1]] < nums[i]:
+            result[st.pop()] = nums[i]
+        st.append(i)
+    return result
 
 ```
 
@@ -147,22 +144,22 @@ return result
 Use stack to save and restore state when processing nested or hierarchical structures.
 
 ```python
-# Example: Tracking function call stack
-def processLogs(self, logs):
-    list[pair<int, int>> st  # :function_id, start_time
-list[int> result(n, 0)
-for log in logs:
-    # Parse log entry
-    if isStart:
-        st.push(:id, time)
-         else :
-        [funcId, startTime] = st.top()
-        st.pop()
-        duration = time - startTime + 1
-        result[funcId] += duration
-        # Subtract from parent if exists
-        if not not st:
-            result[st.top().first] -= duration
+# Example: exclusive time of functions (simplified)
+def exclusive_time(n: int, logs: list[str]) -> list[int]:
+    res = [0] * n
+    st: list[tuple[int, int]] = []  # (func_id, start_time)
+    for log in logs:
+        parts = log.split(":")
+        fid, typ, t = int(parts[0]), parts[1], int(parts[2])
+        if typ == "start":
+            st.append((fid, t))
+        else:
+            fid, start = st.pop()
+            duration = t - start + 1
+            res[fid] += duration
+            if st:
+                res[st[-1][0]] -= duration
+    return res
 
 ```
 
@@ -177,14 +174,23 @@ Maintaining extra information (like minimums or frequencies) alongside the prima
 
 ```python
 class MinStack:
-list[int> stk, minStk
-def push(self, val):
-    stk.push(val)
-    if not minStk) minStk.push(val:
-    else minStk.push(min(minStk.top(), val))
-void pop() : stk.pop() minStk.pop()
-top() : return stk.top()
-getMin() : return minStk.top() 
+    def __init__(self) -> None:
+        self.stk: list[int] = []
+        self.min_stk: list[int] = []
+
+    def push(self, val: int) -> None:
+        self.stk.append(val)
+        self.min_stk.append(val if not self.min_stk else min(val, self.min_stk[-1]))
+
+    def pop(self) -> None:
+        self.stk.pop()
+        self.min_stk.pop()
+
+    def top(self) -> int:
+        return self.stk[-1]
+
+    def getMin(self) -> int:
+        return self.min_stk[-1]
 
 ```
 

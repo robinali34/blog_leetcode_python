@@ -25,22 +25,26 @@ Breadth-First Search explores nodes level by level using a queue.
 
 ```python
 # BFS on graph (adjacency list)
+from collections import deque
+
 def bfs(self, graph, start):
-    deque[int> q
-    list[bool> visited(len(graph), False)
-    q.push(start)
+    q = deque()
+    visited = [False] * len(graph)
+
+    q.append(start)
     visited[start] = True
-    while not not q:
-        node = q[0]
-        q.pop()
+
+    while q:
+        node = q.popleft()
+
         # Process node
-        cout << node << " "
+        print(node, end=" ")
+
         # Explore neighbors
         for neighbor in graph[node]:
             if not visited[neighbor]:
                 visited[neighbor] = True
-                q.push(neighbor)
-
+                q.append(neighbor)
 ```
 
 ## BFS on Grid
@@ -48,49 +52,63 @@ def bfs(self, graph, start):
 BFS for 2D grid problems (4-directional or 8-directional).
 
 ```python
+from collections import deque
+
 # BFS on 2D grid (4-directional)
-def bfsGrid(self, grid, pair<int, start, pair<int, target):
-    m = len(grid), n = grid[0].__len__()
-    deque[pair<int, int>> q
-    list[list[int>> dist(m, list[int>(n, -1))
-    list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-q.push(start)
-dist[start.first][start.second] = 0
-while not not q:
-    [x, y] = q[0]
-    q.pop()
-    if make_pair(x, y) == target:
-        return dist[x][y]
-    for ([dx, dy] : dirs) :
-    nx = x + dx, ny = y + dy
-    if (nx >= 0  and  nx < m  and  ny >= 0  and  ny < n  and
-    grid[nx][ny] != '#'  and  dist[nx][ny] == -1) :
-    dist[nx][ny] = dist[x][y] + 1
-    q.push(:nx, ny)
-return -1
+def bfsGrid(self, grid, start, target):
+    m, n = len(grid), len(grid[0])
+
+    q = deque([start])
+    dist = [[-1] * n for _ in range(m)]
+
+    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+    dist[start[0]][start[1]] = 0
+
+    while q:
+        x, y = q.popleft()
+
+        if (x, y) == target:
+            return dist[x][y]
+
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
+
+            if (0 <= nx < m and 0 <= ny < n and
+                grid[nx][ny] != '#' and dist[nx][ny] == -1):
+
+                dist[nx][ny] = dist[x][y] + 1
+                q.append((nx, ny))
+
+    return -1
+
+
 # Count connected components (Number of Islands)
 def numIslands(self, grid):
-    m = len(grid), n = grid[0].__len__()
+    m, n = len(grid), len(grid[0])
     count = 0
-    list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-for (i = 0 i < m i += 1) :
-for (j = 0 j < n j += 1) :
-if grid[i][j] == '1':
-    count += 1
-    deque[pair<int, int>> q
-    q.push(:i, j)
-    grid[i][j] = '0'
-    while not not q:
-        [x, y] = q[0]
-        q.pop()
-        for ([dx, dy] : dirs) :
-        nx = x + dx, ny = y + dy
-        if (nx >= 0  and  nx < m  and  ny >= 0  and  ny < n  and
-        grid[nx][ny] == '1') :
-        grid[nx][ny] = '0'
-        q.push(:nx, ny)
-return count
 
+    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+    for i in range(m):
+        for j in range(n):
+            if grid[i][j] == '1':
+                count += 1
+
+                q = deque([(i, j)])
+                grid[i][j] = '0'
+
+                while q:
+                    x, y = q.popleft()
+
+                    for dx, dy in dirs:
+                        nx, ny = x + dx, y + dy
+
+                        if (0 <= nx < m and 0 <= ny < n and grid[nx][ny] == '1'):
+                            grid[nx][ny] = '0'
+                            q.append((nx, ny))
+
+    return count
 ```
 
 | ID | Title | Link | Solution |
@@ -103,28 +121,35 @@ return count
 Start BFS from multiple sources simultaneously.
 
 ```python
+from collections import deque
+
 # Multi-source BFS (e.g., 01 Matrix)
 def updateMatrix(self, mat):
-    m = len(mat), n = mat[0].__len__()
-    deque[pair<int, int>> q
-    list[list[int>> dist(m, list[int>(n, -1))
-    list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-# Add all zeros as starting points
-for (i = 0 i < m i += 1) :
-for (j = 0 j < n j += 1) :
-if mat[i][j] == 0:
-    q.push(:i, j)
-    dist[i][j] = 0
-while not not q:
-    [x, y] = q[0]
-    q.pop()
-    for ([dx, dy] : dirs) :
-    nx = x + dx, ny = y + dy
-    if nx >= 0  and  nx < m  and  ny >= 0  and  ny < n  and  dist[nx][ny] == -1:
-        dist[nx][ny] = dist[x][y] + 1
-        q.push(:nx, ny)
-return dist
+    m, n = len(mat), len(mat[0])
 
+    q = deque()
+    dist = [[-1] * n for _ in range(m)]
+
+    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+    # Add all zeros as starting points
+    for i in range(m):
+        for j in range(n):
+            if mat[i][j] == 0:
+                q.append((i, j))
+                dist[i][j] = 0
+
+    while q:
+        x, y = q.popleft()
+
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
+
+            if (0 <= nx < m and 0 <= ny < n and dist[nx][ny] == -1):
+                dist[nx][ny] = dist[x][y] + 1
+                q.append((nx, ny))
+
+    return dist
 ```
 
 | ID | Title | Link | Solution |
@@ -140,22 +165,25 @@ BFS finds shortest path in unweighted graphs.
 
 ```python
 # Shortest path in unweighted graph
+from collections import deque
+
 def shortestPath(self, graph, start, target):
-    deque[int> q
-    list[int> dist(len(graph), -1)
-    q.push(start)
+    q = deque()
+    dist = [-1] * len(graph)
+
+    q.append(start)
     dist[start] = 0
-    while not not q:
-        node = q[0]
-        q.pop()
+
+    while q:
+        node = q.popleft()
+
         if node == target:
             return dist[node]
+
         for neighbor in graph[node]:
             if dist[neighbor] == -1:
                 dist[neighbor] = dist[node] + 1
-                q.push(neighbor)
-    return -1
-
+                q.append(neighbor)
 ```
 
 ## Level-order Traversal
@@ -164,43 +192,64 @@ BFS for tree level-order traversal.
 
 ```python
 # Binary Tree Level Order Traversal
+from collections import deque
+
+# Binary Tree Level Order Traversal
 def levelOrder(self, root):
-    list[list[int>> result
-    if (not root) return result
-    deque[TreeNode> q
-    q.push(root)
-    while not not q:
+    result = []
+    if not root:
+        return result
+
+    q = deque([root])
+
+    while q:
         size = len(q)
-        list[int> level
-        for (i = 0 i < size i += 1) :
-        TreeNode node = q[0]
-        q.pop()
-        level.append(node.val)
-        if node.left) q.push(node.left:
-        if node.right) q.push(node.right:
-    result.append(level)
-return result
+        level = []
+
+        for _ in range(size):
+            node = q.popleft()
+            level.append(node.val)
+
+            if node.left:
+                q.append(node.left)
+
+            if node.right:
+                q.append(node.right)
+
+        result.append(level)
+
+    return result
+
+
 # Zigzag Level Order Traversal
 def zigzagLevelOrder(self, root):
-    list[list[int>> result
-    if (not root) return result
-    deque[TreeNode> q
-    q.push(root)
-    bool leftToRight = True
-    while not not q:
-        size = len(q)
-        list[int> level(size)
-        for (i = 0 i < size i += 1) :
-        TreeNode node = q[0]
-        q.pop()
-        (i if             index = leftToRight  else size - 1 - i)
-        level[index] = node.val
-        if node.left) q.push(node.left:
-        if node.right) q.push(node.right:
-    result.append(level)
-    leftToRight = not leftToRight
-return result
+    result = []
+    if not root:
+        return result
 
+    q = deque([root])
+    leftToRight = True
+
+    while q:
+        size = len(q)
+        level = [0] * size
+
+        for i in range(size):
+            node = q.popleft()
+
+            index = i if leftToRight else (size - 1 - i)
+            level[index] = node.val
+
+            if node.left:
+                q.append(node.left)
+
+            if node.right:
+                q.append(node.right)
+
+        result.append(level)
+        leftToRight = not leftToRight
+
+    return result
 ```
 
 | ID | Title | Link | Solution |
@@ -218,28 +267,38 @@ BFS when state includes more than just position.
 
 ```python
 # BFS with state (e.g., Shortest Path with Obstacle Elimination)
-def shortestPath(self, grid, k):
-    m = len(grid), n = grid[0].__len__()
-    list[list[list[bool>>> visited(m, list[list[bool>>(n, list[bool>(k + 1, False)))
-    deque[list[int>> q # :x, y, obstacles_eliminated, steps
-q.push(:0, 0, 0, 0)
-visited[0][0][0] = True
-list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-while not not q:
-    state = q[0]
-    q.pop()
-    x = state[0], y = state[1], obstacles = state[2], steps = state[3]
-    if x == m - 1  and  y == n - 1:
-        return steps
-    for ([dx, dy] : dirs) :
-    nx = x + dx, ny = y + dy
-    if nx >= 0  and  nx < m  and  ny >= 0  and  ny < n:
-        newObstacles = obstacles + grid[nx][ny]
-        if newObstacles <= k  and  not visited[nx][ny][newObstacles]:
-            visited[nx][ny][newObstacles] = True
-            q.push(:nx, ny, newObstacles, steps + 1)
-return -1
+from collections import deque
 
+def shortestPath(self, grid, k):
+    m, n = len(grid), len(grid[0])
+
+    visited = [[[False] * (k + 1) for _ in range(n)] for _ in range(m)]
+
+    q = deque()
+    # state: (x, y, obstacles_eliminated, steps)
+    q.append((0, 0, 0, 0))
+
+    visited[0][0][0] = True
+
+    dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+    while q:
+        x, y, obstacles, steps = q.popleft()
+
+        if x == m - 1 and y == n - 1:
+            return steps
+
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
+
+            if 0 <= nx < m and 0 <= ny < n:
+                newObstacles = obstacles + grid[nx][ny]
+
+                if newObstacles <= k and not visited[nx][ny][newObstacles]:
+                    visited[nx][ny][newObstacles] = True
+                    q.append((nx, ny, newObstacles, steps + 1))
+
+    return -1
 ```
 
 | ID | Title | Link | Solution |

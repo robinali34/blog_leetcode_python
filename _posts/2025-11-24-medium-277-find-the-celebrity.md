@@ -81,25 +81,29 @@ The key insight is to use a two-pass approach:
 
 ```python
 # Forward declaration of the knows API
-bool knows(a, b)
-class Solution:
-def findCelebrity(self, n):
-    # First pass: find candidate
-    candidate = 0
-    for (i = 1 i < n i += 1) :
-    if knows(candidate, i):
-        candidate = i
-# Second pass: verify candidate
-for (i = 0 i < n i += 1) :
-if i != candidate:
-    # Celebrity should not know anyone
-    if knows(candidate, i):
-        return -1
-    # Everyone should know the celebrity
-    if not knows(i, candidate):
-        return -1
-return candidate
+# def knows(a, b): return bool
 
+class Solution:
+    def findCelebrity(self, n):
+        # First pass: find candidate
+        candidate = 0
+
+        for i in range(1, n):
+            if knows(candidate, i):
+                candidate = i
+
+        # Second pass: verify candidate
+        for i in range(n):
+            if i != candidate:
+                # Celebrity should not know anyone
+                if knows(candidate, i):
+                    return -1
+
+                # Everyone should know the celebrity
+                if not knows(i, candidate):
+                    return -1
+
+        return candidate
 ```
 
 ## How the Algorithm Works
@@ -218,23 +222,29 @@ if i != candidate:
 
 ```python
 class Solution:
-def findCelebrity(self, n):
-    for (i = 0 i < n i += 1) :
-    bool isCelebrity = True
-    # Check if i knows anyone
-    for (j = 0 j < n j += 1) :
-    if i != j  and  knows(i, j):
-        isCelebrity = False
-        break
-if (not isCelebrity) continue
-# Check if everyone knows i
-for (j = 0 j < n j += 1) :
-if i != j  and  not knows(j, i):
-    isCelebrity = False
-    break
-if (isCelebrity) return i
-return -1
+    def findCelebrity(self, n):
+        for i in range(n):
+            isCelebrity = True
 
+            # Check if i knows anyone
+            for j in range(n):
+                if i != j and knows(i, j):
+                    isCelebrity = False
+                    break
+
+            if not isCelebrity:
+                continue
+
+            # Check if everyone knows i
+            for j in range(n):
+                if i != j and not knows(j, i):
+                    isCelebrity = False
+                    break
+
+            if isCelebrity:
+                return i
+
+        return -1
 ```
 
 **Pros:**

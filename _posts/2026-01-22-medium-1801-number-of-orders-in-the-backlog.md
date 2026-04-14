@@ -109,44 +109,56 @@ This problem requires efficiently matching buy and sell orders based on price co
 ## Solution
 
 ```python
-class Solution:
-def getNumberOfBacklogOrders(self, orders):
-    MOD = 1e9 +7
-    heapq[pair<int, int>> buy
-    heapq[pair<int, int>, list[pair<int, int>>, greater<>> sell
-    for o in orders:
-        price = o[0], amount = o[1], type = o[2]
-        if type == 0:
-            while amount > 0  and  not not sell  and  sell.top().first <= price:
-                [sellPrice, sellAmount] = sell.top()
-                sell.pop()
-                matched = min(amount, sellAmount)
-                amount -= matched
-                sellAmount -= matched
-                if sellAmount > 0:
-                    sell.push(:sellPrice, sellAmount)
-            if amount > 0:
-                buy.push(:price, amount)
-             else :
-            while amount > 0  and  not not buy  and  buy.top().first >= price:
-                [buyPrice, buyAmount] = buy.top()
-                buy.pop()
-                matched = min(amount, buyAmount)
-                amount -= matched
-                buyAmount -= matched
-                if buyAmount > 0:
-                    buy.push(:buyPrice, buyAmount)
-            if amount > 0:
-                sell.push(:price, amount)
-    long long rtn = 0
-    while not not buy:
-        rtn = (rtn + buy.top().second) % MOD
-        buy.pop()
-    while not not sell:
-        rtn = (rtn + sell.top().second) % MOD
-        sell.pop()
-    return rtn
+import heapq
 
+class Solution:
+    def getNumberOfBacklogOrders(self, orders):
+        MOD = 10**9 + 7
+        
+        buy = []   # max heap (use negative price)
+        sell = []  # min heap
+        
+        for o in orders:
+            price, amount, type = o[0], o[1], o[2]
+            
+            if type == 0:
+                while amount > 0 and sell and sell[0][0] <= price:
+                    sellPrice, sellAmount = heapq.heappop(sell)
+                    matched = min(amount, sellAmount)
+                    amount -= matched
+                    sellAmount -= matched
+                    
+                    if sellAmount > 0:
+                        heapq.heappush(sell, (sellPrice, sellAmount))
+                
+                if amount > 0:
+                    heapq.heappush(buy, (-price, amount))
+            
+            else:
+                while amount > 0 and buy and -buy[0][0] >= price:
+                    buyPrice, buyAmount = heapq.heappop(buy)
+                    buyPrice = -buyPrice
+                    matched = min(amount, buyAmount)
+                    amount -= matched
+                    buyAmount -= matched
+                    
+                    if buyAmount > 0:
+                        heapq.heappush(buy, (-buyPrice, buyAmount))
+                
+                if amount > 0:
+                    heapq.heappush(sell, (price, amount))
+        
+        rtn = 0
+        
+        while buy:
+            rtn = (rtn + buy[0][1]) % MOD
+            heapq.heappop(buy)
+        
+        while sell:
+            rtn = (rtn + sell[0][1]) % MOD
+            heapq.heappop(sell)
+        
+        return rtn
 ```
 
 ### Algorithm Explanation:

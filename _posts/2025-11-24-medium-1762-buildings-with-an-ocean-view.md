@@ -95,17 +95,18 @@ The simplest and most efficient approach: iterate from right to left, tracking t
 
 ```python
 class Solution:
-def findBuildings(self, heights):
-    n = len(heights)
-    list[int> rtn
-    maxHeight = -1
-    for (curr = n - 1 curr >= 0 curr -= 1) :
-    if maxHeight < heights[curr]:
-        rtn.append(curr)
-        maxHeight = heights[curr]
-rtn.reverse()
-return rtn
+    def findBuildings(self, heights):
+        n = len(heights)
+        rtn = []
+        maxHeight = -1
 
+        for curr in range(n - 1, -1, -1):
+            if maxHeight < heights[curr]:
+                rtn.append(curr)
+                maxHeight = heights[curr]
+
+        rtn.reverse()
+        return rtn
 ```
 
 **How it works:**
@@ -129,21 +130,24 @@ Uses a monotonic stack to maintain buildings in decreasing order of height.
 
 ```python
 class Solution:
-def findBuildings(self, heights):
-    n = len(heights)
-    list[int> rtn
-    list[int> stk
-    for (curr = n - 1 curr >= 0 curr -= 1) :
-    # Remove buildings that are shorter than current
-    while not not stk  and  heights[stk.top()] < heights[curr]:
-        stk.pop()
-    # If stack is empty, current building has ocean view
-    if not stk:
-        rtn.append(curr)
-    stk.push(curr)
-rtn.reverse()
-return rtn
+    def findBuildings(self, heights):
+        n = len(heights)
+        rtn = []
+        stk = []
 
+        for curr in range(n - 1, -1, -1):
+            # Remove buildings that are shorter than current
+            while stk and heights[stk[-1]] < heights[curr]:
+                stk.pop()
+
+            # If stack is empty, current building has ocean view
+            if not stk:
+                rtn.append(curr)
+
+            stk.append(curr)
+
+        rtn.reverse()
+        return rtn
 ```
 
 **How it works:**
@@ -237,16 +241,16 @@ After reverse: rtn = [3]
 ### Solution 1: Simple Greedy
 
 ```python
-def findBuildings(self, heights):
+def find_buildings(heights: list[int]) -> list[int]:
     n = len(heights)
-    list[int> rtn
-    maxHeight = -1
-    for (curr = n - 1 curr >= 0 curr -= 1) :
-    if maxHeight < heights[curr]:
-        rtn.append(curr)
-        maxHeight = heights[curr]
-rtn.reverse()
-return rtn
+    rtn: list[int] = []
+    max_height = -1
+    for curr in range(n - 1, -1, -1):
+        if max_height < heights[curr]:
+            rtn.append(curr)
+            max_height = heights[curr]
+    rtn.reverse()
+    return rtn
 
 ```
 
@@ -259,18 +263,18 @@ return rtn
 ### Solution 2: Monotonic Stack
 
 ```python
-def findBuildings(self, heights):
+def find_buildings_stack(heights: list[int]) -> list[int]:
     n = len(heights)
-    list[int> rtn
-    list[int> stk
-    for (curr = n - 1 curr >= 0 curr -= 1) :
-    while not not stk  and  heights[stk.top()] < heights[curr]:
-        stk.pop()
-    if not stk:
-        rtn.append(curr)
-    stk.push(curr)
-rtn.reverse()
-return rtn
+    rtn: list[int] = []
+    stk: list[int] = []
+    for curr in range(n - 1, -1, -1):
+        while stk and heights[stk[-1]] < heights[curr]:
+            stk.pop()
+        if not stk:
+            rtn.append(curr)
+        stk.append(curr)
+    rtn.reverse()
+    return rtn
 
 ```
 

@@ -106,45 +106,72 @@ This problem requires counting the number of subarray sums that fall within a gi
 
 ```python
 class Solution:
-def countRangeSum(self, nums, lower, upper):
-    n = len(nums)
-    list[long long> prefix(n + 1, 0)
-    # prefix sum with 0 included
-    for i in range(0, n):
-    prefix[i + 1] = prefix[i] + nums[i]
-    list[long long> temp(n + 1)
-    return divide(prefix, 0, n, lower, upper, temp)
-divide(list[long long> prefix, left, right,
-lower, upper, list[long long> temp) :
-if (left >= right) return 0
-mid = (left + right) / 2
-count = 0
-count += divide(prefix, left, mid, lower, upper, temp)
-count += divide(prefix, mid + 1, right, lower, upper, temp)
-count += countCross(prefix, left, mid, right, lower, upper)
-merge(prefix, left, mid, right, temp)
-return count
-countCross(list[long long> prefix, left, mid, right,
-lower, upper) :
-count = 0
-wl = left, wr = left
-for (i = mid + 1 i <= right i += 1) :
-long long low = prefix[i] - upper
-long long high = prefix[i] - lower
-while (wl <= mid  and  prefix[wl] < low) wl += 1
-while (wr <= mid  and  prefix[wr] <= high) wr += 1
-count += wr - wl
-return count
-void merge(list[long long> prefix, left, mid, right,
-list[long long> temp) :
-i = left, j = mid + 1, k = left
-while i <= mid  and  j <= right:
-(prefix[i += 1] if             temp[k += 1] = (prefix[i] <= prefix[j])  else prefix[j += 1])
-while (i <= mid) temp[k += 1] = prefix[i += 1]
-while (j <= right) temp[k += 1] = prefix[j += 1]
-for (i = left i <= right i += 1)
-prefix[i] = temp[i]
-
+    def countRangeSum(self, nums, lower, upper):
+        n = len(nums)
+        prefix = [0] * (n + 1)
+        
+        # prefix sum with 0 included
+        for i in range(0, n):
+            prefix[i + 1] = prefix[i] + nums[i]
+        
+        temp = [0] * (n + 1)
+        return self.divide(prefix, 0, n, lower, upper, temp)
+    
+    def divide(self, prefix, left, right, lower, upper, temp):
+        if left >= right:
+            return 0
+        
+        mid = (left + right) // 2
+        count = 0
+        
+        count += self.divide(prefix, left, mid, lower, upper, temp)
+        count += self.divide(prefix, mid + 1, right, lower, upper, temp)
+        count += self.countCross(prefix, left, mid, right, lower, upper)
+        
+        self.merge(prefix, left, mid, right, temp)
+        return count
+    
+    def countCross(self, prefix, left, mid, right, lower, upper):
+        count = 0
+        wl, wr = left, left
+        
+        for i in range(mid + 1, right + 1):
+            low = prefix[i] - upper
+            high = prefix[i] - lower
+            
+            while wl <= mid and prefix[wl] < low:
+                wl += 1
+            while wr <= mid and prefix[wr] <= high:
+                wr += 1
+            
+            count += wr - wl
+        
+        return count
+    
+    def merge(self, prefix, left, mid, right, temp):
+        i, j, k = left, mid + 1, left
+        
+        while i <= mid and j <= right:
+            if prefix[i] <= prefix[j]:
+                temp[k] = prefix[i]
+                i += 1
+            else:
+                temp[k] = prefix[j]
+                j += 1
+            k += 1
+        
+        while i <= mid:
+            temp[k] = prefix[i]
+            i += 1
+            k += 1
+        
+        while j <= right:
+            temp[k] = prefix[j]
+            j += 1
+            k += 1
+        
+        for i in range(left, right + 1):
+            prefix[i] = temp[i]
 ```
 
 ### Algorithm Explanation:

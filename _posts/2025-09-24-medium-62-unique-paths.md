@@ -70,8 +70,6 @@ class Solution:
             for col in range(1, n):
                 dp[row][col] = dp[row][col - 1] + dp[row - 1][col]
         return dp[m - 1][n - 1]
-
-
 ```
 
 ## Step-by-Step Example
@@ -117,10 +115,6 @@ def uniquePaths(self, m: int, n: int) -> int:
     for i in range(1, k + 1):
         result = result * (m + n - 1 - i) // i
     return result
-
-
-
-
 ```
 
 ### Space-Optimized DP
@@ -131,8 +125,6 @@ def uniquePaths(self, m: int, n: int) -> int:
         for j in range(1, n):
             dp[j] += dp[j - 1]
     return dp[n - 1]
-
-
 ```
 
 ## Visual Representation

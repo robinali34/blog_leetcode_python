@@ -102,35 +102,37 @@ The key insight is to use a dummy node to handle edge cases where the head itsel
 ### Solution: Iterative with Dummy Node
 
 ```python
-/
- Definition for singly-linked list.
- struct ListNode :
-     val
-     ListNode next
-     ListNode() : val(0), next(None) :
-     ListNode(x) : val(x), next(None) :
-     ListNode(x, ListNode next) : val(x), next(next) :
-/
-class Solution:
-def removeElements(self, head, val):
-    if(head == None) return head
-    ListNode dummy = ListNode(0, head)
-    ListNode prev = dummy
-    ListNode curr = head
-    ListNode toDelete = None
-    while curr != None:
-        if curr.val == val:
-            prev.next = curr.next
-            toDelete = curr
-             else :
-            prev = curr
-        curr = curr.next
-        if toDelete != None:
-            delete toDelete
-            toDelete = None
-    ListNode ret = dummy.next
-    return ret
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 
+class Solution:
+    def removeElements(self, head, val):
+        if head == None:
+            return head
+
+        dummy = ListNode(0, head)
+        prev = dummy
+        curr = head
+        toDelete = None
+
+        while curr != None:
+            if curr.val == val:
+                prev.next = curr.next
+                toDelete = curr
+            else:
+                prev = curr
+
+            curr = curr.next
+
+            # Python does not need manual delete (kept for syntax consistency)
+            if toDelete != None:
+                toDelete = None
+
+        ret = dummy.next
+        return ret
 ```
 
 ## How the Algorithm Works
@@ -257,11 +259,13 @@ def removeElements(self, head, val):
 
 ```python
 class Solution:
-def removeElements(self, head, val):
-    if(head == None) return head
-    head.next = removeElements(head.next, val)
-    (head.next if         return head.val == val  else head)
+    def removeElements(self, head, val):
+        if head == None:
+            return head
 
+        head.next = self.removeElements(head.next, val)
+
+        return head.next if head.val == val else head
 ```
 
 ### Approach 3: Simplified Iterative (No Memory Deletion)
@@ -270,18 +274,21 @@ For LeetCode submissions where memory management isn't required:
 
 ```python
 class Solution:
-def removeElements(self, head, val):
-    def dummy(self, 0, head)
-    ListNode prev = dummy
-    ListNode curr = head
-    while curr != None:
-        if curr.val == val:
-            prev.next = curr.next
-             else :
-            prev = curr
-        curr = curr.next
-    return dummy.next
+    def removeElements(self, head, val):
+        dummy = ListNode(0, head)
 
+        prev = dummy
+        curr = head
+
+        while curr != None:
+            if curr.val == val:
+                prev.next = curr.next
+            else:
+                prev = curr
+
+            curr = curr.next
+
+        return dummy.next
 ```
 
 ## Complexity Analysis

@@ -83,25 +83,30 @@ This solution uses Depth-First Search to explore each island and marks visited c
 
 ```python
 class Solution:
-def dfs(self, grid, row, col):
-    if row < 0  or  col < 0  or  row >= (int)len(grid)  or  col >= (int)grid[0].__len__(:
-    or  grid[row][col] != '1') :
-    return
-grid[row][col] = '0'
-dfs(grid, row - 1, col)
-dfs(grid, row, col - 1)
-dfs(grid, row + 1, col)
-dfs(grid, row, col + 1)
-def numIslands(self, grid):
-    if (len(grid) == 0  or  grid[0].__len__() == 0) return 0
-    cnt = 0
-    for(i = 0 i < (int)len(grid) i += 1) :
-    for(j = 0 j < (int)grid[0].__len__() j += 1) :
-    if grid[i][j] == '1':
-        dfs(grid, i, j)
-        cnt += 1
-return cnt
+    def dfs(self, grid, row, col):
+        if (row < 0 or col < 0 or row >= len(grid) or col >= len(grid[0]) or grid[row][col] != '1'):
+            return
 
+        grid[row][col] = '0'
+
+        self.dfs(grid, row - 1, col)
+        self.dfs(grid, row, col - 1)
+        self.dfs(grid, row + 1, col)
+        self.dfs(grid, row, col + 1)
+
+    def numIslands(self, grid):
+        if len(grid) == 0 or len(grid[0]) == 0:
+            return 0
+
+        cnt = 0
+
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if grid[i][j] == '1':
+                    self.dfs(grid, i, j)
+                    cnt += 1
+
+        return cnt
 ```
 
 ## How the Algorithm Works
@@ -215,30 +220,38 @@ dfs(grid, row, col + 1)   # Right
 
 ```python
 class Solution:
-def numIslands(self, grid):
-    if (not grid  or  grid[0].empty()) return 0
-    m = len(grid), n = grid[0].__len__()
-    cnt = 0
-    list[list[int>> dirs = \:\:-1,0\, \:1,0\, \:0,-1\, \:0,1\\
-for(i = 0 i < m i += 1) :
-for(j = 0 j < n j += 1) :
-if grid[i][j] == '1':
-    cnt += 1
-    deque[pair<int,int>> q
-    q.push(:i, j)
-    grid[i][j] = '0'
-    while not not q:
-        [r, c] = q[0]
-        q.pop()
-        for dir in dirs:
-            nr = r + dir[0]
-            nc = c + dir[1]
-            if(nr >= 0  and  nr < m  and  nc >= 0  and  nc < n
-            and  grid[nr][nc] == '1') :
-            grid[nr][nc] = '0'
-            q.push(:nr, nc)
-return cnt
+    def numIslands(self, grid):
+        if not grid or not grid[0]:
+            return 0
 
+        m = len(grid)
+        n = len(grid[0])
+
+        cnt = 0
+
+        dirs = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == '1':
+                    cnt += 1
+
+                    q = deque()
+                    q.append((i, j))
+                    grid[i][j] = '0'
+
+                    while q:
+                        r, c = q.popleft()
+
+                        for dr, dc in dirs:
+                            nr = r + dr
+                            nc = c + dc
+
+                            if (0 <= nr < m and 0 <= nc < n and grid[nr][nc] == '1'):
+                                grid[nr][nc] = '0'
+                                q.append((nr, nc))
+
+        return cnt
 ```
 
 **Pros:**
@@ -323,10 +336,6 @@ return
 
 ```python
 grid[row][col] = '0'
-
-
-
-
 ```
 
 **Why change to '0'?**
@@ -341,10 +350,6 @@ dfs(grid, row - 1, col)  # Up
 dfs(grid, row, col - 1)  # Left
 dfs(grid, row + 1, col)  # Down
 dfs(grid, row, col + 1)  # Right
-
-
-
-
 ```
 
 Order doesn't matter - all 4 directions must be explored.

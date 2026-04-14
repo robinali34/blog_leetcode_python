@@ -37,29 +37,11 @@ Find the minimum total cost of such a round trip.
 **Example 1:**
 {% raw %}
 ```python
-Input:
-outbound = :9, 1, 5
-returnTrip = :4, 5, 3
-Output: 5
-Explanation:
-- Select outbound[1] = 1 (index 1)
-- Select return_trip[0] = 4 (index 0)
-- Total: 1 + 4 = 5
-All possible pairings:
-- outbound[0] = 9 with return_trip[0] = 4 → 13
-- outbound[0] = 9 with return_trip[1] = 5 → 14
-- outbound[0] = 9 with return_trip[2] = 3 → 12
-- outbound[1] = 1 with return_trip[0] = 4 → 5 ✓ (minimum)
-- outbound[1] = 1 with return_trip[1] = 5 → 6
-- outbound[1] = 1 with return_trip[2] = 3 → 4
-- outbound[2] = 5 with return_trip[0] = 4 → 9
-- outbound[2] = 5 with return_trip[1] = 5 → 10
-- outbound[2] = 5 with return_trip[2] = 3 → 8
-Minimum: min(13, 14, 12, 5, 6, 4, 9, 10, 8) = 4
-Wait, the minimum is actually 4 (outbound[1] = 1 + return_trip[2] = 3), but the example says 5.
-This suggests the example might be showing one valid solution (1 + 4 = 5) rather than the optimal.
-Or there might be additional constraints not stated.
-For the solution, we'll find the True minimum cost.
+# Example 1 (unconstrained pairing: any i with any j)
+outbound = [9, 1, 5]
+return_trip = [4, 5, 3]
+# Best sum: 1 + 3 = 4  (outbound[1] + return_trip[2])
+# If you require return index before outbound index, the story changes — see j > i below.
 
 ```
 {% endraw %}
@@ -67,23 +49,9 @@ For the solution, we'll find the True minimum cost.
 **Example 2:**
 {% raw %}
 ```python
-Input:
-outbound = :3, 2, 1
-returnTrip = :1, 2, 3
-Output: 3
-Explanation:
-- outbound[0] = 3: can pair with return_trip[1] = 2 → 5, return_trip[2] = 3 → 6
-- outbound[1] = 2: can pair with return_trip[2] = 3 → 5
-- Minimum: min(5, 6, 5) = 5... wait, let me recalculate
-Actually with j > i:
-- outbound[0] = 3: return_trip[1] = 2 → 5, return_trip[2] = 3 → 6
-- outbound[1] = 2: return_trip[2] = 3 → 5
-- Minimum: 5
-But if j >= i:
-- outbound[0] = 3: return_trip[0] = 1 → 4, return_trip[1] = 2 → 5, return_trip[2] = 3 → 6
-- outbound[1] = 2: return_trip[1] = 2 → 4, return_trip[2] = 3 → 5
-- outbound[2] = 2: return_trip[2] = 3 → 4
-- Minimum: 4
+# Example 2 sketch — compare unconstrained vs j >= i vs j > i on paper
+outbound = [3, 2, 1]
+return_trip = [1, 2, 3]
 
 ```
 {% endraw %}
@@ -109,39 +77,23 @@ Alternatively, we can find the minimum outbound price and minimum return price s
 ### Solution 1: Brute Force - Check All Pairs (O(n²))
 
 ```python
-#include <vector>
-#include <climits>
-#include <algorithm>
-using namespace std
-def minimizeRoundTripCost(self, outbound, returnTrip):
+def minimize_round_trip_all_pairs(outbound: list[int], return_trip: list[int]) -> int:
     n = len(outbound)
-    minCost = INT_MAX
-    # Try all possible pairs
-    for (i = 0 i < n i += 1) :
-    for (j = 0 j < n j += 1) :
-    cost = outbound[i] + returnTrip[j]
-    minCost = min(minCost, cost)
-return minCost
+    best = 10**9
+    for i in range(n):
+        for j in range(n):
+            best = min(best, outbound[i] + return_trip[j])
+    return best
 
 ```
 
 ### Solution 2: Optimized - Find Minimums Separately (O(n))
 
 ```python
-#include <vector>
-#include <climits>
-#include <algorithm>
-using namespace std
-def minimizeRoundTripCost(self, outbound, returnTrip):
-    n = len(outbound)
-    # Find minimum return price
-    minReturn = min_element(returnTrip.begin(), returnTrip.end())
-    # For each outbound, pair with minimum return
-    minCost = INT_MAX
-    for (i = 0 i < n i += 1) :
-    cost = outbound[i] + minReturn
-    minCost = min(minCost, cost)
-return minCost
+def minimize_with_global_min_return(outbound: list[int], return_trip: list[int]) -> int:
+    """Unconstrained pairing: best is min(outbound) + min(return_trip)."""
+    mr = min(return_trip)
+    return min(o + mr for o in outbound)
 
 ```
 
@@ -215,10 +167,13 @@ returnTrip: {4,  5,  3}
 ### Step 1: Precompute Minimum Return Prices
 
 ```python
-list[int> minReturn(n)
-minReturn[n - 1] = returnTrip[n - 1]
-for (i = n - 2 i >= 0 i -= 1) :
-minReturn[i] = min(returnTrip[i], minReturn[i + 1])
+def suffix_min_return(return_trip: list[int]) -> list[int]:
+    n = len(return_trip)
+    suf = [0] * n
+    suf[-1] = return_trip[-1]
+    for i in range(n - 2, -1, -1):
+        suf[i] = min(return_trip[i], suf[i + 1])
+    return suf
 
 ```
 
@@ -230,10 +185,16 @@ minReturn[i] = min(returnTrip[i], minReturn[i + 1])
 ### Step 2: Find Minimum Cost
 
 ```python
-minCost = INT_MAX
-for (i = 0 i < n - 1 i += 1) :
-cost = outbound[i] + minReturn[i + 1]
-minCost = min(minCost, cost)
+def min_cost_j_gt_i(outbound: list[int], return_trip: list[int]) -> int:
+    """Require return index j > outbound index i."""
+    n = len(outbound)
+    if n < 2:
+        return 10**9
+    suf = [0] * n
+    suf[-1] = return_trip[-1]
+    for i in range(n - 2, -1, -1):
+        suf[i] = min(return_trip[i], suf[i + 1])
+    return min(outbound[i] + suf[i + 1] for i in range(n - 1))
 
 ```
 
@@ -252,26 +213,16 @@ minCost = min(minCost, cost)
 Instead of storing the entire `minReturn` array, we can iterate backwards and track the minimum return price seen so far.
 
 ```python
-#include <vector>
-#include <climits>
-#include <algorithm>
-using namespace std
-def minimizeRoundTripCost(self, outbound, returnTrip):
+def min_cost_j_gt_i_o1_space(outbound: list[int], return_trip: list[int]) -> int:
     n = len(outbound)
     if n < 2:
-        return INT_MAX
-    minCost = INT_MAX
-    minReturnPrice = returnTrip[n - 1]  # Minimum return price from current position onwards
-    # Iterate backwards through outbound tickets
-    for (i = n - 1 i >= 0 i -= 1) :
-    # Update minimum return price available (includes returnTrip[i] and all after)
-    if i < n - 1:
-        minReturnPrice = min(minReturnPrice, returnTrip[i + 1])
-    minReturnPrice = min(minReturnPrice, returnTrip[i])
-    # Calculate cost for current outbound ticket
-    cost = outbound[i] + minReturnPrice
-    minCost = min(minCost, cost)
-return minCost
+        return 10**9
+    best = 10**9
+    s = return_trip[-1]
+    for i in range(n - 2, -1, -1):
+        best = min(best, outbound[i] + s)
+        s = min(return_trip[i], s)
+    return best
 
 ```
 
@@ -290,18 +241,13 @@ return minCost
 **Space Complexity:** O(1)
 
 ```python
-#include <vector>
-#include <climits>
-#include <algorithm>
-using namespace std
-def minimizeRoundTripCost(self, outbound, returnTrip):
+def min_cost_j_gt_i_bruteforce(outbound: list[int], return_trip: list[int]) -> int:
     n = len(outbound)
-    minCost = INT_MAX
-    for (i = 0 i < n i += 1) :
-    for (j = i + 1 j < n j += 1) :
-    cost = outbound[i] + returnTrip[j]
-    minCost = min(minCost, cost)
-return minCost
+    best = 10**9
+    for i in range(n):
+        for j in range(i + 1, n):
+            best = min(best, outbound[i] + return_trip[j])
+    return best
 
 ```
 
@@ -348,9 +294,8 @@ return minCost
 ### Handling Edge Cases
 
 ```python
-if n < 2:
-    return float('inf')  # or throw exception, or return -1
-
+if len(outbound) < 2:
+    pass  # no pair with j > i
 
 ```
 
@@ -441,13 +386,9 @@ Here are several test cases to verify the solution:
 ### Test Case 1
 {% raw %}
 ```python
-outbound = :9, 1, 5
-returnTrip = :4, 5, 3
-Expected Output: 4
-Explanation:
-- Minimum return price: min(4, 5, 3) = 3
-- Costs: 9+3=12, 1+3=4, 5+3=8
-- Minimum: 4 (outbound[1]=1 + returnTrip[2]=3)
+outbound = [9, 1, 5]
+return_trip = [4, 5, 3]
+# unconstrained min sum: min(o + min(return_trip)) = 1 + 3 = 4
 
 ```
 {% endraw %}
@@ -455,13 +396,9 @@ Explanation:
 ### Test Case 2
 {% raw %}
 ```python
-outbound = :5, 7, 10
-returnTrip = :20, 9, 1
-Expected Output: 6
-Explanation:
-- Minimum return price: min(20, 9, 1) = 1
-- Costs: 5+1=6, 7+1=8, 10+1=11
-- Minimum: 6 (outbound[0]=5 + returnTrip[2]=1)
+outbound = [5, 7, 10]
+return_trip = [20, 9, 1]
+# min sum: 5 + 1 = 6
 
 ```
 {% endraw %}
@@ -469,13 +406,9 @@ Explanation:
 ### Test Case 3
 {% raw %}
 ```python
-outbound = :1, 100, 200
-returnTrip = :1000, 400, 2
-Expected Output: 3
-Explanation:
-- Minimum return price: min(1000, 400, 2) = 2
-- Costs: 1+2=3, 100+2=102, 200+2=202
-- Minimum: 3 (outbound[0]=1 + returnTrip[2]=2)
+outbound = [1, 100, 200]
+return_trip = [1000, 400, 2]
+# min sum: 1 + 2 = 3
 
 ```
 {% endraw %}
@@ -483,13 +416,9 @@ Explanation:
 ### Test Case 4
 {% raw %}
 ```python
-outbound = :8, 4, 2
-returnTrip = :5, 3, 6
-Expected Output: 5
-Explanation:
-- Minimum return price: min(5, 3, 6) = 3
-- Costs: 8+3=11, 4+3=7, 2+3=5
-- Minimum: 5 (outbound[2]=2 + returnTrip[1]=3)
+outbound = [8, 4, 2]
+return_trip = [5, 3, 6]
+# min sum: 2 + 3 = 5
 
 ```
 {% endraw %}
@@ -497,13 +426,9 @@ Explanation:
 ### Test Case 5
 {% raw %}
 ```python
-outbound = :1, 2, 3
-returnTrip = :10, 9, 8
-Expected Output: 9
-Explanation:
-- Minimum return price: min(10, 9, 8) = 8
-- Costs: 1+8=9, 2+8=10, 3+8=11
-- Minimum: 9 (outbound[0]=1 + returnTrip[2]=8)
+outbound = [1, 2, 3]
+return_trip = [10, 9, 8]
+# min sum: 1 + 8 = 9
 
 ```
 {% endraw %}
@@ -512,36 +437,20 @@ Explanation:
 
 {% raw %}
 ```python
-#include <vector>
-#include <iostream>
-#include <cassert>
-using namespace std
-def testMinimizeRoundTripCost(self):
-    list[pair<pair<list[int>, list[int>>, int>> testCases = {}
-    :::9, 1, 5, :4, 5, 3, 4,
-    :::5, 7, 10, :20, 9, 1, 6,
-    :::1, 100, 200, :1000, 400, 2, 3,
-    :::8, 4, 2, :5, 3, 6, 5,
-    :::1, 2, 3, :10, 9, 8, 9,
-for ([input, expected] : testCases) :
-[outbound, returnTrip] = input
-result = minimizeRoundTripCost(outbound, returnTrip)
-assert(result == expected  and  "Test case failed")
-cout << "✓ Passed: "
-cout << "outbound = {"
-for (i = 0 i < (int)len(outbound) i += 1) :
-cout << outbound[i]
-if (i < (int)len(outbound) - 1) cout << ", "
-cout << ", returnTrip = {"
-for (i = 0 i < (int)len(returnTrip) i += 1) :
-cout << returnTrip[i]
-if (i < (int)len(returnTrip) - 1) cout << ", "
-cout << " . " << result << endl
-cout << "All test cases passednot " << endl
-# Run tests
-def main(self):
-    testMinimizeRoundTripCost()
-    return 0
+def minimize_unconstrained(outbound: list[int], return_trip: list[int]) -> int:
+    mr = min(return_trip)
+    return min(o + mr for o in outbound)
+
+
+TESTS = [
+    ([9, 1, 5], [4, 5, 3], 4),
+    ([5, 7, 10], [20, 9, 1], 6),
+    ([1, 100, 200], [1000, 400, 2], 3),
+    ([8, 4, 2], [5, 3, 6], 5),
+    ([1, 2, 3], [10, 9, 8], 9),
+]
+for ob, rt, exp in TESTS:
+    assert minimize_unconstrained(ob, rt) == exp
 
 ```
 {% endraw %}

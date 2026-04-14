@@ -97,23 +97,28 @@ Multiply each digit pair, accumulate into a result array with carry propagation.
 {% raw %}
 ```python
 class Solution:
-def multiply(self, num1, num2):
-    if (num1 == "0"  or  num2 == "0") return "0"
-    n = len(num1)
-    m = len(num2)
-    list[int> result(n + m, 0)
-    for (i = n - 1 i >= 0 i -= 1) :
-    for (j = m - 1 j >= 0 j -= 1) :
-    mul = (num1[i] - '0')  (num2[j] - '0')
-    sum = mul + result[i + j + 1]
-    result[i + j + 1] = sum % 10
-    result[i + j] += sum / 10
-str ans
-for num in result:
-    if not (not ans  and  num == 0):
-    ans += to_string(num)
-("0" if         return not ans  else ans)
-
+    def multiply(self, num1, num2):
+        if num1 == "0" or num2 == "0":
+            return "0"
+        
+        n, m = len(num1), len(num2)
+        result = [0] * (n + m)
+        
+        for i in range(n - 1, -1, -1):
+            for j in range(m - 1, -1, -1):
+                mul = int(num1[i]) * int(num2[j])
+                total = mul + result[i + j + 1]
+                
+                result[i + j + 1] = total % 10
+                result[i + j] += total // 10
+        
+        # build the result string (skip leading zeros)
+        ans = ""
+        for num in result:
+            if not (ans == "" and num == 0):
+                ans += str(num)
+        
+        return ans if ans else "0"
 ```
 {% endraw %}
 

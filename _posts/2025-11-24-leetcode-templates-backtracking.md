@@ -8,7 +8,7 @@ tags: [leetcode, templates, backtracking, dfs]
 ---
 
 {% raw %}
-Minimal, copy-paste C++ for permutations, combinations, subsets, combination sum, grid pathfinding, and constraint satisfaction (N-Queens, Sudoku).
+Minimal, copy-paste Python for permutations, combinations, subsets, combination sum, grid pathfinding, and constraint satisfaction (N-Queens, Sudoku).
 
 ## Contents
 
@@ -39,18 +39,18 @@ Generate all permutations of distinct elements.
 
 ```python
 # Permutations without duplicates
-def backtrack(self, nums, cur, used, res):
+def permute_backtrack(nums: list[int], cur: list[int], used: list[bool], res: list[list[int]]) -> None:
     if len(cur) == len(nums):
-        res.append(cur)
+        res.append(cur.copy())
         return
-    for (i = 0 i < (int)len(nums) i += 1):
-    if (used[i]) continue
-    used[i] = True
-    cur.append(nums[i])
-    backtrack(nums, cur, used, res)
-    cur.pop()
-    used[i] = False
-
+    for i in range(len(nums)):
+        if used[i]:
+            continue
+        used[i] = True
+        cur.append(nums[i])
+        permute_backtrack(nums, cur, used, res)
+        cur.pop()
+        used[i] = False
 ```
 
 ### Permutations with duplicates
@@ -58,28 +58,26 @@ def backtrack(self, nums, cur, used, res):
 Avoid duplicates by sorting first, then skipping duplicates at the same level when the previous duplicate hasn't been used.
 
 ```python
-# Permutations with duplicates (avoid duplicates by sorting + skip used duplicates)
-def backtrack(self, nums, cur, used, res):
+# Permutations with duplicates (sort first; skip same value at same level if prev unused)
+def permute_unique_backtrack(nums: list[int], cur: list[int], used: list[bool], res: list[list[int]]) -> None:
     if len(cur) == len(nums):
-        res.append(cur)
+        res.append(cur.copy())
         return
-    for (i = 0 i < (int)len(nums) i += 1):
-    # Skip if already used, or if duplicate and previous duplicate not used
-    if (used[i] * or  (i > 0  and  nums[i] == nums[i-1] * and  not used[i-1])) continue
-    used[i] = True
-    cur.append(nums[i])
-    backtrack(nums, cur, used, res)
-    cur.pop()
-    used[i] = False
-# Call with sorted array
-def permuteUnique(self, nums):
-    nums.sort()
-    list[list[int>> res
-    list[int> cur
-    list[bool> used(len(nums), False)
-    backtrack(nums, cur, used, res)
-    return res
+    for i in range(len(nums)):
+        if used[i] or (i > 0 and nums[i] == nums[i - 1] and not used[i - 1]):
+            continue
+        used[i] = True
+        cur.append(nums[i])
+        permute_unique_backtrack(nums, cur, used, res)
+        cur.pop()
+        used[i] = False
 
+
+def permute_unique(nums: list[int]) -> list[list[int]]:
+    nums = sorted(nums)
+    res: list[list[int]] = []
+    permute_unique_backtrack(nums, [], [False] * len(nums), res)
+    return res
 ```
 
 | ID | Title | Link | Solution |
@@ -92,17 +90,15 @@ def permuteUnique(self, nums):
 Generate all combinations of k elements from n elements. Order doesn't matter, so we use `start` index to avoid duplicates.
 
 ```python
-# Combinations C(n, k)
-def backtrack(self, start, n, k, cur, res):
+# Combinations C(n, k) — choose k numbers from 1..n
+def combine_backtrack(start: int, n: int, k: int, cur: list[int], res: list[list[int]]) -> None:
     if len(cur) == k:
-        res.append(cur)
+        res.append(cur.copy())
         return
-    # Only consider elements from start onwards to avoid duplicates
-    for (i = start i <= n i += 1):
-    cur.append(i)
-    backtrack(i+1, n, k, cur, res)  # Next start is i+1
-    cur.pop()
-
+    for i in range(start, n + 1):
+        cur.append(i)
+        combine_backtrack(i + 1, n, k, cur, res)
+        cur.pop()
 ```
 
 **Key insight:** Use `start` parameter to ensure we only consider elements after the current position, preventing duplicate combinations.
@@ -120,13 +116,12 @@ Generate all subsets (power set) of an array. This includes the empty set and th
 
 ```python
 # Subsets without duplicates
-def backtrack(self, start, nums, cur, res):
-    res.append(cur)  # Add current subset (including empty set)
-    for (i = start i < (int)len(nums) i += 1):
-    cur.append(nums[i])
-    backtrack(i+1, nums, cur, res)
-    cur.pop()
-
+def subsets_backtrack(start: int, nums: list[int], cur: list[int], res: list[list[int]]) -> None:
+    res.append(cur.copy())
+    for i in range(start, len(nums)):
+        cur.append(nums[i])
+        subsets_backtrack(i + 1, nums, cur, res)
+        cur.pop()
 ```
 
 ### Subsets with duplicates
@@ -135,22 +130,21 @@ Sort first, then skip duplicates at the same level.
 
 ```python
 # Subsets with duplicates (sort first, skip duplicates at same level)
-def backtrack(self, start, nums, cur, res):
-    res.append(cur)
-    for (i = start i < (int)len(nums) i += 1):
-    # Skip duplicates at the same level
-    if (i > start  and  nums[i] == nums[i-1]) continue
-    cur.append(nums[i])
-    backtrack(i+1, nums, cur, res)
-    cur.pop()
-# Call with sorted array
-def subsetsWithDup(self, nums):
-    nums.sort()
-    list[list[int>> res
-    list[int> cur
-    backtrack(0, nums, cur, res)
-    return res
+def subsets_dup_backtrack(start: int, nums: list[int], cur: list[int], res: list[list[int]]) -> None:
+    res.append(cur.copy())
+    for i in range(start, len(nums)):
+        if i > start and nums[i] == nums[i - 1]:
+            continue
+        cur.append(nums[i])
+        subsets_dup_backtrack(i + 1, nums, cur, res)
+        cur.pop()
 
+
+def subsets_with_dup(nums: list[int]) -> list[list[int]]:
+    nums.sort()
+    res: list[list[int]] = []
+    subsets_dup_backtrack(0, nums, [], res)
+    return res
 ```
 
 | ID | Title | Link | Solution |
@@ -166,16 +160,18 @@ Find all combinations that sum to target. Elements can be reused or used once de
 
 ```python
 # Combination Sum (can reuse same element)
-def backtrack(self, start, candidates, target, cur, res):
+def combination_sum_backtrack(
+    start: int, candidates: list[int], target: int, cur: list[int], res: list[list[int]]
+) -> None:
     if target == 0:
-        res.append(cur)
+        res.append(cur.copy())
         return
-    if (target < 0) return  # Pruning: target exceeded
-    for (i = start i < (int)len(candidates) i += 1):
-    cur.append(candidates[i])
-    # Can reuse: start=i (not i+1)
-    backtrack(i, candidates, target - candidates[i], cur, res)
-    cur.pop()
+    if target < 0:
+        return
+    for i in range(start, len(candidates)):
+        cur.append(candidates[i])
+        combination_sum_backtrack(i, candidates, target - candidates[i], cur, res)
+        cur.pop()
 
 ```
 
@@ -183,24 +179,26 @@ def backtrack(self, start, candidates, target, cur, res):
 
 ```python
 # Combination Sum II (each element used once, duplicates exist)
-def backtrack(self, start, candidates, target, cur, res):
+def combination_sum2_backtrack(
+    start: int, candidates: list[int], target: int, cur: list[int], res: list[list[int]]
+) -> None:
     if target == 0:
-        res.append(cur)
+        res.append(cur.copy())
         return
-    if (target < 0) return
-    for (i = start i < (int)len(candidates) i += 1):
-    # Skip duplicates at the same level
-    if (i > start  and  candidates[i] == candidates[i-1]) continue
-    cur.append(candidates[i])
-    # No reuse: start=i+1
-    backtrack(i+1, candidates, target - candidates[i], cur, res)
-    cur.pop()
-# Call with sorted array
-def combinationSum2(self, candidates, target):
+    if target < 0:
+        return
+    for i in range(start, len(candidates)):
+        if i > start and candidates[i] == candidates[i - 1]:
+            continue
+        cur.append(candidates[i])
+        combination_sum2_backtrack(i + 1, candidates, target - candidates[i], cur, res)
+        cur.pop()
+
+
+def combination_sum2(candidates: list[int], target: int) -> list[list[int]]:
     candidates.sort()
-    list[list[int>> res
-    list[int> cur
-    backtrack(0, candidates, target, cur, res)
+    res: list[list[int]] = []
+    combination_sum2_backtrack(0, candidates, target, [], res)
     return res
 
 ```
@@ -209,15 +207,16 @@ def combinationSum2(self, candidates, target):
 
 ```python
 # Combination Sum III: choose k numbers from 1-9 that sum to n
-def backtrack(self, start, k, n, cur, res):
-    if len(cur) == k  and  n == 0:
-        res.append(cur)
+def combination_sum3_backtrack(start: int, k: int, n: int, cur: list[int], res: list[list[int]]) -> None:
+    if len(cur) == k and n == 0:
+        res.append(cur.copy())
         return
-    if (len(cur) >= k  or  n < 0) return
-    for (i = start i <= 9 i += 1):
-    cur.append(i)
-    backtrack(i+1, k, n-i, cur, res)
-    cur.pop()
+    if len(cur) >= k or n < 0:
+        return
+    for i in range(start, 10):
+        cur.append(i)
+        combination_sum3_backtrack(i + 1, k, n - i, cur, res)
+        cur.pop()
 
 ```
 
@@ -235,22 +234,32 @@ Backtrack on 2D grid with constraints. Mark cells as visited during exploration,
 
 ```python
 # Word Search: find if word exists in grid
-def dfs(self, board, i, j, word, idx):
-    if (idx == (int)len(word)) return True
-    if (i < 0  or  i >= (int)len(board)  or  j < 0  or  j >= (int)board[0].__len__()) return False
-    if (board[i][j] != word[idx]) return False
-    char temp = board[i][j]
-    board[i][j] = '#'  # Mark as visited
-    dirs[4][2] = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-for d in dirs:
-    if (dfs(board, i+d[0], j+d[1], word, idx+1)) return True
-board[i][j] = temp  # Backtrack: restore original value
-return False
-def exist(self, board, word):
-    for (i = 0 i < (int)len(board) i += 1):
-    for (j = 0 j < (int)board[0].__len__() j += 1):
-    if (dfs(board, i, j, word, 0)) return True
-return False
+DIRS = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+
+def word_search_dfs(board: list[list[str]], i: int, j: int, word: str, idx: int) -> bool:
+    if idx == len(word):
+        return True
+    if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]):
+        return False
+    if board[i][j] != word[idx]:
+        return False
+    temp = board[i][j]
+    board[i][j] = "#"
+    for di, dj in DIRS:
+        if word_search_dfs(board, i + di, j + dj, word, idx + 1):
+            board[i][j] = temp
+            return True
+    board[i][j] = temp
+    return False
+
+
+def word_exist(board: list[list[str]], word: str) -> bool:
+    for i in range(len(board)):
+        for j in range(len(board[0])):
+            if word_search_dfs(board, i, j, word, 0):
+                return True
+    return False
 
 ```
 
@@ -274,54 +283,70 @@ Backtracking with complex constraints. Validate each move before placing.
 ### N-Queens
 
 ```python
-# N-Queens: place n queens on n×n board
-def backtrack(self, row, n, board, res):
-    if row == n:
-        res.append(board)
-        return
-    for (col = 0 col < n col += 1):
-    if isValid(board, row, col, n):
-        board[row][col] = 'Q'
-        backtrack(row+1, n, board, res)
-        board[row][col] = '.'  # Backtrack
-def isValid(self, board, row, col, n):
-    # Check column above
-    for i in range(0, row):
-    if (board[i][col] == 'Q') return False
-    # Check diagonal \ (top-left to bottom-right)
-    for (i = row-1, j = col-1 i >= 0  and  j >= 0 i -= 1, j -= 1)
-    if (board[i][j] == 'Q') return False
-    # Check diagonal / (top-right to bottom-left)
-    for (i = row-1, j = col+1 i >= 0  and  j < n i -= 1, j += 1)
-    if (board[i][j] == 'Q') return False
+# N-Queens: place n queens on n×n board (board is list[list[str]])
+def n_queens_is_safe(board: list[list[str]], row: int, col: int, n: int) -> bool:
+    for i in range(row):
+        if board[i][col] == "Q":
+            return False
+    i, j = row - 1, col - 1
+    while i >= 0 and j >= 0:
+        if board[i][j] == "Q":
+            return False
+        i -= 1
+        j -= 1
+    i, j = row - 1, col + 1
+    while i >= 0 and j < n:
+        if board[i][j] == "Q":
+            return False
+        i -= 1
+        j += 1
     return True
+
+
+def n_queens_backtrack(row: int, n: int, board: list[list[str]], res: list[list[str]]) -> None:
+    if row == n:
+        res.append(["".join(r) for r in board])
+        return
+    for col in range(n):
+        if n_queens_is_safe(board, row, col, n):
+            board[row][col] = "Q"
+            n_queens_backtrack(row + 1, n, board, res)
+            board[row][col] = "."
 
 ```
 
 ### Sudoku Solver
 
 ```python
-# Sudoku Solver
-def solveSudoku(self, board):
-    for (i = 0 i < 9 i += 1):
-    for (j = 0 j < 9 j += 1):
-    if board[i][j] == '.':
-        for (char c = '1' c <= '9' c += 1):
-        if isValid(board, i, j, c):
-            board[i][j] = c
-            if (solveSudoku(board)) return True
-            board[i][j] = '.'  # Backtrack
-    return False  # No valid number found
-return True  # All cells filled
-def isValid(self, board, row, col, c):
-    for (i = 0 i < 9 i += 1):
-    # Check row
-    if (board[row][i] == c) return False
-    # Check column
-    if (board[i][col] == c) return False
-    # Check 3x3 box
-    if (board[3(row/3) + i/3][3(col/3) + i%3] == c) return False
-return True
+# Sudoku Solver (mutates board in place)
+def sudoku_valid(board: list[list[str]], row: int, col: int, ch: str) -> bool:
+    for i in range(9):
+        if board[row][i] == ch:
+            return False
+        if board[i][col] == ch:
+            return False
+    br, bc = 3 * (row // 3), 3 * (col // 3)
+    for i in range(3):
+        for j in range(3):
+            if board[br + i][bc + j] == ch:
+                return False
+    return True
+
+
+def solve_sudoku(board: list[list[str]]) -> bool:
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] != ".":
+                continue
+            for d in "123456789":
+                if not sudoku_valid(board, i, j, d):
+                    continue
+                board[i][j] = d
+                if solve_sudoku(board):
+                    return True
+                board[i][j] = "."
+            return False
+    return True
 
 ```
 
@@ -337,35 +362,43 @@ Partition string into palindromic substrings. Check if substring is palindrome b
 
 ```python
 # Palindrome Partitioning
-def backtrack(self, start, s, cur, res):
-    if start == (int)len(s):
-        res.append(cur)
-        return
-    for (end = start end < (int)len(s) end += 1):
-    if isPalindrome(s, start, end):
-        cur.append(s.substr(start, end-start+1))
-        backtrack(end+1, s, cur, res)
-        cur.pop()  # Backtrack
-def isPalindrome(self, s, l, r):
+def is_pal_sub(s: str, l: int, r: int) -> bool:
     while l < r:
-        if (s[l += 1] != s[r -= 1]) return False
+        if s[l] != s[r]:
+            return False
+        l += 1
+        r -= 1
     return True
+
+
+def partition_backtrack(start: int, s: str, cur: list[str], res: list[list[str]]) -> None:
+    if start == len(s):
+        res.append(cur.copy())
+        return
+    for end in range(start, len(s)):
+        if is_pal_sub(s, start, end):
+            cur.append(s[start : end + 1])
+            partition_backtrack(end + 1, s, cur, res)
+            cur.pop()
 
 ```
 
 **Optimization:** Precompute palindrome table to avoid repeated checks.
 
 ```python
-# Optimized: Precompute palindrome table
-def precomputePalindromes(self, s):
+# Optimized: precompute palindrome table dp[i][j]
+def precompute_palindromes(s: str) -> list[list[bool]]:
     n = len(s)
-    list[list[bool>> dp(n, list[bool>(n, False))
-    for (i = n-1 i >= 0 i -= 1):
-    for (j = i j < n j += 1):
-    if (i == j) dp[i][j] = True
-elif j == i+1) dp[i][j] = (s[i] == s[j]:
-else dp[i][j] = (s[i] == s[j] * and  dp[i+1][j-1])
-return dp
+    dp = [[False] * n for _ in range(n)]
+    for i in range(n - 1, -1, -1):
+        for j in range(i, n):
+            if i == j:
+                dp[i][j] = True
+            elif j == i + 1:
+                dp[i][j] = s[i] == s[j]
+            else:
+                dp[i][j] = s[i] == s[j] and dp[i + 1][j - 1]
+    return dp
 
 ```
 
@@ -382,19 +415,18 @@ Generate all valid parentheses combinations using backtracking.
 
 ```python
 # Generate Parentheses: generate all valid n pairs
-def backtrack(self, n, open, close, path, res):
+def gen_parentheses_backtrack(n: int, open_cnt: int, close_cnt: int, path: list[str], res: list[str]) -> None:
     if len(path) == 2 * n:
-        res.append(path)
+        res.append("".join(path))
         return
-        if open < n:
-            path.append('(')
-            backtrack(n, open + 1, close, path, res)
-            path.pop()
-            if close < open:
-                path.append(')')
-                backtrack(n, open, close + 1, path, res)
-                path.pop()
-
+    if open_cnt < n:
+        path.append("(")
+        gen_parentheses_backtrack(n, open_cnt + 1, close_cnt, path, res)
+        path.pop()
+    if close_cnt < open_cnt:
+        path.append(")")
+        gen_parentheses_backtrack(n, open_cnt, close_cnt + 1, path, res)
+        path.pop()
 
 ```
 
@@ -410,21 +442,17 @@ def backtrack(self, n, open, close, path, res):
 ## General Backtracking Template
 
 ```python
-def backtrack(self, state, constraints, current_solution, results):
-    # Base case: solution is complete
-    if isComplete(current_solution):
-        results.add(current_solution)
+# Sketch — fill in problem-specific helpers
+def backtrack_sketch(state, constraints, current_solution, results):
+    if is_complete(current_solution):
+        results.append(list(current_solution))
         return
-    # Generate candidates
-    for (each candidate in candidates):
-    # Pruning: skip invalid candidates early
-    if isValid(candidate, constraints):
-        # Make move: add candidate to solution
-        makeMove(candidate, current_solution)
-        # Recurse: explore further
-        backtrack(updated_state, constraints, current_solution, results)
-        # Backtrack: remove candidate to try next option
-        undoMove(candidate, current_solution)
+    for candidate in iter_candidates(state):
+        if not is_valid_move(candidate, constraints):
+            continue
+        make_move(candidate, current_solution)
+        backtrack_sketch(next_state(state, candidate), constraints, current_solution, results)
+        undo_move(candidate, current_solution)
 
 ```
 

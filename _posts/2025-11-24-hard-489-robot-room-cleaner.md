@@ -20,16 +20,13 @@ When it tries to move into a blocked cell, its bumper sensor detects the obstacl
 Design an algorithm to clean the entire room using only the 4 given APIs shown below.
 
 ```python
-interface Robot :
-# returns True if next cell is open and robot moves into the cell.
-# returns False if next cell is blocked and robot stays in the current cell.
-boolean move()
-# Robot will stay in the same cell after calling turnLeft/turnRight.
-# Each turn will be 90 degrees.
-void turnLeft()
-void turnRight()
-# Clean the current cell.
-void clean()
+from typing import Protocol
+
+class Robot(Protocol):
+    def move(self) -> bool: ...
+    def turnLeft(self) -> None: ...
+    def turnRight(self) -> None: ...
+    def clean(self) -> None: ...
 
 ```
 
@@ -109,42 +106,31 @@ This solution uses DFS backtracking with a visited set to track cleaned cells. T
 ### Solution: DFS with Backtracking
 
 ```python
-/
- # This is the robot's control interface.
- # You should not implement it, or speculate about its implementation
- class Robot:
-     # Returns True if the cell in front is open and robot moves into the cell.
-     # Returns False if the cell in front is blocked and robot stays in the current cell.
-     bool move()
-     # Robot will stay in the same cell after calling turnLeft/turnRight.
-     # Each turn will be 90 degrees.
-     void turnLeft()
-     void turnRight()
-     # Clean the current cell.
-     void clean()
-/
 class Solution:
-list[list[int>> dirs = \:\:-1, 0\, \:0, 1\, \:1, 0\, \:0, -1\\
-set<pair<int, int>> visited
-def goBack(self, robot):
-    robot.turnRight()
-    robot.turnRight()
-    robot.move()
-    robot.turnRight()
-    robot.turnRight()
-def backtrack(self, robot, x, y, d):
-    visited.insert(:x, y)
-    robot.clean()
-    for(i = 0 i < 4 i += 1) :
-    new_d = (d + i) % 4
-    nx = x + dirs[new_d][0]
-    ny = y + dirs[new_d][1]
-    if not visited.count({nx, ny})  and  robot.move():
-        backtrack(robot, nx, ny, new_d)
-        goBack(robot)
-    robot.turnRight()
-def cleanRoom(self, robot):
-    backtrack(robot, 0, 0, 0)
+    def cleanRoom(self, robot) -> None:
+        dirs = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+        visited: set[tuple[int, int]] = set()
+
+        def go_back() -> None:
+            robot.turnRight()
+            robot.turnRight()
+            robot.move()
+            robot.turnRight()
+            robot.turnRight()
+
+        def backtrack(r: int, c: int, d: int) -> None:
+            visited.add((r, c))
+            robot.clean()
+            for i in range(4):
+                nd = (d + i) % 4
+                nr = r + dirs[nd][0]
+                nc = c + dirs[nd][1]
+                if (nr, nc) not in visited and robot.move():
+                    backtrack(nr, nc, nd)
+                    go_back()
+                robot.turnRight()
+
+        backtrack(0, 0, 0)
 
 ```
 
@@ -208,9 +194,9 @@ Robot Path (starting at 1,3):
 ### Direction Management
 
 ```python
-list[list[int>> dirs = \:\:-1, 0\, \:0, 1\, \:1, 0\, \:0, -1\\
+dirs = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 # Index: 0=up, 1=right, 2=down, 3=left
-new_d = (d + i) % 4  # Relative direction
+new_d = (d + i) % 4
 nx = x + dirs[new_d][0]
 ny = y + dirs[new_d][1]
 
@@ -224,24 +210,17 @@ ny = y + dirs[new_d][1]
 ### Backtracking Function
 
 ```python
-def backtrack(self, robot, x, y, d):
-    # Mark current cell as visited and clean
-    visited.insert(:x, y)
+def backtrack(r: int, c: int, d: int) -> None:
+    visited.add((r, c))
     robot.clean()
-    # Try all 4 directions
-    for(i = 0 i < 4 i += 1) :
-    new_d = (d + i) % 4
-    nx = x + dirs[new_d][0]
-    ny = y + dirs[new_d][1]
-    # If not visited and can move
-    if not visited.count({nx, ny})  and  robot.move():
-        # Explore recursively
-        backtrack(robot, nx, ny, new_d)
-        # Return to current position
-        goBack(robot)
-    # Turn right to try next direction
-    robot.turnRight()
-
+    for i in range(4):
+        nd = (d + i) % 4
+        nr = r + dirs[nd][0]
+        nc = c + dirs[nd][1]
+        if (nr, nc) not in visited and robot.move():
+            backtrack(nr, nc, nd)
+            go_back()
+        robot.turnRight()
 ```
 
 ### goBack Function
@@ -253,8 +232,6 @@ def goBack(self, robot):
     robot.move()       # Move back to previous cell
     robot.turnRight()  # Turn 90° right
     robot.turnRight()  # Turn 90° right (total 180°, restore original facing)
-
-
 ```
 
 **Why this works:**
@@ -281,29 +258,7 @@ def goBack(self, robot):
 More explicit direction management:
 
 ```python
-class Solution:
-set<pair<int, int>> visited
-list[list[int>> dirs = \:\:-1,0\, \:0,1\, \:1,0\, \:0,-1\\
-def goBack(self, robot):
-    robot.turnRight()
-    robot.turnRight()
-    robot.move()
-    robot.turnRight()
-    robot.turnRight()
-def dfs(self, robot, x, y, dir):
-    visited.insert(:x, y)
-    robot.clean()
-    for(i = 0 i < 4 i += 1) :
-    newDir = (dir + i) % 4
-    nx = x + dirs[newDir][0]
-    ny = y + dirs[newDir][1]
-    if visited.find({nx, ny}) == visited.end()  and  robot.move():
-        dfs(robot, nx, ny, newDir)
-        goBack(robot)
-    robot.turnRight()
-def cleanRoom(self, robot):
-    dfs(robot, 0, 0, 0)
-
+# Same DFS + go_back pattern as the main solution (rename dfs <-> backtrack).
 ```
 
 ## Complexity Analysis
@@ -318,10 +273,8 @@ def cleanRoom(self, robot):
 ### Direction Array
 
 ```python
-list[list[int>> dirs = \:\:-1, 0\, \:0, 1\, \:1, 0\, \:0, -1\\
-#                    Index:   0        1       2        3
-#                  Meaning:  up     right   down     left
-
+dirs = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+# Index: 0 up, 1 right, 2 down, 3 left
 ```
 
 **Why this order?**
@@ -332,11 +285,7 @@ list[list[int>> dirs = \:\:-1, 0\, \:0, 1\, \:1, 0\, \:0, -1\\
 ### Visited Set
 
 ```python
-set<pair<int, int>> visited
-
-
-
-
+visited: set[tuple[int, int]] = set()
 ```
 
 **Why use set?**
@@ -416,13 +365,12 @@ Similar problems:
 ## goBack Function Explanation
 
 ```python
-def goBack(self, robot):
+def go_back(robot) -> None:
     robot.turnRight()  # 1st turn: 90° right
     robot.turnRight()  # 2nd turn: 90° right (total 180°)
     robot.move()       # Move back to previous cell
     robot.turnRight()  # 3rd turn: 90° right
     robot.turnRight()  # 4th turn: 90° right (total 180°, restore facing)
-
 
 ```
 

@@ -107,16 +107,21 @@ This solution uses a greedy BFS-like approach, tracking the current end of the c
 
 ```python
 class Solution:
-def jump(self, nums):
-    rtn = 0, n = len(nums)
-    curEnd = 0, curFar = 0
-    for(i = 0 i < n - 1 i += 1) :
-    curFar = max(curFar, i + nums[i])
-    if i == curEnd:
-        rtn += 1
-        curEnd = curFar
-return rtn
+    def jump(self, nums):
+        rtn = 0
+        n = len(nums)
 
+        curEnd = 0
+        curFar = 0
+
+        for i in range(n - 1):
+            curFar = max(curFar, i + nums[i])
+
+            if i == curEnd:
+                rtn += 1
+                curEnd = curFar
+
+        return rtn
 ```
 
 ## How the Algorithm Works
@@ -246,15 +251,18 @@ At each level, we greedily extend to the farthest position because:
 
 ```python
 class Solution:
-def jump(self, nums):
-    n = len(nums)
-    list[int> dp(n, INT_MAX)
-    dp[0] = 0
-    for(i = 0 i < n i += 1) :
-    for(j = 1 j <= nums[i] * and  i + j < n j += 1) :
-    dp[i + j] = min(dp[i + j], dp[i] + 1)
-return dp[n - 1]
+    def jump(self, nums):
+        n = len(nums)
 
+        dp = [float('inf')] * n
+        dp[0] = 0
+
+        for i in range(n):
+            for j in range(1, nums[i] + 1):
+                if i + j < n:
+                    dp[i + j] = min(dp[i + j], dp[i] + 1)
+
+        return dp[n - 1]
 ```
 
 **Pros:**
@@ -275,18 +283,20 @@ More explicit version of the greedy approach:
 
 ```python
 class Solution:
-def jump(self, nums):
-    n = len(nums)
-    jumps = 0
-    currentLevelEnd = 0
-    nextLevelEnd = 0
-    for(i = 0 i < n - 1 i += 1) :
-    nextLevelEnd = max(nextLevelEnd, i + nums[i])
-    if i == currentLevelEnd:
-        jumps += 1
-        currentLevelEnd = nextLevelEnd
-return jumps
+    def jump(self, nums):
+        n = len(nums)
+        jumps = 0
+        currentLevelEnd = 0
+        nextLevelEnd = 0
 
+        for i in range(n - 1):
+            nextLevelEnd = max(nextLevelEnd, i + nums[i])
+
+            if i == currentLevelEnd:
+                jumps += 1
+                currentLevelEnd = nextLevelEnd
+
+        return jumps
 ```
 
 **Pros:**

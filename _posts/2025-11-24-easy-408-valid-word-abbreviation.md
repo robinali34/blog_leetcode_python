@@ -114,25 +114,32 @@ The key insight is to track the current position in the word while parsing the a
 
 ```python
 class Solution:
-def validWordAbbreviation(self, word, abbr):
-    len = abbr.length(), wordLen = word.length()
-    abbrLen = 0, num = 0
-    for(i = 0 i < len i += 1) :
-    if abbr[i] >= 'a'  and  abbr[i] <= 'z':
-        # Letter: add accumulated number and current letter
-        abbrLen += num + 1
-        num = 0
-        # Check bounds and character match
-        if abbrLen > wordLen  or  abbr[i] != word[abbrLen - 1]:
-            return False
-         else :
-        # Digit: check for leading zero and build number
-        if not num  and  abbr[i] == '0':
-            return False
-        num = num  10 + abbr[i] - '0'
-# Final check: accumulated length should match word length
-return abbrLen + num == wordLen
+    def validWordAbbreviation(self, word, abbr):
+        n = len(abbr)
+        wordLen = len(word)
 
+        abbrLen = 0
+        num = 0
+
+        for i in range(n):
+            if abbr[i].isalpha():
+                # Letter: add accumulated number and current letter
+                abbrLen += num + 1
+                num = 0
+
+                # Check bounds and character match
+                if abbrLen > wordLen or abbr[i] != word[abbrLen - 1]:
+                    return False
+
+            else:
+                # Digit: check for leading zero and build number
+                if num == 0 and abbr[i] == '0':
+                    return False
+
+                num = num * 10 + (ord(abbr[i]) - ord('0'))
+
+        # Final check: accumulated length should match word length
+        return abbrLen + num == wordLen
 ```
 
 ## How the Algorithm Works
@@ -222,10 +229,6 @@ if abbr[i] >= 'a'  and  abbr[i] <= 'z':
     num = 0
     if abbrLen > wordLen  or  abbr[i] != word[abbrLen - 1]:
         return False
-
-
-
-
 ```
 
 **Why:**
@@ -242,7 +245,6 @@ else:
     if not num  and  abbr[i] == '0':
         return False
     num = num  10 + abbr[i] - '0'
-
 ```
 
 **Why:**
@@ -254,10 +256,6 @@ else:
 
 ```python
 return abbrLen + num == wordLen
-
-
-
-
 ```
 
 **Why:**
@@ -283,26 +281,30 @@ return abbrLen + num == wordLen
 
 ```python
 class Solution:
-def validWordAbbreviation(self, word, abbr):
-    i = 0, j = 0  # i for word, j for abbr
-    while i < word.length()  and  j < abbr.length():
-        if abbr[j] >= 'a'  and  abbr[j] <= 'z':
-            # Letter: must match
-            if word[i] != abbr[j]:
-                return False
-            i += 1
-            j += 1
-             else :
-            # Digit: parse number and skip
-            if abbr[j] == '0':
-                return False  # Leading zero
-            num = 0
-            while j < abbr.length()  and  isdigit(abbr[j]):
-                num = num  10 + (abbr[j] - '0')
-                j += 1
-            i += num  # Skip num characters in word
-    return i == word.length()  and  j == abbr.length()
+    def validWordAbbreviation(self, word, abbr):
+        i = 0
+        j = 0  # i for word, j for abbr
 
+        while i < len(word) and j < len(abbr):
+            if abbr[j].isalpha():
+                # Letter: must match
+                if word[i] != abbr[j]:
+                    return False
+                i += 1
+                j += 1
+            else:
+                # Digit: parse number and skip
+                if abbr[j] == '0':
+                    return False  # Leading zero
+
+                num = 0
+                while j < len(abbr) and abbr[j].isdigit():
+                    num = num * 10 + int(abbr[j])
+                    j += 1
+
+                i += num  # Skip num characters in word
+
+        return i == len(word) and j == len(abbr)
 ```
 
 **Pros:**
@@ -340,10 +342,6 @@ word[0] is the first character, so word[abbrLen - 1] = word[0] ✓
 ```python
 if not num  and  abbr[i] == '0':
     return False
-
-
-
-
 ```
 
 **Why this works:**
@@ -356,7 +354,6 @@ if not num  and  abbr[i] == '0':
 
 ```python
 num = num  10 + abbr[i] - '0'
-
 ```
 
 **How it works:**

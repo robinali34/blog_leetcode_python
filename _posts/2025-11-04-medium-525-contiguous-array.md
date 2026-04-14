@@ -69,18 +69,21 @@ Convert `0` to `-1` and `1` to `+1`, then use prefix sum. When we see a prefix s
 
 ```python
 class Solution:
-def findMaxLength(self, nums):
-    dict[int, int> map
-    map[0] = -1  # Base case: prefix sum 0 at index -1
-    maxLen = 0, count = 0
-    for(i = 0 i < (int)len(nums) i += 1) :
-    (1 if             count = count + (nums[i] == 1  else -1))
-    if count in map:
-        maxLen = max(maxLen, i - map[count])
-         else :
-        map[count] = i
-return maxLen
+    def findMaxLength(self, nums):
+        first_index = {0: -1}  # prefix sum 0 at virtual index -1
 
+        max_len = 0
+        count = 0
+
+        for i in range(len(nums)):
+            count += 1 if nums[i] == 1 else -1
+
+            if count in first_index:
+                max_len = max(max_len, i - first_index[count])
+            else:
+                first_index[count] = i
+
+        return max_len
 ```
 
 ## How the Algorithm Works
@@ -151,43 +154,32 @@ Subarray [0,5]: [0,1,0,0,1,1]
 
 ### 1. Initialize Hash Map
 ```python
-dict[int, int> map
-map[0] = -1  # Base case
-maxLen = 0, count = 0
+first_index: dict[int, int] = {}
+first_index[0] = -1  # Base case
+max_len, count = 0, 0
 
 ```
-- **`map[0] = -1`**: Represents prefix sum 0 before the array starts
+- **`first_index[0] = -1`**: Represents prefix sum 0 before the array starts
 - This allows us to handle subarrays starting at index 0
 - **`count`**: Tracks the current prefix sum
 
 ### 2. Transform and Calculate Prefix Sum
 ```python
-(1 if count = count + (nums[i] == 1  else -1))
+count += 1 if nums[i] == 1 else -1
 
 ```
 - **Convert**: `0` → `-1`, `1` → `+1`
 - **Accumulate**: Add to running count
 
-### 3. Check for Repeated Prefix Sum
+### 3–4. Update with hash map
 ```python
-if count in map:
-    maxLen = max(maxLen, i - map[count])
-
-
-
-
-```
-- **If prefix sum seen before**: Subarray from `map[count] + 1` to `i` has sum 0
-- **Length**: `i - map[count]` (we don't add 1 because `map[count]` is the index before the subarray starts)
-
-### 4. Store First Occurrence
-```python
+if count in first_index:
+    max_len = max(max_len, i - first_index[count])
 else:
-    map[count] = i
-
+    first_index[count] = i
 ```
-- **Store only first occurrence**: To maximize subarray length
-- **Later occurrences**: Would give shorter subarrays
+- **If prefix sum seen before**: subarray from `first_index[count] + 1` to `i` has sum 0; length is `i - first_index[count]`.
+- **Else**: store the first index for this prefix sum (only the first occurrence maximizes length).
 
 ## Why This Works
 
@@ -238,16 +230,18 @@ Subarray [1,5]: prefix[5] = 0 = prefix[1]
 ### Approach 1: Brute Force (TLE)
 
 ```python
-def findMaxLength(self, nums):
-    maxLen = 0
-    for(i = 0 i < len(nums) i += 1) :
-    zeros = 0, ones = 0
-    for(j = i j < len(nums) j += 1) :
-    if(nums[j] == 0) zeros += 1
-    else ones += 1
-    if zeros == ones:
-        maxLen = max(maxLen, j - i + 1)
-return maxLen
+def find_max_length_bruteforce(nums: list[int]) -> int:
+    max_len = 0
+    for i in range(len(nums)):
+        zeros = ones = 0
+        for j in range(i, len(nums)):
+            if nums[j] == 0:
+                zeros += 1
+            else:
+                ones += 1
+            if zeros == ones:
+                max_len = max(max_len, j - i + 1)
+    return max_len
 
 ```
 
@@ -259,19 +253,20 @@ return maxLen
 Since prefix sums can only range from `-n` to `n`, we can use an array:
 
 ```python
-def findMaxLength(self, nums):
+def find_max_length_array(nums: list[int]) -> int:
     n = len(nums)
-    list[int> map(2  n + 1, -2)  # Offset by n
-    map[n] = -1  # map[0] = -1 with offset
-    maxLen = 0, count = 0
-    for(i = 0 i < n i += 1) :
-    (1 if         count += (nums[i] == 1  else -1))
-    idx = count + n  # Offset to positive index
-    if map[idx] != -2:
-        maxLen = max(maxLen, i - map[idx])
-         else :
-        map[idx] = i
-return maxLen
+    offset = n
+    first_at = [-2] * (2 * n + 1)  # -2 = not seen; prefix 0 stored at index offset
+    first_at[offset] = -1
+    max_len = count = 0
+    for i in range(n):
+        count += 1 if nums[i] == 1 else -1
+        idx = count + offset
+        if first_at[idx] != -2:
+            max_len = max(max_len, i - first_at[idx])
+        else:
+            first_at[idx] = i
+    return max_len
 
 ```
 
@@ -416,14 +411,10 @@ Since we need to check all positions, early exit isn't possible.
 ### Memory Optimization
 For very large arrays, consider using array instead of hash map if prefix sum range is bounded.
 
-### Use `contains()` vs `find()`
+### Use `in` for dict membership
 ```python
-# Modern Python20 (your code)
-if(count in map) : ...
-# Alternative (Python17 and earlier)
-if(map.find(count) != map.end()) : ...
-
-
+if count in first_index:
+    ...
 ```
 
 Both are O(1) average case, but `contains()` is more readable.
@@ -433,7 +424,7 @@ Both are O(1) average case, but `contains()` is more readable.
 1. **Readability**: Clear variable names and logic
 2. **Efficiency**: Optimal O(n) time and space
 3. **Correctness**: Handles all edge cases properly
-4. **Modern C++**: Uses `contains()` method (Python20)
+4. **Python**: Uses `in` for dict membership checks
 
 ---
 

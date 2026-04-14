@@ -96,17 +96,46 @@ For each word, sort even-index and odd-index characters separately, concatenate 
 {% raw %}
 ```python
 class Solution:
-def numSpecialEquivGroups(self, words):
-    set[str> groups
-    for w in words:
-        str even = "", odd = ""
-        for (i = 0 i < (int)len(w) i += 1) :
-        if (i % 2 == 0) even += w[i]
-        else odd += w[i]
-    even.sort()
-    odd.sort()
-    groups.insert(even + "|" + odd)
-return len(groups)
+    def numSpecialEquivGroups(self, words):
+        groups = set()
+        
+        for w in words:
+            even = []
+            odd = []
+            
+            for i in range(len(w)):
+                if i % 2 == 0:
+                    even.append(w[i])
+                else:
+                    odd.append(w[i])
+            
+            even.sort()
+            odd.sort()
+            
+            key = "".join(even) + "|" + "".join(odd)
+            groups.add(key)
+        
+        return len(groups)class Solution:
+    def numSpecialEquivGroups(self, words):
+        groups = set()
+        
+        for w in words:
+            even = []
+            odd = []
+            
+            for i in range(len(w)):
+                if i % 2 == 0:
+                    even.append(w[i])
+                else:
+                    odd.append(w[i])
+            
+            even.sort()
+            odd.sort()
+            
+            key = "".join(even) + "|" + "".join(odd)
+            groups.add(key)
+        
+        return len(groups)
 
 ```
 {% endraw %}
@@ -121,20 +150,31 @@ Since characters are lowercase letters (only 26), we can avoid sorting by counti
 {% raw %}
 ```python
 class Solution:
-def numSpecialEquivGroups(self, words):
-    set[str> groups
-    for w in words:
-        even[26] = :0
-    odd[26] = :0
-for (i = 0 i < (int)len(w) i += 1) :
-if (i % 2 == 0) even[w[i] - 'a']++
-else odd[w[i] - 'a']++
-str key = ""
-for (i = 0 i < 26 i += 1) key += to_string(even[i]) + "#"
-for (i = 0 i < 26 i += 1) key += to_string(odd[i]) + "#"
-groups.insert(key)
-return len(groups)
-
+    def numSpecialEquivGroups(self, words):
+        groups = set()
+        
+        for w in words:
+            even = [0] * 26
+            odd = [0] * 26
+            
+            for i in range(len(w)):
+                if i % 2 == 0:
+                    even[ord(w[i]) - ord('a')] += 1
+                else:
+                    odd[ord(w[i]) - ord('a')] += 1
+            
+            key = []
+            for i in range(26):
+                key.append(str(even[i]))
+                key.append("#")
+            
+            for i in range(26):
+                key.append(str(odd[i]))
+                key.append("#")
+            
+            groups.add("".join(key))
+        
+        return len(groups)
 ```
 {% endraw %}
 

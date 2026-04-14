@@ -98,7 +98,6 @@ class Solution:
             pool.shutdown(wait=True)
 
         return list(visited)
-
 ```
 
 ## Solution in Python
@@ -138,7 +137,6 @@ class Solution:
                     for nxt in fut.result():
                         pending.add(ex.submit(worker, nxt))
         return list(visited)
-
 ```
 
 ## Step-by-Step Example

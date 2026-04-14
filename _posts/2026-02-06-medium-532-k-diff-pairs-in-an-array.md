@@ -64,20 +64,25 @@ One pass to build frequency map; then handle k==0 (count values with freq > 1) a
 
 ```python
 class Solution:
-def findPairs(self, nums, k):
-    dict[int, int> freqs
-    for i in nums:
-        freqs[i] += 1
-    rtn = 0
-    if k == 0:
-        for ([_, freq] : freqs) :
-        if (freq > 1) rtn += 1
-     else :
-    for ([num, _] : freqs) :
-    if num + k in freqs:
-        rtn += 1
-return rtn
-
+    def findPairs(self, nums, k):
+        freqs = {}
+        
+        for i in nums:
+            freqs[i] = freqs.get(i, 0) + 1
+        
+        rtn = 0
+        
+        if k == 0:
+            for freq in freqs.values():
+                if freq > 1:
+                    rtn += 1
+        
+        else:
+            for num in freqs:
+                if num + k in freqs:
+                    rtn += 1
+        
+        return rtn
 ```
 
 - **k == 0:** Each value that appears at least twice gives exactly one unique pair (that value with itself).
@@ -90,23 +95,30 @@ Same logic; k==0 uses a map to count frequencies, k>0 uses a set and checks `num
 
 ```python
 class Solution:
-def findPairs(self, nums, k):
-    rtn = 0
-    if k == 0:
-        dict[int, int> hm
-        for num in nums:
-            hm[num]++
-        for (it = hm.begin() it != hm.end() it += 1) :
-        if (it.second > 1) rtn += 1
-     else :
-    set[int> hs
-    for num in nums:
-        hs.insert(num)
-    for (it = hs.begin() it != hs.end() it += 1) :
-    if *it + k in hs:
-        rtn += 1
-return rtn
-
+    def findPairs(self, nums, k):
+        rtn = 0
+        
+        if k == 0:
+            hm = {}
+            
+            for num in nums:
+                hm[num] = hm.get(num, 0) + 1
+            
+            for key, val in hm.items():
+                if val > 1:
+                    rtn += 1
+        
+        else:
+            hs = set()
+            
+            for num in nums:
+                hs.add(num)
+            
+            for x in hs:
+                if x + k in hs:
+                    rtn += 1
+        
+        return rtn
 ```
 
 - **Time:** O(n). **Space:** O(n).

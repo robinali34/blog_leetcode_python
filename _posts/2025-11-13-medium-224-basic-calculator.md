@@ -109,42 +109,47 @@ Use a stack to handle parentheses. When encountering `(`, push current result an
 
 ```python
 class Solution:
-def calculate(self, s):
-    len = s.length()
-    if(len == 0) return 0
-    rtn = 0, last = 0, curr = 0, sign = 1
-    list[int> stk
-    for(i = 0 i < len i += 1) :
-    char ch = s[i]
-    if isdigit(ch):
-        curr = (10  curr) + (ch - '0')
-    switch (ch) :
-    case '+':
-    rtn += sign  curr
-    sign = 1
-    curr = 0
-    break
-    case '-':
-    rtn += sign  curr
-    sign = -1
-    curr = 0
-    break
-    case '(':
-    stk.push(rtn)
-    stk.push(sign)
-    sign = 1
-    rtn = 0
-    break
-    case ')':
-    rtn += sign  curr
-    rtn = stk.top()
-    stk.pop()
-    rtn += stk.top()
-    stk.pop()
-    curr = 0
-    break
-return rtn + (sign  curr)
+    def calculate(self, s):
+        n = len(s)
+        if n == 0:
+            return 0
 
+        rtn = 0
+        curr = 0
+        sign = 1
+
+        stk = []
+
+        for i in range(n):
+            ch = s[i]
+
+            if ch.isdigit():
+                curr = curr * 10 + (ord(ch) - ord('0'))
+
+            if ch == '+':
+                rtn += sign * curr
+                sign = 1
+                curr = 0
+
+            elif ch == '-':
+                rtn += sign * curr
+                sign = -1
+                curr = 0
+
+            elif ch == '(':
+                stk.append(rtn)
+                stk.append(sign)
+                sign = 1
+                rtn = 0
+
+            elif ch == ')':
+                rtn += sign * curr
+                curr = 0
+                sign = stk.pop()
+                prev = stk.pop()
+                rtn = prev + sign * rtn
+
+        return rtn + sign * curr
 ```
 
 ## Solution 2: Optimized Recursive Approach
@@ -156,34 +161,43 @@ Use recursion to naturally handle nested parentheses. This approach is cleaner a
 
 ```python
 class Solution:
-def parseExpr(self, s, idx):
-    result = 0
-    sign = 1
-    num = 0
-    while idx < s.length():
-        char c = s[idx]
-        if isdigit(c):
-            num = num  10 + (c - '0')
-             else if(c == '+') :
-            result += sign  num
-            sign = 1
-            num = 0
-             else if(c == '-') :
-            result += sign  num
-            sign = -1
-            num = 0
-             else if(c == '(') :
-            idx += 1  # Skip '('
-            num = parseExpr(s, idx)  # Recursive call
-             else if(c == ')') :
-            result += sign  num
-            return result  # Return to parent
-        idx += 1
-    return result + sign  num
-def calculate(self, s):
-    idx = 0
-    return parseExpr(s, idx)
+    def parseExpr(self, s, idx):
+        result = 0
+        sign = 1
+        num = 0
 
+        while idx < len(s):
+            c = s[idx]
+
+            if c.isdigit():
+                num = num * 10 + (ord(c) - ord('0'))
+
+            elif c == '+':
+                result += sign * num
+                sign = 1
+                num = 0
+
+            elif c == '-':
+                result += sign * num
+                sign = -1
+                num = 0
+
+            elif c == '(':
+                idx += 1  # Skip '('
+                num, idx = self.parseExpr(s, idx)  # recursive call
+
+            elif c == ')':
+                result += sign * num
+                return result, idx  # return to parent
+
+            idx += 1
+
+        return result + sign * num, idx
+
+    def calculate(self, s):
+        idx = 0
+        result, _ = self.parseExpr(s, idx)
+        return result
 ```
 
 ## Solution 3: Simplified Iterative (No Stack for Numbers)
@@ -195,30 +209,35 @@ A cleaner iterative approach that only uses stack for signs, not numbers.
 
 ```python
 class Solution:
-def calculate(self, s):
-    list[int> signs
-    sign = 1
-    result = 0
-    num = 0
-    signs.push(1)  # Initial sign
-    for c in s:
-        if isdigit(c):
-            num = num  10 + (c - '0')
-             else if(c == '+'  or  c == '-') :
-            result += signs.top()  sign  num
-            num = 0
-            (1 if                 sign = (c == '+')  else -1)
-             else if(c == '(') :
-            signs.push(signs.top()  sign)
-            sign = 1
-             else if(c == ')') :
-            result += signs.top()  sign  num
-            num = 0
-            signs.pop()
-            sign = 1
-    result += signs.top()  sign  num
-    return result
+    def calculate(self, s):
+        signs = []
+        sign = 1
+        result = 0
+        num = 0
 
+        signs.append(1)  # Initial sign
+
+        for c in s:
+            if c.isdigit():
+                num = num * 10 + (ord(c) - ord('0'))
+
+            elif c == '+' or c == '-':
+                result += signs[-1] * sign * num
+                num = 0
+                sign = 1 if c == '+' else -1
+
+            elif c == '(':
+                signs.append(signs[-1] * sign)
+                sign = 1
+
+            elif c == ')':
+                result += signs[-1] * sign * num
+                num = 0
+                signs.pop()
+                sign = 1
+
+        result += signs[-1] * sign * num
+        return result
 ```
 
 ## How the Algorithms Work

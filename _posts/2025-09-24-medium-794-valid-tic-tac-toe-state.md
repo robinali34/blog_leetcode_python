@@ -92,10 +92,6 @@ class Solution:
         if all(board[i][n - 1 - i] == p for i in range(n)):
             return True
         return False
-
-
-
-
 ```
 
 ## Step-by-Step Example

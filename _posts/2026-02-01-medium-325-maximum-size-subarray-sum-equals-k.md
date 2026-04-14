@@ -89,16 +89,19 @@ This problem is a classic application of the prefix sum technique combined with 
 
 ```python
 class Solution:
-def maxSubArrayLen(self, nums, k):
-    max_len = 0
-    for(i = 0 i < len(nums) i += 1) :
-    sum = 0
-    for(j = i j < len(nums) j += 1) :
-    sum += nums[j]
-    if sum == k:
-        max_len = max(max_len, j - i + 1)
-return max_len
-
+    def maxSubArrayLen(self, nums, k):
+        max_len = 0
+        
+        for i in range(len(nums)):
+            s = 0
+            
+            for j in range(i, len(nums)):
+                s += nums[j]
+                
+                if s == k:
+                    max_len = max(max_len, j - i + 1)
+        
+        return max_len
 ```
 
 ### Algorithm Breakdown:
@@ -123,21 +126,26 @@ return max_len
 
 ```python
 class Solution:
-def maxSubArrayLen(self, nums, k):
-    long long prefixSum = 0
-    maxLen = 0
-    N = len(nums)
-    dict[long long, int> cache
-    for(i = 0 i < N i += 1) :
-    prefixSum += nums[i]
-    if prefixSum == k:
-        maxLen = i + 1
-    if prefixSum - k in cache:
-        maxLen = max(maxLen, i - cache[prefixSum - k])
-    if not prefixSum in cache:
-        cache[prefixSum] = i
-return maxLen
-
+    def maxSubArrayLen(self, nums, k):
+        prefixSum = 0
+        maxLen = 0
+        N = len(nums)
+        
+        cache = {}
+        
+        for i in range(N):
+            prefixSum += nums[i]
+            
+            if prefixSum == k:
+                maxLen = i + 1
+            
+            if prefixSum - k in cache:
+                maxLen = max(maxLen, i - cache[prefixSum - k])
+            
+            if prefixSum not in cache:
+                cache[prefixSum] = i
+        
+        return maxLen
 ```
 
 ### Algorithm Breakdown:

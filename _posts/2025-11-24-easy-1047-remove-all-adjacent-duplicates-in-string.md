@@ -113,30 +113,36 @@ Use two pointers to simulate a stack in-place. `left` acts as the stack pointer,
 
 ```python
 class Solution:
-def removeDuplicates(self, s):
-    str stk
-    for ch in s:
-        if not not stk  and  stk[-1] == ch:
-            stk.pop()
-             else :
-            stk.append(ch)
-    return stk
+    def removeDuplicates(self, s):
+        stk = []
 
+        for ch in s:
+            if stk and stk[-1] == ch:
+                stk.pop()
+            else:
+                stk.append(ch)
+
+        return "".join(stk)
 ```
 
 ## Solution 2: In-Place Two Pointers
 
 ```python
 class Solution:
-def removeDuplicates(self, s):
-    left = -1
-    for(right = 0 right < len(s) right += 1) :
-    if left >= 0  and  s[right] == s[left]:
-        left -= 1
-        continue
-    s[left += 1] = s[right]
-return s.substr(0, left + 1)
+    def removeDuplicates(self, s):
+        left = -1
 
+        s = list(s)
+
+        for right in range(len(s)):
+            if left >= 0 and s[right] == s[left]:
+                left -= 1
+                continue
+
+            left += 1
+            s[left] = s[right]
+
+        return "".join(s[:left + 1])
 ```
 
 ## How the Algorithms Work
@@ -306,8 +312,6 @@ stk.append() # Push to stack
 
 ```python
 left = -1  # Points to last valid character (-1 means empty)
-
-
 ```
 
 **Why `left = -1` initially?**
@@ -328,19 +332,22 @@ left = -1  # Points to last valid character (-1 means empty)
 
 ```python
 class Solution:
-def removeDuplicates(self, s):
-    list[char> stk
-    for ch in s:
-        if not not stk  and  stk.top() == ch:
-            stk.pop()
-             else :
-            stk.push(ch)
-    str result
-    while not not stk:
-        result = stk.top() + result
-        stk.pop()
-    return result
+    def removeDuplicates(self, s):
+        stk = []
 
+        for ch in s:
+            if stk and stk[-1] == ch:
+                stk.pop()
+            else:
+                stk.append(ch)
+
+        result = ""
+
+        while stk:
+            result = stk[-1] + result
+            stk.pop()
+
+        return result
 ```
 
 **Pros:**
@@ -358,12 +365,11 @@ def removeDuplicates(self, s):
 
 ```python
 class Solution:
-def removeDuplicates(self, s):
-    for(i = 0 i < (int)len(s) - 1 i += 1) :
-    if s[i] == s[i+1]:
-        return removeDuplicates(s.substr(0, i) + s.substr(i+2))
-return s
-
+    def removeDuplicates(self, s):
+        for i in range(len(s) - 1):
+            if s[i] == s[i + 1]:
+                return self.removeDuplicates(s[:i] + s[i + 2:])
+        return s
 ```
 
 **Pros:**

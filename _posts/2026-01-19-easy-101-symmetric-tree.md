@@ -88,27 +88,34 @@ This problem requires checking if a binary tree is symmetric (mirror of itself).
 ## Solution: Recursive DFS with Helper Function
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def isSymmetric(self, root):
-    if(not root) return True
-    return isMirror(root.left, root.right)
-def isMirror(self, a, b):
-    if(not a  and  not b) return True
-    if(not a  or  not b) return False
-    if(a.val != b.val) return False
-    return isMirror(a.left, b.right)  and
-    isMirror(a.right, b.left)
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 
+
+class Solution:
+    def isSymmetric(self, root):
+        if not root:
+            return True
+        return self.isMirror(root.left, root.right)
+
+    def isMirror(self, a, b):
+        if not a and not b:
+            return True
+
+        if not a or not b:
+            return False
+
+        if a.val != b.val:
+            return False
+
+        return (
+            self.isMirror(a.left, b.right)
+            and self.isMirror(a.right, b.left)
+        )
 ```
 
 ### Algorithm Explanation:
@@ -244,16 +251,23 @@ isSymmetric(1):
 
 ```python
 class Solution:
-def isSymmetric(self, root):
-    if (not root) return True
-    return isMirror(root.left, root.right)
-def isMirror(self, a, b):
-    if (not a  and  not b) return True
-    if (not a  or  not b) return False
-    return a.val == b.val  and
-    isMirror(a.left, b.right)  and
-    isMirror(a.right, b.left)
+    def isSymmetric(self, root):
+        if not root:
+            return True
+        return self.isMirror(root.left, root.right)
 
+    def isMirror(self, a, b):
+        if not a and not b:
+            return True
+
+        if not a or not b:
+            return False
+
+        return (
+            a.val == b.val
+            and self.isMirror(a.left, b.right)
+            and self.isMirror(a.right, b.left)
+        )
 ```
 
 **Key Difference**: Combines value check with recursive calls using AND
@@ -264,20 +278,28 @@ def isMirror(self, a, b):
 
 ```python
 class Solution:
-def isSymmetric(self, root):
-    if (not root) return True
-    list[pair<TreeNode, TreeNode>> st
-    st.push(:root.left, root.right)
-    while not not st:
-        [a, b] = st.top()
-        st.pop()
-        if (not a  and  not b) continue
-        if (not a  or  not b) return False
-        if (a.val != b.val) return False
-        st.push(:a.right, b.left)
-        st.push(:a.left, b.right)
-    return True
+    def isSymmetric(self, root):
+        if not root:
+            return True
 
+        st = [(root.left, root.right)]
+
+        while st:
+            a, b = st.pop()
+
+            if not a and not b:
+                continue
+
+            if not a or not b:
+                return False
+
+            if a.val != b.val:
+                return False
+
+            st.append((a.right, b.left))
+            st.append((a.left, b.right))
+
+        return True
 ```
 
 **Complexity**: 
@@ -288,20 +310,28 @@ def isSymmetric(self, root):
 
 ```python
 class Solution:
-def isSymmetric(self, root):
-    if (not root) return True
-    deque[pair<TreeNode, TreeNode>> q
-    q.push(:root.left, root.right)
-    while not not q:
-        [a, b] = q[0]
-        q.pop()
-        if (not a  and  not b) continue
-        if (not a  or  not b) return False
-        if (a.val != b.val) return False
-        q.push(:a.left, b.right)
-        q.push(:a.right, b.left)
-    return True
+    def isSymmetric(self, root):
+        if not root:
+            return True
 
+        q = [(root.left, root.right)]
+
+        while q:
+            a, b = q.pop(0)
+
+            if not a and not b:
+                continue
+
+            if not a or not b:
+                return False
+
+            if a.val != b.val:
+                return False
+
+            q.append((a.left, b.right))
+            q.append((a.right, b.left))
+
+        return True
 ```
 
 **Complexity**: 

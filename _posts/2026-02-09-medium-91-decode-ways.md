@@ -85,44 +85,60 @@ This is a classic 1D dynamic programming problem, similar to the Fibonacci seque
 
 ```python
 class Solution:
-def numDecodings(self, s):
-    if(not s  or  s[0] == '0') return 0
-    n = s.length()
-    list[int> dp(n, 0)
-    dp[0] = 1
-    for(i = 1 i < n i += 1) :
-    # Single char
-    if s[i] != '0':
-        dp[i] += dp[i - 1]
-    # Two chars
-    two_digits = (s[i - 1] - '0')  10 + (s[i] - '0')
-    if s[i - 1] != '0'  and  two_digits <= 26:
-        (dp[i - 2] if                 dp[i] += (i >= 2  else 1))
-return dp[n - 1]
-
+    def numDecodings(self, s):
+        if not s or s[0] == '0':
+            return 0
+        
+        n = len(s)
+        dp = [0] * n
+        
+        dp[0] = 1
+        
+        for i in range(1, n):
+            # single digit
+            if s[i] != '0':
+                dp[i] += dp[i - 1]
+            
+            # two digits
+            two_digits = int(s[i - 1:i + 1])
+            if 10 <= two_digits <= 26:
+                if i >= 2:
+                    dp[i] += dp[i - 2]
+                else:
+                    dp[i] += 1
+        
+        return dp[n - 1]
 ```
 
 ### Solution 2: Space Optimized DP
 
 ```python
 class Solution:
-def numDecodings(self, s):
-    if(not s  or  s[0] == '0') return 0
-    n = s.length()
-    prev1 = 1, prev2 = 1
-    for(i = 1 i < n i += 1) :
-    curr = 0
-    # Single char
-    if s[i] != '0':
-        curr += prev1
-    # Two chars
-    two_digits = (s[i - 1] - '0')  10 + (s[i] - '0')
-    if s[i - 1] != '0'  and  two_digits <= 26:
-        (prev2 if                 curr += (i >= 2  else 1))
-    prev2 = prev1
-    prev1 = curr
-return prev1
-
+    def numDecodings(self, s):
+        if not s or s[0] == '0':
+            return 0
+        
+        n = len(s)
+        
+        prev2 = 1  # dp[i-2]
+        prev1 = 1  # dp[i-1]
+        
+        for i in range(1, n):
+            curr = 0
+            
+            # single digit decode
+            if s[i] != '0':
+                curr += prev1
+            
+            # two digit decode
+            two_digits = int(s[i-1:i+1])
+            if 10 <= two_digits <= 26:
+                curr += prev2
+            
+            prev2 = prev1
+            prev1 = curr
+        
+        return prev1
 ```
 
 ## Complexity Analysis

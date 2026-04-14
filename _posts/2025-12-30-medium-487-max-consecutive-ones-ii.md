@@ -121,19 +121,23 @@ This problem requires finding the longest sequence of consecutive 1s when we can
 
 ```python
 class Solution:
-def findMaxConsecutiveOnes(self, nums):
-    n = len(nums)
-    rtn = 0, dp0 = 0, dp1 = 0
-    for(i = 0 i < n i += 1) :
-    if nums[i]:
-        dp1 += 1
-        dp0 += 1
-         else :
-        dp1 = dp0 + 1
+    def findMaxConsecutiveOnes(self, nums):
+        n = len(nums)
+        rtn = 0
         dp0 = 0
-    rtn = max(rtn, max(dp0, dp1))
-return rtn
+        dp1 = 0
 
+        for i in range(n):
+            if nums[i]:
+                dp1 += 1
+                dp0 += 1
+            else:
+                dp1 = dp0 + 1
+                dp0 = 0
+
+            rtn = max(rtn, max(dp0, dp1))
+
+        return rtn
 ```
 
 ### **Algorithm Explanation:**

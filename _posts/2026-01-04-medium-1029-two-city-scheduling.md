@@ -106,16 +106,16 @@ This is a **greedy algorithm** problem with a key mathematical insight. The cruc
 
 ```python
 class Solution:
-def twoCitySchedCost(self, costs):
-    sort(costs.begin(), costs.end(), [](u, autov) :
-    return (u[0] - u[1] < v[0] - v[1])
-    )
-    total = 0
-    N = len(costs) / 2
-    for(i = 0 i < N i += 1) :
-    total += costs[i][0] + costs[i + N][1]
-return total
+    def twoCitySchedCost(self, costs):
+        costs.sort(key=lambda x: x[1] - x[0])
 
+        total = 0
+        n = len(costs) // 2
+
+        for i in range(n):
+            total += costs[i][1] + costs[i + n][0]
+
+        return total
 ```
 
 ### **Algorithm Explanation:**

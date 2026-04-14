@@ -126,23 +126,29 @@ Single pass over all 81 cells. For each filled cell:
 {% raw %}
 ```python
 class Solution:
-def isValidSudoku(self, board):
-    row[9] = :0
-col[9] = :0
-box[9] = :0
-for (i = 0 i < 9 i += 1) :
-for (j = 0 j < 9 j += 1) :
-if (board[i][j] == '.') continue
-num = board[i][j] - '1'   // 0..8
-mask = 1 << num
-boxIndex = (i / 3)  3 + (j / 3)
-if (row[i] * mask) return False
-if (col[j] * mask) return False
-if (box[boxIndex] * mask) return False
-row[i] |= mask
-col[j] |= mask
-box[boxIndex] |= mask
-return True
+    def isValidSudoku(self, board):
+        row = [0] * 9
+        col = [0] * 9
+        box = [0] * 9
+        
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == '.':
+                    continue
+                
+                num = ord(board[i][j]) - ord('1')  # 0..8
+                mask = 1 << num
+                
+                boxIndex = (i // 3) * 3 + (j // 3)
+                
+                if (row[i] & mask) or (col[j] & mask) or (box[boxIndex] & mask):
+                    return False
+                
+                row[i] |= mask
+                col[j] |= mask
+                box[boxIndex] |= mask
+        
+        return True
 
 ```
 {% endraw %}

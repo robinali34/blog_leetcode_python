@@ -78,24 +78,34 @@ The key insight is to use a character frequency count as the hash map key. Strin
 
 ```python
 class Solution:
-def groupAnagrams(self, strs):
-    if len(strs) == 0) return list[list[str>>(:
-    dict[str, list[str>> hm
-    count[26]
-    for s in strs:
-        fill(begin(count), end(count), 0)
-        for(char c: s) count[c-'a']++
-        str key = ""
-        for(i = 0 i < 26 i += 1) :
-        key += "#"
-        key += to_string(count[i])
-    if not key in hm) hm[key] = list[str>(:
-    hm[key].append(s)
-list[list[str>> rtn
-for(itr = hm.begin() itr != hm.end() itr += 1) :
-rtn.append(itr.second)
-return rtn
+    def groupAnagrams(self, strs):
+        if len(strs) == 0:
+            return []
 
+        hm = {}
+
+        for s in strs:
+            count = [0] * 26
+
+            for c in s:
+                count[ord(c) - ord('a')] += 1
+
+            key = ""
+            for i in range(26):
+                key += "#"
+                key += str(count[i])
+
+            if key not in hm:
+                hm[key] = []
+
+            hm[key].append(s)
+
+        rtn = []
+
+        for key in hm:
+            rtn.append(hm[key])
+
+        return rtn
 ```
 
 ## How the Algorithm Works
@@ -157,30 +167,17 @@ Groups: ["eat","tea","ate"]  ["tan","nat"]  ["bat"]
 ## Algorithm Breakdown
 
 ```python
-def groupAnagrams(self, strs):
-    # Handle empty input
-    if len(strs) == 0) return list[list[str>>(:
-    # Map: character count key . list of anagrams
-    dict[str, list[str>> hm
-    count[26]  # Count array for 26 lowercase letters
+def group_anagrams(strs: list[str]) -> list[list[str]]:
+    if not strs:
+        return []
+    hm: dict[str, list[str]] = {}
     for s in strs:
-        # Reset count array
-        fill(begin(count), end(count), 0)
-        # Count characters in current str
-        for(char c: s) count[c-'a']++
-        # Build key from character counts
-        str key = ""
-        for(i = 0 i < 26 i += 1) :
-        key += "#"           # Delimiter
-        key += to_string(count[i])  # Count for each letter
-    # Add str to appropriate group
-    if not key in hm) hm[key] = list[str>(:
-    hm[key].append(s)
-# Convert map values to result vector
-list[list[str>> rtn
-for(itr = hm.begin() itr != hm.end() itr += 1) :
-rtn.append(itr.second)
-return rtn
+        count = [0] * 26
+        for c in s:
+            count[ord(c) - ord("a")] += 1
+        key = "".join(f"#{n}" for n in count)
+        hm.setdefault(key, []).append(s)
+    return list(hm.values())
 
 ```
 
@@ -201,17 +198,21 @@ return rtn
 
 ```python
 class Solution:
-def groupAnagrams(self, strs):
-    dict[str, list[str>> hm
-    for s in strs:
-        str key = s
-        key.sort()
-        hm[key].append(s)
-    list[list[str>> rtn
-    for([key, group] : hm) :
-    rtn.append(group)
-return rtn
+    def groupAnagrams(self, strs):
+        hm = {}
 
+        for s in strs:
+            key = ''.join(sorted(s))
+            if key not in hm:
+                hm[key] = []
+            hm[key].append(s)
+
+        rtn = []
+
+        for key in hm:
+            rtn.append(hm[key])
+
+        return rtn
 ```
 
 **Pros:**
@@ -231,20 +232,30 @@ Uses prime numbers to create hash keys, avoiding string concatenation overhead.
 
 ```python
 class Solution:
-def groupAnagrams(self, strs):
-    # Prime numbers for each letter
-    primes[26] = :2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97,101
-dict[long long, list[str>> hm
-for s in strs:
-    long long key = 1
-    for c in s:
-        key = primes[c - 'a']
-    hm[key].append(s)
-list[list[str>> rtn
-for([key, group] : hm) :
-rtn.append(group)
-return rtn
+    def groupAnagrams(self, strs):
+        # Prime numbers for each letter
+        primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
+                  59, 61, 67, 71, 73, 79, 83, 89, 97, 101]
 
+        hm = {}
+
+        for s in strs:
+            key = 1
+
+            for c in s:
+                key *= primes[ord(c) - ord('a')]
+
+            if key not in hm:
+                hm[key] = []
+
+            hm[key].append(s)
+
+        rtn = []
+
+        for key in hm:
+            rtn.append(hm[key])
+
+        return rtn
 ```
 
 **Pros:**
@@ -275,20 +286,16 @@ return rtn
 ### Character Count Array
 
 ```python
-count[26]  # For 26 lowercase letters a-z
-fill(begin(count), end(count), 0)  # Reset to zero
-# Count characters
-for(char c: s) count[c-'a']++  # 'a' maps to index 0, 'z' to 25
+count = [0] * 26
+for c in s:
+    count[ord(c) - ord("a")] += 1
 
 ```
 
 ### Key Construction
 
 ```python
-str key = ""
-for(i = 0 i < 26 i += 1) :
-key += "#"              # Delimiter prevents ambiguity
-key += to_string(count[i])  # Count for letter at position i
+key = "".join(f"#{n}" for n in count)
 
 ```
 
@@ -296,16 +303,10 @@ key += to_string(count[i])  # Count for letter at position i
 - Without delimiter: "12" could mean count[0]=1, count[1]=2 OR count[0]=12
 - With delimiter: "#1#2" unambiguously means count[0]=1, count[1]=2
 
-### Python20 contains() Method
+### Dict setdefault
 
 ```python
-if not key in hm) hm[key] = list[str>(:
-
-```
-
-Alternative (Python11/14):
-```python
-if hm.find(key) == hm.end()) hm[key] = list[str>(:
+hm.setdefault(key, []).append(s)
 
 ```
 

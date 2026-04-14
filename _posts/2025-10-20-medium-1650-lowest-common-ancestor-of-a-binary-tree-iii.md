@@ -74,9 +74,6 @@ class Solution:
 
         return a
 ```
-<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
-read_file
-```
 
 ## Explanation
 
@@ -157,10 +154,6 @@ def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
                 return curr
                 curr = curr.parent
                 return None
-
-
-
-
 ```
 
 ### Approach 2: Depth Calculation
@@ -193,7 +186,6 @@ class Solution:
             q = q.parent
 
         return p
-
 ```
 
 ## Comparison of Approaches

@@ -73,17 +73,21 @@ The Dutch National Flag algorithm uses two pointers to partition the array into 
 
 ```python
 class Solution:
-def sortColors(self, nums):
-    n = len(nums)
-    p0 = 0, p2 = n - 1
-    for(i = 0 i <= p2 i += 1) :
-    while i <= p2  and  nums[i] == 2:
-        swap(nums[i], nums[p2])
-        p2 -= 1
-    if nums[i] == 0:
-        swap(nums[i], nums[p0])
-        p0 += 1
+    def sortColors(self, nums):
+        p0 = 0
+        p2 = len(nums) - 1
+        i = 0
 
+        while i <= p2:
+            if nums[i] == 2:
+                nums[i], nums[p2] = nums[p2], nums[i]
+                p2 -= 1
+            elif nums[i] == 0:
+                nums[i], nums[p0] = nums[p0], nums[i]
+                p0 += 1
+                i += 1
+            else:
+                i += 1
 ```
 
 ## How the Algorithm Works
@@ -235,25 +239,29 @@ This minimizes swaps because:
 
 ```python
 class Solution:
-def sortColorsMinSwaps(self, nums):
-    n = len(nums)
-    p0 = 0, p2 = n - 1
-    # First pass: Move all 2s to the end
-    while p0 <= p2:
-        if nums[p2] == 2:
-            p2 -= 1
-             else if(nums[p0] == 2) :
-            swap(nums[p0], nums[p2])
-            p2 -= 1
-             else :
-            p0 += 1
-    # Second pass: Move all 0s to the front
-    p0 = 0
-    for(i = 0 i <= p2 i += 1) :
-    if nums[i] == 0:
-        swap(nums[i], nums[p0])
-        p0 += 1
+    def sortColorsMinSwaps(self, nums):
+        n = len(nums)
+        p0 = 0
+        p2 = n - 1
 
+        # First pass: Move all 2s to the end
+        while p0 <= p2:
+            if nums[p2] == 2:
+                p2 -= 1
+
+            elif nums[p0] == 2:
+                nums[p0], nums[p2] = nums[p2], nums[p0]
+                p2 -= 1
+
+            else:
+                p0 += 1
+
+        # Second pass: Move all 0s to the front
+        p0 = 0
+        for i in range(p2 + 1):
+            if nums[i] == 0:
+                nums[i], nums[p0] = nums[p0], nums[i]
+                p0 += 1
 ```
 
 ### Alternative: Single-Pass Greedy Approach
@@ -262,25 +270,27 @@ We can also do this in a single pass by being more strategic about swaps:
 
 ```python
 class Solution:
-def sortColorsMinSwaps(self, nums):
-    n = len(nums)
-    left = 0, right = n - 1
-    i = 0
-    while i <= right:
-        if nums[i] == 0:
-            # Move 0 to front
-            swap(nums[i], nums[left])
-            left += 1
-            i += 1
-             else if(nums[i] == 2) :
-            # Move 2 to end, but don't increment i
-            # because swapped element needs to be checked
-            swap(nums[i], nums[right])
-            right -= 1
-             else :
-            # nums[i] == 1, leave it
-            i += 1
+    def sortColorsMinSwaps(self, nums):
+        n = len(nums)
+        left = 0
+        right = n - 1
+        i = 0
 
+        while i <= right:
+            if nums[i] == 0:
+                # Move 0 to front
+                nums[i], nums[left] = nums[left], nums[i]
+                left += 1
+                i += 1
+
+            elif nums[i] == 2:
+                # Move 2 to end, but don't increment i
+                nums[i], nums[right] = nums[right], nums[i]
+                right -= 1
+
+            else:
+                # nums[i] == 1, leave it
+                i += 1
 ```
 
 ### Why This Minimizes Swaps?

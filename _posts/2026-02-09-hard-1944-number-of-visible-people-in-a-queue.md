@@ -87,24 +87,24 @@ We maintain a **monotonic decreasing stack** from right to left.
 
 ```python
 class Solution:
-def canSeePersonsCount(self, heights):
-    n = len(heights)
-    list[int> rtn(n, 0)
-    list[int> st
-    # Iterate from right to left
-    for(i = n - 1 i >= 0 i -= 1) :
-    # Person i can see everyone in the stack that is shorter than them
-    while not not st  and  heights[i] > st.top():
-        st.pop()
-        rtn[i]++
-    # If there's someone left in the stack, they are taller than person i
-    # Person i can see this taller person, but no one beyond them
-    if not not st:
-        rtn[i]++
-    # Push current height to maintain monotonic decreasing stack (from top)
-    st.push(heights[i])
-return rtn
-
+    def canSeePersonsCount(self, heights):
+        n = len(heights)
+        res = [0] * n
+        st = []  # monotonic decreasing stack
+        
+        for i in range(n - 1, -1, -1):
+            # pop all shorter people
+            while st and heights[i] > st[-1]:
+                st.pop()
+                res[i] += 1
+            
+            # if someone taller exists, we can see exactly one
+            if st:
+                res[i] += 1
+            
+            st.append(heights[i])
+        
+        return res
 ```
 
 ## Example Walkthrough

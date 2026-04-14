@@ -139,41 +139,64 @@ Combines all operators with parentheses. Use recursion or stack to handle nestin
 
 ```python
 class Solution:
-def parseExpr(self, s, idx):
-    char op = '+'
-    list[int> stk
-    for( idx < len(s) idx += 1) :
-    if(isspace(s[idx])) continue
-    long num = 0
-    if s[idx] == '(':
-        num = parseExpr(s, idx += 1)
-         else if(isdigit(s[idx])) :
-        num = parseNum(s, idx)
-        idx -= 1
-         else if(s[idx] == ')') :
-        break
-         else :
-        continue
-    switch(op) :
-    case '+': stk.append(num) break
-    case '-': stk.append(-num) break
-    case '': stk[-1] = num break
-    case '/': stk[-1] /= num break
-if idx + 1 < len(s):
-    op = s[idx + 1]
-result = 0
-for(num: stk) result += num
-return result
-def parseNum(self, s, idx):
-    long num = 0
-    while idx < len(s)  and  isdigit(s[idx]):
-        num = num  10 + (s[idx] - '0')
-        idx += 1
-    return num
-def calculate(self, s):
-    idx = 0
-    return parseExpr(s, idx)
+    def parseExpr(self, s, idx):
+        op = '+'
+        stk = []
 
+        while idx < len(s):
+            if s[idx].isspace():
+                idx += 1
+                continue
+
+            num = 0
+
+            if s[idx] == '(':
+                idx += 1
+                num, idx = self.parseExpr(s, idx)
+
+            elif s[idx].isdigit():
+                num, idx = self.parseNum(s, idx)
+                idx -= 1
+
+            elif s[idx] == ')':
+                break
+
+            else:
+                op = s[idx]
+                idx += 1
+                continue
+
+            if op == '+':
+                stk.append(num)
+            elif op == '-':
+                stk.append(-num)
+            elif op == '*':
+                stk[-1] = stk[-1] * num
+            elif op == '/':
+                stk[-1] = stk[-1] // num
+
+            if idx < len(s):
+                if idx + 1 < len(s):
+                    op = s[idx + 1]
+
+            idx += 1
+
+        result = sum(stk)
+        return result, idx
+
+    def parseNum(self, s, idx):
+        num = 0
+
+        while idx < len(s) and s[idx].isdigit():
+            num = num * 10 + (ord(s[idx]) - ord('0'))
+            idx += 1
+
+        return num, idx
+
+    def calculate(self, s):
+        idx = 0
+        result, _ = self.parseExpr(s, idx)
+        return result
 ```
 
 **Key Points:**

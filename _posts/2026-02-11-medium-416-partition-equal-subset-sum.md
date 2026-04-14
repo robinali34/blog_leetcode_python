@@ -97,16 +97,27 @@ Space Complexity: $O(\text{target})$
 {% raw %}
 ```python
 class Solution:
-def canPartition(self, nums):
-    totalSum = accumulate(nums.begin(), nums.end(), 0)
-    if (totalSum % 2 != 0) return False
-    subSetSum = totalSum / 2
-    return dfs(nums, len(nums) - 1, subSetSum)
-def dfs(self, nums, n, subSetSum):
-    if (subSetSum == 0) return True
-    if (n < 0  or  subSetSum < 0) return False
-    return dfs(nums, n - 1, subSetSum - nums[n])  or  dfs(nums, n - 1, subSetSum)
-
+    def canPartition(self, nums):
+        totalSum = sum(nums)
+        
+        if totalSum % 2 != 0:
+            return False
+        
+        target = totalSum // 2
+        
+        return self.dfs(nums, len(nums) - 1, target)
+    
+    def dfs(self, nums, n, target):
+        if target == 0:
+            return True
+        if n < 0 or target < 0:
+            return False
+        
+        # take or not take
+        return (
+            self.dfs(nums, n - 1, target - nums[n]) or
+            self.dfs(nums, n - 1, target)
+        )
 ```
 {% endraw %}
 
@@ -115,21 +126,34 @@ def dfs(self, nums, n, subSetSum):
 {% raw %}
 ```python
 class Solution:
-def canPartition(self, nums):
-    totalSum = accumulate(nums.begin(), nums.end(), 0)
-    if (totalSum % 2 != 0) return False
-    subSetSum = totalSum / 2
-    n = len(nums)
-    # memo[i][j]: -1 unvisited, 0 False, 1 True
-    list[list[int>> memo(n, list[int>(subSetSum + 1, -1))
-    return dfs(nums, n - 1, subSetSum, memo)
-def dfs(self, nums, i, target, memo):
-    if (target == 0) return True
-    if (i < 0  or  target < 0) return False
-    if (memo[i][target] != -1) return memo[i][target]
-    bool result = dfs(nums, i - 1, target - nums[i], memo)  or
-    dfs(nums, i - 1, target, memo)
-    return memo[i][target] = result
+    def canPartition(self, nums):
+        totalSum = sum(nums)
+        
+        if totalSum % 2 != 0:
+            return False
+        
+        target = totalSum // 2
+        n = len(nums)
+        
+        memo = [[-1] * (target + 1) for _ in range(n)]
+        
+        return self.dfs(nums, n - 1, target, memo)
+    
+    def dfs(self, nums, i, target, memo):
+        if target == 0:
+            return True
+        if i < 0 or target < 0:
+            return False
+        
+        if memo[i][target] != -1:
+            return memo[i][target]
+        
+        # not take OR take
+        take = self.dfs(nums, i - 1, target - nums[i], memo)
+        not_take = self.dfs(nums, i - 1, target, memo)
+        
+        memo[i][target] = 1 if (take or not_take) else 0
+        return memo[i][target] == 1
 
 ```
 {% endraw %}
@@ -139,23 +163,32 @@ def dfs(self, nums, i, target, memo):
 {% raw %}
 ```python
 class Solution:
-def canPartition(self, nums):
-    sum = accumulate(nums.begin(), nums.end(), 0)
-    if (sum % 2) return False
-    subSetSum = sum / 2
-    n = len(nums)
-    # dp[i][j] means whether sum j is possible using first i items
-    list[list[bool>> dp(n + 1, list[bool>(subSetSum + 1, False))
-    # Base case: sum 0 is always possible (by choosing nothing)
-    for (i = 0 i <= n i += 1) dp[i][0] = True
-    for (i = 1 i <= n i += 1) :
-    curr = nums[i - 1]
-    for (j = 1 j <= subSetSum j += 1) :
-    if j < curr:
-        dp[i][j] = dp[i - 1][j]
-         else :
-        dp[i][j] = dp[i - 1][j] * or  dp[i - 1][j - curr]
-return dp[n][subSetSum]
+    def canPartition(self, nums):
+        total = sum(nums)
+        
+        if total % 2 != 0:
+            return False
+        
+        target = total // 2
+        n = len(nums)
+        
+        # dp[i][j] = can we form sum j using first i elements
+        dp = [[False] * (target + 1) for _ in range(n + 1)]
+        
+        # base case: sum 0 is always possible
+        for i in range(n + 1):
+            dp[i][0] = True
+        
+        for i in range(1, n + 1):
+            curr = nums[i - 1]
+            
+            for j in range(1, target + 1):
+                if j < curr:
+                    dp[i][j] = dp[i - 1][j]
+                else:
+                    dp[i][j] = dp[i - 1][j] or dp[i - 1][j - curr]
+        
+        return dp[n][target]
 
 ```
 {% endraw %}
@@ -165,17 +198,22 @@ return dp[n][subSetSum]
 {% raw %}
 ```python
 class Solution:
-def canPartition(self, nums):
-    sum = accumulate(nums.begin(), nums.end(), 0)
-    if (sum % 2) return False
-    target = sum / 2
-    list[bool> dp(target + 1, False)
-    dp[0] = True
-    for num in nums:
-        # Iterate backwards to avoid using the same element multiple times for the same sum
-        for (j = target j >= num j -= 1) :
-        dp[j] = dp[j] * or  dp[j - num]
-return dp[target]
+    def canPartition(self, nums):
+        total = sum(nums)
+        
+        if total % 2 != 0:
+            return False
+        
+        target = total // 2
+        
+        dp = [False] * (target + 1)
+        dp[0] = True
+        
+        for num in nums:
+            for j in range(target, num - 1, -1):
+                dp[j] = dp[j] or dp[j - num]
+        
+        return dp[target]
 
 ```
 {% endraw %}

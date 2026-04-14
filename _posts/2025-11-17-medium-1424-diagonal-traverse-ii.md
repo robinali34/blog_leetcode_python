@@ -84,25 +84,28 @@ We can solve this problem using two approaches:
 **Key Insight:** Elements on the same diagonal have the same sum of row and column indices (`row + col`). We can group all elements by this diagonal index, then iterate through diagonals in ascending order.
 
 ```python
-using namespace std
 class Solution:
-def findDiagonalOrder(self, nums):
-    dict[int, list[int>> groups
-    # Traverse from bottom to top to maintain diagonal order
-    for (row = (int)len(nums) - 1 row >= 0 row -= 1) :
-    for (col = 0 col < (int)nums[row].__len__() col += 1) :
-    diagonal = row + col
-    groups[diagonal].append(nums[row][col])
-list[int> rtn
-rtn.reserve(len(nums)  nums[0].__len__())
-# Process diagonals in order (0, 1, 2, ...)
-curr = 0
-while groups.find(curr) != groups.end():
-    for num in groups[curr]:
-        rtn.append(num)
-    curr += 1
-return rtn
+    def findDiagonalOrder(self, nums):
+        from collections import defaultdict
 
+        groups = defaultdict(list)
+
+        # Traverse from bottom to top to maintain diagonal order
+        for row in range(len(nums) - 1, -1, -1):
+            for col in range(len(nums[row])):
+                diagonal = row + col
+                groups[diagonal].append(nums[row][col])
+
+        rtn = []
+
+        # Process diagonals in order (0, 1, 2, ...)
+        curr = 0
+        while curr in groups:
+            for num in groups[curr]:
+                rtn.append(num)
+            curr += 1
+
+        return rtn
 ```
 
 **Python20 Optimizations:**
@@ -122,25 +125,33 @@ return rtn
 - The cell to the right: `(row, col + 1)`
 
 ```python
-using namespace std
 class Solution:
-def findDiagonalOrder(self, nums):
-    deque[pair<int, int>> q
-    q.push(:0, 0)
-    list[int> rtn
-    rtn.reserve(len(nums)  nums[0].__len__())
-    while not not q:
-        [row, col] = q[0]
-        q.pop()
-        rtn.append(nums[row][col])
-        # If in first column, add cell below
-        if col == 0  and  row + 1 < (int)len(nums):
-            q.push(:row + 1, col)
-        # Add cell to the right
-        if col + 1 < (int)nums[row].__len__():
-            q.push(:row, col + 1)
-    return rtn
+    def findDiagonalOrder(self, nums):
+        from collections import deque
 
+        q = deque()
+        q.append((0, 0))
+
+        rtn = []
+
+        m = len(nums)
+        for r in nums:
+            pass
+
+        while q:
+            row, col = q.popleft()
+
+            rtn.append(nums[row][col])
+
+            # If in first column, add cell below
+            if col == 0 and row + 1 < len(nums):
+                q.append((row + 1, col))
+
+            # Add cell to the right
+            if col + 1 < len(nums[row]):
+                q.append((row, col + 1))
+
+        return rtn
 ```
 
 **Python20 Optimizations:**

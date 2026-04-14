@@ -85,161 +85,85 @@ We use a combination of hash map and doubly linked list to achieve O(1) operatio
 ### Solution 1: Using list (Recommended - Python20 Optimized)
 
 ```python
-using namespace std
-class LRUCache:
-capacity_
-dict[int, list<pair<int, int>>.iterator> cache_
-list<pair<int, int>> lru_list_
-# Helper to move node to front (most recently used)
-def moveToFront(self, list<pair<int, it):
-    if it != lru_list_.begin():
-        lru_list_.splice(lru_list_.begin(), lru_list_, it)
-explicit LRUCache(capacity)
-: capacity_(capacity)
-:
-cache_.reserve(capacity_)  # Pre-allocate hash map
-def get(self, key):
-    it = cache_.find(key)
-    if it == cache_.end():
-        return -1
-    # Move to front (most recently used)
-    moveToFront(it.second)
-    return it.second.second
-def put(self, key, value):
-    it = cache_.find(key)
-    if it != cache_.end():
-        # Update existing key
-        it.second.second = value
-        moveToFront(it.second)
-         else :
-        # Add new key
-        if len(cache_) >= capacity_:
-            # Evict least recently used (back of list)
-            [lru_key, _] = lru_list_[-1]
-            cache_.erase(lru_key)
-            lru_list_.pop()
-        # Insert at front
-        lru_list_.emplace_front(key, value)
-        cache_[key] = lru_list_.begin()
+from collections import OrderedDict
 
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.cache: OrderedDict[int, int] = OrderedDict()
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.capacity:
+            self.cache.popitem(last=False)
 ```
 
 ### Solution 2: Custom Doubly Linked List (Python20 Optimized)
 
 ```python
-using namespace std
-class LRUCache:
-struct Node :
-key
-value
-Node next
-Node prev
-Node(k, v)
-: key(k), value(v), next(None), prev(None) :
-capacity_
-dict[int, Node> cache_
-# Dummy head and tail for easier list manipulation
-unique_ptr<Node> head_
-unique_ptr<Node> tail_
-# Add node right before tail (most recently used)
-def addNode(self, node):
-    Node prev_end = tail_.prev
-    prev_end.next = node
-    node.prev = prev_end
-    node.next = tail_.get()
-    tail_.prev = node
-# Remove node from list
-def removeNode(self, node):
-    node.prev.next = node.next
-    node.next.prev = node.prev
-# Move node to end (most recently used)
-def moveToEnd(self, node):
-    removeNode(node)
-    addNode(node)
-explicit LRUCache(capacity)
-: capacity_(capacity)
-, head_(make_unique<Node>(-1, -1))
-, tail_(make_unique<Node>(-1, -1))
-:
-head_.next = tail_.get()
-tail_.prev = head_.get()
-cache_.reserve(capacity_)
-~LRUCache() :
-# Clean up nodes
-Node current = head_.next
-while current != tail_.get():
-    Node next = current.next
-    delete current
-    current = next
-# Delete copy constructor and assignment
-LRUCache(LRUCache) = delete
-LRUCache operator=(LRUCache) = delete
-def get(self, key):
-    it = cache_.find(key)
-    if it == cache_.end():
-        return -1
-    Node node = it.second
-    moveToEnd(node)
-    return node.value
-def put(self, key, value):
-    it = cache_.find(key)
-    if it != cache_.end():
-        # Update existing
-        Node node = it.second
-        node.value = value
-        moveToEnd(node)
-         else :
-        # Add new
-        if len(cache_) >= capacity_:
-            # Evict least recently used (head.next)
-            Node lru = head_.next
-            removeNode(lru)
-            cache_.erase(lru.key)
-            delete lru
-        Node newNode = Node(key, value)
-        addNode(newNode)
-        cache_[key] = newNode
+class _Node:
+    __slots__ = ("key", "val", "prev", "next")
 
+    def __init__(self, key: int = 0, val: int = 0):
+        self.key, self.val = key, val
+        self.prev = self.next = None
+
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.mp: dict[int, _Node] = {}
+        self.head = _Node()
+        self.tail = _Node()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def _remove(self, node: _Node) -> None:
+        p, n = node.prev, node.next
+        p.next, n.prev = n, p
+
+    def _add_to_front(self, node: _Node) -> None:
+        n = self.head.next
+        self.head.next = node
+        node.prev = self.head
+        node.next = n
+        n.prev = node
+
+    def get(self, key: int) -> int:
+        if key not in self.mp:
+            return -1
+        node = self.mp[key]
+        self._remove(node)
+        self._add_to_front(node)
+        return node.val
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.mp:
+            node = self.mp[key]
+            node.val = value
+            self._remove(node)
+            self._add_to_front(node)
+            return
+        if len(self.mp) >= self.capacity:
+            lru = self.tail.prev
+            self._remove(lru)
+            del self.mp[lru.key]
+        node = _Node(key, value)
+        self.mp[key] = node
+        self._add_to_front(node)
 ```
 
 ### Solution 3: Most Optimized with Move Semantics
 
-```python
-#include <unordered_map>
-#include <list>
-#include <utility>
-class LRUCache:
-capacity_
-std.dict[int, std.list<std.pair<int, int>>.iterator> cache_
-std.list<std.pair<int, int>> lru_list_
-explicit LRUCache(capacity)
-: capacity_(capacity)
-:
-cache_.reserve(capacity_)
-[[nodiscard]] get(key) :
-it = cache_.find(key)
-if it == cache_.end():
-    return -1
-# Move to front using splice (O(1))
-lru_list_.splice(lru_list_.begin(), lru_list_, it.second)
-return it.second.second
-def put(self, key, value):
-    it = cache_.find(key)
-    if it != cache_.end():
-        # Update and move to front
-        it.second.second = value
-        lru_list_.splice(lru_list_.begin(), lru_list_, it.second)
-         else :
-        # Check capacity
-        if len(cache_) >= capacity_:
-            # Evict LRU (back of list)
-            cache_.erase(lru_list_[-1].first)
-            lru_list_.pop()
-        # Insert at front
-        lru_list_.emplace_front(key, value)
-        cache_[key] = lru_list_.begin()
-
-```
+Same as Solution 1 (`OrderedDict` gives O(1) `move_to_end` / `popitem`); in C++ you would pair `std::list` with `std::unordered_map` iterators and `splice`.
 
 ## Key Optimizations (Python20)
 

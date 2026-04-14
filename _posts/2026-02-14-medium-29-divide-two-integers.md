@@ -142,20 +142,27 @@ Each bit of the quotient is determined from most significant to least significan
 {% raw %}
 ```python
 class Solution:
-def divide(self, dividend, divisor):
-    # Handle overflow case
-    if (dividend == INT_MIN  and  divisor == -1) return INT_MAX
-    bool negative = (dividend < 0) ^ (divisor < 0)
-    long long dvd = llabs((long long)dividend)
-    long long dvs = llabs((long long)divisor)
-    long long rtn = 0
-    for (i = 31 i >= 0 i -= 1) :
-    if (dvd >> i) >= dvs:
-        rtn += (1LL << i)
-        dvd -= (dvs << i)
-if (negative) rtn = -rtn
-return (int)rtn
-
+    def divide(self, dividend, divisor):
+        INT_MAX = 2**31 - 1
+        INT_MIN = -2**31
+        
+        # overflow case
+        if dividend == INT_MIN and divisor == -1:
+            return INT_MAX
+        
+        negative = (dividend < 0) ^ (divisor < 0)
+        
+        dvd = abs(dividend)
+        dvs = abs(divisor)
+        
+        result = 0
+        
+        for i in range(31, -1, -1):
+            if (dvd >> i) >= dvs:
+                result += (1 << i)
+                dvd -= (dvs << i)
+        
+        return -result if negative else result
 ```
 {% endraw %}
 
@@ -174,23 +181,58 @@ Instead of iterating over all 32 bits, repeatedly double `divisor` until it exce
 {% raw %}
 ```python
 class Solution:
-def divide(self, dividend, divisor):
-    if dividend == INT_MIN  and  divisor == -1:
-    return INT_MAX
-    bool negative = (dividend < 0) ^ (divisor < 0)
-    long long a = llabs((long long)dividend)
-    long long b = llabs((long long)divisor)
-    long long result = 0
-    while a >= b:
-        long long temp = b
-        long long multiple = 1
-        while a >= (temp << 1):
-            temp <<= 1
-            multiple <<= 1
-        a -= temp
-        result += multiple
-    (-(int)result if         return negative  else (int)result)
-
+    def divide(self, dividend, divisor):
+        INT_MAX = 2**31 - 1
+        INT_MIN = -2**31
+        
+        if dividend == INT_MIN and divisor == -1:
+            return INT_MAX
+        
+        negative = (dividend < 0) ^ (divisor < 0)
+        
+        a = abs(dividend)
+        b = abs(divisor)
+        
+        result = 0
+        
+        while a >= b:
+            temp = b
+            multiple = 1
+            
+            while a >= (temp << 1):
+                temp <<= 1
+                multiple <<= 1
+            
+            a -= temp
+            result += multiple
+        
+        return -result if negative else resultclass Solution:
+    def divide(self, dividend, divisor):
+        INT_MAX = 2**31 - 1
+        INT_MIN = -2**31
+        
+        if dividend == INT_MIN and divisor == -1:
+            return INT_MAX
+        
+        negative = (dividend < 0) ^ (divisor < 0)
+        
+        a = abs(dividend)
+        b = abs(divisor)
+        
+        result = 0
+        
+        while a >= b:
+            temp = b
+            multiple = 1
+            
+            while a >= (temp << 1):
+                temp <<= 1
+                multiple <<= 1
+            
+            a -= temp
+            result += multiple
+        
+        return -result if negative else result
 ```
 {% endraw %}
 

@@ -93,29 +93,42 @@ This problem requires finding the **longest path in a DAG (Directed Acyclic Grap
 
 ```python
 class Solution:
-def minimumSemesters(self, n, relations):
-    list[list[int>> graph(n + 1)
-    for relation in relations:
-        graph[relation[0]].append(relation[1])
-    list[int> visited(n + 1, 0)
-    maxLen = 1
-    for(node = 1 node < n + 1 node += 1) :
-    len = dfs(node, graph, visited)
-    if(len == -1) return -1 # Found a cycle
-    maxLen = max(maxLen, len)
-return maxLen
-def dfs(self, node, graph, visited):
-    if visited[node] != 0:
-        return visited[node]
-    visited[node] = -1
-    maxLen = 1
-    for endNode in graph[node]:
-        len = dfs(endNode, graph, visited)
-        if(len == -1) return -1
-        maxLen = max(maxLen, len + 1)
-    visited[node] = maxLen
-    return maxLen
-
+    def minimumSemesters(self, n, relations):
+        graph = [[] for _ in range(n + 1)]
+        
+        for relation in relations:
+            graph[relation[0]].append(relation[1])
+        
+        visited = [0] * (n + 1)
+        maxLen = 1
+        
+        def dfs(node):
+            if visited[node] != 0:
+                return visited[node]
+            
+            visited[node] = -1
+            maxLen = 1
+            
+            for endNode in graph[node]:
+                length = dfs(endNode)
+                
+                if length == -1:
+                    return -1
+                
+                maxLen = max(maxLen, length + 1)
+            
+            visited[node] = maxLen
+            return maxLen
+        
+        for node in range(1, n + 1):
+            length = dfs(node)
+            
+            if length == -1:
+                return -1
+            
+            maxLen = max(maxLen, length)
+        
+        return maxLen
 ```
 
 ### Algorithm Explanation:
@@ -303,32 +316,40 @@ Result: return -1 ✓
 ## Alternative Approach: Topological Sort (Kahn's Algorithm)
 
 ```python
-class Solution:
-def minimumSemesters(self, n, relations):
-    list[list[int>> graph(n + 1)
-    list[int> indegree(n + 1, 0)
-    for relation in relations:
-        graph[relation[0]].append(relation[1])
-        indegree[relation[1]]++
-    deque[int> q
-    for(i = 1 i <= n i += 1) :
-    if indegree[i] == 0:
-        q.push(i)
-semesters = 0
-coursesTaken = 0
-while not not q:
-    semesters += 1
-    size = len(q)
-    for(i = 0 i < size i += 1) :
-    node = q[0]
-    q.pop()
-    coursesTaken += 1
-    for neighbor in graph[node]:
-        indegree[neighbor]--
-        if indegree[neighbor] == 0:
-            q.push(neighbor)
-(semesters if         return coursesTaken == n  else -1)
+from collections import deque
 
+class Solution:
+    def minimumSemesters(self, n, relations):
+        graph = [[] for _ in range(n + 1)]
+        indegree = [0] * (n + 1)
+        
+        for relation in relations:
+            graph[relation[0]].append(relation[1])
+            indegree[relation[1]] += 1
+        
+        q = deque()
+        
+        for i in range(1, n + 1):
+            if indegree[i] == 0:
+                q.append(i)
+        
+        semesters = 0
+        coursesTaken = 0
+        
+        while q:
+            semesters += 1
+            size = len(q)
+            
+            for _ in range(size):
+                node = q.popleft()
+                coursesTaken += 1
+                
+                for neighbor in graph[node]:
+                    indegree[neighbor] -= 1
+                    if indegree[neighbor] == 0:
+                        q.append(neighbor)
+        
+        return semesters if coursesTaken == n else -1
 ```
 
 **Time Complexity:** O(V + E)  

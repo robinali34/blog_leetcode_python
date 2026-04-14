@@ -109,37 +109,44 @@ Use a stack to store numbers. When encountering `+` or `-`, push the number (wit
 
 ```python
 class Solution:
-def calculate(self, s):
-    len = s.length()
-    if(len == 0) return 0
-    list[int> stk
-    char operation = '+'
-    curr = 0
-    for(i = 0 i < len i += 1) :
-    char ch = s[i]
-    if isdigit(ch):
-        curr = (curr  10) + (ch - '0')
-    if not isdigit(ch)  and  not isspace(ch)  or  i == len - 1:
-        if operation == '-':
-            stk.push(-curr)
-             else if(operation == '+') :
-            stk.push(curr)
-             else if(operation == '') :
-            stkTop = stk.top()
-            stk.pop()
-            stk.push(stkTop  curr)
-             else if(operation == '/') :
-            stkTop = stk.top()
-            stk.pop()
-            stk.push(stkTop / curr)
-        operation = ch
-        curr = 0
-rtn = 0
-while not not stk:
-    rtn += stk.top()
-    stk.pop()
-return rtn
+    def calculate(self, s):
+        n = len(s)
+        if n == 0:
+            return 0
 
+        stk = []
+        operation = '+'
+        curr = 0
+
+        for i in range(n):
+            ch = s[i]
+
+            if ch.isdigit():
+                curr = curr * 10 + (ord(ch) - ord('0'))
+
+            if (not ch.isdigit() and not ch.isspace()) or i == n - 1:
+                if operation == '-':
+                    stk.append(-curr)
+
+                elif operation == '+':
+                    stk.append(curr)
+
+                elif operation == '*':
+                    top = stk.pop()
+                    stk.append(top * curr)
+
+                elif operation == '/':
+                    top = stk.pop()
+                    stk.append(int(top / curr))
+
+                operation = ch
+                curr = 0
+
+        rtn = 0
+        while stk:
+            rtn += stk.pop()
+
+        return rtn
 ```
 
 ## Solution 2: Optimized Without Stack
@@ -151,28 +158,38 @@ Instead of using a stack, use variables to track the last value and current resu
 
 ```python
 class Solution:
-def calculate(self, s):
-    len = s.length()
-    if (len == 0) return 0
-    curr = 0, last = 0, rtn = 0
-    char sign = '+'
-    for(i = 0 i < len i += 1) :
-    char ch = s[i]
-    if isdigit(ch):
-        curr = (curr  10) + (ch - '0')
-    if not isdigit(ch)  and  not isspace(ch)  or  i == len - 1:
-        if sign == '+'  or  sign == '-':
-            rtn += last
-            (curr if                     last = (sign == '+')  else -curr)
-             else if(sign == '') :
-            last = last  curr
-             else if(sign == '/') :
-            last = last / curr
-        sign = ch
-        curr = 0
-rtn += last
-return rtn
+    def calculate(self, s):
+        n = len(s)
+        if n == 0:
+            return 0
 
+        curr = 0
+        last = 0
+        rtn = 0
+        sign = '+'
+
+        for i in range(n):
+            ch = s[i]
+
+            if ch.isdigit():
+                curr = curr * 10 + (ord(ch) - ord('0'))
+
+            if (not ch.isdigit() and not ch.isspace()) or i == n - 1:
+                if sign == '+' or sign == '-':
+                    rtn += last
+                    last = curr if sign == '+' else -curr
+
+                elif sign == '*':
+                    last = last * curr
+
+                elif sign == '/':
+                    last = int(last / curr)
+
+                sign = ch
+                curr = 0
+
+        rtn += last
+        return rtn
 ```
 
 ## How the Algorithms Work

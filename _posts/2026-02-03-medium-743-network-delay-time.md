@@ -102,37 +102,44 @@ This is a classic shortest path problem. We need to find the shortest distance f
 
 ```python
 class Solution:
-def networkDelayTime(self, times, n, k):
-    # Build adjacency matrix
-    # Initialize with "infinity" (LLONG_MAX)
-    list[list[long long>> adj(n, list[long long>(n, LLONG_MAX))
-    for(t : times) :
-    u = t[0]-1, v = t[1]-1, w = t[2]
-    adj[u][v] = w  # edge from u to v
-# Distance array
-list[long long> dist(n, LLONG_MAX)
-dist[k-1] = 0
-# Visited array
-list[bool> visited(n, False)
-# Dijkstra main loop (without priority queue)
-for(i = 0 i < n i += 1) :
-# Pick the unvisited node with the smallest distance
-long long minDist = LLONG_MAX
-u = -1
-for(j = 0 j < n j += 1) :
-if not visited[j] * and  dist[j] < minDist:
-    minDist = dist[j]
-    u = j
-if(u == -1) break # all remaining nodes are unreachable
-visited[u] = True
-# Relax neighbors
-for(v = 0 v < n v += 1) :
-if adj[u][v] != LLONG_MAX  and  dist[u] + adj[u][v] < dist[v]:
-    dist[v] = dist[u] + adj[u][v]
-# Get the maximum distance
-long long ans = max_element(dist.begin(), dist.end())
-(-1 if         return ans == LLONG_MAX  else (int)ans)
-
+    def networkDelayTime(self, times, n, k):
+        INF = float('inf')
+        
+        # Build adjacency matrix
+        adj = [[INF] * n for _ in range(n)]
+        
+        for t in times:
+            u = t[0] - 1
+            v = t[1] - 1
+            w = t[2]
+            adj[u][v] = w
+        
+        dist = [INF] * n
+        dist[k - 1] = 0
+        
+        visited = [False] * n
+        
+        for _ in range(n):
+            minDist = INF
+            u = -1
+            
+            for j in range(n):
+                if not visited[j] and dist[j] < minDist:
+                    minDist = dist[j]
+                    u = j
+            
+            if u == -1:
+                break
+            
+            visited[u] = True
+            
+            for v in range(n):
+                if adj[u][v] != INF and dist[u] + adj[u][v] < dist[v]:
+                    dist[v] = dist[u] + adj[u][v]
+        
+        ans = max(dist)
+        
+        return -1 if ans == INF else ans
 ```
 
 ### Algorithm Breakdown:
@@ -168,26 +175,36 @@ This solution uses BFS with a regular queue. While BFS doesn't guarantee shortes
 **Note:** This approach is less efficient than Dijkstra's algorithm but is simpler to implement and works correctly for this problem.
 
 ```python
-class Solution:
-def networkDelayTime(self, times, n, k):
-    list[list[pair<int, int>>> adj(n)
-    for(t: times) adj[t[0] - 1].emplace_back(t[1] - 1, t[2])
-    list[long long> dist(n, LLONG_MAX)
-    dist[k - 1] = 0
-    deque[int> q
-    q.push(k - 1)
-    while not not q:
-        node = q[0]
-        q.pop()
-        for next in adj[node]:
-            to = next.first
-            long long d = dist[node] + next.second
-            if d < dist[to]:
-                dist[to] = d
-                q.emplace(to)
-    long long rtn = max_element(dist.begin(), dist.end())
-    (-1 if         return rtn == LLONG_MAX  else (int)rtn)
+from collections import deque
 
+class Solution:
+    def networkDelayTime(self, times, n, k):
+        adj = [[] for _ in range(n)]
+        
+        for t in times:
+            adj[t[0] - 1].append((t[1] - 1, t[2]))
+        
+        INF = float('inf')
+        dist = [INF] * n
+        dist[k - 1] = 0
+        
+        q = deque()
+        q.append(k - 1)
+        
+        while q:
+            node = q.popleft()
+            
+            for nxt in adj[node]:
+                to, w = nxt
+                d = dist[node] + w
+                
+                if d < dist[to]:
+                    dist[to] = d
+                    q.append(to)
+        
+        rtn = max(dist)
+        
+        return -1 if rtn == INF else rtn
 ```
 
 ### Why This Works:
@@ -207,30 +224,37 @@ def networkDelayTime(self, times, n, k):
 **This is the optimal implementation!** This solution uses Dijkstra's algorithm with a min-heap (priority queue with `greater<>` comparator) and is the best practical approach for this problem.
 
 ```python
-class Solution:
-def networkDelayTime(self, times, n, k):
-    list[list[pair<int, int>>> adj(n)
-    for(t: times) adj[t[0] - 1].emplace_back(t[1] - 1, t[2])
-    list[long long> dist(n, LLONG_MAX)
-    dist[k - 1] = 0
-    # Min-heap: priority_queue with greater<> comparator
-    heapq[pair<long long, int>, list[pair<long long, int>>, greater<>> q
-    q.emplace(0, k - 1)
-    while not not q:
-        node = q.top()
-        q.pop()
-        long long time = node.first
-        x = node.second
-        if dist[x] < time) continue # Skip outdated entries (lazy deletion:
-        for next in adj[x]:
-            y = next.first
-            long long d = dist[x] + next.second
-            if d < dist[y]:
-                dist[y] = d
-                q.emplace(d, y)
-    long long rtn = max_element(dist.begin(), dist.end())
-    (-1 if         return rtn == LLONG_MAX  else (int)rtn)
+import heapq
 
+class Solution:
+    def networkDelayTime(self, times, n, k):
+        adj = [[] for _ in range(n)]
+        
+        for t in times:
+            adj[t[0] - 1].append((t[1] - 1, t[2]))
+        
+        INF = float('inf')
+        dist = [INF] * n
+        dist[k - 1] = 0
+        
+        pq = [(0, k - 1)]  # (time, node)
+        
+        while pq:
+            time, x = heapq.heappop(pq)
+            
+            if dist[x] < time:
+                continue
+            
+            for y, cost in adj[x]:
+                d = dist[x] + cost
+                
+                if d < dist[y]:
+                    dist[y] = d
+                    heapq.heappush(pq, (d, y))
+        
+        rtn = max(dist)
+        
+        return -1 if rtn == INF else rtn
 ```
 
 ### Algorithm Breakdown:

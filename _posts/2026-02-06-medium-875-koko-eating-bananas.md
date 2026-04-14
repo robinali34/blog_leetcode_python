@@ -57,16 +57,22 @@ Try speed 1, 2, 3, ... until total hours ≤ h.
 
 ```python
 class Solution:
-def minEatingSpeed(self, piles, h):
-    speed = 1
-    while True:
-        hourSpend = 0
-        for pile in piles:
-            hourSpend += pile / speed + (pile % speed != 0)
-            if (hourSpend > h) break
-        if (hourSpend <= h) return speed
-        else speed += 1
-
+    def minEatingSpeed(self, piles, h):
+        speed = 1
+        
+        while True:
+            hourSpend = 0
+            
+            for pile in piles:
+                hourSpend += pile // speed + (1 if pile % speed != 0 else 0)
+                
+                if hourSpend > h:
+                    break
+            
+            if hourSpend <= h:
+                return speed
+            else:
+                speed += 1
 ```
 
 - **Time:** O(n × max(piles)) in the worst case — too slow for large piles.
@@ -78,17 +84,23 @@ Binary search on `k` in `[1, max(piles)]`; for each `mid`, compute total hours a
 
 ```python
 class Solution:
-def minEatingSpeed(self, piles, h):
-    left = 1, right = max_element(piles.begin(), piles.end())
-    while left < right:
-        mid = left + (right - left) / 2
-        hourSpend = 0
-        for pile in piles:
-            hourSpend += pile / mid + (pile % mid != 0)
-        if (hourSpend <= h) right = mid
-        else left = mid + 1
-    return right
-
+    def minEatingSpeed(self, piles, h):
+        left = 1
+        right = max(piles)
+        
+        while left < right:
+            mid = left + (right - left) // 2
+            
+            hourSpend = 0
+            for pile in piles:
+                hourSpend += pile // mid + (1 if pile % mid != 0 else 0)
+            
+            if hourSpend <= h:
+                right = mid
+            else:
+                left = mid + 1
+        
+        return right
 ```
 
 - **Invariant:** `right` is always feasible; we look for the smallest feasible `k`, which is `right` when `left == right`.

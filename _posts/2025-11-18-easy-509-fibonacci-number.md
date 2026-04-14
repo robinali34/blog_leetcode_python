@@ -111,16 +111,21 @@ This solution uses bottom-up dynamic programming with memoization to avoid recal
 
 ```python
 class Solution:
-def fib(self, n):
-    list[int> cache(n + 1, 0)
-    if(n <= 0) return 0
-    if(n == 1) return 1
-    cache[0] = 0
-    cache[1] = 1
-    for(i = 2 i <= n i += 1) :
-    cache[i] = cache[i - 1] + cache[i - 2]
-return cache[n]
+    def fib(self, n):
+        cache = [0] * (n + 1)
 
+        if n <= 0:
+            return 0
+        if n == 1:
+            return 1
+
+        cache[0] = 0
+        cache[1] = 1
+
+        for i in range(2, n + 1):
+            cache[i] = cache[i - 1] + cache[i - 2]
+
+        return cache[n]
 ```
 
 ## How the Algorithm Works
@@ -206,17 +211,21 @@ Only keep track of the last two values instead of the entire array:
 
 ```python
 class Solution:
-def fib(self, n):
-    if(n <= 0) return 0
-    if(n == 1) return 1
-    prev2 = 0  # F(0)
-    prev1 = 1  # F(1)
-    for(i = 2 i <= n i += 1) :
-    curr = prev1 + prev2
-    prev2 = prev1
-    prev1 = curr
-return prev1
+    def fib(self, n):
+        if n <= 0:
+            return 0
+        if n == 1:
+            return 1
 
+        prev2 = 0  # F(0)
+        prev1 = 1  # F(1)
+
+        for i in range(2, n + 1):
+            curr = prev1 + prev2
+            prev2 = prev1
+            prev1 = curr
+
+        return prev1
 ```
 
 **Pros:**
@@ -234,16 +243,21 @@ return prev1
 
 ```python
 class Solution:
-def fib(self, n):
-    list[int> memo(n + 1, -1)
-    return fibHelper(n, memo)
-def fibHelper(self, n, memo):
-    if(n <= 0) return 0
-    if(n == 1) return 1
-    if(memo[n] != -1) return memo[n]
-    memo[n] = fibHelper(n - 1, memo) + fibHelper(n - 2, memo)
-    return memo[n]
+    def fib(self, n):
+        memo = [-1] * (n + 1)
+        return self.fibHelper(n, memo)
 
+    def fibHelper(self, n, memo):
+        if n <= 0:
+            return 0
+        if n == 1:
+            return 1
+
+        if memo[n] != -1:
+            return memo[n]
+
+        memo[n] = self.fibHelper(n - 1, memo) + self.fibHelper(n - 2, memo)
+        return memo[n]
 ```
 
 **Pros:**
@@ -261,11 +275,12 @@ def fibHelper(self, n, memo):
 
 ```python
 class Solution:
-def fib(self, n):
-    if(n <= 0) return 0
-    if(n == 1) return 1
-    return fib(n - 1) + fib(n - 2)
-
+    def fib(self, n):
+        if n <= 0:
+            return 0
+        if n == 1:
+            return 1
+        return self.fib(n - 1) + self.fib(n - 2)
 ```
 
 **Why not recommended:**
@@ -282,26 +297,44 @@ Uses matrix exponentiation for logarithmic time complexity:
 
 ```python
 class Solution:
-def fib(self, n):
-    if(n <= 0) return 0
-    if(n == 1) return 1
-    # Matrix: [F(n+1) F(n)  ] = [1 1]^n
-    #         [F(n)   F(n-1)]   [1 0]
-    list[list[int>> base = \:\:1, 1\, \:1, 0\\
-list[list[int>> result = matrixPower(base, n)
-return result[0][1]
-def matrixPower(self, m, n):
-    if(n == 1) return m
-    list[list[int>> half = matrixPower(m, n / 2)
-    list[list[int>> result = matrixMultiply(half, half)
-    if n % 2 == 1:
-        result = matrixMultiply(result, m)
-    return result
-def matrixMultiply(self, a, b):
-    return :
-    :a[0][0]b[0][0] + a[0][1]b[1][0], a[0][0]b[0][1] + a[0][1]b[1][1],
-    :a[1][0]b[0][0] + a[1][1]b[1][0], a[1][0]b[0][1] + a[1][1]b[1][1]
+    def fib(self, n):
+        if n <= 0:
+            return 0
+        if n == 1:
+            return 1
 
+        # Matrix: [F(n+1) F(n)  ] = [1 1]^n
+        #         [F(n)   F(n-1)]   [1 0]
+
+        base = [[1, 1],
+                [1, 0]]
+
+        result = self.matrixPower(base, n)
+        return result[0][1]
+
+    def matrixPower(self, m, n):
+        if n == 1:
+            return m
+
+        half = self.matrixPower(m, n // 2)
+        result = self.matrixMultiply(half, half)
+
+        if n % 2 == 1:
+            result = self.matrixMultiply(result, m)
+
+        return result
+
+    def matrixMultiply(self, a, b):
+        return [
+            [
+                a[0][0] * b[0][0] + a[0][1] * b[1][0],
+                a[0][0] * b[0][1] + a[0][1] * b[1][1]
+            ],
+            [
+                a[1][0] * b[0][0] + a[1][1] * b[1][0],
+                a[1][0] * b[0][1] + a[1][1] * b[1][1]
+            ]
+        ]
 ```
 
 **Pros:**

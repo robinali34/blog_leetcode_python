@@ -57,30 +57,40 @@ This is **topological sort** on a directed graph: edge `(bi, ai)` means `bi` mus
 
 ```python
 class Solution:
-def findOrder(self, numCourses, prerequisites):
-    list[list[int>> adj(numCourses)
-    list[int> color(numCourses, 0) // 0: unvisited, 1: visiting, 2: visited
-    list[int> order
-    bool valid = True
-    for p in prerequisites:
-        adj[p[1]].emplace_back(p[0])
-    for (i = 0 i < numCourses i += 1) :
-    if color[i] == 0) dfs(i, adj, color, order, valid:
-if (not valid) return :
-order.reverse()
-return order
-def dfs(self, u, adj, color, order, valid):
-    color[u] = 1
-    for v in adj[u]:
-        if color[v] == 0:
-            dfs(v, adj, color, order, valid)
-            if (not valid) return
-             else if (color[v] == 1) :
-            valid = False
-            return
-    color[u] = 2
-    order.emplace_back(u)
-
+    def findOrder(self, numCourses, prerequisites):
+        adj = [[] for _ in range(numCourses)]
+        
+        for a, b in prerequisites:
+            adj[b].append(a)
+        
+        color = [0] * numCourses  # 0=unvisited, 1=visiting, 2=visited
+        order = []
+        valid = True
+        
+        def dfs(u):
+            nonlocal valid
+            
+            color[u] = 1
+            
+            for v in adj[u]:
+                if color[v] == 0:
+                    dfs(v)
+                    if not valid:
+                        return
+                elif color[v] == 1:
+                    valid = False
+                    return
+            
+            color[u] = 2
+            order.append(u)
+        
+        for i in range(numCourses):
+            if color[i] == 0:
+                dfs(i)
+                if not valid:
+                    return []
+        
+        return order[::-1]
 ```
 
 - **Cycle:** Seeing `color[v] == 1` means `v` is on the current DFS stack → back edge → cycle.
@@ -90,25 +100,34 @@ def dfs(self, u, adj, color, order, valid):
 ## Solution 2: Kahn's Algorithm (BFS)
 
 ```python
-class Solution:
-def findOrder(self, numCourses, prerequisites):
-    list[list[int>> adj(numCourses)
-    list[int> indegree(numCourses, 0)
-    deque[int> q
-    list[int> order
-    for p in prerequisites:
-        adj[p[1]].emplace_back(p[0])
-        indegree[p[0]]++
-    for (i = 0 i < numCourses i += 1) :
-    if indegree[i] == 0) q.push(i:
-while not not q:
-    u = q[0]
-    q.pop()
-    order.emplace_back(u)
-    for v in adj[u]:
-        if indegree -= 1[v] == 0) q.push(v:
-(order if         return len(order) == numCourses  else list[int>:)
+from collections import deque
 
+class Solution:
+    def findOrder(self, numCourses, prerequisites):
+        adj = [[] for _ in range(numCourses)]
+        indegree = [0] * numCourses
+        
+        for a, b in prerequisites:
+            adj[b].append(a)
+            indegree[a] += 1
+        
+        q = deque()
+        order = []
+        
+        for i in range(numCourses):
+            if indegree[i] == 0:
+                q.append(i)
+        
+        while q:
+            u = q.popleft()
+            order.append(u)
+            
+            for v in adj[u]:
+                indegree[v] -= 1
+                if indegree[v] == 0:
+                    q.append(v)
+        
+        return order if len(order) == numCourses else []
 ```
 
 - **Indegree:** `indegree[v]` = number of edges into `v`. Process nodes with indegree 0 (no unmet prerequisites).

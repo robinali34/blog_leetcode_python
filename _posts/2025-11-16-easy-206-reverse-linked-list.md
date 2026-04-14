@@ -103,19 +103,24 @@ Collect all node values into an array, then rebuild the list by assigning values
 
 ```python
 class Solution:
-def reverseList(self, head):
-    if (not head) return None
-    list[int> values
-    ListNode curr = head
-    while curr:
-        values.append(curr.val)
-        curr = curr.next
-    curr = head
-    for (i = len(values) - 1 i >= 0 i -= 1) :
-    curr.val = values[i]
-    curr = curr.next
-return head
+    def reverseList(self, head):
+        if not head:
+            return None
 
+        values = []
+
+        curr = head
+        while curr:
+            values.append(curr.val)
+            curr = curr.next
+
+        curr = head
+
+        for i in range(len(values) - 1, -1, -1):
+            curr.val = values[i]
+            curr = curr.next
+
+        return head
 ```
 
 **Note**: This approach modifies node values instead of pointers, which is not ideal for interview purposes.
@@ -123,64 +128,63 @@ return head
 ### Solution 2: Iterative Approach (Recommended - Python20 Optimized)
 
 ```python
-using namespace std
-/
- Definition for singly-linked list.
- struct ListNode :
-     val
-     ListNode next
-     ListNode() : val(0), next(None) :
-     ListNode(x) : val(x), next(None) :
-     ListNode(x, ListNode next) : val(x), next(next) :
-/
-class Solution:
-def reverseList(self, head):
-    ListNode prev = None
-    ListNode curr = head
-    while curr != None:
-        ListNode next = curr.next  # Save next node
-        curr.next = prev             # Reverse link
-        prev = curr                   # Move prev forward
-        curr = next                   # Move curr forward
-    return prev  # prev is now the new head
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
 
+class Solution:
+    def reverseList(self, head):
+        prev = None
+        curr = head
+
+        while curr != None:
+            nxt = curr.next  # Save next node
+            curr.next = prev  # Reverse link
+            prev = curr       # Move prev forward
+            curr = nxt        # Move curr forward
+
+        return prev  # prev is now the new head
 ```
 
 ### Solution 2: Recursive Approach (Python20 Optimized)
 
 ```python
-using namespace std
 class Solution:
-def reverseList(self, head):
-    # Base case: empty list or single node
-    if head == None  or  head.next == None:
-        return head
-    # Recursively reverse the rest of the list
-    ListNode newHead = reverseList(head.next)
-    # Reverse the link: head.next now points to head
-    head.next.next = head
-    head.next = None
-    return newHead
+    def reverseList(self, head):
+        # Base case: empty list or single node
+        if head == None or head.next == None:
+            return head
 
+        # Recursively reverse the rest of the list
+        newHead = self.reverseList(head.next)
+
+        # Reverse the link: head.next now points to head
+        head.next.next = head
+        head.next = None
+
+        return newHead
 ```
 
 ### Solution 3: Iterative with Explicit Null Checks
 
 ```python
-using namespace std
 class Solution:
-def reverseList(self, head):
-    if head == None:
-        return None
-    ListNode prev = None
-    ListNode curr = head
-    while curr != None:
-        ListNode next = curr.next
-        curr.next = prev
-        prev = curr
-        curr = next
-    return prev
+    def reverseList(self, head):
+        if head == None:
+            return None
 
+        prev = None
+        curr = head
+
+        while curr != None:
+            nxt = curr.next
+            curr.next = prev
+            prev = curr
+            curr = nxt
+
+        return prev
 ```
 
 ## How the Iterative Algorithm Works

@@ -107,25 +107,32 @@ This problem requires finding the lowest common ancestor of two nodes in a binar
 ## Solution: Recursive DFS (Post-order)
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode(x) : val(x), left(None), right(None) :
-/
-class Solution:
-def lowestCommonAncestor(self, root, p, q):
-    return isCommonAncestor(root, p, q)
-def isCommonAncestor(self, node, p, q):
-    if(not node) return None
-    TreeNode left = isCommonAncestor(node.left, p, q)
-    TreeNode right = isCommonAncestor(node.right, p, q)
-    if(node == p  or  node == q) return node
-    if(left  and  right) return node
-    (left if         return left  else right)
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
 
+
+class Solution:
+    def lowestCommonAncestor(self, root, p, q):
+        return self.isCommonAncestor(root, p, q)
+
+    def isCommonAncestor(self, node, p, q):
+        if not node:
+            return None
+
+        if node == p or node == q:
+            return node
+
+        left = self.isCommonAncestor(node.left, p, q)
+        right = self.isCommonAncestor(node.right, p, q)
+
+        if left and right:
+            return node
+
+        return left if left else right
 ```
 
 ### Algorithm Explanation:
@@ -250,27 +257,37 @@ isCommonAncestor(3, 5, 4):
 
 ```python
 class Solution:
-def lowestCommonAncestor(self, root, p, q):
-    list[TreeNode> pathP, pathQ
-    findPath(root, p, pathP)
-    findPath(root, q, pathQ)
-    TreeNode lca = None
-    i = 0
-    while (i < len(pathP)  and  i < len(pathQ)  and
-    pathP[i] == pathQ[i]) :
-    lca = pathP[i]
-    i += 1
-return lca
-def findPath(self, root, target, path):
-    if (not root) return False
-    path.append(root)
-    if (root == target) return True
-    if (findPath(root.left, target, path)  or
-    findPath(root.right, target, path)) :
-    return True
-path.pop()
-return False
+    def lowestCommonAncestor(self, root, p, q):
+        pathP = []
+        pathQ = []
 
+        self.findPath(root, p, pathP)
+        self.findPath(root, q, pathQ)
+
+        lca = None
+        i = 0
+
+        while i < len(pathP) and i < len(pathQ) and pathP[i] == pathQ[i]:
+            lca = pathP[i]
+            i += 1
+
+        return lca
+
+    def findPath(self, root, target, path):
+        if not root:
+            return False
+
+        path.append(root)
+
+        if root == target:
+            return True
+
+        if (self.findPath(root.left, target, path) or
+            self.findPath(root.right, target, path)):
+            return True
+
+        path.pop()
+        return False
 ```
 
 **Complexity**: 
@@ -281,35 +298,38 @@ return False
 
 ```python
 class Solution:
-def lowestCommonAncestor(self, root, p, q):
-    dict[TreeNode, TreeNode> parent
-    list[TreeNode> st
-    parent[root] = None
-    st.push(root)
-    # Build parent map
-    while not parent.count(p)  or  not parent.count(q):
-        TreeNode node = st.top()
-        st.pop()
-        if node.left:
-            parent[node.left] = node
-            st.push(node.left)
-        if node.right:
-            parent[node.right] = node
-            st.push(node.right)
-    # Find path from p to root
-    set<TreeNode> ancestors
-    TreeNode curr = p
-    while curr:
-        ancestors.insert(curr)
-        curr = parent[curr]
-    # Find first common ancestor from q
-    curr = q
-    while curr:
-        if ancestors.count(curr):
-            return curr
-        curr = parent[curr]
-    return None
+    def lowestCommonAncestor(self, root, p, q):
+        parent = {}
+        stack = [root]
+        parent[root] = None
 
+        # Build parent pointers until both p and q are found
+        while p not in parent or q not in parent:
+            node = stack.pop()
+
+            if node.left:
+                parent[node.left] = node
+                stack.append(node.left)
+
+            if node.right:
+                parent[node.right] = node
+                stack.append(node.right)
+
+        # Collect all ancestors of p
+        ancestors = set()
+        curr = p
+        while curr:
+            ancestors.add(curr)
+            curr = parent[curr]
+
+        # Walk q upwards until we find a shared ancestor
+        curr = q
+        while curr:
+            if curr in ancestors:
+                return curr
+            curr = parent[curr]
+
+        return None
 ```
 
 **Complexity**: 

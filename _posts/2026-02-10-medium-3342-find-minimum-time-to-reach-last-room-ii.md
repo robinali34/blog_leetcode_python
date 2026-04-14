@@ -89,43 +89,43 @@ We can use **Dijkstra's Algorithm**. The state in the priority queue will be `{t
 
 {% raw %}
 ```python
-class Solution:
-def minTimeToReach(self, moveTime):
-    n = (int)len(moveTime)
-    m = (int)moveTime[0].__len__()
-    # dist[i][j] stores the minimum time to reach (i, j).
-    # Note: strictly speaking, we might arrive at (i, j) with 'next_cost=1' or 'next_cost=2'.
-    # However, arriving earlier is always better regardless of the next move cost
-    # because the wait time `max(t, moveTime)` dominates small differences in edge weights.
-    # A simple 2D dist array is sufficient for this problem's constraints.
-    list[list[long long>> dist(n, list[long long>(m, LLONG_MAX))
-    dist[0][0] = 0
-    # State: :time, r, c, next_move_cost
-    # next_move_cost is the cost to travel to the next neighbor.
-    struct State :
-    long long time
-    r, c, w
-    bool operator>(State other) : return time > other.time
-heapq[State, list[State>, greater<>> pq
-pq.push(:0, 0, 0, 1) # Start at (0,0), time 0, next move costs 1
-dirs[4][2] = ::0,1, :0,-1, :1,0, :-1,0
-while not not pq:
-    [t, r, c, w] = pq.top()
-    pq.pop()
-    if (t > dist[r][c]) continue
-    if (r == n - 1  and  c == m - 1) return (int)t
-    for d in dirs:
-        nr = r + d[0]
-        nc = c + d[1]
-        if (nr < 0  or  nr >= n  or  nc < 0  or  nc >= m) continue
-        # Calculate arrival time at neighbor
-        # Must wait until moveTime[nr][nc], then add travel cost 'w'
-        long long nt = max(t, (long long)moveTime[nr][nc]) + w
-        if nt < dist[nr][nc]:
-            dist[nr][nc] = nt
-            pq.push(:nt, nr, nc, 3 - w) # Flip weight: 1.2, 2.1
-return -1 # Should not reach here
+import heapq
 
+class Solution:
+    def minTimeToReach(self, moveTime):
+        n, m = len(moveTime), len(moveTime[0])
+        
+        INF = float('inf')
+        dist = [[INF] * m for _ in range(n)]
+        dist[0][0] = 0
+        
+        # (time, r, c, next_move_cost)
+        pq = [(0, 0, 0, 1)]
+        
+        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        
+        while pq:
+            t, r, c, w = heapq.heappop(pq)
+            
+            if t > dist[r][c]:
+                continue
+            
+            if r == n - 1 and c == m - 1:
+                return t
+            
+            for dr, dc in dirs:
+                nr, nc = r + dr, c + dc
+                
+                if nr < 0 or nr >= n or nc < 0 or nc >= m:
+                    continue
+                
+                nt = max(t, moveTime[nr][nc]) + w
+                
+                if nt < dist[nr][nc]:
+                    dist[nr][nc] = nt
+                    heapq.heappush(pq, (nt, nr, nc, 3 - w))  # flip 1 ↔ 2
+        
+        return -1
 ```
 {% endraw %}
 

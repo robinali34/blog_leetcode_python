@@ -139,7 +139,6 @@ class Solution:
             self.quickselect(arr, count_map, left, pivot_index - 1, k_smallest)
         else:
             self.quickselect(arr, count_map, pivot_index + 1, right, k_smallest)
-
 ```
 
 ### Approach 3: Min Heap

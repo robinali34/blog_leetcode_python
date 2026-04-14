@@ -121,32 +121,46 @@ The key insight is to use prefix sums to create ranges proportional to weights, 
 ### Solution 1: Linear Search
 
 ```python
+import random
+
+
 class Solution:
-list[int> prefixSum
-Solution(list[int> w) :
-for n in w:
-    (0 if             prefixSum.append(n + (not prefixSum else prefixSum[-1])))
-def pickIndex(self):
-    float randNum = (float) rand() / RAND_MAX
-    float target = randNum  prefixSum[-1]
-    for(i = 0 i < len(prefixSum) i += 1) :
-    if(target < prefixSum[i]) return i
-return len(prefixSum) - 1
+    def __init__(self, w: list[int]):
+        self.prefix: list[int] = []
+        s = 0
+        for x in w:
+            s += x
+            self.prefix.append(s)
+
+    def pickIndex(self) -> int:
+        total = self.prefix[-1]
+        target = random.random() * total
+        for i, p in enumerate(self.prefix):
+            if target < p:
+                return i
+        return len(self.prefix) - 1
 
 ```
 
 ### Solution 2: Binary Search (Optimized)
 
 ```python
+import bisect
+import random
+
+
 class Solution:
-list[int> prefixSum
-Solution(list[int> w) :
-for n in w:
-    (0 if             prefixSum.append(n + (not prefixSum else prefixSum[-1])))
-def pickIndex(self):
-    float randNum = (float) rand() / RAND_MAX
-    float target = randNum  prefixSum[-1]
-    return lower_bound(prefixSum.begin(), prefixSum.end(), target) - prefixSum.begin()
+    def __init__(self, w: list[int]):
+        self.prefix: list[int] = []
+        s = 0
+        for x in w:
+            s += x
+            self.prefix.append(s)
+
+    def pickIndex(self) -> int:
+        total = self.prefix[-1]
+        target = random.random() * total
+        return bisect.bisect_left(self.prefix, target)
 
 ```
 
@@ -223,9 +237,12 @@ Random value 0.0-6.0 maps to:
 ### Constructor
 
 ```python
-Solution(list[int> w) :
-for n in w:
-    (0 if         prefixSum.append(n + (not prefixSum else prefixSum[-1])))
+def __init__(self, w: list[int]):
+    self.prefix: list[int] = []
+    s = 0
+    for x in w:
+        s += x
+        self.prefix.append(s)
 
 ```
 
@@ -237,12 +254,16 @@ for n in w:
 ### pickIndex - Linear Search
 
 ```python
-def pickIndex(self):
-    float randNum = (float) rand() / RAND_MAX  # [0.0, 1.0)
-    float target = randNum  prefixSum[-1]   # [0.0, totalSum)
-    for(i = 0 i < len(prefixSum) i += 1) :
-    if(target < prefixSum[i]) return i
-return len(prefixSum) - 1  # Fallback (shouldn't happen)
+import random
+
+
+def pickIndex(self) -> int:
+    total = self.prefix[-1]
+    target = random.random() * total
+    for i, p in enumerate(self.prefix):
+        if target < p:
+            return i
+    return len(self.prefix) - 1
 
 ```
 
@@ -255,11 +276,14 @@ return len(prefixSum) - 1  # Fallback (shouldn't happen)
 ### pickIndex - Binary Search
 
 ```python
-def pickIndex(self):
-    float randNum = (float) rand() / RAND_MAX
-    float target = randNum  prefixSum[-1]
-    return lower_bound(prefixSum.begin(), prefixSum.end(), target)
-    - prefixSum.begin()
+import bisect
+import random
+
+
+def pickIndex(self) -> int:
+    total = self.prefix[-1]
+    target = random.random() * total
+    return bisect.bisect_left(self.prefix, target)
 
 ```
 
@@ -283,15 +307,22 @@ def pickIndex(self):
 **Space Complexity:** O(n)
 
 ```python
+import bisect
+import random
+
+
 class Solution:
-list[int> prefixSum
-Solution(list[int> w) :
-for weight in w:
-    (0 if             prefixSum.append(weight + (not prefixSum  else prefixSum[-1])))
-def pickIndex(self):
-    target = rand() % prefixSum[-1] + 1  # [1, totalSum]
-    return lower_bound(prefixSum.begin(), prefixSum.end(), target)
-    - prefixSum.begin()
+    def __init__(self, w: list[int]):
+        self.prefix: list[int] = []
+        s = 0
+        for x in w:
+            s += x
+            self.prefix.append(s)
+
+    def pickIndex(self) -> int:
+        total = self.prefix[-1]
+        target = random.randint(1, total)
+        return bisect.bisect_left(self.prefix, target)
 
 ```
 
@@ -308,21 +339,28 @@ def pickIndex(self):
 **Space Complexity:** O(n)
 
 ```python
+import random
+
+
 class Solution:
-list[int> prefixSum
-Solution(list[int> w) :
-for weight in w:
-    (0 if             prefixSum.append(weight + (not prefixSum  else prefixSum[-1])))
-def pickIndex(self):
-    target = rand() % prefixSum[-1] + 1
-    left = 0, right = len(prefixSum) - 1
-    while left < right:
-        mid = left + (right - left) / 2
-        if prefixSum[mid] < target:
-            left = mid + 1
-             else :
-            right = mid
-    return left
+    def __init__(self, w: list[int]):
+        self.prefix: list[int] = []
+        s = 0
+        for x in w:
+            s += x
+            self.prefix.append(s)
+
+    def pickIndex(self) -> int:
+        total = self.prefix[-1]
+        target = random.randint(1, total)
+        left, right = 0, len(self.prefix) - 1
+        while left < right:
+            mid = left + (right - left) // 2
+            if self.prefix[mid] < target:
+                left = mid + 1
+            else:
+                right = mid
+        return left
 
 ```
 
@@ -346,7 +384,11 @@ def pickIndex(self):
 ### Prefix Sum Construction
 
 ```python
-(0 if prefixSum.append(n + (not prefixSum else prefixSum[-1])))
+s = 0
+self.prefix = []
+for n in w:
+    s += n
+    self.prefix.append(s)
 
 ```
 
@@ -358,8 +400,10 @@ def pickIndex(self):
 ### Random Number Generation
 
 ```python
-float randNum = (float) rand() / RAND_MAX  # [0.0, 1.0)
-float target = randNum  prefixSum[-1]  # [0.0, totalSum)
+import random
+
+total = self.prefix[-1]
+target = random.random() * total  # uniform in [0, total)
 
 ```
 
@@ -371,10 +415,9 @@ float target = randNum  prefixSum[-1]  # [0.0, totalSum)
 ### lower_bound Usage
 
 ```python
-lower_bound(prefixSum.begin(), prefixSum.end(), target)
+import bisect
 
-
-
+idx = bisect.bisect_left(self.prefix, target)
 
 ```
 
@@ -449,9 +492,10 @@ For weights `w = [w₀, w₁, ..., wₙ₋₁]`:
 ### Using `rand()`
 
 ```python
-srand(time(None))  # Seed once
-target = rand() % prefixSum[-1] + 1
+import random
 
+random.seed()  # optional
+target = random.randint(1, self.prefix[-1])
 
 ```
 
@@ -466,18 +510,23 @@ target = rand() % prefixSum[-1] + 1
 ### Using `<random>` (Modern C++)
 
 ```python
-#include <random>
+import bisect
+import random
+
+
 class Solution:
-list[int> prefixSum
-mt19937 gen
-uniform_real_distribution<double> dis
-Solution(list[int> w) : gen(random_device:()), dis(0.0, 1.0) :
-for weight in w:
-    (0 if             prefixSum.append(weight + (not prefixSum  else prefixSum[-1])))
-def pickIndex(self):
-    double target = dis(gen)  prefixSum[-1]
-    return lower_bound(prefixSum.begin(), prefixSum.end(), target)
-    - prefixSum.begin()
+    def __init__(self, w: list[int]):
+        self.prefix: list[int] = []
+        s = 0
+        for x in w:
+            s += x
+            self.prefix.append(s)
+        self._rng = random.Random()
+
+    def pickIndex(self) -> int:
+        total = self.prefix[-1]
+        target = self._rng.random() * total
+        return bisect.bisect_left(self.prefix, target)
 
 ```
 
