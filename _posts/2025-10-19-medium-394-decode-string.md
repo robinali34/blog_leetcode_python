@@ -64,27 +64,31 @@ Use two stacks to handle nested encoded strings: one for counts and one for stri
 
 ```python
 class Solution:
-def decodeString(self, s: str) -> str:
-counts = []
-strings = []
-curr = ""
-k = 0
-for ch in s:
-if ch.isdigit():
-k = k  10 + int(ch)
-elif ch == '[':
-counts.append(k)
-strings.append(curr)
-curr = ""
-k = 0
-elif ch == ']':
-decode = strings.pop()
-count = counts.pop()
-curr = decode + curr  count
-else:
-curr += ch
-return curr
+    def decodeString(self, s: str) -> str:
+        counts = []
+        strings = []
+        curr = ""
+        k = 0
 
+        for ch in s:
+            if ch.isdigit():
+                k = k * 10 + int(ch)
+
+            elif ch == '[':
+                counts.append(k)
+                strings.append(curr)
+                curr = ""
+                k = 0
+
+            elif ch == ']':
+                decode = strings.pop()
+                count = counts.pop()
+                curr = decode + curr * count
+
+            else:
+                curr += ch
+
+        return curr
 ```
 
 ## How the Algorithm Works
@@ -120,21 +124,23 @@ return curr
 
 ### Character Processing:
 ```python
-for ch in s:
-if ch.isdigit():
-k = k  10 + int(ch)
-elif ch == '[':
-counts.append(k)
-strings.append(curr)
-curr = ""
-k = 0
-elif ch == ']':
-decode = strings.pop()
-count = counts.pop()
-curr = decode + curr  count
-else:
-curr += ch
+        for ch in s:
+            if ch.isdigit():
+                k = k * 10 + int(ch)
 
+            elif ch == '[':
+                counts.append(k)
+                strings.append(curr)
+                curr = ""
+                k = 0
+
+            elif ch == ']':
+                decode = strings.pop()
+                count = counts.pop()
+                curr = decode + curr * count
+
+            else:
+                curr += ch
 ```
 
 **Process:**
@@ -147,25 +153,17 @@ curr += ch
 
 **Push Operation (on '['):**
 ```python
-counts.push(k)
-strings.push(curr)
+counts.append(k)
+strings.append(curr)
 curr = ""
 k = 0
-
-
-
-
 ```
 
 **Pop Operation (on ']'):**
 ```python
-str decode = strings.top()
-strings.pop()
-count = counts.top()
-while(count -= 1) decode += curr
-counts.pop()
-curr = decode
-
+prev = strings.pop()
+count = counts.pop()
+curr = prev + curr * count
 ```
 
 ## Complexity Analysis
@@ -254,27 +252,30 @@ return self.decodeString(s, [0])
 ### Approach 2: Iterative with Single Stack
 ```python
 class Solution:
-def decodeString(self, s: str) -> str:
-st = []
-curr = ""
-k = 0
-for c in s:
-if c.isdigit():
-k = k  10 + int(c)
-elif c == '[':
-st.append(str(k))
-st.append(curr)
-curr = ""
-k = 0
-elif c == ']':
-prev = st.pop()
-count = int(st.pop())
-temp = curr  count
-curr = prev + temp
-else:
-curr += c
-return curr
+    def decodeString(self, s: str) -> str:
+        st = []
+        curr = ""
+        k = 0
 
+        for c in s:
+            if c.isdigit():
+                k = k * 10 + int(c)
+
+            elif c == '[':
+                st.append(str(k))
+                st.append(curr)
+                curr = ""
+                k = 0
+
+            elif c == ']':
+                prev = st.pop()
+                count = int(st.pop())
+                curr = prev + curr * count
+
+            else:
+                curr += c
+
+        return curr
 ```
 
 **Time Complexity:** O(n + m)  

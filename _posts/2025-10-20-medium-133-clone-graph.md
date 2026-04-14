@@ -78,25 +78,27 @@ This problem requires creating a **deep copy** of a graph, meaning we need to cr
 ```python
 from collections import deque
 
-class Node:
-    def __init__(self, val=0, neighbors=None):
-        self.val = val
-        self.neighbors = neighbors if neighbors is not None else []
-
 class Solution:
     def cloneGraph(self, node: 'Node') -> 'Node':
         if not node:
             return None
+
         visited = {}
         q = deque([node])
+
         visited[node] = Node(node.val)
+
         while q:
             curr = q.popleft()
+
             for neighbor in curr.neighbors:
+
                 if neighbor not in visited:
                     visited[neighbor] = Node(neighbor.val)
                     q.append(neighbor)
+
                 visited[curr].neighbors.append(visited[neighbor])
+
         return visited[node]
 ```
 
@@ -107,15 +109,19 @@ class Solution:
     def dfs(self, node: 'Node', visited: dict) -> 'Node':
         if node in visited:
             return visited[node]
+
         clone = Node(node.val)
         visited[node] = clone
+
         for neighbor in node.neighbors:
             clone.neighbors.append(self.dfs(neighbor, visited))
+
         return clone
 
     def cloneGraph(self, node: 'Node') -> 'Node':
-        if node is None:
+        if not node:
             return None
+
         visited = {}
         return self.dfs(node, visited)
 ```
@@ -199,16 +205,23 @@ class Solution:
     def cloneGraph(self, node: 'Node') -> 'Node':
         if not node:
             return None
+
         visited = {}
         stk = [node]
+
         visited[node] = Node(node.val)
+
         while stk:
             curr = stk.pop()
+
             for neighbor in curr.neighbors:
+
                 if neighbor not in visited:
                     visited[neighbor] = Node(neighbor.val)
                     stk.append(neighbor)
+
                 visited[curr].neighbors.append(visited[neighbor])
+
         return visited[node]
 ```
 

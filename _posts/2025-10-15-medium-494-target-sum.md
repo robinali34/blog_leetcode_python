@@ -53,18 +53,21 @@ Convert the problem to a subset sum problem using mathematical transformation.
 class Solution:
     def findTargetSumWays(self, nums: list[int], target: int) -> int:
         totalSum = sum(nums)
-        # Check if target is achievable
-        if (target + totalSum) % 2 != 0 or abs(target) > totalSum:
+
+        # invalid cases
+        if abs(target) > totalSum or (target + totalSum) % 2 != 0:
             return 0
-            subsetSum = (target + totalSum) // 2
-            dp = [0] * (subsetSum + 1)
-            dp[0] = 1
-            for num in nums:
-                for i in range(subsetSum, num - 1, -1):
-                    dp[i] += dp[i - num]
-                    return dp[subsetSum]
 
+        subsetSum = (target + totalSum) // 2
 
+        dp = [0] * (subsetSum + 1)
+        dp[0] = 1
+
+        for num in nums:
+            for i in range(subsetSum, num - 1, -1):
+                dp[i] += dp[i - num]
+
+        return dp[subsetSum]
 ```
 
 ## How the Algorithm Works
@@ -137,10 +140,6 @@ if (target + totalSum) % 2 != 0  or  abs(target) > totalSum:
 ### 2. Subset Sum Calculation
 ```python
 subsetSum = (target + totalSum) / 2
-
-
-
-
 ```
 
 **Mathematical proof:**
@@ -153,7 +152,6 @@ subsetSum = (target + totalSum) / 2
 ```python
 list[int] dp(subsetSum + 1, 0)
 dp[0] = 1  # One way to make sum 0 (empty subset)
-
 ```
 
 ### 4. Bottom-Up DP
@@ -161,10 +159,6 @@ dp[0] = 1  # One way to make sum 0 (empty subset)
 for num in nums:
     for i in range(subsetSum, num - 1, -1):
         dp[i] += dp[i - num]
-
-
-
-
 ```
 
 **Why iterate backwards?**
@@ -178,15 +172,15 @@ for num in nums:
 class Solution:
     def findTargetSumWays(self, nums: list[int], target: int) -> int:
         return self.dfs(nums, 0, target)
+
     def dfs(self, nums: list[int], index: int, target: int) -> int:
         if index == len(nums):
             return 1 if target == 0 else 0
-            return (self.dfs(nums, index + 1, target - nums[index]) +
-            self.dfs(nums, index + 1, target + nums[index]))
 
-
-
-
+        return (
+            self.dfs(nums, index + 1, target - nums[index]) +
+            self.dfs(nums, index + 1, target + nums[index])
+        )
 ```
 
 **Time Complexity:** O(2^n)  
@@ -198,18 +192,23 @@ class Solution:
     def findTargetSumWays(self, nums: list[int], target: int) -> int:
         memo = {}
         return self.dfs(nums, 0, target, memo)
+
     def dfs(self, nums: list[int], index: int, target: int, memo: dict) -> int:
         if index == len(nums):
             return 1 if target == 0 else 0
-            key = f":index,:target"
-            if key in memo:
-                return memo[key]
-                result = (self.dfs(nums, index + 1, target - nums[index], memo) +
-                self.dfs(nums, index + 1, target + nums[index], memo))
-                memo[key] = result
-                return result
 
+        key = (index, target)
 
+        if key in memo:
+            return memo[key]
+
+        result = (
+            self.dfs(nums, index + 1, target - nums[index], memo) +
+            self.dfs(nums, index + 1, target + nums[index], memo)
+        )
+
+        memo[key] = result
+        return result
 ```
 
 **Time Complexity:** O(n × sum)  

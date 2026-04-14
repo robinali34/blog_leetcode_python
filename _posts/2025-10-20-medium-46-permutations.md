@@ -68,33 +68,29 @@ This is a classic **backtracking** problem that requires generating all possible
 ```python
 class Solution:
     def permute(self, nums: list[int]) -> list[list[int]]:
-        result = [] * self.permuteHelper(nums, 0, result)
+        result = []
+        self.permuteHelper(nums, 0, result)
         return result
+
     def permuteHelper(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
         if idx == len(nums):
             result.append(nums[:])  # Create a copy
             return
-            for i in range(idx, len(nums)):
-                nums[idx], nums[i] = nums[i], nums[idx]  # Swap
-                self.permuteHelper(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]  # Backtrack
 
-
-
-
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]  # Swap
+            self.permuteHelper(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]  # Backtrack
 ```
 
 ### Solution 2: STL next_permutation
 
 ```python
 from itertools import permutations
+
 class Solution:
     def permute(self, nums: list[int]) -> list[list[int]]:
-        return list(permutations(nums))
-
-
-
-
+        return [list(p) for p in permutations(nums)]
 ```
 
 ## Explanation
@@ -198,23 +194,28 @@ class Solution:
         result = []
         current = []
         used = [False] * len(nums)
+
         self.backtrack(nums, current, used, result)
         return result
+
     def backtrack(self, nums: list[int], current: list[int],
-    used: list[bool], result: list[list[int]]) -> None:
+                  used: list[bool], result: list[list[int]]) -> None:
+
         if len(current) == len(nums):
             result.append(current[:])
             return
-            for i in range(len(nums)):
-                if used[i]:
-                    continue
-                    used[i] = True
-                    current.append(nums[i])
-                    self.backtrack(nums, current, used, result)
-                    current.pop()
-                    used[i] = False
 
+        for i in range(len(nums)):
+            if used[i]:
+                continue
 
+            used[i] = True
+            current.append(nums[i])
+
+            self.backtrack(nums, current, used, result)
+
+            current.pop()
+            used[i] = False
 ```
 
 ### Approach 4: Iterative with Stack
@@ -223,18 +224,20 @@ class Solution:
     def permute(self, nums: list[int]) -> list[list[int]]:
         result = []
         stack = [[]]
+
         while stack:
             current = stack.pop()
+
             if len(current) == len(nums):
                 result.append(current)
                 continue
-                for num in nums:
-                    if num not in current:
-                        next_perm = current + [num]
-                        stack.append(next_perm)
-                        return result
 
+            for num in nums:
+                if num not in current:
+                    next_perm = current + [num]
+                    stack.append(next_perm)
 
+        return result
 ```
 
 ## When to Use Each Approach

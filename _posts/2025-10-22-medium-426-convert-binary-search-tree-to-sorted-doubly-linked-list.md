@@ -62,25 +62,34 @@ class Solution:
     def __init__(self):
         self.first = None
         self.last = None
+
     def treeToDoublyList(self, root: 'Node') -> 'Node':
         if not root:
             return None
-            self.inorder(root)
-            self.last.right = self.first
-            self.first.left = self.last
-            return self.first
-            def inorder(self, node: 'Node') -> None:
-                if node:
-                    self.inorder(node.left)
-                    if self.last:
-                        self.last.right = node
-                        node.left = self.last
-                    else:
-                        self.first = node
-                        self.last = node
-                        self.inorder(node.right)
 
+        self.inorder(root)
 
+        # close circular list
+        self.last.right = self.first
+        self.first.left = self.last
+
+        return self.first
+
+    def inorder(self, node: 'Node') -> None:
+        if not node:
+            return
+
+        self.inorder(node.left)
+
+        if self.last:
+            self.last.right = node
+            node.left = self.last
+        else:
+            self.first = node
+
+        self.last = node
+
+        self.inorder(node.right)
 ```
 
 ### Approach 2: Inorder Traversal with Return Values
@@ -98,25 +107,33 @@ class Solution:
     def treeToDoublyList(self, root: 'Node') -> 'Node':
         if not root:
             return None
-            head = [None]
-            tail = [None]
-            self.inorder(root, head, tail)
-            head[0].left = tail[0]
-            tail[0].right = head[0]
-            return head[0]
-            def inorder(self, node: 'Node', head: list, tail: list) -> None:
-                if not node:
-                    return
-                    self.inorder(node.left, head, tail)
-                    if not head[0]:
-                        head[0] = node
-                    else:
-                        tail[0].right = node
-                        node.left = tail[0]
-                        tail[0] = node
-                        self.inorder(node.right, head, tail)
 
+        head = [None]
+        tail = [None]
 
+        self.inorder(root, head, tail)
+
+        # close circular DLL
+        head[0].left = tail[0]
+        tail[0].right = head[0]
+
+        return head[0]
+
+    def inorder(self, node: 'Node', head: list, tail: list) -> None:
+        if not node:
+            return
+
+        self.inorder(node.left, head, tail)
+
+        if not head[0]:
+            head[0] = node
+        else:
+            tail[0].right = node
+            node.left = tail[0]
+
+        tail[0] = node
+
+        self.inorder(node.right, head, tail)
 ```
 
 ### Approach 3: Iterative Inorder Traversal
@@ -135,27 +152,33 @@ class Solution:
     def treeToDoublyList(self, root: 'Node') -> 'Node':
         if not root:
             return None
-            stk = []
-            first = None
-            last = None
-            curr = root
-            while curr or stk:
-                while curr:
-                    stk.append(curr)
-                    curr = curr.left
-                    curr = stk.pop()
-                    if not first:
-                        first = curr
-                    else:
-                        last.right = curr
-                        curr.left = last
-                        last = curr
-                        curr = curr.right
-                        first.left = last
-                        last.right = first
-                        return first
 
+        stk = []
+        first = None
+        last = None
+        curr = root
 
+        while curr or stk:
+            while curr:
+                stk.append(curr)
+                curr = curr.left
+
+            curr = stk.pop()
+
+            if not first:
+                first = curr
+            else:
+                last.right = curr
+                curr.left = last
+
+            last = curr
+            curr = curr.right
+
+        # close circular list
+        first.left = last
+        last.right = first
+
+        return first
 ```
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 read_file
@@ -185,19 +208,25 @@ class Solution:
     def __init__(self):
         self.first = None
         self.last = None
+
     def inorder(self, node: 'Node') -> None:
-        if node:
-            self.inorder(node.left)
-            # Process current node
-            if self.last:
-                self.last.right = node
-                node.left = self.last
-            else:
-                self.first = node  # First node in sorted order
-                self.last = node
-                self.inorder(node.right)
+        if not node:
+            return
 
+        # left
+        self.inorder(node.left)
 
+        # process current node
+        if self.last:
+            self.last.right = node
+            node.left = self.last
+        else:
+            self.first = node
+
+        self.last = node  # always update last
+
+        # right
+        self.inorder(node.right)
 ```
 
 ### Circular Connection
@@ -206,10 +235,6 @@ class Solution:
 self.last.right = self.first  # Last points to first
 self.first.left = self.last   # First points to last
 return self.first             # Return smallest element
-
-
-
-
 ```
 
 ## Edge Cases

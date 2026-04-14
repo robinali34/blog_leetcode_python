@@ -60,20 +60,26 @@ Use a hash map to store only non-zero elements, then optimize dot product by ite
 
 ```python
 class SparseVector:
-def __init__(self, nums: list[int]):
-self.cache = {}
-for i, num in enumerate(nums):
-if num != 0:
-self.cache[i] = num
-# Return the dotProduct of two sparse vectors
-def dotProduct(self, vec: 'SparseVector') -> int:
-result = 0
-smaller = self.cache if len(self.cache) <= len(vec.cache) else vec.cache
-larger = vec.cache if len(self.cache) <= len(vec.cache) else self.cache
-for idx, num in smaller.items():
-if idx in larger:
-result += num  larger[idx]
-return result
+    def __init__(self, nums: list[int]):
+        self.cache = {}
+        for i, num in enumerate(nums):
+            if num != 0:
+                self.cache[i] = num
+
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        result = 0
+
+        # iterate smaller dictionary for efficiency
+        if len(self.cache) <= len(vec.cache):
+            smaller, larger = self.cache, vec.cache
+        else:
+            smaller, larger = vec.cache, self.cache
+
+        for idx, num in smaller.items():
+            if idx in larger:
+                result += num * larger[idx]
+
+        return result
 # Your SparseVector object will be instantiated and called as such:
 # v1 = SparseVector(nums1)
 # v2 = SparseVector(nums2)
@@ -128,10 +134,6 @@ def __init__(self, nums: list[int]):
     for i, num in enumerate(nums):
         if num != 0:
             self.cache[i] = num
-
-
-
-
 ```
 
 **Process:**
@@ -143,14 +145,19 @@ def __init__(self, nums: list[int]):
 ### Dot Product:
 ```python
 def dotProduct(self, vec: 'SparseVector') -> int:
-result = 0
-smaller = self.cache if len(self.cache) <= len(vec.cache) else vec.cache
-larger = vec.cache if len(self.cache) <= len(vec.cache) else self.cache
-for idx, num in smaller.items():
-if idx in larger:
-result += num  larger[idx]
-return result
+    result = 0
 
+    # iterate smaller dictionary for efficiency
+    if len(self.cache) <= len(vec.cache):
+        smaller, larger = self.cache, vec.cache
+    else:
+        smaller, larger = vec.cache, self.cache
+
+    for idx, num in smaller.items():
+        if idx in larger:
+            result += num * larger[idx]
+
+    return result
 ```
 
 **Process:**
@@ -225,13 +232,14 @@ Result = 6
 class SparseVector:
     def __init__(self, nums: list[int]):
         self.nums = nums
+
     def dotProduct(self, vec: 'SparseVector') -> int:
         result = 0
+
         for i in range(len(self.nums)):
             result += self.nums[i] * vec.nums[i]
-            return result
 
-
+        return result
 ```
 
 **Time Complexity:** O(n) for dotProduct  
@@ -241,25 +249,29 @@ class SparseVector:
 ```python
 class SparseVector:
     def __init__(self, nums: list[int]):
-        self.nonZeros = []  # List of (index, value) tuples
+        self.nonZeros = []
         for i, num in enumerate(nums):
             if num != 0:
                 self.nonZeros.append((i, num))
-                def dotProduct(self, vec: 'SparseVector') -> int:
-                    result = 0
-                    i, j = 0, 0
-                    while i < len(self.nonZeros) and j < len(vec.nonZeros):
-                        if self.nonZeros[i][0] == vec.nonZeros[j][0]:
-                            result += self.nonZeros[i][1] * vec.nonZeros[j][1]
-                            i += 1
-                            j += 1
-                        elif self.nonZeros[i][0] < vec.nonZeros[j][0]:
-                            i += 1
-                    else:
-                        j += 1
-                        return result
 
+    def dotProduct(self, vec: 'SparseVector') -> int:
+        result = 0
+        i, j = 0, 0
 
+        while i < len(self.nonZeros) and j < len(vec.nonZeros):
+            idx1, val1 = self.nonZeros[i]
+            idx2, val2 = vec.nonZeros[j]
+
+            if idx1 == idx2:
+                result += val1 * val2
+                i += 1
+                j += 1
+            elif idx1 < idx2:
+                i += 1
+            else:
+                j += 1
+
+        return result
 ```
 
 **Time Complexity:** O(k1 + k2) for dotProduct  

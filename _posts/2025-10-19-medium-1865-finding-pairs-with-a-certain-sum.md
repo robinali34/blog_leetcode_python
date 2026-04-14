@@ -69,30 +69,36 @@ Use a hash map to track the count of each value in nums2, then for each count op
 
 ```python
 class FindSumPairs:
-def __init__(self, nums1: list[int], nums2: list[int]):
-self.nums1 = nums1
-self.nums2 = nums2
-self.cnts = {}
-for num in nums2:
-self.cnts[num] = self.cnts.get(num, 0) + 1
-def add(self, index: int, val: int) -> None:
-self.cnts[self.nums2[index]] -= 1
-self.nums2[index] += val
-self.cnts[self.nums2[index]] = self.cnts.get(self.nums2[index], 0) + 1
-def count(self, tot: int) -> int:
-cnt = 0
-for num in self.nums1:
-rest = tot - num
-if rest in self.cnts:
-cnt += self.cnts[rest]
-return cnt
-/
- Your FindSumPairs object will be instantiated and called as such:
- FindSumPairs obj = new FindSumPairs(nums1, nums2)
- obj->add(index,val)
- param_2 = obj->count(tot)
-/
+    def __init__(self, nums1: list[int], nums2: list[int]):
+        self.nums1 = nums1
+        self.nums2 = nums2
+        self.cnts = {}
 
+        for num in nums2:
+            self.cnts[num] = self.cnts.get(num, 0) + 1
+
+    def add(self, index: int, val: int) -> None:
+        old_val = self.nums2[index]
+
+        # remove old frequency
+        self.cnts[old_val] -= 1
+
+        # update value
+        self.nums2[index] += val
+        new_val = self.nums2[index]
+
+        # add new frequency
+        self.cnts[new_val] = self.cnts.get(new_val, 0) + 1
+
+    def count(self, tot: int) -> int:
+        cnt = 0
+
+        for num in self.nums1:
+            rest = tot - num
+            if rest in self.cnts:
+                cnt += self.cnts[rest]
+
+        return cnt
 ```
 
 ## How the Algorithm Works
@@ -157,12 +163,10 @@ Total count = 0 + 0 + 0 + 0 + 0 + 2 = 2
 def __init__(self, nums1: list[int], nums2: list[int]):
     self.nums1 = nums1
     self.nums2 = nums2
+    self.cnts = {}
+
     for num in nums2:
-        cnts[num] = cnts.get(num, 0) + 1
-
-
-
-
+        self.cnts[num] = self.cnts.get(num, 0) + 1
 ```
 
 **Process:**
@@ -173,13 +177,14 @@ def __init__(self, nums1: list[int], nums2: list[int]):
 ### Add Operation:
 ```python
 def add(self, index: int, val: int) -> None:
-    cnts[nums2[index]] -= 1
-    nums2[index] += val
-    cnts[nums2[index]] = cnts.get(nums2[index], 0) + 1
+    old_val = self.nums2[index]
 
+    self.cnts[old_val] -= 1
 
+    self.nums2[index] += val
+    new_val = self.nums2[index]
 
-
+    self.cnts[new_val] = self.cnts.get(new_val, 0) + 1
 ```
 
 **Process:**
@@ -191,13 +196,13 @@ def add(self, index: int, val: int) -> None:
 ```python
 def count(self, tot: int) -> int:
     cnt = 0
-    for num in nums1:
+
+    for num in self.nums1:
         rest = tot - num
-        if rest in cnts:
-            cnt += cnts[rest]
-            return cnt
+        if rest in self.cnts:
+            cnt += self.cnts[rest]
 
-
+    return cnt
 ```
 
 **Process:**
@@ -283,19 +288,19 @@ class FindSumPairs:
     def __init__(self, nums1: list[int], nums2: list[int]):
         self.nums1 = nums1
         self.nums2 = nums2
+
     def add(self, index: int, val: int) -> None:
         self.nums2[index] += val
+
     def count(self, tot: int) -> int:
         cnt = 0
+
         for num1 in self.nums1:
             for num2 in self.nums2:
                 if num1 + num2 == tot:
                     cnt += 1
-                    return cnt
 
-
-
-
+        return cnt
 ```
 
 **Time Complexity:** O(m × n) for count operation  
@@ -304,23 +309,32 @@ class FindSumPairs:
 ### Approach 2: Two Hash Maps
 ```python
 from collections import Counter
+
 class FindSumPairs:
-def __init__(self, nums1: list[int], nums2: list[int]):
-self.nums1 = nums1
-self.nums2 = nums2
-self.cnts1 = Counter(nums1)
-self.cnts2 = Counter(nums2)
-def add(self, index: int, val: int) -> None:
-old_num = self.nums2[index]
-self.cnts2[old_num] -= 1
-self.nums2[index] += val
-self.cnts2[self.nums2[index]] += 1
-def count(self, tot: int) -> int:
-cnt = 0
-for num, freq in self.cnts1.items():
-rest = tot - num
-cnt += freq  self.cnts2.get(rest, 0)
-return cnt
+    def __init__(self, nums1: list[int], nums2: list[int]):
+        self.nums1 = nums1
+        self.nums2 = nums2
+        self.cnts2 = Counter(nums2)
+
+    def add(self, index: int, val: int) -> None:
+        old_val = self.nums2[index]
+
+        self.cnts2[old_val] -= 1
+        if self.cnts2[old_val] == 0:
+            del self.cnts2[old_val]
+
+        self.nums2[index] += val
+        new_val = self.nums2[index]
+
+        self.cnts2[new_val] += 1
+
+    def count(self, tot: int) -> int:
+        cnt = 0
+
+        for num in self.nums1:
+            cnt += self.cnts2.get(tot - num, 0)
+
+        return cnt
 
 ```
 

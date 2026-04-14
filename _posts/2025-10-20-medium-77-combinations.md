@@ -64,16 +64,16 @@ class Solution:
         path = []
         self.dfs(n, k, path, 1, result)
         return result
+
     def dfs(self, n: int, k: int, path: list[int], first_num: int, result: list[list[int]]) -> None:
         if len(path) == k:
             result.append(path[:])
             return
-            for i in range(first_num, n + 1):
-                path.append(i)
-                self.dfs(n, k, path, i + 1, result)
-                path.pop()
 
-
+        for i in range(first_num, n + 1):
+            path.append(i)
+            self.dfs(n, k, path, i + 1, result)
+            path.pop()
 ```
 
 ### **Algorithm Explanation:**

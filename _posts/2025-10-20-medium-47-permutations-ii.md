@@ -58,50 +58,53 @@ The STL approach works the same as LC 46 because `next_permutation()` automatica
 ```python
 class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
-        result = [] * nums.sort()  # Sort to group duplicates
+        nums.sort()  # important for duplicate handling
+        result = []
         used = [False] * len(nums)
-        current = [] * self.permuteUniqueHelper(nums, used, current, result)
+        self.backtrack(nums, used, [], result)
         return result
-    def permuteUniqueHelper(self, nums: list[int], used: list[bool],
-    current: list[int], result: list[list[int]]) -> None:
-        if len(current) == len(nums):
-            result.append(current[:])
+
+    def backtrack(self, nums: list[int], used: list[bool],
+                  path: list[int], result: list[list[int]]) -> None:
+
+        if len(path) == len(nums):
+            result.append(path[:])
             return
-            for i in range(len(nums)):
-                if used[i]:
-                    continue
-                    # Skip duplicates: if current element equals previous element
-                    # and previous element is not used, skip current element
-                    if i > 0 and nums[i] == nums[i-1] and not used[i-1]:
-                        continue
-                        used[i] = True
-                        current.append(nums[i])
-                        self.permuteUniqueHelper(nums, used, current, result)
-                        current.pop()
-                        used[i] = False
 
+        for i in range(len(nums)):
+            if used[i]:
+                continue
 
+            # skip duplicates
+            if i > 0 and nums[i] == nums[i - 1] and not used[i - 1]:
+                continue
 
+            used[i] = True
+            path.append(nums[i])
 
+            self.backtrack(nums, used, path, result)
+
+            path.pop()
+            used[i] = False
 ```
 
 ### Solution 2: STL next_permutation (Same as LC 46)
 
 ```python
 from itertools import permutations
+
 class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         nums.sort()
         result = []
         seen = set()
+
         for perm in permutations(nums):
-            perm_tuple = tuple(perm)
-            if perm_tuple not in seen:
-                seen.add(perm_tuple)
+            if perm not in seen:
+                seen.add(perm)
                 result.append(list(perm))
-                return result
 
-
+        return result
 ```
 
 ## Why `current` Array is Essential
@@ -112,19 +115,28 @@ The swapping approach from LC 46 doesn't work well for duplicates because:
 
 ```python
 # PROBLEMATIC: Swapping approach for duplicates
-def permuteUnique(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
-    if idx == len(nums):
-        result.append(nums[:])
-        return
+class Solution:
+    def permuteUnique(self, nums: list[int]) -> list[list[int]]:
+        nums.sort()
+        result = []
+        self.backtrack(nums, 0, result)
+        return result
+
+    def backtrack(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
+
+        used = set()
+
         for i in range(idx, len(nums)):
-            if i > idx and nums[i] == nums[idx]:
-                continue  # Still problematic
-                nums[idx], nums[i] = nums[i], nums[idx] * self.permuteUnique(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]
+            if nums[i] in used:
+                continue
+            used.add(nums[i])
 
-
-
-
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.backtrack(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 **Issues:**
@@ -200,8 +212,8 @@ used[i] = False          # Mark as unused
 ```
 2. Reliable Duplicate Detection:
 ```python
-if(i > 0  nums[i] == nums[i-1] * not used[i-1]) continue
-
+if i > 0 and nums[i] == nums[i - 1] and not used[i - 1]:
+    continue
 ```
 - `nums[i] == nums[i-1]` - Current equals previous
 - `not used[i-1]` - Previous is not used
@@ -219,13 +231,14 @@ def permuteUnique(nums: list[int]) -> list[list[int]]:
     nums.sort()
     result = []
     seen = set()
+
     for perm in permutations(nums):
         perm_tuple = tuple(perm)
         if perm_tuple not in seen:
             seen.add(perm_tuple)
             result.append(list(perm))
-    return result
 
+    return result
 ```
 
 **Why STL works without `current`:**
@@ -242,19 +255,19 @@ class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
         self.permute(nums, 0, result)
-        # Remove duplicates using set
+
         unique_perms = set(tuple(perm) for perm in result)
         return [list(perm) for perm in unique_perms]
+
     def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
         if idx == len(nums):
             result.append(nums[:])
             return
-            for i in range(idx, len(nums)):
-                nums[idx], nums[i] = nums[i], nums[idx]
-                self.permute(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]
 
-
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 **How it works:**
@@ -321,27 +334,21 @@ return [[1,1,2], [1,2,1], [2,1,1]]
 class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
-        permute(nums, 0, result)
-        # Method 1: Using set (automatic sorting)
-        set<list[int]> unique_perms(result.begin(), result.end())
+        self.permute(nums, 0, result)
+
+        # Method 1: Using set for deduplication
+        unique_perms = set(tuple(perm) for perm in result)
         return [list(perm) for perm in unique_perms]
-        # Method 2: Using unordered_set (faster insertion)
-        # set[list[int]> unique_perms(result.begin(), result.end())
-        # return [list(perm) for perm in unique_perms]
-        # Method 3: Manual deduplication
-        # result.sort()
-        # result = [result[i] for i in range(len(result)) if i == 0 or result[i] != result[i-1]]
-        # return result
+
     def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
         if idx == len(nums):
             result.append(nums[:])
             return
-            for i in range(idx, len(nums)):
-                nums[idx], nums[i] = nums[i], nums[idx]
-                self.permute(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]
 
-
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 **Note:** `set[list[int]]` requires tuples (since lists are not hashable), so `set[tuple[int, ...]]` is used instead.
@@ -355,19 +362,20 @@ class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
         self.permute(nums, 0, result)
+
         # Remove duplicates using set
         unique_perms = set(tuple(perm) for perm in result)
         return [list(perm) for perm in unique_perms]
+
     def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
         if idx == len(nums):
             result.append(nums[:])
             return
-            for i in range(idx, len(nums)):
-                nums[idx], nums[i] = nums[i], nums[idx]
-                self.permute(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]
 
-
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 #### **Option 3b: Using `set[tuple[int, ...]]` (Equivalent in Python)**
@@ -376,20 +384,21 @@ class Solution:
 class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
-        permute(nums, 0, result)
+        self.permute(nums, 0, result)
+
         # Remove duplicates using set of tuples
         unique_perms = set(tuple(perm) for perm in result)
         return [list(perm) for perm in unique_perms]
+
     def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
         if idx == len(nums):
             result.append(nums[:])
             return
-            for i in range(idx, len(nums)):
-                nums[idx], nums[i] = nums[i], nums[idx]
-                self.permute(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]
 
-
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 ### **Solution 4: Alternative Hash Set Implementations**
@@ -400,39 +409,45 @@ class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
         self.permute(nums, 0, result)
-        # Convert to set of tuples to remove duplicates
+
         unique_perms = set(tuple(perm) for perm in result)
         return [list(perm) for perm in unique_perms]
+
     def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
         if idx == len(nums):
             result.append(nums[:])
             return
-            for i in range(idx, len(nums)):
-                nums[idx], nums[i] = nums[i], nums[idx]
-                self.permute(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]
-                # Method 2: Manual deduplication
+
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
+
+
+# Method 2: Manual deduplication
 class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
         self.permute(nums, 0, result)
-        # Sort and remove consecutive duplicates
+
         result.sort()
         unique_result = []
-        for i, perm in enumerate(result):
-            if i == 0 or perm != result[i - 1]:
-                unique_result.append(perm)
-                return unique_result
-                def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
-                    if idx == len(nums):
-                        result.append(nums[:])
-                        return
-                        for i in range(idx, len(nums)):
-                            nums[idx], nums[i] = nums[i], nums[idx]
-                            self.permute(nums, idx + 1, result)
-                            nums[idx], nums[i] = nums[i], nums[idx]
 
+        for i in range(len(result)):
+            if i == 0 or result[i] != result[i - 1]:
+                unique_result.append(result[i])
 
+        return unique_result
+
+    def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
+        if idx == len(nums):
+            result.append(nums[:])
+            return
+
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 ```
 
 ## Complete Solution Comparison & Trade-offs
@@ -701,18 +716,20 @@ class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
         self.permute(nums, 0, result)
+
         # Remove duplicates using set
         unique_perms = set(tuple(perm) for perm in result)
         return [list(perm) for perm in unique_perms]
+
     def permute(self, nums: list[int], idx: int, result: list[list[int]]) -> None:
         if idx == len(nums):
             result.append(nums[:])
             return
-            for i in range(idx, len(nums)):
-                nums[idx], nums[i] = nums[i], nums[idx]
-                self.permute(nums, idx + 1, result)
-                nums[idx], nums[i] = nums[i], nums[idx]
 
+        for i in range(idx, len(nums)):
+            nums[idx], nums[i] = nums[i], nums[idx]
+            self.permute(nums, idx + 1, result)
+            nums[idx], nums[i] = nums[i], nums[idx]
 
 ```
 
@@ -721,27 +738,30 @@ class Solution:
 class Solution:
     def permuteUnique(self, nums: list[int]) -> list[list[int]]:
         result = []
-        freq = {}  # Count frequency of each number
+
+        freq = {}
         for num in nums:
             freq[num] = freq.get(num, 0) + 1
-            current = []
-            self.backtrack(freq, current, result, len(nums))
-            return result
-            def backtrack(self, freq: dict[int, int], current: list[int],
-            result: list[list[int]], target_size: int) -> None:
-                if len(current) == target_size:
-                    result.append(current[:])
-                    return
-                    for num, count in freq.items():
-                        if count > 0:
-                            freq[num] -= 1
-                            current.append(num)
-                            self.backtrack(freq, current, result, target_size)
-                            current.pop()
-                            freq[num] += 1
 
+        self.backtrack(freq, [], result, len(nums))
+        return result
 
-```
+    def backtrack(self, freq: dict[int, int], current: list[int],
+                  result: list[list[int]], target_size: int) -> None:
+
+        if len(current) == target_size:
+            result.append(current[:])
+            return
+
+        for num in freq:
+            if freq[num] > 0:
+                freq[num] -= 1
+                current.append(num)
+
+                self.backtrack(freq, current, result, target_size)
+
+                current.pop()
+                freq[num] += 1
 ```
 
 ## When to Use Each Approach

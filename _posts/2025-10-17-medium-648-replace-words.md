@@ -60,16 +60,18 @@ class Solution:
             root = word[:i]
             if root in dicSet:
                 return root
-                return word
-                def replaceWords(self, dictionary: list[str], sentence: str) -> str:
-                    dicSet = set(dictionary)
-                    words = sentence.split()
-                    result = []
-                    for word in words:
-                        result.append(self.shortestRoot(dicSet, word))
-                        return ' '.join(result)
+        return word
 
 
+    def replaceWords(self, dictionary: list[str], sentence: str) -> str:
+        dicSet = set(dictionary)
+        words = sentence.split()
+
+        result = []
+        for word in words:
+            result.append(self.shortestRoot(dicSet, word))
+
+        return ' '.join(result)
 ```
 
 ## Solution 2: Trie Data Structure
@@ -84,39 +86,54 @@ class TrieNode:
     def __init__(self):
         self.isEnd = False
         self.children = [None] * 26
+
+
 class Trie:
     def __init__(self):
         self.root = TrieNode()
+
     def insert(self, word: str) -> None:
         current = self.root
+
         for c in word:
             idx = ord(c) - ord('a')
             if current.children[idx] is None:
                 current.children[idx] = TrieNode()
-                current = current.children[idx]
-                current.isEnd = True
-                def shortestRoot(self, word: str) -> str:
-                    current = self.root
-                    for i, ch in enumerate(word):
-                        idx = ord(ch) - ord('a')
-                        if current.children[idx] is None:
-                            return word
-                            current = current.children[idx]
-                            if current.isEnd:
-                                return word[:i + 1]
-                                return word
+            current = current.children[idx]
+
+        current.isEnd = True
+
+
+    def shortestRoot(self, word: str) -> str:
+        current = self.root
+
+        for i, ch in enumerate(word):
+            idx = ord(ch) - ord('a')
+
+            if current.children[idx] is None:
+                return word
+
+            current = current.children[idx]
+
+            if current.isEnd:
+                return word[:i + 1]
+
+        return word
+
+
 class Solution:
     def replaceWords(self, dictionary: list[str], sentence: str) -> str:
-        dicTrie = Trie()
+        trie = Trie()
+
         for word in dictionary:
-            dicTrie.insert(word)
-            words = sentence.split()
-            result = []
-            for word in words:
-                result.append(dicTrie.shortestRoot(word))
-                return ' '.join(result)
+            trie.insert(word)
 
+        result = []
 
+        for word in sentence.split():
+            result.append(trie.shortestRoot(word))
+
+        return ' '.join(result)
 ```
 
 ## How the Algorithms Work
@@ -183,9 +200,7 @@ def shortestRoot(self, dic_set: set[str], word: str) -> str:
         root = word[:i]
         if root in dic_set:
             return root
-            return word
-
-
+    return word
 ```
 
 **Process:**
@@ -198,16 +213,19 @@ def shortestRoot(self, dic_set: set[str], word: str) -> str:
 ```python
 def shortestRoot(self, word: str) -> str:
     current = self.root
+
     for i, ch in enumerate(word):
         idx = ord(ch) - ord('a')
+
         if current.children[idx] is None:
             return word
-            current = current.children[idx]
-            if current.isEnd:
-                return word[:i + 1]
-                return word
 
+        current = current.children[idx]
 
+        if current.isEnd:
+            return word[:i + 1]
+
+    return word
 ```
 
 **Process:**
@@ -296,15 +314,17 @@ class Solution:
     def replaceWords(self, dictionary: list[str], sentence: str) -> str:
         words = sentence.split()
         out = []
+
         for word in words:
             shortest = word
+
             for root in dictionary:
                 if word.startswith(root) and len(root) < len(shortest):
                     shortest = root
-                    out.append(shortest)
-                    return " ".join(out)
 
+            out.append(shortest)
 
+        return " ".join(out)
 ```
 
 **Time Complexity:** O(n * d * m)  
@@ -317,16 +337,18 @@ class Solution:
         dictionary.sort(key=len)
         words = sentence.split()
         out = []
+
         for word in words:
             shortest = word
+
             for root in dictionary:
                 if word.startswith(root):
                     shortest = root
                     break
-                    out.append(shortest)
-                    return " ".join(out)
 
+            out.append(shortest)
 
+        return " ".join(out)
 ```
 
 **Time Complexity:** O(d log d + n * d * m)  

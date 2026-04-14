@@ -49,20 +49,20 @@ Use dynamic programming to track the length of the longest increasing subsequenc
 ```python
 class Solution:
     def lengthOfLIS(self, nums: list[int]) -> int:
+        if not nums:
+            return 0
+
         dp = [1] * len(nums)
         result = 1
+
         for i in range(1, len(nums)):
-            max_pre = 0
             for j in range(i):
                 if nums[i] > nums[j]:
-                    max_pre = max(max_pre, dp[j])
-                    dp[i] = max_pre + 1
-                    result = max(result, dp[i])
-                    return result
+                    dp[i] = max(dp[i], dp[j] + 1)
 
+            result = max(result, dp[i])
 
-
-
+        return result
 ```
 
 ## Solution 2: Binary Search with Patience Sorting
@@ -76,17 +76,21 @@ Use binary search to maintain a sorted array representing the smallest tail elem
 import bisect
 class Solution:
     def lengthOfLIS(self, nums: list[int]) -> int:
+        if not nums:
+            return 0
+
         sub = [nums[0]]
+
         for i in range(1, len(nums)):
             num = nums[i]
+
             if num > sub[-1]:
                 sub.append(num)
             else:
                 idx = bisect.bisect_left(sub, num)
                 sub[idx] = num
-                return len(sub)
 
-
+        return len(sub)
 ```
 
 ## How the Algorithms Work
@@ -150,17 +154,18 @@ class Solution:
 ```python
 dp = [1] * len(nums)
 rtn = 1
+
 for i in range(1, len(nums)):
     max_pre = 0
+
     for j in range(i):
         if nums[i] > nums[j]:
             max_pre = max(max_pre, dp[j])
-            dp[i] = max_pre + 1
-            rtn = max(rtn, dp[i])
 
+    dp[i] = max_pre + 1
+    rtn = max(rtn, dp[i])
 
-
-
+return rtn
 ```
 
 **Process:**
@@ -180,8 +185,6 @@ for num in nums[1:]:
     else:
         i = bisect.bisect_left(sub, num)
         sub[i] = num
-
-
 ```
 
 **Process:**
@@ -263,23 +266,25 @@ i=5: [0,1,2,3]
 class Solution:
     def lengthOfLIS(self, nums: list[int]) -> int:
         memo = [-1] * len(nums)
+
+        def dfs(index: int) -> int:
+            if memo[index] != -1:
+                return memo[index]
+
+            best = 1
+
+            for j in range(index + 1, len(nums)):
+                if nums[j] > nums[index]:
+                    best = max(best, 1 + dfs(j))
+
+            memo[index] = best
+            return best
+
         maxLen = 0
         for i in range(len(nums)):
-            maxLen = max(maxLen, self.dfs(nums, i, memo))
-            return maxLen
-            def dfs(self, nums: list[int], index: int, memo: list[int]) -> int:
-                if memo[index] != -1:
-                    return memo[index]
-                    maxLen = 1
-                    for i in range(index + 1, len(nums)):
-                        if nums[i] > nums[index]:
-                            maxLen = max(maxLen, 1 + self.dfs(nums, i, memo))
-                            memo[index] = maxLen
-                            return maxLen
+            maxLen = max(maxLen, dfs(i))
 
-
-
-
+        return maxLen
 ```
 
 **Time Complexity:** O(n²)  

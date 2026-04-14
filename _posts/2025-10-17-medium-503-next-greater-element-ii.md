@@ -45,19 +45,24 @@ Use a monotonic stack to find the next greater element for each position, proces
 
 ```python
 class Solution:
-def nextGreaterElements(self, nums: list[int]) -> list[int]:
-n = len(nums)
-st = []
-result = [-1] * n
-for i in range(2  n - 1, -1, -1):
-idx = i % n
-while st and st[-1] <= nums[idx]:
-st.pop()
-if st:
-result[idx] = st[-1]
-st.append(nums[idx])
-return result
+    def nextGreaterElements(self, nums: list[int]) -> list[int]:
+        n = len(nums)
+        st = []
+        result = [-1] * n
 
+        for i in range(2 * n - 1, -1, -1):
+            idx = i % n
+
+            while st and st[-1] <= nums[idx]:
+                st.pop()
+
+            if i < n:
+                if st:
+                    result[idx] = st[-1]
+
+            st.append(nums[idx])
+
+        return result
 ```
 
 ## How the Algorithm Works
@@ -134,7 +139,6 @@ Wait, let me recalculate this more carefully...
 n = numslen()
 list[int> st
 list[int] rtn(n, -1)
-
 ```
 
 **Purpose:** Set up result array and stack for values.
@@ -144,25 +148,23 @@ list[int] rtn(n, -1)
 for i in range(2  n - 1, -1, -1):
 idx = i % n
 # Process nums[idx]
-
 ```
 
 **Purpose:** Handle circular nature by processing array twice (note: `2 * n + 1` ensures we process twice).
 
 ### 3. Maintain Monotonic Stack
 ```python
-while not stnot   st.top() <= nums[idx]:
+while st and st[-1] <= nums[idx]:
     st.pop()
-
 ```
 
 **Purpose:** Remove values that are smaller or equal to maintain decreasing order.
 
 ### 4. Find Next Greater Element
 ```python
-if not stnot ) rtn[idx] = st.top(:
-st.push(nums[idx])
-
+if stack is not empty:
+    answer = stack top
+push current element into stack
 ```
 
 **Purpose:** Set result and push current value to stack.
@@ -175,15 +177,16 @@ class Solution:
     def nextGreaterElements(self, nums: list[int]) -> list[int]:
         n = len(nums)
         res = [-1] * n
+
         for i in range(n):
             for j in range(1, n):
                 idx = (i + j) % n
+
                 if nums[idx] > nums[i]:
                     res[i] = nums[idx]
                     break
-                    return res
 
-
+        return res
 ```
 
 **Time Complexity:** O(n²)  
@@ -196,20 +199,20 @@ class Solution:
         n = len(nums)
         res = [-1] * n
         st = []
-        # First pass
-        for i in range(n):
-            while st and nums[st[-1]] < nums[i]:
-                res[st[-1]] = nums[i] * st.pop()
-                st.append(i)
-                # Second pass for circular
-                for i in range(n):
-                    while st and nums[st[-1]] < nums[i]:
-                        res[st[-1]] = nums[i] * st.pop()
-                        return res
 
+        for i in range(2 * n - 1, -1, -1):
+            idx = i % n
 
+            while st and st[-1] <= nums[idx]:
+                st.pop()
 
+            if i < n:
+                if st:
+                    res[idx] = st[-1]
 
+            st.append(nums[idx])
+
+        return res
 ```
 
 **Time Complexity:** O(n)  

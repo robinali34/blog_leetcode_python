@@ -66,28 +66,37 @@ class Solution:
         self.visited = set()
 
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> list[int]:
+        self.graph = {}
+        self.result = []
+        self.visited = set()
+
         self.buildGraph(root, None)
         self.visited.add(target.val)
         self.dfs(target.val, 0, k)
         return self.result
 
     def buildGraph(self, curr: TreeNode, parent: TreeNode) -> None:
-        if curr and parent:
-            if curr.val not in self.graph:
-                self.graph[curr.val] = []
+        if not curr:
+            return
+
+        # Add current node even if parent is None
+        if curr.val not in self.graph:
+            self.graph[curr.val] = []
+
+        if parent:
             if parent.val not in self.graph:
                 self.graph[parent.val] = []
             self.graph[curr.val].append(parent.val)
             self.graph[parent.val].append(curr.val)
-        if curr and curr.left:
-            self.buildGraph(curr.left, curr)
-        if curr and curr.right:
-            self.buildGraph(curr.right, curr)
+
+        self.buildGraph(curr.left, curr)
+        self.buildGraph(curr.right, curr)
 
     def dfs(self, curr: int, dist: int, K: int) -> None:
         if dist == K:
             self.result.append(curr)
             return
+
         for neighbor in self.graph.get(curr, []):
             if neighbor not in self.visited:
                 self.visited.add(neighbor)
@@ -114,6 +123,8 @@ class Solution:
         self.parent = {}
 
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> list[int]:
+        self.parent = {}
+
         self.addParent(root, None)
         result = []
         visited = set()
@@ -129,12 +140,14 @@ class Solution:
     def dfs(self, curr: TreeNode, dist: int, rtn: list[int], visited: set) -> None:
         if not curr or curr in visited:
             return
+
         visited.add(curr)
+
         if dist == 0:
             rtn.append(curr.val)
             return
-        if curr in self.parent:
-            self.dfs(self.parent[curr], dist - 1, rtn, visited)
+
+        self.dfs(self.parent.get(curr), dist - 1, rtn, visited)
         self.dfs(curr.left, dist - 1, rtn, visited)
         self.dfs(curr.right, dist - 1, rtn, visited)
 ```
@@ -158,12 +171,16 @@ class Solution:
         self.graph = {}
 
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> list[int]:
+        self.graph = {}
         self.buildGraph(root, None)
+
         result = []
         q = deque([(target.val, 0)])
         visited = {target.val}
+
         while q:
             curr, dist = q.popleft()
+
             if dist == k:
                 result.append(curr)
             elif dist < k:
@@ -171,20 +188,26 @@ class Solution:
                     if neighbor not in visited:
                         visited.add(neighbor)
                         q.append((neighbor, dist + 1))
+
         return result
 
     def buildGraph(self, curr: TreeNode, parent: TreeNode) -> None:
-        if curr and parent:
-            if curr.val not in self.graph:
-                self.graph[curr.val] = []
+        if not curr:
+            return
+
+        # ensure node exists in graph
+        if curr.val not in self.graph:
+            self.graph[curr.val] = []
+
+        if parent:
             if parent.val not in self.graph:
                 self.graph[parent.val] = []
+
             self.graph[curr.val].append(parent.val)
             self.graph[parent.val].append(curr.val)
-        if curr and curr.left:
-            self.buildGraph(curr.left, curr)
-        if curr and curr.right:
-            self.buildGraph(curr.right, curr)
+
+        self.buildGraph(curr.left, curr)
+        self.buildGraph(curr.right, curr)
 ```
 
 ## Algorithm Analysis
@@ -212,23 +235,19 @@ class Solution:
 if curr and parent:
     graph[curr.val].append(parent.val)
     graph[parent.val].append(curr.val)
-
-
-
-
 ```
 
 ### DFS with Distance Control
 ```python
-def dfs(self, curr: int, dist: int, K: int) -> None:
+def dfs(self, curr: int, dist: int, K: int, graph, visited, result) -> None:
     if dist == K:
         result.append(curr)
         return
-    # Recursively explore all neighbors
+
     for neighbor in graph.get(curr, []):
         if neighbor not in visited:
             visited.add(neighbor)
-            self.dfs(neighbor, dist + 1, K)
+            self.dfs(neighbor, dist + 1, K, graph, visited, result)
 ```
 
 ### Three-Directional Search

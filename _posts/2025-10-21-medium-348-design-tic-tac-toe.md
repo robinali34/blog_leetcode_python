@@ -99,50 +99,38 @@ ticTacToe.move(2, 1, 1); // return 1 (player 1 wins)
 class TicTacToe:
     def __init__(self, n: int):
         self.board = [[''] * n for _ in range(n)]
+
     def move(self, row: int, col: int, player: int) -> int:
-        if player == 1:
-            self.board[row][col] = 'X'
-        else:
-            self.board[row][col] = 'O'
-            if self.win(player):
-                return player
-                return 0
-                def win(self, player: int) -> bool:
-                    ch = 'X' if player == 1 else 'O'
-                    n = len(self.board)
-                    # Check rows
-                    for i in range(n):
-                        cnt = 0
-                        for j in range(n):
-                            if self.board[i][j] == ch:
-                                cnt += 1
-                                if cnt == n:
-                                    return True
-                                    # Check columns
-                                    for i in range(n):
-                                        cnt = 0
-                                        for j in range(n):
-                                            if self.board[j][i] == ch:
-                                                cnt += 1
-                                                if cnt == n:
-                                                    return True
-                                                    # Check main diagonal
-                                                    cnt = 0
-                                                    for i in range(n):
-                                                        if self.board[i][i] == ch:
-                                                            cnt += 1
-                                                            if cnt == n:
-                                                                return True
-                                                                # Check anti-diagonal
-                                                                cnt = 0
-                                                                for i in range(n):
-                                                                    if self.board[i][n - i - 1] == ch:
-                                                                        cnt += 1
-                                                                        if cnt == n:
-                                                                            return True
-                                                                            return False
+        self.board[row][col] = 'X' if player == 1 else 'O'
 
+        if self.win(player):
+            return player
 
+        return 0
+
+    def win(self, player: int) -> bool:
+        ch = 'X' if player == 1 else 'O'
+        n = len(self.board)
+
+        # rows
+        for i in range(n):
+            if all(self.board[i][j] == ch for j in range(n)):
+                return True
+
+        # cols
+        for j in range(n):
+            if all(self.board[i][j] == ch for i in range(n)):
+                return True
+
+        # main diagonal
+        if all(self.board[i][i] == ch for i in range(n)):
+            return True
+
+        # anti diagonal
+        if all(self.board[i][n - i - 1] == ch for i in range(n)):
+            return True
+
+        return False
 ```
 
 ### Approach 2: Optimized with Counters (Recommended)
@@ -164,23 +152,27 @@ class TicTacToe:
         self.cols = [0] * n
         self.diagonal = 0
         self.antiDiagonal = 0
+        self.n = n
+
     def move(self, row: int, col: int, player: int) -> int:
         curr = 1 if player == 1 else -1
-        n = len(self.rows)
+
         self.rows[row] += curr
         self.cols[col] += curr
+
         if row == col:
             self.diagonal += curr
-            if row == n - col - 1:
-                self.antiDiagonal += curr
-                if (abs(self.rows[row]) == n or abs(self.cols[col]) == n or
-                abs(self.diagonal) == n or abs(self.antiDiagonal) == n):
-                    return player
-                    return 0
 
+        if row + col == self.n - 1:
+            self.antiDiagonal += curr
 
+        if (abs(self.rows[row]) == self.n or
+            abs(self.cols[col]) == self.n or
+            abs(self.diagonal) == self.n or
+            abs(self.antiDiagonal) == self.n):
+            return player
 
-
+        return 0
 ```
 
 ## Algorithm Analysis
@@ -205,20 +197,25 @@ class TicTacToe:
 
 ### Counter Update Logic
 ```python
-(1 if curr = player == 1  else -1  # Player encoding)
-rows[row] += curr                 # Update row count
-cols[col] += curr                 # Update column count
-if(row == col) diagonal += curr   # Main diagonal
-if(row == n - col - 1) antiDiagonal += curr  # Anti-diagonal
+curr = 1 if player == 1 else -1
 
+rows[row] += curr
+cols[col] += curr
+
+if row == col:
+    diagonal += curr
+
+if row + col == n - 1:
+    antiDiagonal += curr
 ```
 
 ### Win Condition Check
 ```python
-if(abs(rows[row]) == n  or  abs(cols[col]) == n  or
-abs(diagonal) == n  or  abs(antiDiagonal) == n)
-return player
-
+if (abs(rows[row]) == n or
+    abs(cols[col]) == n or
+    abs(diagonal) == n or
+    abs(antiDiagonal) == n):
+    return player
 ```
 
 ## Edge Cases

@@ -66,30 +66,36 @@ The key insight is that variables connected by equality equations must have the 
 class UnionFind:
     def __init__(self):
         self.parent = list(range(26))
+
     def find(self, idx: int) -> int:
-        if idx == self.parent[idx]:
-            return idx
-            self.parent[idx] = self.find(self.parent[idx])
-            return self.parent[idx]
-            def unite(self, idx1: int, idx2: int) -> None:
-                self.parent[self.find(idx1)] = self.find(idx2)
+        if idx != self.parent[idx]:
+            self.parent[idx] = self.find(self.parent[idx])  # path compression
+        return self.parent[idx]
+
+    def unite(self, idx1: int, idx2: int) -> None:
+        self.parent[self.find(idx1)] = self.find(idx2)
+
+
 class Solution:
     def equationsPossible(self, equations: list[str]) -> bool:
         uf = UnionFind()
+
+        # Step 1: process all "=="
         for eq in equations:
             if eq[1] == '=':
-                idx1 = ord(eq[0]) - ord('a')
-                idx2 = ord(eq[3]) - ord('a')
-                uf.unite(idx1, idx2)
-                for eq in equations:
-                    if eq[1] == 'not ':
-                        idx1 = ord(eq[0]) - ord('a')
-                        idx2 = ord(eq[3]) - ord('a')
-                        if uf.find(idx1) == uf.find(idx2):
-                            return False
-                            return True
+                a = ord(eq[0]) - ord('a')
+                b = ord(eq[3]) - ord('a')
+                uf.unite(a, b)
 
+        # Step 2: check all "!="
+        for eq in equations:
+            if eq[1] == '!':
+                a = ord(eq[0]) - ord('a')
+                b = ord(eq[3]) - ord('a')
+                if uf.find(a) == uf.find(b):
+                    return False
 
+        return True
 ```
 
 **Time Complexity:** O(n * α(26)) where α is the inverse Ackermann function (practically constant)
@@ -108,29 +114,38 @@ class Solution:
     def equationsPossible(self, equations: list[str]) -> bool:
         SIZE = 26
         graph = [[] for _ in range(SIZE)]
-        color = [-1] * SIZE
-        for eqn in equations:
-            if eqn[1] == '=':
-                x = ord(eqn[0]) - ord('a')
-                y = ord(eqn[3]) - ord('a')
+
+        # Step 1: build graph from "=="
+        for eq in equations:
+            if eq[1] == '=':
+                x = ord(eq[0]) - ord('a')
+                y = ord(eq[3]) - ord('a')
                 graph[x].append(y)
                 graph[y].append(x)
-                def dfs(node: int, c: int) -> None:
-                    if color[node] == -1:
-                        color[node] = c
-                        for nei in graph[node]:
-                            dfs(nei, c)
-                            for i in range(SIZE):
-                                dfs(i, i)
-                                for eqn in equations:
-                                    if eqn[1] == 'not ':
-                                        x = ord(eqn[0]) - ord('a')
-                                        y = ord(eqn[3]) - ord('a')
-                                        if color[x] == color[y]:
-                                            return False
-                                            return True
 
+        color = [-1] * SIZE
 
+        # DFS to assign components
+        def dfs(node: int, c: int) -> None:
+            color[node] = c
+            for nei in graph[node]:
+                if color[nei] == -1:
+                    dfs(nei, c)
+
+        # Step 2: color connected components
+        for i in range(SIZE):
+            if color[i] == -1:
+                dfs(i, i)
+
+        # Step 3: check inequalities
+        for eq in equations:
+            if eq[1] == '!':
+                x = ord(eq[0]) - ord('a')
+                y = ord(eq[3]) - ord('a')
+                if color[x] == color[y]:
+                    return False
+
+        return True
 ```
 
 **Time Complexity:** O(n + 26) = O(n) - process equations + DFS on graph
@@ -147,34 +162,41 @@ class Solution:
 ```python
 class Solution:
     SIZE = 26
+
     def dfs(self, node: int, comp_id: int, adjacency: list[list[int]], component: list[int]) -> None:
         component[node] = comp_id
         for neighbor in adjacency[node]:
             if component[neighbor] == -1:
                 self.dfs(neighbor, comp_id, adjacency, component)
-                def equationsPossible(self, equations: list[str]) -> bool:
-                    adjacency = [[] for _ in range(self.SIZE)]
-                    component = [-1] * self.SIZE
-                    for eq in equations:
-                        if eq[1] == '=':
-                            x = ord(eq[0]) - ord('a')
-                            y = ord(eq[3]) - ord('a')
-                            adjacency[x].append(y)
-                            adjacency[y].append(x)
-                            cur = 0
-                            for i in range(self.SIZE):
-                                if component[i] == -1 and adjacency[i]:
-                                    self.dfs(i, cur, adjacency, component)
-                                    cur += 1
-                                    for eq in equations:
-                                        if eq[1] == 'not ':
-                                            x = ord(eq[0]) - ord('a')
-                                            y = ord(eq[3]) - ord('a')
-                                            if x == y or (component[x] != -1 and component[x] == component[y]):
-                                                return False
-                                                return True
 
+    def equationsPossible(self, equations: list[str]) -> bool:
+        adjacency = [[] for _ in range(self.SIZE)]
+        component = [-1] * self.SIZE
 
+        # Step 1: build graph from "=="
+        for eq in equations:
+            if eq[1] == '=':
+                x = ord(eq[0]) - ord('a')
+                y = ord(eq[3]) - ord('a')
+                adjacency[x].append(y)
+                adjacency[y].append(x)
+
+        # Step 2: assign components using DFS
+        comp_id = 0
+        for i in range(self.SIZE):
+            if component[i] == -1:
+                self.dfs(i, comp_id, adjacency, component)
+                comp_id += 1
+
+        # Step 3: check inequalities
+        for eq in equations:
+            if eq[1] == '!':
+                x = ord(eq[0]) - ord('a')
+                y = ord(eq[3]) - ord('a')
+                if component[x] != -1 and component[x] == component[y]:
+                    return False
+
+        return True
 ```
 
 **Time Complexity:** O(n + 26) = O(n)

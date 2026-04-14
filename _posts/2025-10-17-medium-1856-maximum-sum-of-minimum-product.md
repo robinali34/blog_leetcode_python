@@ -65,28 +65,38 @@ Use monotonic stack to find the range where each element is minimum, then calcul
 
 ```python
 class Solution:
-def maxSumMinProduct(self, nums: list[int]) -> int:
-MOD = 109 + 7
-n = len(nums)
-prefix = [0] * (n + 1)
-for i in range(n):
-prefix[i + 1] = prefix[i] + nums[i]
-left = [-1] * n
-right = [n] * n
-stack = []
-for i in range(n):
-while stack and nums[stack[-1]] >= nums[i]:
-right[stack[-1]] = i
-stack.pop()
-if stack:
-left[i] = stack[-1]
-stack.append(i)
-max_product = 0
-for i in range(n):
-total_sum = prefix[right[i]] - prefix[left[i] + 1]
-max_product = max(max_product, total_sum  nums[i])
-return max_product % MOD
+    def maxSumMinProduct(self, nums: list[int]) -> int:
+        MOD = 10**9 + 7
+        n = len(nums)
 
+        # prefix sum
+        prefix = [0] * (n + 1)
+        for i in range(n):
+            prefix[i + 1] = prefix[i] + nums[i]
+
+        left = [-1] * n
+        right = [n] * n
+
+        stack = []
+
+        # next smaller to right + previous smaller to left
+        for i in range(n):
+            while stack and nums[stack[-1]] >= nums[i]:
+                right[stack.pop()] = i
+            if stack:
+                left[i] = stack[-1]
+            stack.append(i)
+
+        max_product = 0
+
+        for i in range(n):
+            l = left[i]
+            r = right[i]
+
+            total_sum = prefix[r] - prefix[l + 1]
+            max_product = max(max_product, total_sum * nums[i])
+
+        return max_product % MOD
 ```
 
 ## How the Algorithm Works
@@ -143,14 +153,14 @@ right = [4, 3, 4, 4]
 ```python
 for i in range(n):
     while stack and nums[stack[-1]] >= nums[i]:
-        right[stack[-1]] = i
-        stack.pop()
-        if stack:
-            left[i] = stack[-1] * stack.append(i)
+        right[stack.pop()] = i
 
+    if stack:
+        left[i] = stack[-1]
+    else:
+        left[i] = -1
 
-
-
+    stack.append(i)
 ```
 
 **Process:**
@@ -162,9 +172,8 @@ for i in range(n):
 ### Product Calculation:
 ```python
 for i in range(n):
-total_sum = prefix[right[i]] - prefix[left[i] + 1]
-max_product = max(max_product, total_sum  nums[i])
-
+    total_sum = prefix[right[i]] - prefix[left[i] + 1]
+    max_product = max(max_product, total_sum * nums[i])
 ```
 
 **Process:**
@@ -247,19 +256,21 @@ right = [3, 3, 3, 5, 5]
 ### Approach 1: Brute Force
 ```python
 class Solution:
-def maxSumMinProduct(self, nums: list[int]) -> int:
-MOD = 109 + 7
-max_product = 0
-n = len(nums)
-for i in range(n):
-min_val = nums[i]
-total = 0
-for j in range(i, n):
-min_val = min(min_val, nums[j])
-total += nums[j]
-max_product = max(max_product, min_val  total)
-return max_product % MOD
+    def maxSumMinProduct(self, nums: list[int]) -> int:
+        MOD = 10**9 + 7
+        max_product = 0
+        n = len(nums)
 
+        for i in range(n):
+            min_val = nums[i]
+            total = 0
+
+            for j in range(i, n):
+                min_val = min(min_val, nums[j])
+                total += nums[j]
+                max_product = max(max_product, min_val * total)
+
+        return max_product % MOD
 ```
 
 **Time Complexity:** O(n^3)  
@@ -271,20 +282,24 @@ class Solution:
     def _maxProduct(self, nums: list[int], left: int, right: int) -> int:
         if left > right:
             return 0
-            if left == right:
-                return nums[left] * nums[left]
-                min_idx = min(range(left, right + 1), key=lambda i: nums[i])
-                total = sum(nums[left:right + 1])
-                product = nums[min_idx] * total
-                return max(
-                product,
-                self._maxProduct(nums, left, min_idx - 1),
-                self._maxProduct(nums, min_idx + 1, right),
-                )
-                def maxSumMinProduct(self, nums: list[int]) -> int:
-                    return self._maxProduct(nums, 0, len(nums) - 1) % (109 + 7)
 
+        if left == right:
+            return nums[left] * nums[left]
 
+        min_idx = min(range(left, right + 1), key=lambda i: nums[i])
+
+        total = sum(nums[left:right + 1])
+        product = nums[min_idx] * total
+
+        return max(
+            product,
+            self._maxProduct(nums, left, min_idx - 1),
+            self._maxProduct(nums, min_idx + 1, right)
+        )
+
+    def maxSumMinProduct(self, nums: list[int]) -> int:
+        MOD = 10**9 + 7
+        return self._maxProduct(nums, 0, len(nums) - 1) % MOD
 ```
 
 **Time Complexity:** O(n log n)  

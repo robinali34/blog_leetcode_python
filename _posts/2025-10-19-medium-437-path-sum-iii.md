@@ -51,24 +51,23 @@ class Solution:
     def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
         if not node:
             return 0
-            cnt = 1 if targetSum == node.val else 0
-            return (
-            cnt
-            + self.dfs(node.left, targetSum - node.val)
-            + self.dfs(node.right, targetSum - node.val)
-            )
-            def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
-                if not root:
-                    return 0
-                    return (
-                    self.dfs(root, targetSum)
-                    + self.pathSum(root.left, targetSum)
-                    + self.pathSum(root.right, targetSum)
-                    )
 
+        cnt = 1 if node.val == targetSum else 0
 
+        cnt += self.dfs(node.left, targetSum - node.val)
+        cnt += self.dfs(node.right, targetSum - node.val)
 
+        return cnt
 
+    def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+        if not root:
+            return 0
+
+        return (
+            self.dfs(root, targetSum)
+            + self.pathSum(root.left, targetSum)
+            + self.pathSum(root.right, targetSum)
+        )
 ```
 
 ## How the Algorithm Works
@@ -119,12 +118,13 @@ class Solution:
 def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
     if not node:
         return 0
-        cnt = 1 if targetSum == node.val else 0
-        return cnt + dfs(self, node.left, targetSum - node.val) + dfs(self, node.right, targetSum - node.val)
 
+    cnt = 1 if node.val == targetSum else 0
 
+    cnt += self.dfs(node.left, targetSum - node.val)
+    cnt += self.dfs(node.right, targetSum - node.val)
 
-
+    return cnt
 ```
 
 **Process:**
@@ -138,11 +138,12 @@ def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
 def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
     if not root:
         return 0
-        return dfs(self, root, targetSum) + pathSum(self, root.left, targetSum) + pathSum(self, root.right, targetSum)
 
-
-
-
+    return (
+        self.dfs(root, targetSum)
+        + self.pathSum(root.left, targetSum)
+        + self.pathSum(root.right, targetSum)
+    )
 ```
 
 **Process:**
@@ -219,20 +220,28 @@ Where n is the number of nodes and h is the height of the tree.
 ### Approach 1: Prefix Sum with Hash Map
 ```python
 class Solution:
-def dfs(self, node: 'TreeNode | None', targetSum: int, prefixSum: dict[int, int], currentSum: int) -> int:
-if not node:
-return 0
-currentSum += node.val
-count = prefixSum.get(currentSum - targetSum, 0)
-prefixSum[currentSum] = prefixSum.get(currentSum, 0) + 1
-count += self.dfs(node.left, targetSum, prefixSum, currentSum)
-count += self.dfs(node.right, targetSum, prefixSum, currentSum)
-prefixSum[currentSum] -= 1
-return count
-def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
-prefixSum = :0: 1
-return self.dfs(root, targetSum, prefixSum, 0)
+    def dfs(self, node: 'TreeNode | None', targetSum: int,
+            prefixSum: dict[int, int], currentSum: int) -> int:
 
+        if not node:
+            return 0
+
+        currentSum += node.val
+
+        count = prefixSum.get(currentSum - targetSum, 0)
+
+        prefixSum[currentSum] = prefixSum.get(currentSum, 0) + 1
+
+        count += self.dfs(node.left, targetSum, prefixSum, currentSum)
+        count += self.dfs(node.right, targetSum, prefixSum, currentSum)
+
+        prefixSum[currentSum] -= 1  # backtrack
+
+        return count
+
+    def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
+        prefixSum = {0: 1}
+        return self.dfs(root, targetSum, prefixSum, 0)
 ```
 
 **Time Complexity:** O(n)  
@@ -244,27 +253,31 @@ class Solution:
     def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
         if not root:
             return 0
-            stk = [root]
-            count = 0
-            while stk:
-                node = stk.pop()
-                count += self.dfs(node, targetSum)
-                if node.left:
-                    stk.append(node.left)
-                    if node.right:
-                        stk.append(node.right)
-                        return count
-                        def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
-                            if not node:
-                                return 0
-                                cnt = 1 if targetSum == node.val else 0
-                                return (
-                                cnt
-                                + self.dfs(node.left, targetSum - node.val)
-                                + self.dfs(node.right, targetSum - node.val)
-                                )
 
+        stk = [root]
+        count = 0
 
+        while stk:
+            node = stk.pop()
+            count += self.dfs(node, targetSum)
+
+            if node.left:
+                stk.append(node.left)
+            if node.right:
+                stk.append(node.right)
+
+        return count
+
+    def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
+        if not node:
+            return 0
+
+        cnt = 1 if node.val == targetSum else 0
+
+        cnt += self.dfs(node.left, targetSum - node.val)
+        cnt += self.dfs(node.right, targetSum - node.val)
+
+        return cnt
 ```
 
 **Time Complexity:** O(n²)  

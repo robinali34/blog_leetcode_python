@@ -126,13 +126,13 @@ def backtrack(self, parameters) -> None:
     if base_case:
         # Process result
         return
-        for choice in choices:
-            # Make choice
-            make_choice(choice)
-            # Recurse
-            backtrack(updated_parameters)
-            # Undo choice (backtrack)
-            undo_choice(choice)
+    for choice in choices:
+        # Make choice
+        make_choice(choice)
+        # Recurse
+        backtrack(updated_parameters)
+        # Undo choice (backtrack)
+        undo_choice(choice)
 
 
 

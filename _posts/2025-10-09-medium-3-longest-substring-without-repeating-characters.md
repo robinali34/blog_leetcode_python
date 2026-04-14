@@ -51,18 +51,17 @@ class Solution:
         max_len = 0
         hashmap = {}
         start = 0
+
         for end in range(len(s)):
             cur = s[end]
-            # If character exists and is within current window
+
             if cur in hashmap and hashmap[cur] >= start:
-                start = hashmap[cur] + 1  # Move start past the duplicate
-                hashmap[cur] = end  # Update character position
-                max_len = max(max_len, end - start + 1)  # Update max length
-                return max_len
+                start = hashmap[cur] + 1
 
+            hashmap[cur] = end
+            max_len = max(max_len, end - start + 1)
 
-
-
+        return max_len
 ```
 
 ## How the Algorithm Works
@@ -122,30 +121,18 @@ hashmap = {}  # Dictionary to store character positions
 start = 0
 for end in range(len(s)):
     cur = s[end]
-
-
-
-
 ```
 
 ### 3. Handle Duplicates
 ```python
 if cur in hashmap and hashmap[cur] >= start:
     start = hashmap[cur] + 1  # Move start past duplicate
-
-
-
-
 ```
 
 ### 4. Update and Track
 ```python
 hashmap[cur] = end  # Update character position
 max_len = max(max_len, end - start + 1)  # Update max length
-
-
-
-
 ```
 
 ## Alternative Approaches
@@ -157,10 +144,6 @@ for i in range(n):
     for j in range(i, n):
         if isUnique(s, i, j):
             max_len = max(max_len, j - i + 1)
-
-
-
-
 ```
 
 ### Approach 2: Sliding Window with Set
@@ -174,11 +157,6 @@ for end in range(len(s)):
         start += 1
         window.add(s[end])
         max_len = max(max_len, end - start + 1)
-
-
-
-
-```
 ```
 
 ## Complexity Analysis

@@ -56,16 +56,15 @@ Sort people by height (descending) and k-value (ascending), then insert each per
 ```python
 class Solution:
     def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
-        # 1. Sort by height (descending), then by k-value (ascending)
-        # 2. Insert each person at the k-th position
-        # 3. Use list for efficient insertion at arbitrary positions
+        # Sort by height descending, then k ascending
         people.sort(key=lambda x: (-x[0], x[1]))
+
         result = []
+
         for person in people:
             result.insert(person[1], person)
-            return result
 
-
+        return result
 ```
 
 ## How the Algorithm Works
@@ -107,11 +106,12 @@ Sorted:   [[7,0],[7,1],[6,1],[5,0],[5,2],[4,4]]
 
 ### Sorting Logic:
 ```python
-sort(people.begin(), people.end(), [](list[int] * a, list[int] b) :
-if(a[0] == b[0]) return a[1] < b[1]  # Same height: sort by k-value
-return a[0] > b[0]                    # Different height: sort by height
-)
-
+sort(people.begin(), people.end(),
+     [](const vector<int>& a, const vector<int>& b) {
+         if (a[0] == b[0])
+             return a[1] < b[1];   // same height → smaller k first
+         return a[0] > b[0];       // taller first
+     });
 ```
 
 **Process:**
@@ -123,10 +123,6 @@ return a[0] > b[0]                    # Different height: sort by height
 ```python
 for person in people:
     result.insert(person[1], person)
-
-
-
-
 ```
 
 **Process:**
@@ -196,12 +192,13 @@ Sorted:   [[6,0],[5,0],[4,0],[3,2],[2,2],[1,4]]
 class Solution:
     def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
         people.sort(key=lambda x: (-x[0], x[1]))
+
         result = []
+
         for person in people:
             result.insert(person[1], person)
-            return result
 
-
+        return result
 ```
 
 **Time Complexity:** O(n²)  
@@ -210,20 +207,24 @@ class Solution:
 ### Approach 2: Priority Queue
 ```python
 import heapq
+
 class Solution:
     def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
-        # Max heap: negate height for max heap behavior
         pq = []
-        for person in people:
-            heapq.heappush(pq, (-person[0], person[1]))
-            result = []
-            while pq:
-                neg_h, k = heapq.heappop(pq)
-                h = -neg_h
-                result.insert(k, [h, k])
-                return result
 
+        # build heap
+        for h, k in people:
+            heapq.heappush(pq, (-h, k))
 
+        result = []
+
+        # process heap AFTER building it
+        while pq:
+            neg_h, k = heapq.heappop(pq)
+            h = -neg_h
+            result.insert(k, [h, k])
+
+        return result
 ```
 
 **Time Complexity:** O(n²)  

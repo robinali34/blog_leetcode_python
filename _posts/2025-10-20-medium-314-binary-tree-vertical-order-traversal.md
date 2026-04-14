@@ -73,28 +73,28 @@ This problem requires traversing a binary tree in **vertical order** (column by 
 #         self.val = val
 #         self.left = left
 #         self.right = right
-from collections import deque
+from collections import deque, defaultdict
+
 class Solution:
     def verticalOrder(self, root: TreeNode) -> list[list[int]]:
         if not root:
             return []
-            column_map = {}
-            q = deque([(root, 0)])
-            while q:
-                size = len(q)
-                for _ in range(size):
-                    curr, col = q.popleft()
-                    if col not in column_map:
-                        column_map[col] = []
-                        column_map[col].append(curr.val)
-                        if curr.left:
-                            q.append((curr.left, col - 1))
-                            if curr.right:
-                                q.append((curr.right, col + 1))
-                                result = [column_map[col] for col in sorted(column_map.keys())]
-                                return result
 
+        column_map = defaultdict(list)
+        q = deque([(root, 0)])
 
+        while q:
+            node, col = q.popleft()
+
+            column_map[col].append(node.val)
+
+            if node.left:
+                q.append((node.left, col - 1))
+
+            if node.right:
+                q.append((node.right, col + 1))
+
+        return [column_map[col] for col in sorted(column_map.keys())]
 ```
 
 ### **Algorithm Explanation:**
@@ -165,25 +165,29 @@ Result: [[9], [3,15], [20], [7]]
 ```python
 class Solution:
     def verticalOrder(self, root: TreeNode) -> list[list[int]]:
-        column_map = {}  # column -> [(row, val)]
+        from collections import defaultdict
+
+        column_map = defaultdict(list)
+
         self.dfs(root, 0, 0, column_map)
+
         result = []
+
         for col in sorted(column_map.keys()):
             nodes = column_map[col]
-            nodes.sort()  # Sort by row, then by val
-            vals = [val for row, val in nodes]
-            result.append(vals)
-            return result
-            def dfs(self, node: TreeNode, row: int, col: int, column_map: dict) -> None:
-                if not node:
-                    return
-                    if col not in column_map:
-                        column_map[col] = []
-                        column_map[col].append((row, node.val))
-                        self.dfs(node.left, row + 1, col - 1, column_map)
-                        self.dfs(node.right, row + 1, col + 1, column_map)
+            nodes.sort()  # sort by (row, value)
+            result.append([val for row, val in nodes])
 
+        return result
 
+    def dfs(self, node: TreeNode, row: int, col: int, column_map: dict) -> None:
+        if not node:
+            return
+
+        column_map[col].append((row, node.val))
+
+        self.dfs(node.left, row + 1, col - 1, column_map)
+        self.dfs(node.right, row + 1, col + 1, column_map)
 ```
 
 **Why BFS is better:**

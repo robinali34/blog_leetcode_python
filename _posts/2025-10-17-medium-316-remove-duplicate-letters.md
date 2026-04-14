@@ -56,21 +56,27 @@ class Solution:
         count = [0] * 26
         visited = [False] * 26
         stack = []
+
+        # count frequency
         for c in s:
             count[ord(c) - ord('a')] += 1
-            for c in s:
-                idx = ord(c) - ord('a')
-                count[idx] -= 1
-                if visited[idx]:
-                    continue
-                    while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
-                        visited[ord(stack[-1]) - ord('a')] = False
-                        stack.pop()
-                        stack.append(c)
-                        visited[idx] = True
-                        return "".join(stack)
 
+        for c in s:
+            idx = ord(c) - ord('a')
 
+            count[idx] -= 1
+
+            if visited[idx]:
+                continue
+
+            while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
+                visited[ord(stack[-1]) - ord('a')] = False
+                stack.pop()
+
+            stack.append(c)
+            visited[idx] = True
+
+        return "".join(stack)
 ```
 
 ## How the Algorithm Works
@@ -117,18 +123,18 @@ class Solution:
 ### Core Logic:
 ```python
 for c in s:
-    count[ord(c) - ord('a')] -= 1
-    if visited[ord(c) - ord('a')]:
+    idx = ord(c) - ord('a')
+    count[idx] -= 1
+
+    if visited[idx]:
         continue
-        while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
-            visited[ord(stack[-1]) - ord('a')] = False
-            stack.pop()
-            stack.append(c)
-            visited[ord(c) - ord('a')] = True
 
+    while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
+        visited[ord(stack[-1]) - ord('a')] = False
+        stack.pop()
 
-
-
+    stack.append(c)
+    visited[idx] = True
 ```
 
 **Process:**
@@ -200,21 +206,28 @@ class Solution:
     def removeDuplicateLetters(self, s: str) -> str:
         if not s:
             return ""
-            count = [0] * 26
-            for c in s:
-                count[ord(c) - ord('a')] += 1
-                pos = 0
-                for i, ch in enumerate(s):
-                    if ch < s[pos]:
-                        pos = i
-                        count[ord(ch) - ord('a')] -= 1
-                        if count[ord(ch) - ord('a')] == 0:
-                            break
-                            first = s[pos]
-                            remaining = s[pos + 1:].replace(first, "")
-                            return first + self.removeDuplicateLetters(remaining)
 
+        # count frequency
+        count = [0] * 26
+        for c in s:
+            count[ord(c) - ord('a')] += 1
 
+        pos = 0
+
+        for i, c in enumerate(s):
+            if c < s[pos]:
+                pos = i
+
+            count[ord(c) - ord('a')] -= 1
+
+            # check if all remaining letters still exist
+            if count[ord(c) - ord('a')] == 0:
+                break
+
+        first = s[pos]
+        remaining = s[pos + 1:].replace(first, "")
+
+        return first + self.removeDuplicateLetters(remaining)
 ```
 
 **Time Complexity:** O(n^2)  
@@ -224,16 +237,28 @@ class Solution:
 ```python
 class Solution:
     def removeDuplicateLetters(self, s: str) -> str:
-        seen = set()
-        result = []
+        count = [0] * 26
         for c in s:
-            if c not in seen:
-                seen.add(c)
-                result.append(c)
-                result.sort()
-                return "".join(result)
+            count[ord(c) - ord('a')] += 1
 
+        stack = []
+        in_stack = [False] * 26
 
+        for c in s:
+            idx = ord(c) - ord('a')
+            count[idx] -= 1
+
+            if in_stack[idx]:
+                continue
+
+            while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
+                in_stack[ord(stack[-1]) - ord('a')] = False
+                stack.pop()
+
+            stack.append(c)
+            in_stack[idx] = True
+
+        return "".join(stack)
 ```
 
 **Time Complexity:** O(n log n)  

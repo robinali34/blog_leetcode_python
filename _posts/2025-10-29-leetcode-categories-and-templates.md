@@ -774,3 +774,7 @@ def schedule(self, iv: list[tuple[int, int]]) -> int:
 
 ```
 {% endraw %}
+
+## Recent solution posts (2026)
+
+For **curated links by theme** (sliding window, trees, XOR, scheduling, and more), see the [LeetCode Questions List]({{ site.baseurl }}/leetcode-questions-list/) section *Problems by Category* → *Spring 2026 highlights*, and the [LeetCode Templates]({{ site.baseurl }}/leetcode-templates/) page *Recent posts by category*.

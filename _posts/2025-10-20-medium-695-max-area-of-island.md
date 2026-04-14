@@ -62,20 +62,27 @@ This is a classic **Connected Components** problem that can be solved using **De
 ```python
 class Solution:
     def dfs(self, grid: list[list[int]], r: int, c: int) -> int:
-        if r < 0 or r >= len(grid) or c < 0 or c >= len(grid[0]) or grid[r][c] == 0:
+        if (r < 0 or r >= len(grid) or
+            c < 0 or c >= len(grid[0]) or
+            grid[r][c] == 0):
             return 0
+
         grid[r][c] = 0
         area = 1
-        dirs = [(0, -1), (0, 1), (1, 0), (-1, 0)]
-        for dr, dc in dirs:
+
+        for dr, dc in [(0, -1), (0, 1), (1, 0), (-1, 0)]:
             area += self.dfs(grid, r + dr, c + dc)
+
         return area
 
     def maxAreaOfIsland(self, grid: list[list[int]]) -> int:
         max_area = 0
+
         for r in range(len(grid)):
             for c in range(len(grid[0])):
-                max_area = max(max_area, self.dfs(grid, r, c))
+                if grid[r][c] == 1:   # ✅ important fix
+                    max_area = max(max_area, self.dfs(grid, r, c))
+
         return max_area
 ```
 
@@ -126,24 +133,30 @@ For a simple grid `[[1,1],[1,0]]`:
 ### BFS Approach:
 ```python
 from collections import deque
-def bfs(self, grid: list[list[int]], r: int, c: int) -> int:
-    q = deque([(r, c)])
-    grid[r][c] = 0
-    area = 0
-    dirs = [(0, -1), (0, 1), (1, 0), (-1, 0)]
-    while q:
-        row, col = q.popleft()
-        area += 1
-        for dr, dc in dirs:
-            newR, newC = row + dr, col + dc
-            if (newR >= 0 and newR < len(grid) and
-            newC >= 0 and newC < len(grid[0]) and
-            grid[newR][newC] == 1):
-                grid[newR][newC] = 0
-                q.append((newR, newC))
-                return area
 
+class Solution:
+    def bfs(self, grid: list[list[int]], r: int, c: int) -> int:
+        q = deque([(r, c)])
+        grid[r][c] = 0
 
+        area = 0
+        dirs = [(0, -1), (0, 1), (1, 0), (-1, 0)]
+
+        while q:
+            row, col = q.popleft()
+            area += 1
+
+            for dr, dc in dirs:
+                newR, newC = row + dr, col + dc
+
+                if (0 <= newR < len(grid) and
+                    0 <= newC < len(grid[0]) and
+                    grid[newR][newC] == 1):
+
+                    grid[newR][newC] = 0
+                    q.append((newR, newC))
+
+        return area
 ```
 
 This problem demonstrates the fundamental pattern for finding connected components in a 2D grid using DFS or BFS.

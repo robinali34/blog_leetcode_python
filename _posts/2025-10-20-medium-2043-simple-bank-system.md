@@ -80,34 +80,31 @@ This is a **Data Structure Design** problem that simulates a simple bank system.
 
 ```python
 class Bank:
-def __init__(self, balance: list[int]):
-self.balance = balance
-def isValid(self, account: int) -> bool:
-return 1 <= account <= len(self.balance)
-def transfer(self, account1: int, account2: int, money: int) -> bool:
-if self.isValid(account1) and self.isValid(account2) and self.balance[account1 - 1] >= money:
-self.balance[account1 - 1] -= money
-self.balance[account2 - 1] += money
-return True
-return False
-def deposit(self, account: int, money: int) -> bool:
-if self.isValid(account):
-self.balance[account - 1] += money
-return True
-return False
-def withdraw(self, account: int, money: int) -> bool:
-if self.isValid(account) and self.balance[account - 1] >= money:
-self.balance[account - 1] -= money
-return True
-return False
-/
- Your Bank object will be instantiated and called as such:
- Bank obj = new Bank(balance)
- bool param_1 = obj->transfer(account1,account2,money)
- bool param_2 = obj->deposit(account,money)
- bool param_3 = obj->withdraw(account,money)
-/
+    def __init__(self, balance: list[int]):
+        self.balance = balance
 
+    def isValid(self, account: int) -> bool:
+        return 1 <= account <= len(self.balance)
+
+    def transfer(self, account1: int, account2: int, money: int) -> bool:
+        if (self.isValid(account1) and self.isValid(account2) and
+                self.balance[account1 - 1] >= money):
+            self.balance[account1 - 1] -= money
+            self.balance[account2 - 1] += money
+            return True
+        return False
+
+    def deposit(self, account: int, money: int) -> bool:
+        if self.isValid(account):
+            self.balance[account - 1] += money
+            return True
+        return False
+
+    def withdraw(self, account: int, money: int) -> bool:
+        if self.isValid(account) and self.balance[account - 1] >= money:
+            self.balance[account - 1] -= money
+            return True
+        return False
 ```
 
 ## Explanation

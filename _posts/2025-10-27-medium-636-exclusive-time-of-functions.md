@@ -85,26 +85,27 @@ Explanation:
 class Solution:
     def exclusiveTime(self, n: int, logs: list[str]) -> list[int]:
         result = [0] * n
-        st = []  # [(function_id, start_time), ...]
+        st = []  # stack of function ids
+        prev_time = 0
+
         for log in logs:
-            parts = log.split(':')
-            func_id = int(parts[0])
-            action = parts[1]
-            timestamp = int(parts[2])
+            func_id, action, timestamp = log.split(':')
+            func_id = int(func_id)
+            timestamp = int(timestamp)
+
             if action == 'start':
-                # Push function to stack
-                st.append((func_id, timestamp))
-            else:
-                # Pop and calculate duration
-                funcId, startTime = st.pop()
-                duration = timestamp - startTime + 1  # +1 to include end timestamp
-                result[funcId] += duration
-                # Subtract from parent function
+                # If another function is running, add time to it
                 if st:
-                    result[st[-1][0]] -= duration
-                    return result
+                    result[st[-1]] += timestamp - prev_time
+                st.append(func_id)
+                prev_time = timestamp
 
+            else:
+                # End current function
+                result[st.pop()] += timestamp - prev_time + 1
+                prev_time = timestamp + 1
 
+        return result
 ```
 
 ### Approach 2: Using String Splitting for Parsing
@@ -116,22 +117,25 @@ class Solution:
     def exclusiveTime(self, n: int, logs: list[str]) -> list[int]:
         result = [0] * n
         st = []
+        prev_time = 0
+
         for log in logs:
             parts = log.split(':')
             func_id = int(parts[0])
-            isStart = (parts[1] == "start")
+            is_start = (parts[1] == "start")
             timestamp = int(parts[2])
-            if isStart:
+
+            if is_start:
+                if st:
+                    result[st[-1][0]] += timestamp - prev_time
                 st.append((func_id, timestamp))
+                prev_time = timestamp
             else:
                 funcId, startTime = st.pop()
-                duration = timestamp - startTime + 1
-                result[funcId] += duration
-                if st:
-                    result[st[-1][0]] -= duration
-                    return result
+                result[funcId] += timestamp - prev_time + 1
+                prev_time = timestamp + 1
 
-
+        return result
 ```
 
 ### Approach 3: Store Only Start Time
@@ -142,25 +146,28 @@ class Solution:
 class Solution:
     def exclusiveTime(self, n: int, logs: list[str]) -> list[int]:
         result = [0] * n
-        st = []  # Only store function IDs
+        st = []  # stack of function IDs
         prevTime = 0
+
         for log in logs:
-            parts = log.split(':')
-            func_id = int(parts[0])
-            isStart = (parts[1] == "start")
-            timestamp = int(parts[2])
-            if isStart:
+            func_id, action, timestamp = log.split(':')
+            func_id = int(func_id)
+            timestamp = int(timestamp)
+
+            if action == "start":
+                # If a function is already running, add time to it
                 if st:
                     result[st[-1]] += timestamp - prevTime
-                    st.append(func_id)
-                    prevTime = timestamp
-                else:
-                    result[st[-1]] += timestamp - prevTime + 1
-                    st.pop()
-                    prevTime = timestamp + 1
-                    return result
 
+                st.append(func_id)
+                prevTime = timestamp
 
+            else:
+                # End current function
+                result[st.pop()] += timestamp - prevTime + 1
+                prevTime = timestamp + 1
+
+        return result
 ```
 
 ## Algorithm Analysis
@@ -196,13 +203,19 @@ With subtraction:
 ```python
 # Parse function ID (numeric str to int)
 id = 0
-while i < len(log) and log[i] != ':':
-id = id  10 + int(log[i])
-i += 1
-# Check for "start" or "end"
-if i + 1 < len(log) and log[i + 1] == 's':
-isStart = True
+i = 0
 
+while i < len(log) and log[i] != ':':
+    id = id * 10 + int(log[i])
+    i += 1
+
+i += 1  # skip ':'
+
+# Check for "start" or "end"
+if i + 1 < len(log) and log[i:i+5] == 'start':
+    isStart = True
+else:
+    isStart = False
 ```
 
 ### Stack Operations
@@ -211,16 +224,16 @@ isStart = True
 # Start event: push function onto stack
 if isStart:
     st.append((id, time))
-    # End event: pop and calculate
+
+# End event: pop and calculate
 else:
     funcId, startTime = st.pop()
     duration = time - startTime + 1
     rtn[funcId] += duration
+
     # Subtract from parent
     if st:
         rtn[st[-1][0]] -= duration
-
-
 ```
 
 ## Edge Cases

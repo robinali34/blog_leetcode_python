@@ -65,17 +65,20 @@ class Solution:
         distinct_cnt = len(set(nums))
         freq = {}
         left = 0
+
         for right in range(len(nums)):
             freq[nums[right]] = freq.get(nums[right], 0) + 1
+
             while len(freq) == distinct_cnt:
                 cnt += len(nums) - right
+
                 freq[nums[left]] -= 1
                 if freq[nums[left]] == 0:
                     del freq[nums[left]]
-                    left += 1
-                    return cnt
 
+                left += 1
 
+        return cnt
 ```
 
 ## How the Algorithm Works
@@ -136,16 +139,18 @@ freq = {}
 ### 2. Two Pointers Sliding Window
 ```python
 left = 0
+
 for right in range(len(nums)):
     freq[nums[right]] = freq.get(nums[right], 0) + 1
+
     while len(freq) == distinct_cnt:
         cnt += len(nums) - right
+
         freq[nums[left]] -= 1
         if freq[nums[left]] == 0:
             del freq[nums[left]]
-            left += 1
 
-
+        left += 1
 ```
 
 **Process:**
@@ -206,17 +211,17 @@ class Solution:
     def countCompleteSubarrays(self, nums: list[int]) -> int:
         cnt = 0
         total_unique = len(set(nums))
+
         for left in range(len(nums)):
             window_counts = {}
+
             for right in range(left, len(nums)):
                 window_counts[nums[right]] = window_counts.get(nums[right], 0) + 1
+
                 if len(window_counts) == total_unique:
                     cnt += 1
-                    return cnt
 
-
-
-
+        return cnt
 ```
 
 **Time Complexity:** O(n²)  
@@ -229,18 +234,18 @@ class Solution:
         n = len(nums)
         total_unique = len(set(nums))
         cnt = 0
+
         for i in range(n):
             for j in range(i, n):
                 subarray_elements = set()
+
                 for k in range(i, j + 1):
                     subarray_elements.add(nums[k])
-                    if len(subarray_elements) == total_unique:
-                        cnt += 1
-                        return cnt
 
+                if len(subarray_elements) == total_unique:
+                    cnt += 1
 
-
-
+        return cnt
 ```
 
 **Time Complexity:** O(n³)  
@@ -321,29 +326,43 @@ Total complete subarrays: 4
 
 ### 1. Early Termination
 ```python
-if window_countslen() == total_unique:
-    cnt += (numslen() - right)  # All remaining subarrays are complete
+if len(window_counts) == total_unique:
+    cnt += len(nums) - right
     break
-
-
 ```
 
 ### 2. Set Instead of Map
 ```python
-window_elements = set()
+window_counts = {}
 # Only track presence, not frequency
-
-
-
-
 ```
 
 ### 3. Two Pointers Optimization
 ```python
 # Use two pointers to find minimum window with all elements
 # Then count all subarrays containing this window
+class Solution:
+    def countCompleteSubarrays(self, nums: list[int]) -> int:
+        n = len(nums)
+        total_unique = len(set(nums))
 
+        window_counts = {}
+        left = 0
+        cnt = 0
 
+        for right in range(n):
+            window_counts[nums[right]] = window_counts.get(nums[right], 0) + 1
+
+            while len(window_counts) == total_unique:
+                cnt += n - right
+
+                window_counts[nums[left]] -= 1
+                if window_counts[nums[left]] == 0:
+                    del window_counts[nums[left]]
+
+                left += 1
+
+        return cnt
 ```
 
 ## Related Problems

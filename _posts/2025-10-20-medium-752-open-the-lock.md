@@ -77,35 +77,40 @@ This is a **shortest path problem** that can be solved using **BFS**. We need to
 
 ```python
 from collections import deque
+
 class Solution:
     def openLock(self, deadends: list[str], target: str) -> int:
         deads = set(deadends)
-        visited = set()
+
         if "0000" in deads:
             return -1
-            q = deque(["0000"])
-            visited.add("0000")
-            steps = 0
-            while q:
-                size = len(q)
-                for _ in range(size):
-                    curr = q.popleft()
-                    if curr == target:
-                        return steps
-                        for i in range(4):
-                            for dir in [-1, 1]:
-                                next_state = list(curr)
-                                next_state[i] = str((int(curr[i]) + dir + 10) % 10)
-                                next_str = ''.join(next_state)
-                                if next_str not in deads and next_str not in visited:
-                                    q.append(next_str)
-                                    visited.add(next_str)
-                                    steps += 1
-                                    return -1
 
+        q = deque(["0000"])
+        visited = set(["0000"])
+        steps = 0
 
+        while q:
+            size = len(q)
 
+            for _ in range(size):
+                curr = q.popleft()
 
+                if curr == target:
+                    return steps
+
+                for i in range(4):
+                    for d in [-1, 1]:
+                        next_state = list(curr)
+                        next_state[i] = str((int(curr[i]) + d + 10) % 10)
+                        nxt = ''.join(next_state)
+
+                        if nxt not in deads and nxt not in visited:
+                            visited.add(nxt)
+                            q.append(nxt)
+
+            steps += 1
+
+        return -1
 ```
 
 ### **Algorithm Explanation:**
@@ -173,34 +178,54 @@ next[i] = (curr[i] - '0' + dir + 10) % 10 + '0'
 ### **Bidirectional BFS**
 ```python
 class Solution:
-def openLock(self, deadends: list[str], target: str) -> int:
-deads = set(deadends)
-if "0000" in deads or target in deads:
-return -1
-begin, end, visited = {"0000", :target, set()
-steps = 0
-while begin and end:
-if len(begin) > len(end):
-begin, end = end, begin
-next_level = set()
-for curr in begin:
-if curr in end:
-return steps
-if curr in deads or curr in visited:
-continue
-visited.add(curr)
-curr_list = list(curr)
-for i in range(4):
-for dir in [-1, 1]:
-next_state = curr_list[:]
-next_state[i] = str((int(curr[i]) + dir + 10) % 10)
-next_str = ''.join(next_state)
-if next_str not in deads and next_str not in visited:
-next_level.add(next_str)
-begin = next_level
-steps += 1
-return -1
+    def openLock(self, deadends: list[str], target: str) -> int:
+        deads = set(deadends)
 
+        if "0000" in deads:
+            return -1
+
+        begin = {"0000"}
+        end = {target}
+        visited = set()
+
+        steps = 0
+
+        while begin and end:
+
+            # always expand smaller frontier
+            if len(begin) > len(end):
+                begin, end = end, begin
+
+            next_level = set()
+
+            for curr in begin:
+
+                if curr in deads or curr in visited:
+                    continue
+
+                visited.add(curr)
+
+                if curr in end:
+                    return steps
+
+                curr_list = list(curr)
+
+                for i in range(4):
+                    digit = int(curr[i])
+
+                    for d in [-1, 1]:
+                        new_digit = (digit + d + 10) % 10
+                        nxt = curr_list[:]
+                        nxt[i] = str(new_digit)
+                        nxt_str = ''.join(nxt)
+
+                        if nxt not in visited and nxt not in deads:
+                            next_level.add(nxt)
+
+            begin = next_level
+            steps += 1
+
+        return -1
 ```
 
 ## Related Problems

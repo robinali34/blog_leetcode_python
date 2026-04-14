@@ -61,14 +61,12 @@ Explanation: The value -3 has 3 occurrences, 0 has 2 occurrences, 1 has 4 occurr
 class Solution:
     def uniqueOccurrences(self, arr: list[int]) -> bool:
         freqs = {}
+
         for num in arr:
             freqs[num] = freqs.get(num, 0) + 1
-            occurs = set(freqs.values())
-            return len(occurs) == len(freqs)
 
-
-
-
+        occurs = set(freqs.values())
+        return len(occurs) == len(freqs)
 ```
 
 ### Approach 2: Early Termination Optimization
@@ -85,18 +83,17 @@ class Solution:
 class Solution:
     def uniqueOccurrences(self, arr: list[int]) -> bool:
         freqs = {}
+
         for num in arr:
             freqs[num] = freqs.get(num, 0) + 1
-            occurs = set()
-            for freq in freqs.values():
-                if freq in occurs:
-                    return False
-                    occurs.add(freq)
-                    return True
 
+        occurs = set()
+        for freq in freqs.values():
+            if freq in occurs:
+                return False
+            occurs.add(freq)
 
-
-
+        return True
 ```
 
 ### Approach 3: Array-Based Counting
@@ -112,20 +109,20 @@ class Solution:
 ```python
 class Solution:
     def uniqueOccurrences(self, arr: list[int]) -> bool:
-        freq = [0] * 2001  # Offset by 1000 for negative numbers
-        count = [0] * 1001  # Max frequency is 1000
+        freq = [0] * 2001  # for values [-1000, 1000]
+
         for num in arr:
             freq[num + 1000] += 1
-            for f in freq:
-                if f > 0:
-                    count[f] += 1
-                    if count[f] > 1:
-                        return False
-                        return True
 
+        seen = [0] * 1001  # frequency range
 
+        for f in freq:
+            if f > 0:
+                if seen[f] > 0:
+                    return False
+                seen[f] = 1
 
-
+        return True
 ```
 
 ## Algorithm Analysis

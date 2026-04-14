@@ -67,44 +67,44 @@ Explanation: Insert 0 between 1 (tail) and 1 (head), wrapping around.
 **Space Complexity:** O(1)
 
 ```python
-/
 # Definition for a Node.
 class Node:
-def __init__(self, _val: int = 0, _next: 'Node | None' = None):
-self.val = _val
-self.next = _next
-/
-class Solution:
-def insert(self, head: 'Node', insertVal: int) -> 'Node':
-# Empty list case
-if not head:
-newNode = Node(insertVal)
-newNode.next = newNode
-return newNode
-curr = head
-toInsert = False
-while True:
-# Normal case: insert between curr and curr.next
-if curr.val <= insertVal <= curr.next.val:
-toInsert = True
-# Wrap-around case: curr.next.val < curr.val indicates the wrap point
-elif curr.next.val < curr.val:
-# Insert at wrap-around (largest or smallest value)
-if insertVal >= curr.val or insertVal <= curr.next.val:
-toInsert = True
-if toInsert:
-newNode = Node(insertVal)
-newNode.next = curr.next
-curr.next = newNode
-return head
-curr = curr.next
-if curr == head:
-break
-# All values are the same or insert at current position
-newNode = Node(insertVal, curr.next)
-curr.next = newNode
-return head
+    def __init__(self, _val: int = 0, _next: 'Node | None' = None):
+        self.val = _val
+        self.next = _next
 
+
+class Solution:
+    def insert(self, head: 'Node', insertVal: int) -> 'Node':
+        # Empty list case
+        if not head:
+            newNode = Node(insertVal)
+            newNode.next = newNode
+            return newNode
+
+        curr = head
+
+        while True:
+            # Case 1: Normal position
+            if curr.val <= insertVal <= curr.next.val:
+                break
+
+            # Case 2: Wrap-around point (max -> min)
+            if curr.val > curr.next.val:
+                if insertVal >= curr.val or insertVal <= curr.next.val:
+                    break
+
+            curr = curr.next
+
+            # Case 3: Completed full loop (all values same or no spot found)
+            if curr == head:
+                break
+
+        # Insert new node
+        newNode = Node(insertVal, curr.next)
+        curr.next = newNode
+
+        return head
 ```
 
 ### Approach 2: Two-Pass with Preprocessing
@@ -124,29 +124,30 @@ class Solution:
             newNode = Node(insertVal)
             newNode.next = newNode
             return newNode
-            # Find the maximum node
-            maxNode = head
-            curr = head.next
-            while curr != head:
-                if curr.val >= maxNode.val:
-                    maxNode = curr
-                    curr = curr.next
-                    # Insert at the end if value is too large
-                    if insertVal >= maxNode.val or insertVal <= maxNode.next.val:
-                        newNode = Node(insertVal, maxNode.next)
-                        maxNode.next = newNode
-                        return head
-                        # Find the correct insertion point
-                        curr = maxNode.next
-                        while curr.next.val < insertVal:
-                            curr = curr.next
-                            newNode = Node(insertVal, curr.next)
-                            curr.next = newNode
-                            return head
 
+        # Step 1: Find the maximum node
+        maxNode = head
+        curr = head.next
+        while curr != head:
+            if curr.val >= maxNode.val:
+                maxNode = curr
+            curr = curr.next
 
+        # Step 2: Insert at wrap-around (max → min)
+        if insertVal >= maxNode.val or insertVal <= maxNode.next.val:
+            newNode = Node(insertVal, maxNode.next)
+            maxNode.next = newNode
+            return head
 
+        # Step 3: Insert in normal sorted position
+        curr = maxNode.next  # smallest node
+        while curr.next.val < insertVal:
+            curr = curr.next
 
+        newNode = Node(insertVal, curr.next)
+        curr.next = newNode
+
+        return head
 ```
 
 ### Approach 3: Simplified Logic
@@ -157,23 +158,36 @@ class Solution:
 class Solution:
     def insert(self, head: 'Node', insertVal: int) -> 'Node':
         newNode = Node(insertVal)
+
+        # Case 1: Empty list
         if not head:
             newNode.next = newNode
             return newNode
-            curr = head
-            while curr.next != head:
-                if curr.val <= insertVal <= curr.next.val:
-                    break
-                    if curr.val > curr.next.val and (insertVal >= curr.val or insertVal <= curr.next.val):
-                        break
-                        curr = curr.next
-                        newNode.next = curr.next
-                        curr.next = newNode
-                        return head
 
+        curr = head
 
+        while True:
+            # Case 2: Normal insertion
+            if curr.val <= insertVal <= curr.next.val:
+                break
 
+            # Case 3: Wrap-around point
+            if curr.val > curr.next.val and (
+                insertVal >= curr.val or insertVal <= curr.next.val
+            ):
+                break
 
+            curr = curr.next
+
+            # Case 4: Full loop (all values same)
+            if curr == head:
+                break
+
+        # Insert node
+        newNode.next = curr.next
+        curr.next = newNode
+
+        return head
 ```
 
 ## Algorithm Analysis
@@ -205,10 +219,6 @@ if not head:
     new_node = Node(insertVal)
     new_node.next = new_node  # Self-referencing
     return new_node
-
-
-
-
 ```
 
 ### Normal Insertion Case
@@ -218,23 +228,17 @@ if curr.val <= insertVal <= curr.next.val:
     new_node = Node(insertVal, curr.next)
     curr.next = new_node
     return head
-
-
-
-
 ```
 
 ### Wrap-Around Insertion Case
 ```python
-# At the wrap point (largest to smallest)
+# At the wrap point (largest → smallest)
 if curr.next.val < curr.val:
     # Insert if value is larger than max OR smaller than min
     if insertVal >= curr.val or insertVal <= curr.next.val:
-        pass  # Insert here
-
-
-
-
+        new_node = Node(insertVal, curr.next)
+        curr.next = new_node
+        return head
 ```
 
 ## Edge Cases

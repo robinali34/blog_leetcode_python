@@ -67,20 +67,23 @@ class Solution:
     def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:
         if not matrix or not matrix[0]:
             return False
-            rows, cols = len(matrix), len(matrix[0])
-            for i in range(rows):
-                left, right = 0, cols - 1
-                while left <= right:
-                    mid = left + (right - left) // 2
-                    if matrix[i][mid] == target:
-                        return True
-                    elif matrix[i][mid] < target:
-                        left = mid + 1
+
+        rows, cols = len(matrix), len(matrix[0])
+
+        for i in range(rows):
+            left, right = 0, cols - 1
+
+            while left <= right:
+                mid = left + (right - left) // 2
+
+                if matrix[i][mid] == target:
+                    return True
+                elif matrix[i][mid] < target:
+                    left = mid + 1
                 else:
                     right = mid - 1
-                    return False
 
-
+        return False
 ```
 
 ### How it Works:
@@ -98,30 +101,39 @@ Use divide and conquer by eliminating regions based on the middle column.
 
 ```python
 class Solution:
-    def searchMatrixHelper(self, matrix: list[list[int]], target: int,
-    top: int, left: int, bottom: int, right: int) -> bool:
+    def searchMatrixHelper(self, matrix, target, top, left, bottom, right):
         if top > bottom or left > right:
             return False
-            if target < matrix[top][left] or target > matrix[bottom][right]:
-                return False
-                midCol = left + (right - left) // 2
-                row = top
-                # Find the last row where matrix[row][midCol] <= target
-                while row <= bottom and matrix[row][midCol] <= target:
-                    if matrix[row][midCol] == target:
-                        return True
-                        row += 1
-                        # Search in top-right and bottom-left quadrants
-                        return (self.searchMatrixHelper(matrix, target, top, midCol + 1, row - 1, right) or
-                        self.searchMatrixHelper(matrix, target, row, left, bottom, midCol - 1))
-                        def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:
-                            if not matrix or not matrix[0]:
-                                return False
-                                return self.searchMatrixHelper(matrix, target, 0, 0, len(matrix) - 1, len(matrix[0]) - 1)
 
+        if target < matrix[top][left] or target > matrix[bottom][right]:
+            return False
 
+        midCol = (left + right) // 2
 
+        row = top
 
+        # find split row
+        while row <= bottom and matrix[row][midCol] <= target:
+            if matrix[row][midCol] == target:
+                return True
+            row += 1
+
+        return (
+            self.searchMatrixHelper(matrix, target, top, midCol + 1, row - 1, right) or
+            self.searchMatrixHelper(matrix, target, row, left, bottom, midCol - 1)
+        )
+
+    def searchMatrix(self, matrix, target):
+        if not matrix or not matrix[0]:
+            return False
+
+        return self.searchMatrixHelper(
+            matrix,
+            target,
+            0, 0,
+            len(matrix) - 1,
+            len(matrix[0]) - 1
+        )
 ```
 
 ### How it Works:
@@ -142,18 +154,20 @@ class Solution:
     def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:
         if not matrix or not matrix[0]:
             return False
-            rows, cols = len(matrix), len(matrix[0])
-            row, col = 0, cols - 1
-            while row < rows and col >= 0:
-                if matrix[row][col] == target:
-                    return True
-                elif matrix[row][col] > target:
-                    col -= 1  # Eliminate current column
+
+        rows, cols = len(matrix), len(matrix[0])
+
+        row, col = 0, cols - 1
+
+        while row < rows and col >= 0:
+            if matrix[row][col] == target:
+                return True
+            elif matrix[row][col] > target:
+                col -= 1
             else:
-                row += 1  # Eliminate current row
-                return False
+                row += 1
 
-
+        return False
 ```
 
 ### How it Works:

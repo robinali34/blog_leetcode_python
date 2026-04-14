@@ -50,16 +50,17 @@ The key insight is that the number of unique BSTs follows the Catalan number seq
 class Solution:
     def numTrees(self, n: int) -> int:
         cache = [1] * (n + 1)
+
         for i in range(2, n + 1):
             total = 0
             for j in range(1, i + 1):
                 left = j - 1
                 right = i - j
                 total += cache[left] * cache[right]
-                cache[i] = total
-                return cache[n]
 
+            cache[i] = total
 
+        return cache[n]
 ```
 
 **Time Complexity:** O(n²) - Nested loops
@@ -73,12 +74,12 @@ class Solution:
         cache = [0] * (n + 1)
         cache[0] = 1
         cache[1] = 1
+
         for i in range(2, n + 1):
             for j in range(1, i + 1):
                 cache[i] += cache[j - 1] * cache[i - j]
-                return cache[n]
 
-
+        return cache[n]
 ```
 
 **Time Complexity:** O(n²) - Nested loops
@@ -88,12 +89,13 @@ class Solution:
 
 ```python
 class Solution:
-def numTrees(self, n: int) -> int:
-result = 1
-for i in range(n):
-result = result  2  (2  i + 1) # (i + 2)
-return int(result)
+    def numTrees(self, n: int) -> int:
+        result = 1
 
+        for i in range(n):
+            result = result * 2 * (2 * i + 1) // (i + 2)
+
+        return result
 ```
 
 **Time Complexity:** O(n) - Single loop

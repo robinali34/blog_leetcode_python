@@ -69,19 +69,21 @@ Explanation:
 class Solution:
     def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
         timestamp = [0] * 1001
+
+        # Build difference array
         for trip in trips:
-            timestamp[trip[1]] += trip[0]  # Pick up passengers
-            timestamp[trip[2]] -= trip[0]  # Drop off passengers
-            usedCapacity = 0
-            for number in timestamp:
-                usedCapacity += number
-                if usedCapacity > capacity:
-                    return False
-                    return True
+            timestamp[trip[1]] += trip[0]  # pick up
+            timestamp[trip[2]] -= trip[0]  # drop off
 
+        usedCapacity = 0
 
+        # Sweep line (prefix sum)
+        for number in timestamp:
+            usedCapacity += number
+            if usedCapacity > capacity:
+                return False
 
-
+        return True
 ```
 
 ### Approach 2: Sorting with Events
@@ -98,19 +100,24 @@ class Solution:
 ```python
 class Solution:
     def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
-        events = []  # [(location, passenger_change), ...]
+        events = []  # (location, passenger_change)
+
+        # Step 1: build events
         for trip in trips:
-            events.append((trip[1], trip[0]))   # Pick up
-            events.append((trip[2], -trip[0]))  # Drop off
-            events.sort()
-            usedCapacity = 0
-            for location, change in events:
-                usedCapacity += change
-                if usedCapacity > capacity:
-                    return False
-                    return True
+            events.append((trip[1], trip[0]))   # pickup
+            events.append((trip[2], -trip[0]))  # dropoff
 
+        # Step 2: sort once
+        events.sort()
 
+        # Step 3: sweep line
+        usedCapacity = 0
+        for location, change in events:
+            usedCapacity += change
+            if usedCapacity > capacity:
+                return False
+
+        return True
 ```
 
 ### Approach 3: Simulation with Priority Queue
@@ -126,27 +133,31 @@ class Solution:
 
 ```python
 import heapq
+
 class Solution:
     def carPooling(self, trips: list[list[int]], capacity: int) -> bool:
-        trips.sort(key=lambda x: x[1])  # Sort by pickup location
-        pq = []  # min heap: (dropoff_location, passengers)
+        trips.sort(key=lambda x: x[1])  # sort by pickup
+
+        pq = []  # (dropoff, passengers)
         usedCapacity = 0
-        for trip in trips:
-            passengers, pickup, dropoff = trip[0], trip[1], trip[2]
-            # Drop off passengers who have reached their destination
+
+        for passengers, pickup, dropoff in trips:
+
+            # Step 1: drop off passengers who already finished
             while pq and pq[0][0] <= pickup:
                 usedCapacity -= heapq.heappop(pq)[1]
-                # Pick up new passengers
-                usedCapacity += passengers
-                if usedCapacity > capacity:
-                    return False
-                    # Add drop-off event
-                    heapq.heappush(pq, (dropoff, passengers))
-                    return True
 
+            # Step 2: pick up new passengers
+            usedCapacity += passengers
 
+            # Step 3: check capacity
+            if usedCapacity > capacity:
+                return False
 
+            # Step 4: add this trip to heap
+            heapq.heappush(pq, (dropoff, passengers))
 
+        return True
 ```
 
 ## Algorithm Analysis
@@ -170,27 +181,27 @@ class Solution:
 
 ### Bucket Sort Technique
 ```python
+# Difference array (sweep line approach)
+timestamp = [0] * 1001
+
 # Add passengers at pickup location
-timestamp[trip[1]] += trip[0]
-# Remove passengers at drop-off location
-timestamp[trip[2]] -= trip[0]
+for trip in trips:
+    timestamp[trip[1]] += trip[0]
 
-
-
-
+    # Remove passengers at drop-off location
+    timestamp[trip[2]] -= trip[0]
 ```
 
 ### Event Processing
 ```python
 # Process events in chronological order
+usedCapacity = 0
 for number in timestamp:
     usedCapacity += number
     if usedCapacity > capacity:
         return False
 
-
-
-
+return True
 ```
 
 ## Edge Cases

@@ -61,27 +61,34 @@ There are several approaches to solve this problem:
 
 ```python
 class Solution:
-def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-edgeSet = set()
-for building in buildings:
-left, right = building[0], building[1]
-edgeSet.add(left)
-edgeSet.add(right)
-edges = sorted(list(edgeSet))
-edgeIdxMap = :edge: i for i, edge in enumerate(edges)
-heights = [0] * len(edges)
-for building in buildings:
-left, right, height = building[0], building[1], building[2]
-leftIdx, rightIdx = edgeIdxMap[left], edgeIdxMap[right]
-for idx in range(leftIdx, rightIdx):
-heights[idx] = max(heights[idx], height)
-result = []
-for i in range(len(heights)):
-curHeight, curPos = heights[i], edges[i]
-if i == 0 or curHeight != heights[i - 1]:
-result.append([curPos, curHeight])
-return result
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        edgeSet = set()
 
+        for building in buildings:
+            left, right = building[0], building[1]
+            edgeSet.add(left)
+            edgeSet.add(right)
+
+        edges = sorted(list(edgeSet))
+        edgeIdxMap = {edge: i for i, edge in enumerate(edges)}
+
+        heights = [0] * len(edges)
+
+        # apply building heights
+        for building in buildings:
+            left, right, height = building[0], building[1], building[2]
+            leftIdx, rightIdx = edgeIdxMap[left], edgeIdxMap[right]
+
+            for idx in range(leftIdx, rightIdx):
+                heights[idx] = max(heights[idx], height)
+
+        # build result
+        result = []
+        for i in range(len(heights)):
+            if i == 0 or heights[i] != heights[i - 1]:
+                result.append([edges[i], heights[i]])
+
+        return result
 ```
 
 **Time Complexity:** O(n²) - For each building, we update all positions it covers
@@ -96,31 +103,38 @@ return result
 ## Solution 2: Sweep Line with Map
 
 ```python
-from sortedcontainers import SortedDict
 class Solution:
-def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-pairs = []
-for b in buildings:
-left, right, height = b[0], b[1], b[2]
-pairs.append((left, -height))
-pairs.append((right, height))
-pairs.sort(key=lambda x: (x[0], x[1]))
-result = []
-height_map = SortedDict(:0: 1)
-pre = 0
-for x, h in pairs:
-if h < 0:
-height_map[-h] = height_map.get(-h, 0) + 1
-else:
-height_map[h] = height_map.get(h, 0) - 1
-if height_map[h] == 0:
-del height_map[h]
-cur = height_map.keys()[-1]  # Get max key
-if cur != pre:
-result.append([x, cur])
-pre = cur
-return result
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        pairs = []
 
+        # build events
+        for b in buildings:
+            left, right, height = b
+            pairs.append((left, -height))   # entering
+            pairs.append((right, height))   # leaving
+
+        pairs.sort()
+
+        height_map = SortedDict({0: 1})
+        result = []
+        prev = 0
+
+        for x, h in pairs:
+            if h < 0:
+                h = -h
+                height_map[h] = height_map.get(h, 0) + 1
+            else:
+                height_map[h] = height_map.get(h, 0) - 1
+                if height_map[h] == 0:
+                    del height_map[h]
+
+            current = height_map.peekitem(-1)[0]
+
+            if current != prev:
+                result.append([x, current])
+                prev = current
+
+        return result
 ```
 
 **Time Complexity:** O(n log n) - Sorting + map operations
@@ -136,33 +150,39 @@ return result
 
 ```python
 import heapq
+
 class Solution:
     def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-        edges = []
-        for i, building in enumerate(buildings):
-            edges.append([building[0], i])
-            edges.append([building[1], i])
-            edges.sort()
-            live = []  # Max heap: (-height, right)
-            result = []
-            idx = 0
-            while idx < len(edges):
-                cur = edges[idx][0]
-                while idx < len(edges) and edges[idx][0] == cur:
-                    b = edges[idx][1]
-                    if buildings[b][0] == cur:
-                        right = buildings[b][1]
-                        height = buildings[b][2]
-                        heapq.heappush(live, (-height, right))
-                        idx += 1
-                        while live and live[0][1] <= cur:
-                            heapq.heappop(live)
-                            curHeight = -live[0][0] if live else 0
-                            if not result or result[-1][1] != curHeight:
-                                result.append([cur, curHeight])
-                                return result
+        # (x, start/end, height)
+        events = []
 
+        for l, r, h in buildings:
+            events.append((l, -h, r))  # start
+            events.append((r, 0, 0))   # end marker
 
+        events.sort()
+
+        result = []
+        live = [(0, float('inf'))]  # ( -height, right )
+        prev_height = 0
+
+        for x, neg_h, r in events:
+
+            # start of building
+            if neg_h != 0:
+                heapq.heappush(live, (neg_h, r))
+
+            # remove expired buildings
+            while live and live[0][1] <= x:
+                heapq.heappop(live)
+
+            current_height = -live[0][0]
+
+            if current_height != prev_height:
+                result.append([x, current_height])
+                prev_height = current_height
+
+        return result
 ```
 
 **Time Complexity:** O(n log n) - Sorting + priority queue operations
@@ -179,35 +199,37 @@ class Solution:
 
 ```python
 import heapq
+
 class Solution:
     def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-        edges = []
-        for b in buildings:
-            edges.append([b[0], b[2]])
-            edges.append([b[1], -b[2]])
-            edges.sort(key=lambda x: (x[0], -x[1]))
-            live = []  # Max heap: (-height, height)
-            past = []  # Max heap: (-height, height)
-            result = []
-            idx = 0
-            while idx < len(edges):
-                cur = edges[idx][0]
-                while idx < len(edges) and edges[idx][0] == cur:
-                    height = edges[idx][1]
-                    if height > 0:
-                        heapq.heappush(live, (-height, height))
-                    else:
-                        heapq.heappush(past, (height, -height))
-                        idx += 1
-                        while live and past and live[0][1] == past[0][1]:
-                            heapq.heappop(live)
-                            heapq.heappop(past)
-                            curHeight = -live[0][0] if live else 0
-                            if not result or result[-1][1] != curHeight:
-                                result.append([cur, curHeight])
-                                return result
+        events = []
 
+        for l, r, h in buildings:
+            events.append((l, -h, r))  # start event
+            events.append((r, 0, 0))   # end event
 
+        events.sort()
+
+        result = []
+        live = [(0, float('inf'))]  # (-height, right)
+        prev = 0
+
+        for x, neg_h, r in events:
+
+            if neg_h != 0:
+                heapq.heappush(live, (neg_h, r))
+
+            # remove expired buildings
+            while live[0][1] <= x:
+                heapq.heappop(live)
+
+            curr = -live[0][0]
+
+            if curr != prev:
+                result.append([x, curr])
+                prev = curr
+
+        return result
 ```
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 grep
@@ -225,41 +247,37 @@ grep
 ## Solution 5: Union Find Optimization
 
 ```python
-class UnionFind:
-def __init__(self, n: int):
-self.root = list(range(n))
-def find(self, x: int) -> int:
-if self.root[x] != x:
-return self.find(self.root[x])
-return self.root[x]
-def merge(self, x: int, y: int) -> None:
-self.root[self.find(x)] = self.find(y)
-class Solution:
-def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-buildings.sort(key=lambda x: x[2], reverse=True)
-edgeSet = set()
-for b in buildings:
-edgeSet.add(b[0])
-edgeSet.add(b[1])
-edges = sorted(list(edgeSet))
-edgeIdxMap = :edge: i for i, edge in enumerate(edges)
-uf = UnionFind(len(edges))
-heights = [0] * len(edges)
-for b in buildings:
-left, right, height = b[0], b[1], b[2]
-leftIdx = uf.find(edgeIdxMap[left])
-rightIdx = edgeIdxMap[right]
-while leftIdx < rightIdx:
-heights[leftIdx] = height
-uf.merge(leftIdx, rightIdx)
-leftIdx += 1
-leftIdx = uf.find(leftIdx)
-result = []
-for i in range(len(edges)):
-if i == 0 or heights[i] != heights[i - 1]:
-result.append([edges[i], heights[i]])
-return result
+import heapq
 
+class Solution:
+    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
+        events = []
+
+        for l, r, h in buildings:
+            events.append((l, -h, r))  # start
+            events.append((r, 0, 0))   # end
+
+        events.sort()
+
+        result = []
+        live = [(0, float('inf'))]
+        prev = 0
+
+        for x, neg_h, r in events:
+
+            if neg_h != 0:
+                heapq.heappush(live, (neg_h, r))
+
+            while live[0][1] <= x:
+                heapq.heappop(live)
+
+            curr = -live[0][0]
+
+            if curr != prev:
+                result.append([x, curr])
+                prev = curr
+
+        return result
 ```
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 read_file

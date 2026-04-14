@@ -67,14 +67,12 @@ This approach ensures both pointers travel the same total distance, making them 
 class Solution:
     def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
         a, b = p, q
+
         while a != b:
             a = q if a is None else a.parent
             b = p if b is None else b.parent
-            return a
 
-
-
-
+        return a
 ```
 <｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
 read_file
@@ -167,30 +165,34 @@ def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
 
 ### Approach 2: Depth Calculation
 ```python
-def getDepth(self, node: 'Node') -> int:
-    depth = 0
-    while node:
-        depth += 1
-        node = node.parent
+class Solution:
+
+    def getDepth(self, node: 'Node') -> int:
+        depth = 0
+        while node:
+            depth += 1
+            node = node.parent
         return depth
+
     def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
         depthP = self.getDepth(p)
         depthQ = self.getDepth(q)
-        # Move deeper node up to same level
+
+        # Step 1: bring both to same depth
         while depthP > depthQ:
             p = p.parent
             depthP -= 1
-            while depthQ > depthP:
-                q = q.parent
-                depthQ -= 1
-                # Move both up until they meet
-                while p != q:
-                    p = p.parent
-                    q = q.parent
-                    return p
 
+        while depthQ > depthP:
+            q = q.parent
+            depthQ -= 1
 
+        # Step 2: move upward together
+        while p != q:
+            p = p.parent
+            q = q.parent
 
+        return p
 
 ```
 

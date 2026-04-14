@@ -43,44 +43,47 @@ class Solution:
         cache = [0] * len(nums)
         self.mergeSort(nums, 0, len(nums) - 1, cache)
         return nums
-    def merge(self, arr: list[int], left: int, pivot: int, right: int, cache: list[int]) -> None:
-        start1 = left
-        start2 = pivot + 1
-        n1 = pivot - left + 1
-        n2 = right - pivot
-        # Copy both halves to cache
-        for i in range(n1):
-            cache[start1 + i] = arr[start1 + i]
-            for i in range(n2):
-                cache[start2 + i] = arr[start2 + i]
-                # Merge the two halves back into arr
-                i, j, k = 0, 0, left
-                while i < n1 and j < n2:
-                    if cache[start1 + i] <= cache[start2 + j]:
-                        arr[k] = cache[start1 + i]
-                        i += 1
-                    else:
-                        arr[k] = cache[start2 + j]
-                        j += 1
-                        k += 1
-                        # Copy remaining elements
-                        while i < n1:
-                            arr[k] = cache[start1 + i]
-                            i += 1
-                            k += 1
-                            while j < n2:
-                                arr[k] = cache[start2 + j]
-                                j += 1
-                                k += 1
-                                def mergeSort(self, arr: list[int], left: int, right: int, cache: list[int]) -> None:
-                                    if left >= right:
-                                        return
-                                        pivot = left + (right - left) // 2
-                                        self.mergeSort(arr, left, pivot, cache)
-                                        self.mergeSort(arr, pivot + 1, right, cache)
-                                        self.merge(arr, left, pivot, right, cache)
 
+    def mergeSort(self, arr: list[int], left: int, right: int, cache: list[int]) -> None:
+        if left >= right:
+            return
 
+        mid = (left + right) // 2
+
+        self.mergeSort(arr, left, mid, cache)
+        self.mergeSort(arr, mid + 1, right, cache)
+        self.merge(arr, left, mid, right, cache)
+
+    def merge(self, arr: list[int], left: int, mid: int, right: int, cache: list[int]) -> None:
+        # copy to cache
+        for i in range(left, right + 1):
+            cache[i] = arr[i]
+
+        i = left
+        j = mid + 1
+        k = left
+
+        # merge back
+        while i <= mid and j <= right:
+            if cache[i] <= cache[j]:
+                arr[k] = cache[i]
+                i += 1
+            else:
+                arr[k] = cache[j]
+                j += 1
+            k += 1
+
+        # remaining left side
+        while i <= mid:
+            arr[k] = cache[i]
+            i += 1
+            k += 1
+
+        # remaining right side
+        while j <= right:
+            arr[k] = cache[j]
+            j += 1
+            k += 1
 ```
 
 ### How Merge Sort Works:
@@ -100,32 +103,38 @@ Heap sort uses a max-heap to sort the array in-place.
 
 ```python
 class Solution:
-def heapify(self, arr: list[int], n: int, i: int) -> None:
-largest = i
-left = 2  i + 1
-right = 2  i + 2
-# Find the largest among root and children
-if left < n and arr[left] > arr[largest]:
-largest = left
-if right < n and arr[right] > arr[largest]:
-largest = right
-# If largest is not root, swap and heapify
-if largest != i:
-arr[i], arr[largest] = arr[largest], arr[i]
-self.heapify(arr, n, largest)
-def heapSort(self, arr: list[int]) -> None:
-n = len(arr)
-# Build max heap
-for i in range(n // 2 - 1, -1, -1):
-self.heapify(arr, n, i)
-# Extract elements from heap one by one
-for i in range(n - 1, 0, -1):
-arr[0], arr[i] = arr[i], arr[0]  # Move max to end
-self.heapify(arr, i, 0)  # Heapify reduced heap
-def sortArray(self, nums: list[int]) -> list[int]:
-self.heapSort(nums)
-return nums
+    def heapify(self, arr: list[int], n: int, i: int) -> None:
+        largest = i
+        left = 2 * i + 1
+        right = 2 * i + 2
 
+        # Find largest among root and children
+        if left < n and arr[left] > arr[largest]:
+            largest = left
+
+        if right < n and arr[right] > arr[largest]:
+            largest = right
+
+        # If root is not largest, swap and continue heapifying
+        if largest != i:
+            arr[i], arr[largest] = arr[largest], arr[i]
+            self.heapify(arr, n, largest)
+
+    def heapSort(self, arr: list[int]) -> None:
+        n = len(arr)
+
+        # Build max heap
+        for i in range(n // 2 - 1, -1, -1):
+            self.heapify(arr, n, i)
+
+        # Extract elements one by one
+        for i in range(n - 1, 0, -1):
+            arr[0], arr[i] = arr[i], arr[0]
+            self.heapify(arr, i, 0)
+
+    def sortArray(self, nums: list[int]) -> list[int]:
+        self.heapSort(nums)
+        return nums
 ```
 
 ### How Heap Sort Works:
@@ -145,27 +154,27 @@ Counting sort works well when the range of numbers is small.
 class Solution:
     def countSort(self, arr: list[int]) -> None:
         from collections import defaultdict
+
         counts = defaultdict(int)
-        minVal = min(arr)
-        maxVal = max(arr)
-        # Count frequency of each element
+
+        # Step 1: count frequencies
         for val in arr:
             counts[val] += 1
-            # Reconstruct sorted array
-            idx = 0
-            for val in range(minVal, maxVal + 1):
-                if val in counts:
-                    while counts[val] > 0:
-                        arr[idx] = val
-                        idx += 1
-                        counts[val] -= 1
-                        def sortArray(self, nums: list[int]) -> list[int]:
-                            self.countSort(nums)
-                            return nums
 
+        minVal = min(arr)
+        maxVal = max(arr)
 
+        # Step 2: rebuild array
+        idx = 0
+        for val in range(minVal, maxVal + 1):
+            while counts[val] > 0:
+                arr[idx] = val
+                idx += 1
+                counts[val] -= 1
 
-
+    def sortArray(self, nums: list[int]) -> list[int]:
+        self.countSort(nums)
+        return nums
 ```
 
 ### How Counting Sort Works:
