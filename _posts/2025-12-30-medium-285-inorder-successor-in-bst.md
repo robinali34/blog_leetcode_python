@@ -88,31 +88,29 @@ This problem requires finding the in-order successor of a given node in a BST. T
 ### **Solution: Two-Case Handling**
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode(x) : val(x), left(None), right(None) :
-/
+# Definition for a binary tree node.
 class Solution:
-def inorderSuccessor(self, root, p):
-    TreeNode successor = None
-    if p.right != None:
-        successor = p.right
-        while successor.left != None:
-            successor = successor.left
-        return successor
-    TreeNode node = root
-    while node != None:
-        if node.val > p.val:
-            successor = node
-            node = node.left
-             else :
-            node = node.right
-    return successor
+    def inorderSuccessor(self, root, p):
+        successor = None
 
+        # Case 1: right subtree exists
+        if p.right:
+            successor = p.right
+            while successor.left:
+                successor = successor.left
+            return successor
+
+        # Case 2: no right subtree
+        node = root
+
+        while node:
+            if node.val > p.val:
+                successor = node
+                node = node.left
+            else:
+                node = node.right
+
+        return successor
 ```
 
 ### **Algorithm Explanation:**

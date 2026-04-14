@@ -76,29 +76,34 @@ This solution uses Union-Find to group connected cities into provinces.
 
 ```python
 class Solution:
-def find(self, parent, index):
-    if parent[index] != index:
-        parent[index] = find(parent, parent[index])
-    return parent[index]
-def unite(self, parent, index1, index2):
-    parent[find(parent, index1)] = find(parent, index2)
-def findCircleNum(self, isConnected):
-    cnt = len(isConnected)
-    list[int> parent(cnt)
-    # Initialize: each city is its own parent
-    for(i = 0 i < cnt i += 1) :
-    parent[i] = i
-# Union connected cities
-for(i = 0 i < cnt i += 1) :
-for(j = 0 j < cnt j += 1) :
-if isConnected[i][j] == 1:
-    unite(parent, i, j)
-# Count provinces (number of roots)
-circles = 0
-for(i = 0 i < cnt i += 1) :
-if(parent[i] == i) circles += 1
-return circles
+    def find(self, parent, x):
+        if parent[x] != x:
+            parent[x] = self.find(parent, parent[x])
+        return parent[x]
 
+    def unite(self, parent, x, y):
+        rootX = self.find(parent, x)
+        rootY = self.find(parent, y)
+        parent[rootX] = rootY
+
+    def findCircleNum(self, isConnected):
+        n = len(isConnected)
+
+        parent = list(range(n))
+
+        # Union all connected cities
+        for i in range(n):
+            for j in range(n):
+                if isConnected[i][j] == 1:
+                    self.unite(parent, i, j)
+
+        # Count roots
+        circles = 0
+        for i in range(n):
+            if self.find(parent, i) == i:
+                circles += 1
+
+        return circles
 ```
 
 ### How Solution 1 Works
@@ -121,21 +126,25 @@ Use DFS to explore all cities in a province.
 
 ```python
 class Solution:
-def dfs(self, isConnected, visited, city):
-    visited[city] = True
-    for(j = 0 j < len(isConnected) j += 1) :
-    if isConnected[city][j] == 1  and  not visited[j]:
-        dfs(isConnected, visited, j)
-def findCircleNum(self, isConnected):
-    n = len(isConnected)
-    list[bool> visited(n, False)
-    provinces = 0
-    for(i = 0 i < n i += 1) :
-    if not visited[i]:
-        dfs(isConnected, visited, i)
-        provinces += 1
-return provinces
+    def dfs(self, isConnected, visited, city):
+        visited[city] = True
 
+        for j in range(len(isConnected)):
+            if isConnected[city][j] == 1 and not visited[j]:
+                self.dfs(isConnected, visited, j)
+
+    def findCircleNum(self, isConnected):
+        n = len(isConnected)
+        visited = [False] * n
+
+        provinces = 0
+
+        for i in range(n):
+            if not visited[i]:
+                self.dfs(isConnected, visited, i)
+                provinces += 1
+
+        return provinces
 ```
 
 ### How Solution 2 Works
@@ -152,26 +161,31 @@ return provinces
 Use BFS instead of DFS for iterative exploration.
 
 ```python
-class Solution:
-def findCircleNum(self, isConnected):
-    n = len(isConnected)
-    list[bool> visited(n, False)
-    provinces = 0
-    for(i = 0 i < n i += 1) :
-    if not visited[i]:
-        deque[int> q
-        q.push(i)
-        visited[i] = True
-        while not not q:
-            city = q[0]
-            q.pop()
-            for(j = 0 j < n j += 1) :
-            if isConnected[city][j] == 1  and  not visited[j]:
-                visited[j] = True
-                q.push(j)
-    provinces += 1
-return provinces
+from collections import deque
 
+class Solution:
+    def findCircleNum(self, isConnected):
+        n = len(isConnected)
+        visited = [False] * n
+        provinces = 0
+
+        for i in range(n):
+            if not visited[i]:
+                q = deque()
+                q.append(i)
+                visited[i] = True
+
+                while q:
+                    city = q.popleft()
+
+                    for j in range(n):
+                        if isConnected[city][j] == 1 and not visited[j]:
+                            visited[j] = True
+                            q.append(j)
+
+                provinces += 1
+
+        return provinces
 ```
 
 ## Comparison of Approaches

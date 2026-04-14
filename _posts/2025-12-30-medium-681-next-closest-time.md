@@ -88,23 +88,21 @@ This problem requires finding the next closest time (including next day) that ca
 
 ```python
 class Solution:
-def getMin(self, h, m):
-    return h  60 + m
-def nextClosestTime(self, time):
-    h, m
-    sscanf(time.c_str(), "%d:%d", h, m)
-    list[bool> con(10, False)
-    con[time[0] - '0'] = con[time[1] - '0'] = con[time[3] - '0'] = con[time[4] - '0'] = True
-    start = getMin(h, m), end = getMin(h + 24, m), day = getMin(24, 0)
-    h1 = 0, m1 = 0
-    for(i = start + 1 i <= end i += 1) :
-    if(i >= day) i -= day
-    h1 = i / 60
-    m1 = i - h1  60
-    if(con[h1/10] * and  con[h1%10] * and  con[m1/10] * and  con[m1 % 10]) break
-char rtn[60]
-sprintf(rtn, "%02d:%02d", h1, m1)
-return rtn
+    def nextClosestTime(self, time: str) -> str:
+        # extract digits
+        allowed = set(time[:2] + time[3:])
+
+        h = int(time[:2])
+        m = int(time[3:])
+        start = h * 60 + m
+
+        def valid(x):
+            return all(d in allowed for d in f"{x//60:02d}{x%60:02d}")
+
+        for i in range(1, 24 * 60 + 1):
+            nxt = (start + i) % (24 * 60)
+            if valid(nxt):
+                return f"{nxt//60:02d}:{nxt%60:02d}"
 
 ```
 

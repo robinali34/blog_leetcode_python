@@ -76,45 +76,54 @@ This solution uses a sweep line algorithm with coordinate compression to handle 
 
 ```python
 class Solution:
-def rectangleArea(self, rectangles):
-    OPEN = 1, CLOSE = -1, MOD = 1E9 + 7
-    list[int> xCoords
-    list[array<int, 4>> events # :y, type, x1, x2
-for rec in rectangles:
-    xCoords.append(rec[0])
-    xCoords.append(rec[2])
-    events.append(:rec[1], OPEN, rec[0], rec[2])
-    events.append(:rec[3], CLOSE, rec[0], rec[2])
-# Coordinate compression
-xCoords.sort()
-xCoords.erase(unique(xCoords.begin(), xCoords.end()), xCoords.end())
-dict[int, int> xIdx
-for(i = 0 i < len(xCoords) i += 1) :
-xIdx[xCoords[i]] = i
-# Sort events by y-coordinate (process OPEN before CLOSE at same y)
-sort(events.begin(), events.end(), [](a, b):
-if(a[0] != b[0]) return a[0] < b[0]
-return a[1] > b[1]
-)
-n = len(xCoords)
-list[int> count(n, 0)  # Coverage count for each x-segment
-long long rtn = 0
-curY = events[0][0]
-for e in events:
-    y = e[0], type = e[1], x1 = e[2], x2 = e[3]
-    # Calculate total covered length
-    long long coveredLen = 0
-    for(i = 0 i < n - 1 i += 1) :
-    if count[i] > 0:
-        coveredLen += xCoords[i + 1] - xCoords[i]
-rtn = (rtn + coveredLen  (y - curY)) % MOD
-# Update coverage counts
-idx1 = xIdx[x1], idx2 = xIdx[x2]
-for(i = idx1 i < idx2 i += 1) :
-count[i] += type
-curY = y
-return (int)rtn
+    def rectangleArea(self, rectangles):
+        MOD = 10**9 + 7
 
+        OPEN, CLOSE = 1, -1
+
+        xCoords = []
+        events = []  # (y, type, x1, x2)
+
+        for x1, y1, x2, y2 in rectangles:
+            xCoords.append(x1)
+            xCoords.append(x2)
+
+            events.append((y1, OPEN, x1, x2))
+            events.append((y2, CLOSE, x1, x2))
+
+        # coordinate compression
+        xCoords = sorted(set(xCoords))
+
+        xIdx = {x: i for i, x in enumerate(xCoords)}
+
+        # sort events by y, OPEN before CLOSE if same y
+        events.sort(key=lambda x: (x[0], -x[1]))
+
+        n = len(xCoords)
+        count = [0] * n
+
+        def calc_covered():
+            covered = 0
+            for i in range(n - 1):
+                if count[i] > 0:
+                    covered += xCoords[i + 1] - xCoords[i]
+            return covered
+
+        res = 0
+        prevY = events[0][0]
+
+        for y, typ, x1, x2 in events:
+            res += calc_covered() * (y - prevY)
+            res %= MOD
+
+            i1, i2 = xIdx[x1], xIdx[x2]
+
+            for i in range(i1, i2):
+                count[i] += typ
+
+            prevY = y
+
+        return res % MOD
 ```
 
 ### How Solution 1 Works
@@ -151,55 +160,65 @@ This solution uses a segment tree for O(log n) range updates and queries, signif
 
 ```python
 class Solution:
-list[int> xCoords
-list[int> counts      # Coverage count at each node
-list[long long> total # Total covered length in range
-def update(self, node, lo, hi, left, right, delta):
-    if(right <= lo  or  hi <= left) return  # No overlap
-    if left <= lo  and  hi <= right:
-        counts[node] += delta
-         else :
-        mid = (lo + hi) / 2
-        update(2  node, lo, mid, left, right, delta)
-        update(2  node + 1, mid, hi, left, right, delta)
-    # Update total covered length
-    if counts[node] > 0:
-        total[node] = xCoords[hi] - xCoords[lo]
-         else if(hi - lo == 1) :
-        total[node] = 0
-         else :
-        total[node] = total[2  node] + total[2  node + 1]
-def rectangleArea(self, rectangles):
-    OPEN = 1, CLOSE = -1, MOD = 1E9 + 7
-    set<int> xSet
-    list[array<int, 4>> events
-    for rec in rectangles:
-        xSet.insert(rec[0])
-        xSet.insert(rec[2])
-        events.append(:rec[1], OPEN, rec[0], rec[2])
-        events.append(:rec[3], CLOSE, rec[0], rec[2])
-    xCoords.assign(xSet.begin(), xSet.end())
-    dict[int, int> xIdx
-    for(i = 0 i < len(xCoords) i += 1) :
-    xIdx[xCoords[i]] = i
-sort(events.begin(), events.end(), [](a, b) :
-if(a[0] != b[0]) return a[0] < b[0]
-return a[1] > b[1]
-)
-n = len(xCoords)
-counts.assign(4  n, 0)
-total.assign(4  n, 0)
-long long rtn = 0
-curY = events[0][0]
-for e in events:
-    [y, type, x1, x2] = e
-    # Add area since last event
-    rtn = (rtn + total[1] * (y - curY)) % MOD
-    # Update segment tree
-    update(1, 0, n - 1, xIdx[x1], xIdx[x2], type)
-    curY = y
-return (int)rtn
+    def __init__(self):
+        self.xCoords = []
+        self.count = []
+        self.total = []
 
+    def update(self, node, lo, hi, left, right, delta):
+        if right <= lo or hi <= left:
+            return
+
+        if left <= lo and hi <= right:
+            self.count[node] += delta
+        else:
+            mid = (lo + hi) // 2
+            self.update(2 * node, lo, mid, left, right, delta)
+            self.update(2 * node + 1, mid, hi, left, right, delta)
+
+        if self.count[node] > 0:
+            self.total[node] = self.xCoords[hi] - self.xCoords[lo]
+        elif hi - lo == 1:
+            self.total[node] = 0
+        else:
+            self.total[node] = self.total[2 * node] + self.total[2 * node + 1]
+
+    def rectangleArea(self, rectangles):
+        MOD = 10**9 + 7
+        OPEN, CLOSE = 1, -1
+
+        xSet = set()
+        events = []
+
+        for x1, y1, x2, y2 in rectangles:
+            xSet.add(x1)
+            xSet.add(x2)
+            events.append((y1, OPEN, x1, x2))
+            events.append((y2, CLOSE, x1, x2))
+
+        self.xCoords = sorted(xSet)
+
+        xIdx = {x: i for i, x in enumerate(self.xCoords)}
+
+        events.sort(key=lambda x: (x[0], -x[1]))
+
+        n = len(self.xCoords)
+
+        self.count = [0] * (4 * n)
+        self.total = [0] * (4 * n)
+
+        res = 0
+        curY = events[0][0]
+
+        for y, typ, x1, x2 in events:
+            res += self.total[1] * (y - curY)
+            res %= MOD
+
+            self.update(1, 0, n - 1, xIdx[x1], xIdx[x2], typ)
+
+            curY = y
+
+        return res % MOD
 ```
 
 ### How Solution 2 Works

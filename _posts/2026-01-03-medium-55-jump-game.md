@@ -116,15 +116,18 @@ This is a **greedy algorithm** problem. The key insight is to track the **rightm
 
 ```python
 class Solution:
-def canJump(self, nums):
-    N = len(nums)
-    rightMost = 0
-    for(i = 0 i < N i += 1) :
-    if i <= rightMost:
-        rightMost = max(rightMost, i + nums[i])
-        if(rightMost >= N - 1) return True
-return False
+    def canJump(self, nums):
+        N = len(nums)
+        rightMost = 0
 
+        for i in range(N):
+            if i <= rightMost:
+                rightMost = max(rightMost, i + nums[i])
+
+                if rightMost >= N - 1:
+                    return True
+
+        return False
 ```
 
 ### **Algorithm Explanation:**

@@ -115,53 +115,63 @@ This problem requires implementing a queue with operations at front, middle, and
 ### **Solution: Two Deques with Rebalancing**
 
 ```python
-class FrontMiddleBackQueue:
-FrontMiddleBackQueue() :
-def pushFront(self, val):
-    front_cache.push_front(val)
-    rebalance()
-def pushMiddle(self, val):
-    front_cache.append(val)
-    rebalance()
-def pushBack(self, val):
-    back_cache.append(val)
-    rebalance()
-def popFront(self):
-    if(not front_cache  and  not back_cache)  return -1
-    rtn
-    if not front_cache:
-        rtn = back_cache[0]
-        back_cache.pop_front()
-         else :
-        rtn = front_cache[0]
-        front_cache.pop_front()
-        rebalance()
-    return rtn
-def popMiddle(self):
-    if(not front_cache  and  not back_cache)  return -1
-    rtn
-    if len(front_cache) == len(back_cache):
-        rtn = front_cache[-1]
-        front_cache.pop()
-         else :
-        rtn = back_cache[0]
-        back_cache.pop_front()
-    return rtn
-def popBack(self):
-    if(not front_cache  and  not back_cache)  return -1
-    rtn = back_cache[-1]
-    back_cache.pop()
-    rebalance()
-    return rtn
-deque<int> front_cache, back_cache
-def rebalance(self):
-    while len(front_cache) > len(back_cache):
-        back_cache.push_front(front_cache[-1])
-        front_cache.pop()
-    while len(back_cache) > len(front_cache) + 1:
-        front_cache.append(back_cache[0])
-        back_cache.pop_front()
+from collections import deque
 
+class FrontMiddleBackQueue:
+    def __init__(self):
+        self.front_cache = deque()
+        self.back_cache = deque()
+
+    def rebalance(self):
+        while len(self.front_cache) > len(self.back_cache):
+            self.back_cache.appendleft(self.front_cache.pop())
+
+        while len(self.back_cache) > len(self.front_cache) + 1:
+            self.front_cache.append(self.back_cache.popleft())
+
+    def pushFront(self, val):
+        self.front_cache.appendleft(val)
+        self.rebalance()
+
+    def pushMiddle(self, val):
+        self.front_cache.append(val)
+        self.rebalance()
+
+    def pushBack(self, val):
+        self.back_cache.append(val)
+        self.rebalance()
+
+    def popFront(self):
+        if not self.front_cache and not self.back_cache:
+            return -1
+
+        if self.front_cache:
+            val = self.front_cache.popleft()
+        else:
+            val = self.back_cache.popleft()
+
+        self.rebalance()
+        return val
+
+    def popMiddle(self):
+        if not self.front_cache and not self.back_cache:
+            return -1
+
+        if len(self.front_cache) == len(self.back_cache):
+            val = self.front_cache.pop()
+        else:
+            val = self.back_cache.popleft()
+
+        self.rebalance()
+        return val
+
+    def popBack(self):
+        if not self.front_cache and not self.back_cache:
+            return -1
+
+        val = self.back_cache.pop()
+        self.rebalance()
+        return val
 ```
 
 ### **Algorithm Explanation:**
@@ -299,32 +309,39 @@ popBack():
 ### **Approach 2: Single Deque with Index Calculation**
 
 ```python
+from collections import deque
+
 class FrontMiddleBackQueue:
-deque<int> dq
-FrontMiddleBackQueue() :
-def pushFront(self, val):
-    dq.push_front(val)
-def pushMiddle(self, val):
-    mid = len(dq) / 2
-    dq.insert(dq.begin() + mid, val)
-def pushBack(self, val):
-    dq.append(val)
-def popFront(self):
-    if(not dq) return -1
-    val = dq[0]
-    dq.pop_front()
-    return val
-def popMiddle(self):
-    if(not dq) return -1
-    mid = (len(dq) - 1) / 2
-    val = dq[mid]
-    dq.erase(dq.begin() + mid)
-    return val
-def popBack(self):
-    if(not dq) return -1
-    val = dq[-1]
-    dq.pop()
-    return val
+    def __init__(self):
+        self.dq = deque()
+
+    def pushFront(self, val):
+        self.dq.appendleft(val)
+
+    def pushMiddle(self, val):
+        mid = len(self.dq) // 2
+        self.dq.insert(mid, val)
+
+    def pushBack(self, val):
+        self.dq.append(val)
+
+    def popFront(self):
+        if not self.dq:
+            return -1
+        return self.dq.popleft()
+
+    def popMiddle(self):
+        if not self.dq:
+            return -1
+        mid = (len(self.dq) - 1) // 2
+        val = self.dq[mid]
+        del self.dq[mid]
+        return val
+
+    def popBack(self):
+        if not self.dq:
+            return -1
+        return self.dq.pop()
 
 ```
 

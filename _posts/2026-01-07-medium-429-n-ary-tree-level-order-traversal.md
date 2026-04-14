@@ -123,36 +123,36 @@ This is a classic **BFS (Breadth-First Search)** problem for N-ary trees. The ke
 ### **Solution: BFS with Queue**
 
 ```python
-/
 # Definition for a Node.
-class Node:
-val
-list[Node> children
-Node() :
-Node(_val) :
-val = _val
-Node(_val, list[Node> _children) :
-val = _val
-children = _children
-/
-class Solution:
-def levelOrder(self, root):
-    list[list[int>> rtn
-    if(not root) return rtn
-    deque[Node> q
-    q.push(root)
-    while not not q:
-        list[int> level
-        levelSize = len(q)
-        for(i = 0 i < levelSize i += 1) :
-        Node curr = q[0]
-        q.pop()
-        level.append(curr.val)
-        for child in curr.children:
-            q.push(child)
-    rtn.append(level)
-return rtn
+# class Node:
+#     def __init__(self, val=None, children=None):
+#         self.val = val
+#         self.children = children if children is not None else []
 
+class Solution:
+    def levelOrder(self, root):
+        rtn = []
+
+        if not root:
+            return rtn
+
+        q = deque()
+        q.append(root)
+
+        while q:
+            level = []
+            levelSize = len(q)
+
+            for i in range(levelSize):
+                curr = q.popleft()
+                level.append(curr.val)
+
+                for child in curr.children:
+                    q.append(child)
+
+            rtn.append(level)
+
+        return rtn
 ```
 
 ### **Algorithm Explanation:**

@@ -103,40 +103,49 @@ This problem requires checking if two nodes are **cousins**, which means:
 ### **Solution: BFS with Parent Tracking**
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def isCousins(self, root, x, y):
-    if(not root) return False
-    deque[pair<TreeNode, TreeNode>> q
-    q.push(:root, None)
-    TreeNode xParent = None, yParent = None
-    xDepth = 1, yDepth = -1, depth = 0
-    while not not q:
-        size = len(q)
-        for(i = 0 i < size i += 1) :
-        [node, parent] = q[0]
-        q.pop()
-        if node.val == x:
-            xParent = parent
-            xDepth = depth
-        if node.val == y:
-            yParent = parent
-            yDepth = depth
-        if node.left) q.push({node.left, node}:
-        if node.right) q.push({node.right, node}:
-    if(xParent  and  yParent) break
-    depth += 1
-return xDepth == yDepth  and  xParent != yParent
+from collections import deque
 
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def isCousins(self, root, x, y):
+        if not root:
+            return False
+
+        q = deque()
+        q.append((root, None))
+
+        xParent = None
+        yParent = None
+        depth = 0
+
+        while q:
+            size = len(q)
+
+            for i in range(size):
+                node, parent = q.popleft()
+
+                if node.val == x:
+                    xParent = parent
+                if node.val == y:
+                    yParent = parent
+
+                if node.left:
+                    q.append((node.left, node))
+                if node.right:
+                    q.append((node.right, node))
+
+            if xParent and yParent:
+                break
+
+            depth += 1
+
+        return xParent != yParent and xParent is not None and yParent is not None
 ```
 
 ### **Algorithm Explanation:**

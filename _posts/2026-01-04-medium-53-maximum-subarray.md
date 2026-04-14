@@ -122,13 +122,15 @@ This is a classic **Kadane's Algorithm** problem, which can be solved using eith
 
 ```python
 class Solution:
-def maxSubArray(self, nums):
-    maxSum = nums[0], currSum = nums[0]
-    for(i = 1 i < (int)len(nums) i += 1) :
-    currSum = max(nums[i], currSum + nums[i])
-    maxSum = max(maxSum, currSum)
-return maxSum
+    def maxSubArray(self, nums):
+        maxSum = nums[0]
+        currSum = nums[0]
 
+        for i in range(1, len(nums)):
+            currSum = max(nums[i], currSum + nums[i])
+            maxSum = max(maxSum, currSum)
+
+        return maxSum
 ```
 
 ### **Algorithm Explanation:**
@@ -317,15 +319,20 @@ nums = [-2, 1, -3, 4]
 - **Idea**: Store `dp[i]` = maximum subarray sum ending at `i`
 - **Code**:
 ```python
-def maxSubArray(self, nums):
-    list[int> dp(len(nums))
-    dp[0] = nums[0]
-    maxSum = nums[0]
-    for(i = 1 i < len(nums) i += 1) :
-    dp[i] = max(nums[i], dp[i-1] + nums[i])
-    maxSum = max(maxSum, dp[i])
-return maxSum
+class Solution:
+    def maxSubArray(self, nums):
+        n = len(nums)
 
+        dp = [0] * n
+        dp[0] = nums[0]
+
+        maxSum = nums[0]
+
+        for i in range(1, n):
+            dp[i] = max(nums[i], dp[i - 1] + nums[i])
+            maxSum = max(maxSum, dp[i])
+
+        return maxSum
 ```
 
 ### **Approach 3: Divide and Conquer**
@@ -374,21 +381,28 @@ return maxSum
 **Answer**: Track the start and end indices:
 
 ```python
-def maxSubArrayIndices(self, nums):
-    maxSum = nums[0], currSum = nums[0]
-    start = 0, end = 0, currStart = 0
-    for(i = 1 i < len(nums) i += 1) :
-    if currSum < 0:
-        currSum = nums[i]
-        currStart = i
-         else :
-        currSum += nums[i]
-    if currSum > maxSum:
-        maxSum = currSum
-        start = currStart
-        end = i
-return :start, end  # Return indices of maximum subarray
+class Solution:
+    def maxSubArrayIndices(self, nums):
+        maxSum = nums[0]
+        currSum = nums[0]
 
+        start = 0
+        end = 0
+        currStart = 0
+
+        for i in range(1, len(nums)):
+            if currSum < 0:
+                currSum = nums[i]
+                currStart = i
+            else:
+                currSum += nums[i]
+
+            if currSum > maxSum:
+                maxSum = currSum
+                start = currStart
+                end = i
+
+        return start, end
 ```
 
 ## Tags

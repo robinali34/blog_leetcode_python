@@ -98,39 +98,45 @@ This problem is a variation of **level-order traversal** (BFS) where we alternat
 ### **Solution: BFS with Deque and Direction Toggle**
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def zigzagLevelOrder(self, root):
-    list[list[int>> rtn
-    if(root == None) return rtn
-    deque<TreeNode> queue
-    queue.append(root)
-    bool leftToRight = True
-    while not not queue:
-        size = len(queue)
-        list[int> level
-        for(i = 0 i < size i += 1) :
-        TreeNode curr = queue[0]
-        queue.pop_front()
-        if leftToRight:
-            level.append(curr.val)
-             else :
-            level.insert(level.begin(), curr.val)
-        if curr.left) queue.append(curr.left:
-        if curr.right) queue.append(curr.right:
-    rtn.append(level)
-    leftToRight = not leftToRight
-return rtn
+from collections import deque
 
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def zigzagLevelOrder(self, root):
+        rtn = []
+        if root is None:
+            return rtn
+
+        queue = deque([root])
+        leftToRight = True
+
+        while queue:
+            size = len(queue)
+            level = []
+
+            for i in range(size):
+                curr = queue.popleft()
+
+                if leftToRight:
+                    level.append(curr.val)
+                else:
+                    level.insert(0, curr.val)
+
+                if curr.left:
+                    queue.append(curr.left)
+                if curr.right:
+                    queue.append(curr.right)
+
+            rtn.append(level)
+            leftToRight = not leftToRight
+
+        return rtn
 ```
 
 ### **Algorithm Explanation:**
@@ -212,26 +218,39 @@ Level 2 (leftToRight = true):
 Instead of inserting at the beginning, we can pre-allocate the level vector and calculate the index:
 
 ```python
-def zigzagLevelOrder(self, root):
-    list[list[int>> result
-    if (not root) return result
-    deque[TreeNode> q
-    q.push(root)
-    bool leftToRight = True
-    while not not q:
-        size = len(q)
-        list[int> level(size)
-        for (i = 0 i < size i += 1) :
-        TreeNode node = q[0]
-        q.pop()
-        (i if             index = leftToRight  else size - 1 - i)
-        level[index] = node.val
-        if node.left) q.push(node.left:
-        if node.right) q.push(node.right:
-    result.append(level)
-    leftToRight = not leftToRight
-return result
+from collections import deque
 
+class Solution:
+    def zigzagLevelOrder(self, root):
+        result = []
+
+        if not root:
+            return result
+
+        q = deque()
+        q.append(root)
+
+        leftToRight = True
+
+        while q:
+            size = len(q)
+            level = [0] * size
+
+            for i in range(size):
+                node = q.popleft()
+
+                index = i if leftToRight else size - 1 - i
+                level[index] = node.val
+
+                if node.left:
+                    q.append(node.left)
+                if node.right:
+                    q.append(node.right)
+
+            result.append(level)
+            leftToRight = not leftToRight
+
+        return result
 ```
 
 **Advantages:**

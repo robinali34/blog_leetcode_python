@@ -93,20 +93,15 @@ This problem requires efficiently answering multiple range sum queries on an imm
 
 ```python
 class NumArray:
-NumArray(list[int> nums) :
-N = len(nums)
-sums.resize(N + 1, 0)
-for(i = 0 i < N i += 1) :
-sums[i + 1] = sums[i] + nums[i]
-def sumRange(self, left, right):
-    return sums[right + 1] - sums[left]
-list[int> sums
-/
- Your NumArray object will be instantiated and called as such:
- NumArray obj = new NumArray(nums)
- param_1 = obj.sumRange(left,right)
-/
+    def __init__(self, nums):
+        n = len(nums)
+        self.sums = [0] * (n + 1)
 
+        for i in range(n):
+            self.sums[i + 1] = self.sums[i] + nums[i]
+
+    def sumRange(self, left, right):
+        return self.sums[right + 1] - self.sums[left]
 ```
 
 ### **Algorithm Explanation:**

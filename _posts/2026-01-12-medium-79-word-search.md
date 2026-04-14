@@ -100,25 +100,37 @@ This is a classic **backtracking with DFS** problem on a 2D grid. The key insigh
 
 ```python
 class Solution:
-def exist(self, board, word):
-    rows = len(board)
-    cols = board[0].__len__()
-    for(r = 0 r < rows r += 1) :
-    for(c = 0 c < cols c += 1) :
-    if(backtrack(board, word, r, c, 0)) return True
-return False
-rows, cols
-list[pair<int, int>> dirs = \:\:0, 1\, \:0, -1\, \:1, 0\, \:-1, 0\\
-def backtrack(self, board, word, row, col, idx):
-    if(idx == word.length()) return True
-    if row < 0  or  row >= rows  or  col < 0  or  col >= cols  or  board[row][col] != word[idx]:
-        return False
-    board[row][col] = '#'
-    for([dr, dc]: dirs) :
-    if(backtrack(board, word, row + dr, col + dc, idx + 1)) return True
-board[row][col] = word[idx]
-return False
+    def exist(self, board, word):
+        rows = len(board)
+        cols = len(board[0])
 
+        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+        for r in range(rows):
+            for c in range(cols):
+                if self.backtrack(board, word, r, c, 0, rows, cols, dirs):
+                    return True
+
+        return False
+
+    def backtrack(self, board, word, row, col, idx, rows, cols, dirs):
+        if idx == len(word):
+            return True
+
+        if (row < 0 or row >= rows or
+            col < 0 or col >= cols or
+            board[row][col] != word[idx]):
+            return False
+
+        temp = board[row][col]
+        board[row][col] = '#'
+
+        for dr, dc in dirs:
+            if self.backtrack(board, word, row + dr, col + dc, idx + 1, rows, cols, dirs):
+                return True
+
+        board[row][col] = temp
+        return False
 ```
 
 ### **Algorithm Explanation:**
@@ -256,24 +268,38 @@ No path found from (0,0). Try other starting positions...
 
 ```python
 class Solution:
-def exist(self, board, word):
-    m = len(board), n = board[0].__len__()
-    list[list[bool>> visited(m, list[bool>(n, False))
-    for(i = 0 i < m i += 1) :
-    for(j = 0 j < n j += 1) :
-    if(dfs(board, word, i, j, 0, visited)) return True
-return False
-def dfs(self, board, word, i, j, idx, visited):
-    if(idx == word.length()) return True
-    if(i < 0  or  i >= len(board)  or  j < 0  or  j >= board[0].__len__()) return False
-    if(visited[i][j] * or  board[i][j] != word[idx]) return False
-    visited[i][j] = True
-    list[pair<int, int>> dirs = \:\:0,1\, \:0,-1\, \:1,0\, \:-1,0\\
-for([dr, dc]: dirs) :
-if(dfs(board, word, i + dr, j + dc, idx + 1, visited)) return True
-visited[i][j] = False
-return False
+    def exist(self, board, word):
+        m, n = len(board), len(board[0])
 
+        visited = [[False] * n for _ in range(m)]
+
+        for i in range(m):
+            for j in range(n):
+                if self.dfs(board, word, i, j, 0, visited, m, n):
+                    return True
+
+        return False
+
+    def dfs(self, board, word, i, j, idx, visited, m, n):
+        if idx == len(word):
+            return True
+
+        if (i < 0 or i >= m or
+            j < 0 or j >= n or
+            visited[i][j] or
+            board[i][j] != word[idx]):
+            return False
+
+        visited[i][j] = True
+
+        dirs = [(0,1), (0,-1), (1,0), (-1,0)]
+
+        for dr, dc in dirs:
+            if self.dfs(board, word, i + dr, j + dc, idx + 1, visited, m, n):
+                return True
+
+        visited[i][j] = False
+        return False
 ```
 
 **Time Complexity:** O(m × n × 4^L)  

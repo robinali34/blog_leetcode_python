@@ -122,20 +122,19 @@ This problem requires finding the next greater element for each element in `nums
 
 ```python
 class Solution:
-def nextGreaterElement(self, nums1, nums2):
-    dict[int, int> hashmap
-    list[int> stk
-    for(i = len(nums2) - 1 i >= 0 i -= 1) :
-    num = nums2[i]
-    while not not stk  and  num >= stk.top():
-        stk.pop()
-    (-1 if             hashmap[num] = not stk else stk.top())
-    stk.push(num)
-list[int> rtn(len(nums1))
-for(i = 0 i < (int)len(nums1) i += 1) :
-rtn[i] = hashmap[nums1[i]]
-return rtn
+    def nextGreaterElement(self, nums1, nums2):
+        hashmap = {}
+        stk = []
 
+        # build next greater map from right to left
+        for num in reversed(nums2):
+            while stk and num >= stk[-1]:
+                stk.pop()
+
+            hashmap[num] = stk[-1] if stk else -1
+            stk.append(num)
+
+        return [hashmap[x] for x in nums1]
 ```
 
 ### **Algorithm Explanation:**
@@ -261,22 +260,27 @@ Processing from right to left ensures:
 Here's the general template for next greater element problems:
 
 ```python
-def nextGreaterElement(self, nums):
-    n = len(nums)
-    list[int> result(n, -1)
-    list[int> stk
-    # Traverse from right to left
-    for(i = n - 1 i >= 0 i -= 1) :
-    # Pop elements that can't be next greater
-    while not not stk  and  nums[i] >= stk.top():
-        stk.pop()
-    # Top of stack is next greater element
-    if not not stk:
-        result[i] = stk.top()
-    # Push current element
-    stk.push(nums[i])
-return result
+class Solution:
+    def nextGreaterElement(self, nums):
+        n = len(nums)
+        result = [-1] * n
+        stk = []
 
+        # Traverse from right to left
+        for i in range(n - 1, -1, -1):
+
+            # Remove smaller or equal elements
+            while stk and nums[i] >= stk[-1]:
+                stk.pop()
+
+            # Next greater element
+            if stk:
+                result[i] = stk[-1]
+
+            # Push current element
+            stk.append(nums[i])
+
+        return result
 ```
 
 ### **Key Template Components:**

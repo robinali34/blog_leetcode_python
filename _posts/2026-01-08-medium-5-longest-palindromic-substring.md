@@ -97,24 +97,33 @@ Uses preprocessing to transform the string and then uses symmetry properties to 
 
 ```python
 class Solution:
-def longestPalindrome(self, s):
-    N = len(s)
-    if(N < 2) return s
-    start = 0, maxLen = 1
-    for(i = 0 i < N i += 1) :
-    expandAroundCenter(s, i, i, start, maxLen)
-    expandAroundCenter(s, i, i + 1, start, maxLen)
-return s.substr(start, maxLen)
-def expandAroundCenter(self, s, left, right, start, maxLen):
-    N = len(s)
-    while left >=0  and  right < N  and  s[left] == s[right]:
-        len = right - left + 1
-        if len > maxLen:
-            start = left
-            maxLen = len
-        left -= 1
-        right += 1
+    def longestPalindrome(self, s):
+        n = len(s)
+        if n < 2:
+            return s
 
+        start = 0
+        maxLen = 1
+
+        for i in range(n):
+            self.expandAroundCenter(s, i, i, start, maxLen)
+            self.expandAroundCenter(s, i, i + 1, start, maxLen)
+
+        return s[start:start + maxLen]
+
+    def expandAroundCenter(self, s, left, right, start, maxLen):
+        n = len(s)
+
+        while left >= 0 and right < n and s[left] == s[right]:
+            length = right - left + 1
+
+            if length > maxLen:
+                # update via list trick (since ints are immutable in Python)
+                start = left
+                maxLen = length
+
+            left -= 1
+            right += 1
 ```
 
 ### **Algorithm Explanation:**
@@ -181,39 +190,51 @@ Result: s.substr(0, 3) = "bab"
 
 ```python
 class Solution:
-def preprocess(self, s):
-    str t = "^"
-    for c in s:
-        t += "#"
-        t += c
-    t += "#$"
-    return t
-def longestPalindrome(self, s):
-    if (not s) return ""
-    str t = preprocess(s)
-    n = len(t)
-    list[int> p(n, 0)
-    center = 0, right = 0
-    for (i = 1 i < n - 1 i += 1) :
-    mirror = 2  center - i
-    if i < right:
-    p[i] = min(right - i, p[mirror])
-    # Expand around center i
-    while t[i + p[i] + 1] == t[i - p[i] - 1]:
-    p[i]++
-    # Update center and right boundary
-    if i + p[i] > right:
-        center = i
-        right = i + p[i]
-# Find the longest palindrome
-maxLen = 0, centerIndex = 0
-for (i = 1 i < n - 1 i += 1) :
-if p[i] > maxLen:
-    maxLen = p[i]
-    centerIndex = i
-start = (centerIndex - maxLen) / 2
-return s.substr(start, maxLen)
+    def preprocess(self, s):
+        t = "^"
+        for c in s:
+            t += "#" + c
+        t += "#$"
+        return t
 
+    def longestPalindrome(self, s):
+        if not s:
+            return ""
+
+        t = self.preprocess(s)
+        n = len(t)
+
+        p = [0] * n
+
+        center = 0
+        right = 0
+
+        for i in range(1, n - 1):
+            mirror = 2 * center - i
+
+            if i < right:
+                p[i] = min(right - i, p[mirror])
+
+            # expand around center
+            while t[i + p[i] + 1] == t[i - p[i] - 1]:
+                p[i] += 1
+
+            # update center and right
+            if i + p[i] > right:
+                center = i
+                right = i + p[i]
+
+        maxLen = 0
+        centerIndex = 0
+
+        for i in range(1, n - 1):
+            if p[i] > maxLen:
+                maxLen = p[i]
+                centerIndex = i
+
+        start = (centerIndex - maxLen) // 2
+
+        return s[start:start + maxLen]
 ```
 
 ### **Algorithm Explanation:**

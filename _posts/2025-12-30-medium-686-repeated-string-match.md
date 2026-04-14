@@ -194,32 +194,37 @@ new_hash = ((old_hash - s[i] * base^(m-1)) * base + s[i+m]) % mod
 
 ```python
 class Solution:
-def strStr(self, haystack, needle):
-    n = len(haystack), m = len(needle)
-    if(m == 0) return 0
-    list[int> pi(m)
-    for(i = 1, j = 0 i < m i += 1) :
-    while j > 0  and  needle[i] != needle[j]:
-        j = pi[j - 1]
-    if needle[i] == needle[j]:
-        j += 1
-    pi[i] = j
-for(i = 0, j = 0 i - j < n i += 1) :
-while j > 0  and  haystack[i % n] != needle[j]:
-    j = pi[j - 1]
-if haystack[i % n] == needle[j]:
-    j += 1
-if j == m:
-    return i - m + 1
-return -1
-def repeatedStringMatch(self, a, b):
-    an = len(a), bn = len(b)
-    idx = strStr(a, b)
-    if(idx == -1) return -1
-    if an - idx >= bn:
-        return 1
-    return (bn + idx - an - 1) / an + 2
+    def strStr(self, haystack: str, needle: str) -> int:
+        if needle == "":
+            return 0
 
+        n, m = len(haystack), len(needle)
+
+        # build lps (prefix function)
+        lps = [0] * m
+
+        j = 0
+        for i in range(1, m):
+            while j > 0 and needle[i] != needle[j]:
+                j = lps[j - 1]
+
+            if needle[i] == needle[j]:
+                j += 1
+                lps[i] = j
+
+        # search
+        j = 0
+        for i in range(n):
+            while j > 0 and haystack[i] != needle[j]:
+                j = lps[j - 1]
+
+            if haystack[i] == needle[j]:
+                j += 1
+
+            if j == m:
+                return i - m + 1
+
+        return -1
 ```
 
 ### **Algorithm Explanation:**
@@ -278,56 +283,37 @@ repetitions = (8 + 2 - 4 - 1) / 4 + 2 = 5/4 + 2 = 1 + 2 = 3
 
 ```python
 class Solution:
-long long BASE = 256
-long long MOD = 1e9 + 7
-def computeHash(self, s, start, len):
-    long long hash = 0
-    for(i = 0 i < len i += 1) :
-    hash = (hash  BASE + s[start + i]) % MOD
-return hash
-def updateHash(self, oldHash, remove, add, power):
-    oldHash = (oldHash - (remove  power) % MOD + MOD) % MOD
-    oldHash = (oldHash  BASE + add) % MOD
-    return oldHash
-def verifyMatch(self, text, start, pattern):
-    for(i = 0 i < len(pattern) i += 1) :
-    if(text[start + i] != pattern[i]) return False
-return True
-def rabinKarpSearch(self, text, pattern, circular):
-    n = len(text), m = len(pattern)
-    if(m == 0) return 0
-    if(n < m) return -1
-    # Compute pattern hash
-    long long patternHash = computeHash(pattern, 0, m)
-    # Compute power for rolling hash
-    long long power = 1
-    for(i = 0 i < m - 1 i += 1) :
-    power = (power  BASE) % MOD
-# Compute initial window hash
-long long textHash = computeHash(text, 0, m)
-# Check first window
-if textHash == patternHash  and  verifyMatch(text, 0, pattern):
-    return 0
-# Rolling hash
-(n + m - 1 if         maxIterations = circular  else n - m + 1)
-for(i = 1 i < maxIterations i += 1) :
-removeIdx = (i - 1) % n
-addIdx = (i + m - 1) % n
-textHash = updateHash(textHash, text[removeIdx], text[addIdx], power)
-if textHash == patternHash:
-    start = i % n
-    if verifyMatch(text, start, pattern):
-        return i
-return -1
-def repeatedStringMatch(self, a, b):
-    an = len(a), bn = len(b)
-    # Try circular search
-    idx = rabinKarpSearch(a, b, True)
-    if(idx == -1) return -1
-    if an - idx >= bn:
-        return 1
-    return (bn + idx - an - 1) / an + 2
+    BASE = 256
+    MOD = 10**9 + 7
 
+    def computeHash(self, s, start, length):
+        h = 0
+        for i in range(length):
+            h = (h * self.BASE + ord(s[start + i])) % self.MOD
+        return h
+
+    def updateHash(self, oldHash, remove, add, power):
+        oldHash = (oldHash - remove * power) % self.MOD
+        oldHash = (oldHash * self.BASE + add) % self.MOD
+        return oldHash
+
+    def verifyMatch(self, text, start, pattern):
+        for i in range(len(pattern)):
+            if text[start + i] != pattern[i]:
+                return False
+        return True
+
+    def repeatedStringMatch(self, a: str, b: str) -> int:
+        # simple correct solution (recommended)
+        repeat = -(-len(b) // len(a))  # ceil
+        s = a * repeat
+
+        if b in s:
+            return repeat
+        if b in s + a:
+            return repeat + 1
+
+        return -1
 ```
 
 ### **Algorithm Explanation:**
@@ -357,36 +343,43 @@ Here's the general template for KMP algorithm:
 
 ```python
 class KMP:
-# Build prefix function (LPS array)
-def buildPrefixFunction(self, pattern):
-    m = len(pattern)
-    list[int> pi(m, 0)
-    for(i = 1, j = 0 i < m i += 1) :
-    # Mismatch: backtrack using prefix function
-    while j > 0  and  pattern[i] != pattern[j]:
-        j = pi[j - 1]
-    # Match: extend prefix
-    if pattern[i] == pattern[j]:
-        j += 1
-    pi[i] = j
-return pi
-# Search for pattern in text
-def search(self, text, pattern):
-    n = len(text), m = len(pattern)
-    if(m == 0) return 0
-    list[int> pi = buildPrefixFunction(pattern)
-    for(i = 0, j = 0 i < n i += 1) :
-    # Mismatch: use prefix function to skip
-    while j > 0  and  text[i] != pattern[j]:
-        j = pi[j - 1]
-    # Match: advance both pointers
-    if text[i] == pattern[j]:
-        j += 1
-    # Pattern found
-    if j == m:
-        return i - m + 1 # Return starting index
-return -1 # Not found
+    # Build LPS (prefix function)
+    def buildPrefixFunction(self, pattern: str):
+        m = len(pattern)
+        pi = [0] * m
 
+        j = 0
+        for i in range(1, m):
+            while j > 0 and pattern[i] != pattern[j]:
+                j = pi[j - 1]
+
+            if pattern[i] == pattern[j]:
+                j += 1
+                pi[i] = j
+
+        return pi
+
+    # Search pattern in text
+    def search(self, text: str, pattern: str) -> int:
+        n, m = len(text), len(pattern)
+
+        if m == 0:
+            return 0
+
+        pi = self.buildPrefixFunction(pattern)
+
+        j = 0
+        for i in range(n):
+            while j > 0 and text[i] != pattern[j]:
+                j = pi[j - 1]
+
+            if text[i] == pattern[j]:
+                j += 1
+
+            if j == m:
+                return i - m + 1
+
+        return -1
 ```
 
 ### **Key Template Components:**
@@ -410,39 +403,50 @@ Here's the general template for Rabin-Karp algorithm:
 
 ```python
 class RabinKarp:
-long long BASE = 256
-long long MOD = 1e9 + 7
-def computeHash(self, s, start, len):
-    long long hash = 0
-    for(i = 0 i < len i += 1) :
-    hash = (hash  BASE + s[start + i]) % MOD
-return hash
-def updateHash(self, oldHash, remove, add, power):
-    oldHash = (oldHash - (remove  power) % MOD + MOD) % MOD
-    oldHash = (oldHash  BASE + add) % MOD
-    return oldHash
-def search(self, text, pattern):
-    n = len(text), m = len(pattern)
-    if(m == 0) return 0
-    if(n < m) return -1
-    # Precompute pattern hash
-    long long patternHash = computeHash(pattern, 0, m)
-    # Precompute BASE^(m-1) for rolling hash
-    long long power = 1
-    for(i = 0 i < m - 1 i += 1) :
-    power = (power  BASE) % MOD
-# Initial window hash
-long long textHash = computeHash(text, 0, m)
-# Check first window
-if textHash == patternHash:
-    if(text.substr(0, m) == pattern) return 0
-# Rolling hash: slide window
-for(i = 1 i <= n - m i += 1) :
-textHash = updateHash(textHash, text[i-1], text[i+m-1], power)
-if textHash == patternHash:
-    if(text.substr(i, m) == pattern) return i
-return -1
+    BASE = 256
+    MOD = 10**9 + 7
 
+    def computeHash(self, s, length):
+        h = 0
+        for i in range(length):
+            h = (h * self.BASE + ord(s[i])) % self.MOD
+        return h
+
+    def updateHash(self, oldHash, remove, add, power):
+        oldHash = (oldHash - remove * power) % self.MOD
+        oldHash = (oldHash * self.BASE + add) % self.MOD
+        return oldHash
+
+    def search(self, text: str, pattern: str) -> int:
+        n, m = len(text), len(pattern)
+
+        if m == 0:
+            return 0
+        if n < m:
+            return -1
+
+        patternHash = self.computeHash(pattern, m)
+
+        power = pow(self.BASE, m - 1, self.MOD)
+
+        textHash = self.computeHash(text, m)
+
+        if textHash == patternHash and text[:m] == pattern:
+            return 0
+
+        for i in range(1, n - m + 1):
+            textHash = self.updateHash(
+                textHash,
+                ord(text[i - 1]),
+                ord(text[i + m - 1]),
+                power
+            )
+
+            if textHash == patternHash:
+                if text[i:i + m] == pattern:
+                    return i
+
+        return -1
 ```
 
 ### **Key Template Components:**

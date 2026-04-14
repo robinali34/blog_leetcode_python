@@ -127,10 +127,6 @@ class Solution:
                 i += 1
                 j += 1
                 return count
-
-
-
-
 ```
 
 ### **Solution 2: Two Pointers with While Loop for Cookie**
@@ -152,7 +148,6 @@ class Solution:
             else:
                 break
         return count
-
 ```
 
 ### **Algorithm Explanation:**

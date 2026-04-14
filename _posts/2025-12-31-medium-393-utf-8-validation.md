@@ -113,30 +113,44 @@ This problem requires validating UTF-8 encoding by checking bit patterns. UTF-8 
 
 ```python
 class Solution:
-static MASK1 = 1 << 7
-static MASK2 = MASK1 + (1 << 6)
-def isValid(self, num):
-    return (num  MASK2) == MASK1
-def getBytes(self, num):
-    if((num  MASK1) == 0) return 1
-    n = 0, mask = MASK1
-    while (num & mask) != 0:
-        n += 1
-        if(n > 4) return -1
-        mask >>= 1
-    (n if         return n >=2  else -1)
-def validUtf8(self, data):
-    M = len(data)
-    idx = 0
-    while idx < M:
-        num = data[idx]
-        n = getBytes(num)
-        if(n < 0  or  idx + n > M) return False
-        for(i = 1 i < n i += 1) :
-        if(not isValid(data[idx + i])) return False
-    idx += n
-return True
+    def isValidContinuation(self, num):
+        # must be: 10xxxxxx
+        return (num & 0b11000000) == 0b10000000
 
+    def getBytes(self, num):
+        if (num & 0b10000000) == 0:
+            return 1
+
+        mask = 0b10000000
+        count = 0
+
+        while num & mask:
+            count += 1
+            mask >>= 1
+
+        if count == 1 or count > 4:
+            return -1
+
+        return count
+
+    def validUtf8(self, data):
+        n = len(data)
+        i = 0
+
+        while i < n:
+            num = data[i]
+            size = self.getBytes(num)
+
+            if size == -1 or i + size > n:
+                return False
+
+            for j in range(1, size):
+                if not self.isValidContinuation(data[i + j]):
+                    return False
+
+            i += size
+
+        return True
 ```
 
 ### **Algorithm Explanation:**
@@ -395,16 +409,18 @@ Result: false (invalid pattern)
 
 ```python
 # Check if bit 7 is set
-(num  0x80) != 0
+(num & 0x80) != 0
+
 # Check if bits 7-6 are "10"
-(num  0xC0) == 0x80
+(num & 0xC0) == 0x80
+
 # Count leading 1s
 count = 0
-mask = 0x80
-while (num & mask) != 0  and  count < 4:
+mask = 0x80  # 10000000
+
+while (num & mask) != 0 and count < 4:
     count += 1
     mask >>= 1
-
 ```
 
 ## Related Problems

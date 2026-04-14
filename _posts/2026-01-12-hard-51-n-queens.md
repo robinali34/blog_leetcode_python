@@ -125,32 +125,39 @@ This is a classic **backtracking with constraint satisfaction** problem. The key
 
 ```python
 class Solution:
-def solveNQueens(self, n):
-    size = n
-    board.assign(n, str(n, '.'))
-    col.assign(n, False)
-    diag.assign(2  n, False)
-    anti.assign(2  n, False)
-    dfs(0)
-    return rtn
-size
-list[str> board
-list[list[str>> rtn
-list[bool> col, diag, anti
-def dfs(self, row):
-    if row == size:
-        rtn.append(board)
-        return
-    for(c = 0 c < size c += 1) :
-    d = row - c + size
-    a = row + c
-    if(col[c] * or  diag[d] * or  anti[a]) continue
-    col[c] = diag[d] = anti[a] = True
-    board[row][c] = 'Q'
-    dfs(row + 1)
-    board[row][c] = '.'
-    col[c] = diag[d] = anti[a] = False
+    def solveNQueens(self, n):
+        self.size = n
+        self.board = [["."] * n for _ in range(n)]
 
+        self.col = [False] * n
+        self.diag = [False] * (2 * n)
+        self.anti = [False] * (2 * n)
+
+        self.rtn = []
+
+        self.dfs(0)
+
+        return self.rtn
+
+    def dfs(self, row):
+        if row == self.size:
+            self.rtn.append(["".join(r) for r in self.board])
+            return
+
+        for c in range(self.size):
+            d = row - c + self.size
+            a = row + c
+
+            if self.col[c] or self.diag[d] or self.anti[a]:
+                continue
+
+            self.col[c] = self.diag[d] = self.anti[a] = True
+            self.board[row][c] = "Q"
+
+            self.dfs(row + 1)
+
+            self.board[row][c] = "."
+            self.col[c] = self.diag[d] = self.anti[a] = False
 ```
 
 ### **Algorithm Explanation:**
@@ -300,32 +307,47 @@ Final: When row=4, add board to result
 
 ```python
 class Solution:
-def solveNQueens(self, n):
-    list[str> board(n, str(n, '.'))
-    list[list[str>> result
-    dfs(board, 0, n, result)
-    return result
-def dfs(self, board, row, n, result):
-    if row == n:
-        result.append(board)
-        return
-    for(col = 0 col < n col += 1) :
-    if isValid(board, row, col, n):
-        board[row][col] = 'Q'
-        dfs(board, row + 1, n, result)
-        board[row][col] = '.'
-def isValid(self, board, row, col, n):
-    # Check column above
-    for(i = 0 i < row i += 1) :
-    if(board[i][col] == 'Q') return False
-# Check diagonal \
-for(i = row - 1, j = col - 1 i >= 0  and  j >= 0 i -= 1, j -= 1) :
-if(board[i][j] == 'Q') return False
-# Check diagonal /
-for(i = row - 1, j = col + 1 i >= 0  and  j < n i -= 1, j += 1) :
-if(board[i][j] == 'Q') return False
-return True
+    def solveNQueens(self, n):
+        board = [["."] * n for _ in range(n)]
+        result = []
 
+        self.dfs(board, 0, n, result)
+        return result
+
+    def dfs(self, board, row, n, result):
+        if row == n:
+            result.append(["".join(r) for r in board])
+            return
+
+        for col in range(n):
+            if self.isValid(board, row, col, n):
+                board[row][col] = "Q"
+                self.dfs(board, row + 1, n, result)
+                board[row][col] = "."
+
+    def isValid(self, board, row, col, n):
+        # check column
+        for i in range(row):
+            if board[i][col] == "Q":
+                return False
+
+        # diagonal \
+        i, j = row - 1, col - 1
+        while i >= 0 and j >= 0:
+            if board[i][j] == "Q":
+                return False
+            i -= 1
+            j -= 1
+
+        # diagonal /
+        i, j = row - 1, col + 1
+        while i >= 0 and j < n:
+            if board[i][j] == "Q":
+                return False
+            i -= 1
+            j += 1
+
+        return True
 ```
 
 **Time Complexity:** O(n! × n) (slower due to O(n) validation)  

@@ -94,60 +94,64 @@ This is a **Union-Find (Disjoint Set Union)** problem. The key insight is that e
 
 ```python
 class UnionFind:
-UnionFind(n) :
-parent.resize(n)
-for(i = 0 i < n i += 1) :
-parent[i] = i
-def unionSet(self, idx1, idx2):
-    parent[find(idx2)] = find(idx1)
-def find(self, idx):
-    if parent[idx] != idx:
-        parent[idx] = find(parent[idx])
-    return parent[idx]
-list[int> parent
-class Solution:
-def accountsMerge(self, accounts):
-    dict[str, int> emailToIdx
-    dict[str, str> emailToName
-    // 1: Assign an ID to each unique email
-    id = 0
-    for account in accounts:
-        str name = account[0]
-        size = len(account)
-        for(i = 1 i < size i += 1) :
-        str email = account[i]
-        if not email in emailToIdx:
-            emailToIdx[email] = id += 1
-            emailToName[email] = name
-// 2: Union emails belonging to the same account
-UnionFind uf(id)
-for account in accounts:
-    str firstEmail = account[1]
-    firstIdx = emailToIdx[firstEmail]
-    size = len(account)
-    for(i = 2 i < size i += 1) :
-    str nextEmail = account[i]
-    nextIndex = emailToIdx[nextEmail]
-    uf.unionSet(firstIdx, nextIndex)
-// 3: Group emails by their root parent
-dict[int, list[str>> idxToEmails
-for([email, _]: emailToIdx) :
-idx = uf.find(emailToIdx[email])
-list[str> account = idxToEmails[idx]
-account.emplace_back(email)
-idxToEmails[idx] = account
-// 4: Build the merged account list
-list[list[str>> merged
-for([_, emails]: idxToEmails) :
-emails.sort()
-str name = emailToName[emails[0]]
-list[str> account
-account.emplace_back(name)
-for email in emails:
-    account.emplace_back(email)
-merged.emplace_back(account)
-return merged
+    def __init__(self, n):
+        self.parent = list(range(n))
 
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def unionSet(self, x, y):
+        px = self.find(x)
+        py = self.find(y)
+        self.parent[py] = px
+
+
+class Solution:
+    def accountsMerge(self, accounts):
+        emailToIdx = {}
+        emailToName = {}
+
+        # 1: Assign ID to each email
+        idx = 0
+        for account in accounts:
+            name = account[0]
+            for i in range(1, len(account)):
+                email = account[i]
+                if email not in emailToIdx:
+                    emailToIdx[email] = idx
+                    idx += 1
+                emailToName[email] = name
+
+        uf = UnionFind(idx)
+
+        # 2: Union emails in same account
+        for account in accounts:
+            firstEmail = account[1]
+            firstIdx = emailToIdx[firstEmail]
+
+            for i in range(2, len(account)):
+                nextEmail = account[i]
+                uf.unionSet(firstIdx, emailToIdx[nextEmail])
+
+        # 3: Group by root
+        from collections import defaultdict
+        idxToEmails = defaultdict(list)
+
+        for email in emailToIdx:
+            root = uf.find(emailToIdx[email])
+            idxToEmails[root].append(email)
+
+        # 4: Build result
+        merged = []
+        for emails in idxToEmails.values():
+            emails.sort()
+            name = emailToName[emails[0]]
+
+            merged.append([name] + emails)
+
+        return merged
 ```
 
 ### **Algorithm Explanation:**
@@ -286,36 +290,44 @@ Build a graph where emails are nodes and edges connect emails in the same accoun
 
 ```python
 class Solution:
-def accountsMerge(self, accounts):
-    dict[str, list[str>> graph
-    dict[str, str> emailToName
-    # Build graph
-    for account in accounts:
-        str name = account[0]
-        for(i = 1 i < len(account) i += 1) :
-        graph[account[1]].append(account[i])
-        graph[account[i]].append(account[1])
-        emailToName[account[i]] = name
-# DFS to find connected components
-list[list[str>> result
-set[str> visited
-for([email, _]: graph) :
-if not visited.count(email):
-    list[str> component
-    dfs(graph, email, visited, component)
-    component.sort()
-    component.insert(component.begin(), emailToName[email])
-    result.append(component)
-return result
-void dfs(dict[str, list[str>> graph,
-str email, set[str> visited,
-list[str> component) :
-visited.insert(email)
-component.append(email)
-for neighbor in graph[email]:
-    if not visited.count(neighbor):
-        dfs(graph, neighbor, visited, component)
+    def accountsMerge(self, accounts):
+        from collections import defaultdict
 
+        graph = defaultdict(list)
+        emailToName = {}
+
+        # Build graph
+        for account in accounts:
+            name = account[0]
+            first_email = account[1]
+
+            for i in range(1, len(account)):
+                email = account[i]
+                graph[first_email].append(email)
+                graph[email].append(first_email)
+                emailToName[email] = name
+
+        # DFS
+        def dfs(email, visited, component):
+            visited.add(email)
+            component.append(email)
+
+            for neighbor in graph[email]:
+                if neighbor not in visited:
+                    dfs(neighbor, visited, component)
+
+        result = []
+        visited = set()
+
+        for email in graph:
+            if email not in visited:
+                component = []
+                dfs(email, visited, component)
+                component.sort()
+                component.insert(0, emailToName[email])
+                result.append(component)
+
+        return result
 ```
 
 **Time Complexity:** O(n × k × log(n × k))  

@@ -89,16 +89,18 @@ This is a **two-pointer** problem that can be solved with a greedy approach. The
 
 ```python
 class Solution:
-def isSubsequence(self, s, t):
-    N = s.length(), M = t.length()
-    i = 0, j = 0
-    while i < N  and  j < M:
-        if s[i] == t[j]:
-            i += 1
-            j += 1
-        j += 1
-    return i == N
+    def isSubsequence(self, s, t):
+        N, M = len(s), len(t)
 
+        i = 0
+        j = 0
+
+        while i < N and j < M:
+            if s[i] == t[j]:
+                i += 1
+            j += 1
+
+        return i == N
 ```
 
 ### **Algorithm Explanation:**
@@ -210,8 +212,6 @@ The two-pointer approach is optimal because:
 if s[i] == t[j]:
     i += 1
     j += 1  # Always advance j
-
-
 ```
 
 ### **Subsequence Property**
@@ -287,18 +287,34 @@ If we need to check many strings `s` against the same `t`, we can optimize:
 
 ```python
 # Preprocess t to store character positions
-dict[char, list[int>> charPositions
-for(i = 0 i < t.length() i += 1) :
-charPositions[t[i]].append(i)
-# For each query s, use binary search
-def isSubsequence(self, s, dict[char, pos):
-    prev = -1
-    for c in s:
-        it = upper_bound(pos[c].begin(), pos[c].end(), prev)
-        if(it == pos[c].end()) return False
-        prev = it
-    return True
+charPositions = {}
+for i in range(len(t)):
+    if t[i] not in charPositions:
+        charPositions[t[i]] = []
+    charPositions[t[i]].append(i)
 
+
+# For each query s, use binary search
+def isSubsequence(self, s, pos):
+    prev = -1
+
+    for c in s:
+        arr = pos[c]
+
+        l, r = 0, len(arr)
+        while l < r:
+            mid = (l + r) // 2
+            if arr[mid] <= prev:
+                l = mid + 1
+            else:
+                r = mid
+
+        if l == len(arr):
+            return False
+
+        prev = arr[l]
+
+    return True
 ```
 
 **Time**: O(m + n log m) per query (better when many queries)

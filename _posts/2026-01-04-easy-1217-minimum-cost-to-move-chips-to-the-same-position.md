@@ -103,15 +103,17 @@ This is a **greedy algorithm** problem with a key mathematical insight. The cruc
 
 ```python
 class Solution:
-def minCostToMoveChips(self, position):
-    even = 0, odd = 0
-    for pos in position:
-        if pos % 2 == 0:
-            odd += 1
-             else :
-            even += 1
-    return min(odd, even)
+    def minCostToMoveChips(self, position):
+        even = 0
+        odd = 0
 
+        for pos in position:
+            if pos % 2 == 0:
+                even += 1
+            else:
+                odd += 1
+
+        return min(odd, even)
 ```
 
 ### **Algorithm Explanation:**

@@ -216,15 +216,17 @@ The solution uses two states to track different scenarios:
 ### **State Transition Logic**
 
 ```python
-if nums[i] == 1:
-    # Both states can extend
-    dp1 += 1  # Continue with/without flip
-    dp0 += 1  # Continue without flip
-     else :
-    # nums[i] == 0
-    dp1 = dp0 + 1  # Flip this 0, use previous sequence
-    dp0 = 0        # Can't extend without flip
+dp0 = dp1 = 0
 
+for i in range(len(nums)):
+    if nums[i] == 1:
+        # Both states can extend
+        dp1 = dp1 + 1
+        dp0 = dp0 + 1
+    else:
+        # nums[i] == 0
+        dp1 = dp0 + 1  # flip this 0
+        dp0 = 0        # cannot extend without flip
 ```
 
 ### **Why This Works**

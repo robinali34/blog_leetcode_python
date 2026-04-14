@@ -126,35 +126,41 @@ This is a classic **BFS (Breadth-First Search)** problem. The key insight is to:
 ### **Solution: BFS with Queue**
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
-class Solution:
-def levelOrder(self, root):
-    list[list[int>> rtn
-    if(not root) return rtn
-    deque[TreeNode> q
-    q.push(root)
-    while not not q:
-        levelSize = len(q)
-        list[int> level
-        level.reserve(levelSize)
-        for(i = 0 i < levelSize i += 1) :
-        TreeNode curr = q[0]
-        q.pop()
-        level.append(curr.val)
-        if curr.left) q.push(curr.left:
-        if curr.right) q.push(curr.right:
-    rtn.append(level)
-return rtn
+from collections import deque
 
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def levelOrder(self, root):
+        rtn = []
+
+        if not root:
+            return rtn
+
+        q = deque()
+        q.append(root)
+
+        while q:
+            levelSize = len(q)
+            level = []
+
+            for i in range(levelSize):
+                curr = q.popleft()
+                level.append(curr.val)
+
+                if curr.left:
+                    q.append(curr.left)
+                if curr.right:
+                    q.append(curr.right)
+
+            rtn.append(level)
+
+        return rtn
 ```
 
 ### **Algorithm Explanation:**

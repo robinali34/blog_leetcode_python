@@ -122,26 +122,35 @@ This is a follow-up to [LC 300: Longest Increasing Subsequence](https://leetcode
 
 ```python
 class Solution:
-def findNumberOfLIS(self, nums):
-    N = len(nums)
-    if(N == 0) return 0
-    list[int> dp(N, 1), cnt(N, 1)
-    maxLen = 1, rtn = 0
-    for(i = 0 i < N i += 1) :
-    for(j = 0 j < i j += 1) :
-    if nums[i] > nums[j]:
-        if dp[j] + 1 > dp[i]:
-            dp[i] = dp[j] + 1
-            cnt[i] = cnt[j]
-             else if (dp[j] + 1 == dp[i]) :
-            cnt[i] += cnt[j]
-if dp[i] > maxLen:
-    maxLen = dp[i]
-    rtn = cnt[i]
-     else if(dp[i] == maxLen) :
-    rtn += cnt[i]
-return rtn
+    def findNumberOfLIS(self, nums):
+        n = len(nums)
+        if n == 0:
+            return 0
 
+        dp = [1] * n
+        cnt = [1] * n
+
+        maxLen = 1
+        rtn = 0
+
+        for i in range(n):
+            for j in range(i):
+                if nums[i] > nums[j]:
+
+                    if dp[j] + 1 > dp[i]:
+                        dp[i] = dp[j] + 1
+                        cnt[i] = cnt[j]
+
+                    elif dp[j] + 1 == dp[i]:
+                        cnt[i] += cnt[j]
+
+            if dp[i] > maxLen:
+                maxLen = dp[i]
+                rtn = cnt[i]
+            elif dp[i] == maxLen:
+                rtn += cnt[i]
+
+        return rtn
 ```
 
 ### **Algorithm Explanation:**
@@ -358,31 +367,37 @@ This approach uses binary search similar to the patience sorting technique from 
 
 ```python
 class Solution:
-def binarySearch(self, n, f):
-    l = 0, r = n
-    while l < r:
-        mid = (l + r) / 2
-        if f(mid):
-            r = mid
-             else :
-            l = mid + 1
-    return l
-def findNumberOfLIS(self, nums):
-    list[list[int>> d, cnt
-    for v in nums:
-        i = binarySearch(len(d), [](i) : return d[i].back() >= v )
-        c = 1
-        if i > 0:
-            k = binarySearch(d[i - 1].__len__(), [](k) : return d[i - 1][k] < v )
-            c = cnt[i - 1].back() - cnt[i - 1][k]
-        if i == len(d):
-            d.append(:v)
-            cnt.append(:0, c)
-             else :
-            d[i].append(v)
-            cnt[i].append(cnt[i].back() + c)
-    return cnt[-1].back()
+    def binarySearch(self, n, f):
+        l, r = 0, n
+        while l < r:
+            mid = (l + r) // 2
+            if f(mid):
+                r = mid
+            else:
+                l = mid + 1
+        return l
 
+    def findNumberOfLIS(self, nums):
+        d = []
+        cnt = []
+
+        for v in nums:
+            i = self.binarySearch(len(d), lambda i: d[i][-1] >= v)
+
+            c = 1
+            if i > 0:
+                k = self.binarySearch(len(d[i - 1]),
+                                      lambda k: d[i - 1][k] < v)
+                c = cnt[i - 1][-1] - (cnt[i - 1][k - 1] if k > 0 else 0)
+
+            if i == len(d):
+                d.append([v])
+                cnt.append([c])
+            else:
+                d[i].append(v)
+                cnt[i].append(cnt[i][-1] + c)
+
+        return cnt[-1][-1] if cnt else 0
 ```
 
 ### **Algorithm Explanation:**

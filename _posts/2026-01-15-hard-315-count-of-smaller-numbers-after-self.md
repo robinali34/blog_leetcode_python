@@ -121,39 +121,49 @@ This problem requires counting inversions (smaller elements to the right). We ne
 ### **Solution: Fenwick Tree (Binary Indexed Tree) with Coordinate Compression**
 
 ```python
+from bisect import bisect_left
+
 class Fenwick:
-n
-list[int> bit
-lowbit(x) : return x  -x
-Fenwick(_n): n(_n), bit(n + 1, 0) :
-# Add delta at position x (1-indexed)
-def update(self, x, delta):
-    for ( x <= n x += lowbit(x)) :
-    bit[x] += delta
-# Sum from 1..x (1-indexed)
-def query(self, x):
-    s = 0
-    for ( x > 0 x -= lowbit(x)) :
-    s += bit[x]
-return s
+    def __init__(self, n):
+        self.n = n
+        self.bit = [0] * (n + 1)
+
+    def lowbit(self, x):
+        return x & -x
+
+    # add delta at index x (1-indexed)
+    def update(self, x, delta):
+        while x <= self.n:
+            self.bit[x] += delta
+            x += self.lowbit(x)
+
+    # prefix sum 1..x
+    def query(self, x):
+        s = 0
+        while x > 0:
+            s += self.bit[x]
+            x -= self.lowbit(x)
+        return s
+
+
 class Solution:
-def countSmaller(self, nums):
-    sz = len(nums)
-    list[int> res(sz, 0)
-    # Coordinate compression: map distinct values to [1, k]
-    list[int> sorted(nums.begin(), nums.end())
-    sorted.sort()
-    sorted.erase(unique(sorted.begin(), sorted.end()), sorted.end())
-    Fenwick fw(len(sorted))
-    # Process from right to left
-    for (i = sz - 1 i >= 0 i -= 1) :
-    # Find compressed index for nums[i]
-    x = lower_bound(sorted.begin(), sorted.end(), nums[i]) - sorted.begin() + 1
-    # Query how many numbers < nums[i] have been seen
-    res[i] = fw.query(x - 1)
-    # Mark nums[i] as seen
-    fw.update(x, 1)
-return res
+    def countSmaller(self, nums):
+        n = len(nums)
+        res = [0] * n
+
+        # coordinate compression
+        sorted_vals = sorted(set(nums))
+
+        fw = Fenwick(len(sorted_vals))
+
+        # process from right to left
+        for i in range(n - 1, -1, -1):
+            x = bisect_left(sorted_vals, nums[i]) + 1
+
+            res[i] = fw.query(x - 1)
+            fw.update(x, 1)
+
+        return res
 
 ```
 
@@ -262,39 +272,52 @@ Count inversions during merge sort:
 
 ```python
 class Solution:
-def countSmaller(self, nums):
-    n = len(nums)
-    list[int> res(n, 0)
-    list[pair<int, int>> indexed
-    for (i = 0 i < n i += 1) :
-    indexed.append(:nums[i], i)
-mergeSort(indexed, 0, n - 1, res)
-return res
-def mergeSort(self, list[pair<int, arr, l, r, res):
-    if (l >= r) return
-    mid = l + (r - l) / 2
-    mergeSort(arr, l, mid, res)
-    mergeSort(arr, mid + 1, r, res)
-    merge(arr, l, mid, r, res)
-def merge(self, list[pair<int, arr, l, mid, r, res):
-    list[pair<int, int>> temp
-    i = l, j = mid + 1
-    rightCount = 0
-    while i <= mid  and  j <= r:
-        if arr[i].first > arr[j].first:
-            rightCount += 1
-            temp.append(arr[j += 1])
-             else :
-            res[arr[i].second] += rightCount
-            temp.append(arr[i += 1])
-    while i <= mid:
-        res[arr[i].second] += rightCount
-        temp.append(arr[i += 1])
-    while j <= r:
-        temp.append(arr[j += 1])
-    for (k = 0 k < len(temp) k += 1) :
-    arr[l + k] = temp[k]
+    def countSmaller(self, nums):
+        n = len(nums)
+        res = [0] * n
 
+        # (value, index)
+        arr = [(nums[i], i) for i in range(n)]
+
+        self.mergeSort(arr, 0, n - 1, res)
+        return res
+
+    def mergeSort(self, arr, l, r, res):
+        if l >= r:
+            return
+
+        mid = (l + r) // 2
+
+        self.mergeSort(arr, l, mid, res)
+        self.mergeSort(arr, mid + 1, r, res)
+        self.merge(arr, l, mid, r, res)
+
+    def merge(self, arr, l, mid, r, res):
+        temp = []
+        i, j = l, mid + 1
+        rightCount = 0
+
+        while i <= mid and j <= r:
+            if arr[i][0] > arr[j][0]:
+                rightCount += 1
+                temp.append(arr[j])
+                j += 1
+            else:
+                res[arr[i][1]] += rightCount
+                temp.append(arr[i])
+                i += 1
+
+        while i <= mid:
+            res[arr[i][1]] += rightCount
+            temp.append(arr[i])
+            i += 1
+
+        while j <= r:
+            temp.append(arr[j])
+            j += 1
+
+        for k in range(len(temp)):
+            arr[l + k] = temp[k]
 ```
 
 **Time Complexity:** O(n log n)  

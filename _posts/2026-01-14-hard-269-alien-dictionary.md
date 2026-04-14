@@ -129,48 +129,48 @@ This problem requires finding the lexicographic order of characters in an alien 
 ### **Solution: Topological Sort with BFS (Kahn's Algorithm)**
 
 ```python
-class Solution:
-def alienOrder(self, words):
-    N = len(words)
-    if(N == 0) return ""
-    # Build adj list for graph
-    dict[char, set[char>> adj
-    for word in words:
-        for c in word:
-            adj[c]
-    list[int> inDegree(26, 0)
-    # Compare adj list to find order
-    for(i = 0 i < N - 1 i += 1) :
-    str w1 = words[i]
-    str w2 = words[i + 1]
-    minLen = min(len(w1), len(w2))
-    for(j = 0 j < minLen j += 1) :
-    if w1[j] != w2[j]:
-        if not adj[w1[j]].contains(w2[j]):
-            adj[w1[j]].insert(w2[j])
-            inDegree[w2[j] - 'a']++
-        break
-    if j == minLen - 1  and  len(w1) > len(w2):
-        return ""
-# BFS Topological Sort
-deque[char> q
-for([c, _]: adj) :
-if inDegree[c - 'a'] == 0:
-    q.push(c)
-str rtn
-while not not q:
-    char top = q[0]
-    q.pop()
-    rtn.append(top)
-    for success in adj[top]:
-        inDegree[success - 'a']--
-        if inDegree[success - 'a'] == 0:
-            q.push(success)
-# Check if all nodes were output (DAG check)
-if len(rtn) == len(adj):
-    return rtn
-return ""
+from collections import defaultdict, deque
 
+class Solution:
+    def alienOrder(self, words):
+        # Step 1: build graph
+        adj = defaultdict(set)
+        indegree = {c: 0 for word in words for c in word}
+
+        # Step 2: build edges from adjacent words
+        for i in range(len(words) - 1):
+            w1, w2 = words[i], words[i + 1]
+            minLen = min(len(w1), len(w2))
+
+            # invalid case: prefix issue
+            if len(w1) > len(w2) and w1[:minLen] == w2[:minLen]:
+                return ""
+
+            for j in range(minLen):
+                if w1[j] != w2[j]:
+                    if w2[j] not in adj[w1[j]]:
+                        adj[w1[j]].add(w2[j])
+                        indegree[w2[j]] += 1
+                    break
+
+        # Step 3: BFS topo sort
+        q = deque([c for c in indegree if indegree[c] == 0])
+        result = []
+
+        while q:
+            node = q.popleft()
+            result.append(node)
+
+            for nei in adj[node]:
+                indegree[nei] -= 1
+                if indegree[nei] == 0:
+                    q.append(nei)
+
+        # Step 4: cycle check
+        if len(result) != len(indegree):
+            return ""
+
+        return "".join(result)
 ```
 
 ### **Algorithm Explanation:**
@@ -350,45 +350,64 @@ Result: "wertf" ✓
 ### **Approach 2: DFS Topological Sort**
 
 ```python
+from collections import defaultdict
+
 class Solution:
-def alienOrder(self, words):
-    dict[char, set[char>> adj
-    dict[char, int> state // 0: unvisited, 1: visiting, 2: visited
-    # Initialize all characters
-    for word in words:
-        for c in word:
-            adj[c]
-            state[c] = 0
-    # Build graph
-    for(i = 0 i < len(words) - 1 i += 1) :
-    str w1 = words[i]
-    str w2 = words[i + 1]
-    minLen = min(len(w1), len(w2))
-    bool found = False
-    for(j = 0 j < minLen j += 1) :
-    if w1[j] != w2[j]:
-        adj[w1[j]].insert(w2[j])
-        found = True
-        break
-if not found  and  len(w1) > len(w2):
-    return ""
-str result
-for([c, _]: adj) :
-if state[c] == 0  and  hasCycle(c, adj, state, result):
-    return ""
-result.reverse()
-return result
-bool hasCycle(char c, dict[char, set[char>> adj,
-dict[char, int> state, str result) :
-if(state[c] == 1) return True # Cycle detected
-if(state[c] == 2) return False # Already processed
-state[c] = 1 # Mark as visiting
-for neighbor in adj[c]:
-    if hasCycle(neighbor, adj, state, result):
-        return True
-state[c] = 2 # Mark as visited
-result.append(c)
-return False
+    def alienOrder(self, words):
+        # graph + state
+        adj = defaultdict(set)
+        state = {}  # 0=unvisited, 1=visiting, 2=visited
+
+        # initialize all characters
+        for word in words:
+            for c in word:
+                adj[c]
+                state[c] = 0
+
+        # build graph
+        for i in range(len(words) - 1):
+            w1, w2 = words[i], words[i + 1]
+            minLen = min(len(w1), len(w2))
+            found = False
+
+            for j in range(minLen):
+                if w1[j] != w2[j]:
+                    if w2[j] not in adj[w1[j]]:
+                        adj[w1[j]].add(w2[j])
+                    found = True
+                    break
+
+            # invalid prefix case
+            if not found and len(w1) > len(w2):
+                return ""
+
+        result = []
+        visiting = set()
+
+        # DFS function
+        def hasCycle(c):
+            if state[c] == 1:
+                return True   # cycle
+            if state[c] == 2:
+                return False  # already done
+
+            state[c] = 1  # visiting
+
+            for nei in adj[c]:
+                if hasCycle(nei):
+                    return True
+
+            state[c] = 2  # visited
+            result.append(c)
+            return False
+
+        # run DFS
+        for c in adj:
+            if state[c] == 0:
+                if hasCycle(c):
+                    return ""
+
+        return "".join(result[::-1])
 
 ```
 

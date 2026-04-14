@@ -89,25 +89,37 @@ This problem requires identifying all substrings in `s` that match any word in `
 
 ```python
 class Solution:
-def addBoldTag(self, s, words):
-    n = len(s)
-    if(n == 0) return ""
-    list[bool> mask(n, False)
-    for(i = 0 i < n i += 1) :
-    for word in words:
-        word_len = len(word)
-        if i + word_len <= n  and  s.substr(i, word_len) == word:
-            for(j = i j < i + word_len j += 1)
-            mask[j] = True
-str res = ""
-for(i = 0 i < n i += 1) :
-if mask[i] == True  and  (i == 0  or  mask[i - 1] == False):
-    res += "<b>"
-res.append(s[i])
-if mask[i] == True  and  (i == n - 1  or  mask[i+1] == False):
-    res += "</b>"
-return res
+    def addBoldTag(self, s: str, words: list[str]) -> str:
+        n = len(s)
+        if n == 0:
+            return ""
 
+        mask = [False] * n
+
+        # Step 1: mark bold positions
+        for i in range(n):
+            for word in words:
+                wlen = len(word)
+                if i + wlen <= n and s[i:i + wlen] == word:
+                    for j in range(i, i + wlen):
+                        mask[j] = True
+
+        # Step 2: build result with tags
+        res = []
+        i = 0
+
+        while i < n:
+            if mask[i] and (i == 0 or not mask[i - 1]):
+                res.append("<b>")
+
+            res.append(s[i])
+
+            if mask[i] and (i == n - 1 or not mask[i + 1]):
+                res.append("</b>")
+
+            i += 1
+
+        return "".join(res)
 ```
 
 ### **Algorithm Explanation:**
@@ -261,11 +273,10 @@ if i + word_len <= n  and  s.substr(i, word_len) == word:
 ### **Optimization 1: Early Termination**
 Skip positions that are too short for any word:
 ```python
-minLen = INT_MAX
-for word in words:
-    minLen = min(minLen, (int)len(word))
-# Skip positions where remaining str is too short
+minLen = float('inf')
 
+for word in words:
+    minLen = min(minLen, len(word))
 ```
 
 ### **Optimization 2: Trie for Word Matching**

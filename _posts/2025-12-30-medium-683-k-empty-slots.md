@@ -94,27 +94,36 @@ This problem requires finding the earliest day when there exist two blooming bul
 
 ```python
 class Solution:
-def kEmptySlots(self, bulbs, k):
-    n = len(bulbs)
-    list[int> days(n, 0)
-    for(day = 0 day < n day += 1) :
-    days[bulbs[day] - 1] = day + 1
-rtn = INT_MAX
-left = 0, right = k + 1
-while right < len(days):
-    bool valid = True
-    for(i = left + 1 i < right i += 1) :
-    if days[i] < days[left] * or  days[i] < days[right]:
-        left = i
-        right = i + k + 1
-        valid = False
-        break
-if valid:
-    rtn = min(rtn, max(days[left], days[right]))
-    left = right
-    right = left + k + 1
-(rtn if         return rtn != INT_MAX  else -1)
+    def kEmptySlots(self, bulbs, k):
+        n = len(bulbs)
 
+        # days[i] = day when position i+1 blooms
+        days = [0] * n
+
+        for day in range(n):
+            days[bulbs[day] - 1] = day + 1
+
+        ans = float('inf')
+
+        left = 0
+        right = k + 1
+
+        while right < n:
+            valid = True
+
+            for i in range(left + 1, right):
+                if days[i] < days[left] or days[i] < days[right]:
+                    left = i
+                    right = i + k + 1
+                    valid = False
+                    break
+
+            if valid:
+                ans = min(ans, max(days[left], days[right]))
+                left = right
+                right = left + k + 1
+
+        return -1 if ans == float('inf') else ans
 ```
 
 ### **Algorithm Explanation:**
@@ -211,10 +220,10 @@ The algorithm checks if a window `[left, right]` is valid by ensuring:
 
 **Validation Condition:**
 ```python
-for(i = left + 1 i < right i += 1) :
-if days[i] < days[left] * or  days[i] < days[right]:
-    # Invalid: bulb i blooms before one of the endpoints
-
+for i in range(left + 1, right):
+    if days[i] < days[left] or days[i] < days[right]:
+        # Invalid: bulb i blooms before one of the endpoints
+        ...
 ```
 
 **Why this works:**
@@ -225,12 +234,10 @@ if days[i] < days[left] * or  days[i] < days[right]:
 ### **Optimization: Early Termination**
 
 When an invalid bulb is found, we don't need to check positions before it:
-```python
-if days[i] < days[left] * or  days[i] < days[right]:
+```pythonif days[i] < days[left] or days[i] < days[right]:
     left = i  # Move left to invalid position
-    right = i + k + 1  # Update right accordingly
-    break  # Stop checking this window
-
+    right = i + k + 1  # Reset window
+    break
 ```
 
 This optimization ensures we don't check redundant windows.

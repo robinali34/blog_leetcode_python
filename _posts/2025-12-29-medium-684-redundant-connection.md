@@ -119,38 +119,43 @@ This problem requires finding the edge that creates a cycle in an undirected gra
 
 ```python
 class DSU:
-list[int> parent
-list[int> rank
-DSU(n) :
-parent.resize(n)
-rank.resize(n, 0)
-for(i = 0 i < n i += 1) :
-parent[i] = i
-def find(self, x):
-    if parent[x] != x:
-        parent[x] = find(parent[x])
-    return parent[x]
-def unite(self, x, y):
-    x = find(x)
-    y = find(y)
-    if(x == y) return False
-    if rank[x] < rank[y]:
-        parent[x] = y
-         else if(rank[x] > rank[y]) :
-        parent[y] = x
-         else :
-        parent[y] = x
-        rank[x]++
-    return True
-class Solution:
-def findRedundantConnection(self, edges):
-    n = len(edges)
-    DSU dsu(n)
-    for edge in edges:
-        if not dsu.unite(edge[0] - 1, edge[1] - 1):
-            return edge
-    return :
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
 
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def unite(self, x, y):
+        x = self.find(x)
+        y = self.find(y)
+
+        if x == y:
+            return False
+
+        if self.rank[x] < self.rank[y]:
+            self.parent[x] = y
+        elif self.rank[x] > self.rank[y]:
+            self.parent[y] = x
+        else:
+            self.parent[y] = x
+            self.rank[x] += 1
+
+        return True
+
+
+class Solution:
+    def findRedundantConnection(self, edges):
+        n = len(edges)
+        dsu = DSU(n + 1)
+
+        for u, v in edges:
+            if not dsu.unite(u - 1, v - 1):
+                return [u, v]
+
+        return []
 ```
 
 ### **Algorithm Explanation:**
@@ -207,39 +212,51 @@ Edge [2,3]: unite(1, 2)
 
 ```python
 class Solution:
-cycleStart = -1
-def dfs(self, src, visited, list[list[pair<int, adjList, parent):
-    visited[src] = True
-    for p in adjList[src]:
-        adj = p.first
-        if not visited[adj]:
-            parent[adj] = src
-            dfs(adj, visited, adjList, parent)
-             else if(adj != parent[src] * and  cycleStart == -1) :
-            cycleStart = adj
-            parent[adj] = src
-def findRedundantConnection(self, edges):
-    n = len(edges)
-    list[bool> visited(n, False)
-    list[int> parent(n, -1)
-    list[list[pair<int, int>>> adjList(n)
-    for edge in edges:
-        u = edge[0] - 1
-        v = edge[1] - 1
-        adjList[u].append(:v, 0)
-        adjList[v].append(:u, 0)
-    dfs(0, visited, adjList, parent)
-    dict[int, int> cycleNode
-    node = cycleStart
-    do :
-    cycleNode[node] = 1
-    node = parent[node]
-     while node != cycleStart:
-    for(i = len(edges) - 1 i >= 0 i -= 1) :
-    if(cycleNode[edges[i][0] - 1] * and
-    cycleNode[edges[i][1] - 1]) :
-    return edges[i]
-return :
+    def __init__(self):
+        self.cycleStart = -1
+
+    def dfs(self, src, visited, adjList, parent):
+        visited[src] = True
+
+        for adj in adjList[src]:
+            if not visited[adj]:
+                parent[adj] = src
+                self.dfs(adj, visited, adjList, parent)
+
+            elif adj != parent[src] and self.cycleStart == -1:
+                self.cycleStart = adj
+                parent[adj] = src
+
+    def findRedundantConnection(self, edges):
+        n = len(edges)
+
+        visited = [False] * n
+        parent = [-1] * n
+        adjList = [[] for _ in range(n)]
+
+        for u, v in edges:
+            u -= 1
+            v -= 1
+            adjList[u].append(v)
+            adjList[v].append(u)
+
+        self.dfs(0, visited, adjList, parent)
+
+        cycleNode = set()
+
+        node = self.cycleStart
+        while node != -1 and node not in cycleNode:
+            cycleNode.add(node)
+            node = parent[node]
+
+        # find last edge inside cycle
+        for i in range(len(edges) - 1, -1, -1):
+            u = edges[i][0] - 1
+            v = edges[i][1] - 1
+            if u in cycleNode and v in cycleNode:
+                return edges[i]
+
+        return []
 
 ```
 
@@ -300,36 +317,37 @@ Here's the general template for Union-Find (DSU) with union by rank:
 
 ```python
 class DSU:
-list[int> parent
-list[int> rank
-DSU(n) :
-parent.resize(n)
-rank.resize(n, 0)
-for(i = 0 i < n i += 1) :
-parent[i] = i
-# Find with path compression
-def find(self, x):
-    if parent[x] != x:
-        parent[x] = find(parent[x]) # Path compression
-    return parent[x]
-# Union by rank
-def unite(self, x, y):
-    x = find(x)
-    y = find(y)
-    if(x == y) return False # Already in same set
-    # Union by rank: attach smaller tree to larger tree
-    if rank[x] < rank[y]:
-        parent[x] = y
-         else if(rank[x] > rank[y]) :
-        parent[y] = x
-         else :
-        parent[y] = x
-        rank[x]++
-    return True
-# Check if two nodes are connected
-def connected(self, x, y):
-    return find(x) == find(y)
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
 
+    # Find with path compression
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    # Union by rank
+    def unite(self, x, y):
+        x = self.find(x)
+        y = self.find(y)
+
+        if x == y:
+            return False  # Already in same set
+
+        if self.rank[x] < self.rank[y]:
+            self.parent[x] = y
+        elif self.rank[x] > self.rank[y]:
+            self.parent[y] = x
+        else:
+            self.parent[y] = x
+            self.rank[x] += 1
+
+        return True
+
+    # Check if two nodes are connected
+    def connected(self, x, y):
+        return self.find(x) == self.find(y)
 ```
 
 ### **Key Template Components:**

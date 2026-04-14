@@ -102,19 +102,21 @@ This is a **greedy interval scheduling** problem similar to "Non-overlapping Int
 
 ```python
 class Solution:
-def findMinArrowShots(self, points):
-    if (len(points) == 0) return 0
-    sort(points.begin(), points.end(), [](u, v):
-    return u[1] < v[1]
-    )
-    pos = points[0][1]
-    arrows = 1
-    for ballon in points:
-        if ballon[0] > pos:
-            pos = ballon[1]
-            arrows += 1
-    return arrows
+    def findMinArrowShots(self, points):
+        if len(points) == 0:
+            return 0
 
+        points.sort(key=lambda x: x[1])
+
+        pos = points[0][1]
+        arrows = 1
+
+        for balloon in points:
+            if balloon[0] > pos:
+                pos = balloon[1]
+                arrows += 1
+
+        return arrows
 ```
 
 ### **Algorithm Explanation:**

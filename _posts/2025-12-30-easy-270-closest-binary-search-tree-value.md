@@ -83,27 +83,27 @@ This problem requires finding the value in a BST that is closest to a given targ
 ### **Solution: Recursive with Closer Value Comparison**
 
 ```python
-/
- Definition for a binary tree node.
- struct TreeNode :
-     val
-     TreeNode left
-     TreeNode right
-     TreeNode() : val(0), left(None), right(None) :
-     TreeNode(x) : val(x), left(None), right(None) :
-     TreeNode(x, TreeNode left, TreeNode right) : val(x), left(left), right(right) :
-/
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 class Solution:
-def closerValue(self, lower, upper, target):
-    (lower if         return upper - target >= target - lower else upper)
-def closestValue(self, root, target):
-    if(root == None)  return 0
-    if root.val > target  and  root.left != None:
-        return closerValue(closestValue(root.left, target), root.val, target)
-    if root.val < target  and  root.right != None:
-        return closerValue(root.val, closestValue(root.right, target), target)
-    return root.val
+    def closestValue(self, root: Optional[TreeNode], target: float) -> int:
+        closest = root.val
+        node = root
 
+        while node:
+            if abs(node.val - target) < abs(closest - target):
+                closest = node.val
+
+            if target < node.val:
+                node = node.left
+            else:
+                node = node.right
+
+        return closest
 ```
 
 ### **Algorithm Explanation:**
@@ -208,8 +208,9 @@ The algorithm uses BST property to narrow down the search:
 
 ```python
 def closerValue(self, lower, upper, target):
-    (lower if     return upper - target >= target - lower else upper)
-
+    if abs(lower - target) <= abs(upper - target):
+        return lower
+    return upper
 ```
 
 This function determines which value is closer:
@@ -312,14 +313,19 @@ Result: 3
 
 ```python
 class Solution:
-def closestValue(self, root, target):
-    closest = root.val
-    while root:
-        if abs(root.val - target) < abs(closest - target):
-            closest = root.val
-        (root.left if             root = target < root.val  else root.right)
-    return closest
+    def closestValue(self, root, target):
+        closest = root.val
 
+        while root:
+            if abs(root.val - target) < abs(closest - target):
+                closest = root.val
+
+            if target < root.val:
+                root = root.left
+            else:
+                root = root.right
+
+        return closest
 ```
 
 **Comparison:**

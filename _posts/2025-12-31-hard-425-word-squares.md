@@ -98,51 +98,66 @@ This problem requires constructing word squares where each row and corresponding
 ### **Solution: Backtracking with Trie**
 
 ```python
-struct TrieNode :
-dict[char, shared_ptr<TrieNode>> children
-list[int> wordList
-class Solution:
-N
-list[str> words
-shared_ptr<TrieNode> trie
-def buildTree(self):
-    trie = make_shared<TrieNode>()
-    for(i = 0 i < len(words) i += 1) :
-    shared_ptr<TrieNode> node = trie
-    for c in words[i]:
-        if not node.children.count(c):
-            node.children[c] = make_shared<TrieNode>()
-        node = node.children[c]
-        node.wordList.append(i)
-def getWordsWithPrefix(self, prefix):
-    shared_ptr<TrieNode> node = trie
-    for c in prefix:
-        if not node.children.count(c):
-            return :
-    node = node.children[c]
-return node.wordList
-def backtrack(self, step, square, rtn):
-    if step == N:
-        rtn.append(square)
-        return
-    str prefix
-    for word in square:
-        prefix += word[step]
-    for(idx: getWordsWithPrefix(prefix)) :
-    square.append(words[idx])
-    backtrack(step + 1, square, rtn)
-    square.pop()
-def wordSquares(self, words):
-    if(not words) return :
-this.words = words
-this.N = words[0].__len__()
-buildTree()
-list[list[str>> rtn
-for word in words:
-    list[str> square:word
-backtrack(1, square, rtn)
-return rtn
+from collections import defaultdict
 
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.wordList = []
+
+class Solution:
+    def buildTree(self):
+        self.trie = TrieNode()
+
+        for i, word in enumerate(self.words):
+            node = self.trie
+
+            for c in word:
+                if c not in node.children:
+                    node.children[c] = TrieNode()
+                node = node.children[c]
+
+                node.wordList.append(i)
+
+    def getWordsWithPrefix(self, prefix):
+        node = self.trie
+
+        for c in prefix:
+            if c not in node.children:
+                return []
+            node = node.children[c]
+
+        return node.wordList
+
+    def backtrack(self, step, square, res):
+        if step == self.N:
+            res.append(square[:])
+            return
+
+        prefix = ""
+        for word in square:
+            prefix += word[step]
+
+        for idx in self.getWordsWithPrefix(prefix):
+            square.append(self.words[idx])
+            self.backtrack(step + 1, square, res)
+            square.pop()
+
+    def wordSquares(self, words):
+        if not words:
+            return []
+
+        self.words = words
+        self.N = len(words[0])
+
+        self.buildTree()
+
+        res = []
+
+        for word in words:
+            self.backtrack(1, [word], res)
+
+        return res
 ```
 
 ### **Algorithm Explanation:**
@@ -271,22 +286,25 @@ Here's the general backtracking template used in this problem:
 ```python
 def backtrack(self, step, square, rtn):
     # Base case: solution is complete
-    if step == N:
-        rtn.append(square)  # Add complete solution
+    if step == self.N:
+        rtn.append(square[:])  # copy, not reference
         return
-    # Build constraint (prefix) for current step
-    str prefix = buildPrefix(step, square)
-    # Generate candidates (words matching prefix)
-    list[int> candidates = getWordsWithPrefix(prefix)
+
+    # Build prefix for current column
+    prefix = ""
+    for word in square:
+        prefix += word[step]
+
+    # Get candidates matching prefix
+    candidates = self.getWordsWithPrefix(prefix)
+
     # Try each candidate
     for idx in candidates:
-        # Make move: add candidate to solution
-        square.append(words[idx])
-        # Recurse: explore further
-        backtrack(step + 1, square, rtn)
-        # Backtrack: remove candidate to try next
-        square.pop()
+        square.append(self.words[idx])
 
+        self.backtrack(step + 1, square, rtn)
+
+        square.pop()
 ```
 
 ### **Key Template Components:**

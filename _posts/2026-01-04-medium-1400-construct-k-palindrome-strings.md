@@ -96,18 +96,23 @@ This is a **greedy algorithm** problem with a key mathematical insight about pal
 
 ```python
 class Solution:
-def canConstruct(self, s, k):
-    right = s.length()
-    occ[26] = :0
-for ch in s:
-    occ[ch - 'a']++
-left = 0
-for(i = 0 i < 26 i += 1) :
-if occ[i] % 2 == 1:
-    left += 1
-left = max(left, 1)
-return left <= k  and  k <= right
+    def canConstruct(self, s, k):
+        right = len(s)
 
+        occ = [0] * 26
+
+        for ch in s:
+            occ[ord(ch) - ord('a')] += 1
+
+        left = 0
+
+        for i in range(26):
+            if occ[i] % 2 == 1:
+                left += 1
+
+        left = max(left, 1)
+
+        return left <= k and k <= right
 ```
 
 ### **Algorithm Explanation:**

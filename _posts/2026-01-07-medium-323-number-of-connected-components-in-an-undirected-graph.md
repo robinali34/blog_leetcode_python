@@ -97,31 +97,38 @@ This problem requires counting the number of **connected components** in an undi
 ### **Solution 1: BFS (Breadth-First Search)**
 
 ```python
-class Solution:
-def countComponents(self, n, edges):
-    list[list[int>> adj(n)
-    for edge in edges:
-        adj[edge[0]].append(edge[1])
-        adj[edge[1]].append(edge[0])
-    rtn = 0
-    list[bool> visited(n)
-    for(i = 0 i < n i += 1) :
-    if not visited[i]:
-        bfs(adj, i, visited)
-        rtn += 1
-return rtn
-def bfs(self, adj, u, visited):
-    deque[int> q
-    q.push(u)
-    visited[u] = True
-    while not not q:
-        curr = q[0]
-        q.pop()
-        for successor in adj[curr]:
-            if not visited[successor]:
-                q.push(successor)
-                visited[successor] = True
+from collections import deque
 
+class Solution:
+    def countComponents(self, n, edges):
+        adj = [[] for _ in range(n)]
+
+        for edge in edges:
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+
+        rtn = 0
+        visited = [False] * n
+
+        for i in range(n):
+            if not visited[i]:
+                self.bfs(adj, i, visited)
+                rtn += 1
+
+        return rtn
+
+    def bfs(self, adj, u, visited):
+        q = deque()
+        q.append(u)
+        visited[u] = True
+
+        while q:
+            curr = q.popleft()
+
+            for successor in adj[curr]:
+                if not visited[successor]:
+                    visited[successor] = True
+                    q.append(successor)
 ```
 
 ### **Algorithm Explanation:**
@@ -213,24 +220,29 @@ Result: 2 components
 
 ```python
 class Solution:
-def countComponents(self, n, edges):
-    list[list[int>> adj(n)
-    for edge in edges:
-        adj[edge[0]].append(edge[1])
-        adj[edge[1]].append(edge[0])
-    rtn = 0
-    list[bool> visited(n)
-    for(i = 0 i < n i += 1) :
-    if not visited[i]:
-        dfs(adj, i, visited)
-        rtn += 1
-return rtn
-def dfs(self, adj, u, visited):
-    visited[u] = True
-    for v in adj[u]:
-        if not visited[v]:
-            dfs(adj, v, visited)
+    def countComponents(self, n, edges):
+        adj = [[] for _ in range(n)]
 
+        for edge in edges:
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+
+        rtn = 0
+        visited = [False] * n
+
+        for i in range(n):
+            if not visited[i]:
+                self.dfs(adj, i, visited)
+                rtn += 1
+
+        return rtn
+
+    def dfs(self, adj, u, visited):
+        visited[u] = True
+
+        for v in adj[u]:
+            if not visited[v]:
+                self.dfs(adj, v, visited)
 ```
 
 ### **Complexity Analysis:**
@@ -250,22 +262,26 @@ def dfs(self, adj, u, visited):
 
 ```python
 class Solution:
-def countComponents(self, n, edges):
-    list[int> parent(n)
-    iota(parent.begin(), parent.end(), 0)
-    for edge in edges:
-        unite(parent, edge[0], edge[1])
-    rtn = 0
-    for(i = 0 i < n i += 1) :
-    if(parent[i] == i) rtn += 1
-return rtn
-def find(self, parent, x):
-    if parent[x] != x:
-        parent[x] = find(parent, parent[x])
-    return parent[x]
-def unite(self, parent, a, b):
-    parent[find(parent, a)] = find(parent, b)
+    def countComponents(self, n, edges):
+        parent = list(range(n))
 
+        for edge in edges:
+            self.unite(parent, edge[0], edge[1])
+
+        rtn = 0
+        for i in range(n):
+            if self.find(parent, i) == i:
+                rtn += 1
+
+        return rtn
+
+    def find(self, parent, x):
+        if parent[x] != x:
+            parent[x] = self.find(parent, parent[x])
+        return parent[x]
+
+    def unite(self, parent, a, b):
+        parent[self.find(parent, a)] = self.find(parent, b)
 ```
 
 ### **Algorithm Explanation:**

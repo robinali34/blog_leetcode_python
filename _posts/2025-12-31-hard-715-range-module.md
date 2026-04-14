@@ -156,36 +156,50 @@ Store all intervals in an unsorted list and linearly scan for operations.
 
 ```python
 class RangeModule:
-list[pair<int, int>> intervals
-def mergeIntervals(self):
-    if (not intervals) return
-    intervals.sort()
-    list[pair<int, int>> merged
-    merged.append(intervals[0])
-    for (i = 1 i < len(intervals) i += 1) :
-    if merged[-1].second >= intervals[i].first:
-        merged[-1].second = max(merged[-1].second, intervals[i].second)
-         else :
-        merged.append(intervals[i])
-intervals = merged
-RangeModule() :
-def addRange(self, left, right):
-    intervals.append(:left, right)
-    mergeIntervals()  # O(n log n) + O(n)
-def queryRange(self, left, right):
-    for ([l, r] : intervals) :
-    if (l <= left  and  right <= r) return True
-return False
-def removeRange(self, left, right):
-    list[pair<int, int>> newIntervals
-    for ([l, r] : intervals) :
-    if r <= left  or  l >= right:
-        newIntervals.append(:l, r)
-         else :
-        if l < left) newIntervals.append({l, left}:
-        if r > right) newIntervals.append({right, r}:
-intervals = newIntervals
+    def __init__(self):
+        self.intervals = []
 
+    def mergeIntervals(self):
+        if not self.intervals:
+            return
+
+        self.intervals.sort()
+        merged = [self.intervals[0]]
+
+        for i in range(1, len(self.intervals)):
+            l, r = self.intervals[i]
+            last_l, last_r = merged[-1]
+
+            if merged[-1][1] >= l:
+                merged[-1] = (last_l, max(last_r, r))
+            else:
+                merged.append((l, r))
+
+        self.intervals = merged
+
+    def addRange(self, left, right):
+        self.intervals.append((left, right))
+        self.mergeIntervals()
+
+    def queryRange(self, left, right):
+        for l, r in self.intervals:
+            if l <= left and right <= r:
+                return True
+        return False
+
+    def removeRange(self, left, right):
+        newIntervals = []
+
+        for l, r in self.intervals:
+            if r <= left or l >= right:
+                newIntervals.append((l, r))
+            else:
+                if l < left:
+                    newIntervals.append((l, left))
+                if r > right:
+                    newIntervals.append((right, r))
+
+        self.intervals = newIntervals
 ```
 
 **Note**: This approach is inefficient due to O(n) operations and O(n^2) worst case merging.
@@ -199,49 +213,68 @@ Maintain sorted intervals using a vector with binary search for finding position
 
 ```python
 class RangeModule:
-list[pair<int, int>> intervals  # Kept sorted
-def findInsertPos(self, left):
-    low = 0, high = len(intervals)
-    while low < high:
-        mid = low + (high - low) / 2
-        if intervals[mid].first <= left:
-            low = mid + 1
-             else :
-            high = mid
-    return low
-RangeModule() :
-def addRange(self, left, right):
-    pos = findInsertPos(left)  # O(log n)
-    intervals.insert(intervals.begin() + pos, :left, right)  # O(n)
-    # Merge overlapping intervals - O(n)
-    mergeIntervals()
-def queryRange(self, left, right):
-    pos = findInsertPos(left)  # O(log n)
-    if pos > 0:
-        prev = intervals[pos - 1]
-        if (prev.first <= left  and  right <= prev.second) return True
-    return False
-def removeRange(self, left, right):
-    # Find and remove/split intervals - O(n)
-    list[pair<int, int>> newIntervals
-    for ([l, r] : intervals) :
-    if r <= left  or  l >= right:
-        newIntervals.append(:l, r)
-         else :
-        if l < left) newIntervals.append({l, left}:
-        if r > right) newIntervals.append({right, r}:
-intervals = newIntervals
-def mergeIntervals(self):
-    if (not intervals) return
-    list[pair<int, int>> merged
-    merged.append(intervals[0])
-    for (i = 1 i < len(intervals) i += 1) :
-    if merged[-1].second >= intervals[i].first:
-        merged[-1].second = max(merged[-1].second, intervals[i].second)
-         else :
-        merged.append(intervals[i])
-intervals = merged
+    def __init__(self):
+        self.intervals = []
 
+    def findInsertPos(self, left):
+        low, high = 0, len(self.intervals)
+
+        while low < high:
+            mid = (low + high) // 2
+
+            if self.intervals[mid][0] <= left:
+                low = mid + 1
+            else:
+                high = mid
+
+        return low
+
+    def addRange(self, left, right):
+        pos = self.findInsertPos(left)
+        self.intervals.insert(pos, (left, right))
+        self.mergeIntervals()
+
+    def queryRange(self, left, right):
+        pos = self.findInsertPos(left)
+
+        if pos > 0:
+            l, r = self.intervals[pos - 1]
+            if l <= left and right <= r:
+                return True
+
+        return False
+
+    def removeRange(self, left, right):
+        newIntervals = []
+
+        for l, r in self.intervals:
+            if r <= left or l >= right:
+                newIntervals.append((l, r))
+            else:
+                if l < left:
+                    newIntervals.append((l, left))
+                if r > right:
+                    newIntervals.append((right, r))
+
+        self.intervals = newIntervals
+
+    def mergeIntervals(self):
+        if not self.intervals:
+            return
+
+        self.intervals.sort()
+        merged = [self.intervals[0]]
+
+        for i in range(1, len(self.intervals)):
+            l, r = self.intervals[i]
+            last_l, last_r = merged[-1]
+
+            if last_r >= l:
+                merged[-1] = (last_l, max(last_r, r))
+            else:
+                merged.append((l, r))
+
+        self.intervals = merged
 ```
 
 **Note**: Better than brute-force with O(log n) search, but still O(n) for insertions/deletions.
@@ -249,52 +282,59 @@ intervals = merged
 ### **Solution 3: Map-Based Interval Management (Recommended)**
 
 ```python
-class RangeModule:
-map<int, int> intervals
-RangeModule() :
-def addRange(self, left, right):
-    it = intervals.upper_bound(left)
-    if it != intervals.begin():
-        start = prev(it)
-        if(start.second >= right) return
-        if start.second >= left:
-            left = start.first
-            intervals.erase(start)
-    while it != intervals.end()  and  it.first <= right:
-        right = max(right, it.second)
-        it = intervals.erase(it)
-    intervals[left] = right
-def queryRange(self, left, right):
-    it = intervals.upper_bound(left)
-    if(it == intervals.begin()) return False
-    it = prev(it)
-    return right <= it.second
-def removeRange(self, left, right):
-    it = intervals.upper_bound(left)
-    if it != intervals.begin():
-        start = prev(it)
-        if start.second >= right:
-            ri = start.second
-            if start.first == left:
-                intervals.erase(start)
-                 else :
-                start.second = left
-            if right != ri:
-                intervals[right] = ri
-            return
-             else if(start.second > left) :
-            if start.first == left:
-                intervals.erase(start)
-                 else :
-                start.second = left
-    while it != intervals.end()  and  it.first < right:
-        if it.second <= right:
-            it = intervals.erase(it)
-             else :
-            intervals[right] = it.second
-            intervals.erase(it)
-            break
+import bisect
 
+class RangeModule:
+    def __init__(self):
+        # store disjoint intervals [l, r)
+        self.intervals = []
+
+    def _find_left(self, x):
+        # first interval with start > x
+        return bisect.bisect_left(self.intervals, (x,))
+
+    def addRange(self, left, right):
+        i = bisect.bisect_left(self.intervals, (left, 0))
+        new_left, new_right = left, right
+
+        # merge overlapping on the left side
+        if i > 0 and self.intervals[i - 1][1] >= left:
+            i -= 1
+            new_left = min(new_left, self.intervals[i][0])
+            new_right = max(new_right, self.intervals[i][1])
+            self.intervals.pop(i)
+
+        # merge overlapping intervals to the right
+        while i < len(self.intervals) and self.intervals[i][0] <= right:
+            new_right = max(new_right, self.intervals[i][1])
+            self.intervals.pop(i)
+
+        self.intervals.insert(i, (new_left, new_right))
+
+    def queryRange(self, left, right):
+        i = bisect.bisect_right(self.intervals, (left, float('inf')))
+
+        if i == 0:
+            return False
+
+        l, r = self.intervals[i - 1]
+        return l <= left and right <= r
+
+    def removeRange(self, left, right):
+        res = []
+        for l, r in self.intervals:
+            # no overlap
+            if r <= left or l >= right:
+                res.append((l, r))
+            else:
+                # left split
+                if l < left:
+                    res.append((l, left))
+                # right split
+                if r > right:
+                    res.append((right, r))
+
+        self.intervals = res
 ```
 
 ### **Algorithm Explanation:**

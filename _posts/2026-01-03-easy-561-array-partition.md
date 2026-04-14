@@ -117,13 +117,14 @@ This is a **greedy algorithm** problem. The key insight is that to maximize the 
 
 ```python
 class Solution:
-def arrayPairSum(self, nums):
-    nums.sort()
-    sum = 0
-    for(i = 0 i < (int)len(nums) i += 2) :
-    sum += nums[i]
-return sum
+    def arrayPairSum(self, nums):
+        nums.sort()
+        total = 0
 
+        for i in range(0, len(nums), 2):
+            total += nums[i]
+
+        return total
 ```
 
 ### **Algorithm Explanation:**

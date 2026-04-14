@@ -102,38 +102,42 @@ This problem requires efficiently handling both **updates** and **range sum quer
 
 ```python
 class NumMatrix:
-list[list[int>> matrix, rowSumArr
-rowCnt, colCnt
-NumMatrix(list[list[int>> matrix) :
-this.matrix = matrix
-if not matrix  or  matrix[0].empty():
-    rowCnt = 0
-    colCnt = 0
-    return
-rowCnt = len(matrix)
-colCnt = matrix[0].__len__()
-rowSumArr.assign(rowCnt, list[int>(colCnt, 0))
-for(i = 0 i < rowCnt i += 1) :
-rowSumArr[i][0] = matrix[i][0]
-for(j = 1 j < colCnt j += 1) :
-rowSumArr[i][j] = rowSumArr[i][j - 1] + matrix[i][j]
-def update(self, row, col, val):
-    matrix[row][col] = val
-    fromCol = col
-    if col == 0:
-        rowSumArr[row][col] = matrix[row][col]
-        fromCol = col + 1
-    for(j = fromCol j < colCnt j += 1) :
-    rowSumArr[row][j] = rowSumArr[row][j - 1] + matrix[row][j]
-def sumRegion(self, row1, col1, row2, col2):
-    sum = 0
-    for(i = row1 i <= row2 i += 1) :
-    if col1 == 0:
-        sum += rowSumArr[i][col2]
-         else :
-        sum += rowSumArr[i][col2] - rowSumArr[i][col1 - 1]
-return sum
+    def __init__(self, matrix):
+        self.matrix = matrix
 
+        if not matrix or not matrix[0]:
+            self.rowCnt = 0
+            self.colCnt = 0
+            self.rowSumArr = []
+            return
+
+        self.rowCnt = len(matrix)
+        self.colCnt = len(matrix[0])
+
+        self.rowSumArr = [[0] * self.colCnt for _ in range(self.rowCnt)]
+
+        for i in range(self.rowCnt):
+            self.rowSumArr[i][0] = matrix[i][0]
+            for j in range(1, self.colCnt):
+                self.rowSumArr[i][j] = self.rowSumArr[i][j - 1] + matrix[i][j]
+
+    def update(self, row, col, val):
+        self.matrix[row][col] = val
+
+        self.rowSumArr[row][col] = val
+        for j in range(col + 1, self.colCnt):
+            self.rowSumArr[row][j] = self.rowSumArr[row][j - 1] + self.matrix[row][j]
+
+    def sumRegion(self, row1, col1, row2, col2):
+        total = 0
+
+        for i in range(row1, row2 + 1):
+            if col1 == 0:
+                total += self.rowSumArr[i][col2]
+            else:
+                total += self.rowSumArr[i][col2] - self.rowSumArr[i][col1 - 1]
+
+        return total
 ```
 
 ### **Algorithm Explanation:**

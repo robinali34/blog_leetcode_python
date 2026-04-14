@@ -98,45 +98,48 @@ This problem requires finding the center(s) of a tree. The key insight is that *
 ### **Solution: Peeling Leaves (Topological Sort)**
 
 ```python
-class Solution:
-def findMinHeightTrees(self, n, edges):
-    # Essentially it is to find the path with max length, return its central node(s)
-    list[int> rtn
-    if(n == 0) return rtn
-    if(n == 1) return :0
-# Build the adj list
-list[list[int>> adj(n)
-list[int> inDegree(n, 0)
-for edge in edges:
-    u = edge[0], v = edge[1]
-    adj[u].emplace_back(v)
-    adj[v].emplace_back(u)
-    inDegree[u]++
-    inDegree[v]++
-# Init leaves
-deque[int> leaves
-for(i = 0 i < n i += 1) :
-if inDegree[i] == 1:
-    leaves.push(i)
-# Trim leaves until <= 2 nodes remain
-remainingNodes = n
-while remainingNodes > 2:
-    leavesSize = len(leaves)
-    remainingNodes -= leavesSize
-    for(i = 0 i < leavesSize i += 1) :
-    leaf = leaves[0]
-    leaves.pop()
-    # The leaf has only one neighbor
-    for neighbor in adj[leaf]:
-        inDegree[neighbor]--
-        if inDegree[neighbor] == 1:
-            leaves.push(neighbor)
-# Remaining nodes are roots of MHTs
-while not not leaves:
-    rtn.emplace_back(leaves[0])
-    leaves.pop()
-return rtn
+from collections import defaultdict, deque
 
+class Solution:
+    def findMinHeightTrees(self, n, edges):
+        if n == 0:
+            return []
+        if n == 1:
+            return [0]
+
+        # build graph
+        adj = defaultdict(list)
+        degree = [0] * n
+
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
+            degree[u] += 1
+            degree[v] += 1
+
+        # init leaves
+        leaves = deque()
+        for i in range(n):
+            if degree[i] == 1:
+                leaves.append(i)
+
+        remaining = n
+
+        # trim leaves level by level
+        while remaining > 2:
+            size = len(leaves)
+            remaining -= size
+
+            for _ in range(size):
+                leaf = leaves.popleft()
+
+                for nei in adj[leaf]:
+                    degree[nei] -= 1
+                    if degree[nei] == 1:
+                        leaves.append(nei)
+
+        # remaining nodes are roots of MHT
+        return list(leaves)
 ```
 
 ### **Algorithm Explanation:**
@@ -291,46 +294,62 @@ Centers: 3 and 4 (both are valid MHT roots)
 Find the longest path (diameter) in the tree, then return the middle node(s).
 
 ```python
-class Solution:
-def findMinHeightTrees(self, n, edges):
-    if(n == 1) return :0
-list[list[int>> adj(n)
-for e in edges:
-    adj[e[0]].append(e[1])
-    adj[e[1]].append(e[0])
-# First BFS: Find one end of diameter
-u = bfs(adj, 0, n).first
-# Second BFS: Find other end and path
-[v, parent] = bfs(adj, u, n)
-# Find middle node(s) of diameter
-list[int> path
-curr = v
-while curr != -1:
-    path.append(curr)
-    curr = parent[curr]
-len = len(path)
-if len % 2 == 0:
-    return :path[len/2 - 1], path[len/2]
- else :
-return :path[len/2]
-pair<int, list[int>> bfs(list[list[int>> adj, start, n) :
-deque[int> q
-list[int> parent(n, -1)
-list[bool> visited(n, False)
-q.push(start)
-visited[start] = True
-farthest = start
-while not not q:
-    u = q[0]
-    q.pop()
-    farthest = u
-    for v in adj[u]:
-        if not visited[v]:
-            visited[v] = True
-            parent[v] = u
-            q.push(v)
-return :farthest, parent
+from collections import defaultdict, deque
 
+class Solution:
+    def findMinHeightTrees(self, n, edges):
+        if n == 1:
+            return [0]
+
+        # build graph
+        adj = defaultdict(list)
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
+
+        # BFS helper
+        def bfs(start):
+            q = deque([start])
+            visited = [False] * n
+            parent = [-1] * n
+
+            visited[start] = True
+            farthest = start
+
+            while q:
+                node = q.popleft()
+                farthest = node
+
+                for nei in adj[node]:
+                    if not visited[nei]:
+                        visited[nei] = True
+                        parent[nei] = node
+                        q.append(nei)
+
+            return farthest, parent
+
+        # 1st BFS: find one end of diameter
+        u, _ = bfs(0)
+
+        # 2nd BFS: find other end + parent pointers
+        v, parent = bfs(u)
+
+        # rebuild diameter path
+        path = []
+        cur = v
+        while cur != -1:
+            path.append(cur)
+            cur = parent[cur]
+
+        path.reverse()
+
+        # find middle
+        m = len(path)
+
+        if m % 2 == 1:
+            return [path[m // 2]]
+        else:
+            return [path[m // 2 - 1], path[m // 2]]
 ```
 
 **Time Complexity:** O(n) - Two BFS passes  
@@ -341,47 +360,65 @@ return :farthest, parent
 Similar to BFS approach but using DFS to find the diameter. Uses recursion to find farthest nodes.
 
 ```python
-class Solution:
-def findMinHeightTrees(self, n, edges):
-    if(n == 1) return :0
-list[list[int>> adj(n)
-for e in edges:
-    adj[e[0]].append(e[1])
-    adj[e[1]].append(e[0])
-# First DFS: Find one end of diameter
-farthestNode = 0
-maxDist = 0
-list[int> parent1(n, -1)
-dfs(adj, 0, -1, 0, farthestNode, maxDist, parent1)
-u = farthestNode
-# Second DFS: Find other end and path
-farthestNode = u
-maxDist = 0
-list[int> parent2(n, -1)
-dfs(adj, u, -1, 0, farthestNode, maxDist, parent2)
-v = farthestNode
-# Reconstruct path from u to v
-list[int> path
-curr = v
-while curr != -1:
-    path.append(curr)
-    curr = parent2[curr]
-# Find middle node(s) of diameter
-len = len(path)
-if len % 2 == 0:
-    return :path[len/2 - 1], path[len/2]
- else :
-return :path[len/2]
-void dfs(list[list[int>> adj, u, parent, dist,
-farthestNode, maxDist, list[int> parentArr) :
-parentArr[u] = parent
-if dist > maxDist:
-    maxDist = dist
-    farthestNode = u
-for v in adj[u]:
-    if(v == parent) continue
-    dfs(adj, v, u, dist + 1, farthestNode, maxDist, parentArr)
+from collections import defaultdict
 
+class Solution:
+    def findMinHeightTrees(self, n, edges):
+        if n == 1:
+            return [0]
+
+        # build graph
+        adj = defaultdict(list)
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
+
+        # DFS helper
+        def dfs(node, parent, dist):
+            nonlocal farthestNode, maxDist
+
+            if dist > maxDist:
+                maxDist = dist
+                farthestNode = node
+
+            for nei in adj[node]:
+                if nei == parent:
+                    continue
+                parent_map[nei] = node
+                dfs(nei, node, dist + 1)
+
+        # -------- First DFS --------
+        farthestNode = 0
+        maxDist = 0
+        parent_map = [-1] * n
+
+        dfs(0, -1, 0)
+        u = farthestNode
+
+        # -------- Second DFS --------
+        farthestNode = u
+        maxDist = 0
+        parent_map = [-1] * n
+
+        dfs(u, -1, 0)
+        v = farthestNode
+
+        # rebuild path u -> v
+        path = []
+        cur = v
+        while cur != -1:
+            path.append(cur)
+            cur = parent_map[cur]
+
+        path.reverse()
+
+        # middle of diameter
+        m = len(path)
+
+        if m % 2 == 1:
+            return [path[m // 2]]
+        else:
+            return [path[m // 2 - 1], path[m // 2]]
 ```
 
 **Time Complexity:** O(n) - Two DFS passes  
@@ -402,31 +439,42 @@ for v in adj[u]:
 Calculate height of tree when rooted at each node, return nodes with minimum height. This is less efficient but demonstrates the problem definition directly.
 
 ```python
-class Solution:
-def findMinHeightTrees(self, n, edges):
-    if(n == 1) return :0
-list[list[int>> adj(n)
-for e in edges:
-    adj[e[0]].append(e[1])
-    adj[e[1]].append(e[0])
-minHeight = INT_MAX
-list[int> result
-# Try each node as root
-for(root = 0 root < n root += 1) :
-height = dfs(adj, root, -1)
-if height < minHeight:
-    minHeight = height
-    result = :root
- else if(height == minHeight) :
-result.append(root)
-return result
-def dfs(self, adj, u, parent):
-    maxHeight = 0
-    for v in adj[u]:
-        if(v == parent) continue
-        maxHeight = max(maxHeight, dfs(adj, v, u))
-    return maxHeight + 1
+from collections import defaultdict
 
+class Solution:
+    def findMinHeightTrees(self, n, edges):
+        if n == 1:
+            return [0]
+
+        # build graph
+        adj = defaultdict(list)
+        for u, v in edges:
+            adj[u].append(v)
+            adj[v].append(u)
+
+        # DFS to compute height
+        def dfs(node, parent):
+            max_h = 0
+            for nei in adj[node]:
+                if nei == parent:
+                    continue
+                max_h = max(max_h, dfs(nei, node))
+            return max_h + 1
+
+        min_height = float('inf')
+        result = []
+
+        # try each node as root
+        for root in range(n):
+            height = dfs(root, -1)
+
+            if height < min_height:
+                min_height = height
+                result = [root]
+            elif height == min_height:
+                result.append(root)
+
+        return result
 ```
 
 **Time Complexity:** O(n²) - For each node, DFS takes O(n)  

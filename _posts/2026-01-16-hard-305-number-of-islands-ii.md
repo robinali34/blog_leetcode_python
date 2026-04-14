@@ -104,55 +104,67 @@ This is an **incremental/dynamic** problem where we add land cells one by one an
 
 ```python
 class UnionFind:
-UnionFind(size) :
-parent.resize(size, -1)
-rank.resize(size, 0)
-cnt = 0
-def addLand(self, x):
-    if(parent[x] >= 0) return
-    parent[x] = x
-    cnt += 1
-def isLand(self, x):
-    if parent[x] >= 0:
-        return True
-    return False
-def numberOfIslands(self):
-    return cnt
-def find(self, x):
-    if parent[x] != x:
-        parent[x] = find(parent[x])
-    return parent[x]
-def union_set(self, x, y):
-    xset = find(x), yset = find(y)
-    if xset == yset:
-        return
-         else if (rank[xset] < rank[yset]) :
-        parent[xset] = yset
-         else if(rank[xset] > rank[yset]) :
-        parent[yset] = xset
-         else :
-        parent[yset] = xset
-        rank[xset]++
-    cnt -= 1
-list[int> parent, rank
-cnt
-class Solution:
-def numIslands2(self, m, n, positions):
-    :% raw %list[pair<int, int>> dirs = ::-1, 0, :1, 0, :0, 1, :0, -1:% endraw %
-UnionFind dsu(mn)
-list[int> rtn
-for position in positions:
-    landPosition = position[0] * n + position[1]
-    dsu.addLand(landPosition)
-    for([dx, dy]: dirs) :
-    neighborX = position[0] + dx
-    neighborY = position[1] + dy
-    neighborPosition = neighborX  n + neighborY
-    if neighborX >= 0  and  neighborX < m  and  neighborY >= 0  and  neighborY < n  and  dsu.isLand(neighborPosition):
-        dsu.union_set(landPosition, neighborPosition)
-rtn.emplace_back(dsu.numberOfIslands())
-return rtn
+    def __init__(self, size):
+        self.parent = [-1] * size
+        self.rank = [0] * size
+        self.cnt = 0  # number of islands
 
+    def addLand(self, x):
+        if self.parent[x] != -1:
+            return
+        self.parent[x] = x
+        self.cnt += 1
+
+    def isLand(self, x):
+        return self.parent[x] != -1
+
+    def numberOfIslands(self):
+        return self.cnt
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union_set(self, x, y):
+        xroot = self.find(x)
+        yroot = self.find(y)
+
+        if xroot == yroot:
+            return
+
+        if self.rank[xroot] < self.rank[yroot]:
+            self.parent[xroot] = yroot
+        elif self.rank[xroot] > self.rank[yroot]:
+            self.parent[yroot] = xroot
+        else:
+            self.parent[yroot] = xroot
+            self.rank[xroot] += 1
+
+        self.cnt -= 1
+
+
+class Solution:
+    def numIslands2(self, m, n, positions):
+        uf = UnionFind(m * n)
+
+        dirs = [(1,0), (-1,0), (0,1), (0,-1)]
+        res = []
+
+        for r, c in positions:
+            idx = r * n + c
+            uf.addLand(idx)
+
+            for dr, dc in dirs:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < m and 0 <= nc < n:
+                    nidx = nr * n + nc
+                    if uf.isLand(nidx):
+                        uf.union_set(idx, nidx)
+
+            res.append(uf.numberOfIslands())
+
+        return res
 ```
 
 ### **Algorithm Explanation:**
@@ -287,38 +299,46 @@ Rebuild island count from scratch after each addition. This approach is too slow
 
 ```python
 class Solution:
-def numIslands2(self, m, n, positions):
-    list[list[int>> grid(m, list[int>(n, 0))
-    list[int> result
-    for pos in positions:
-        r = pos[0], c = pos[1]
-        if grid[r][c] == 1:
-            # duplicate: count stays same
-            result.append(countIslands(grid))
-             else :
-            grid[r][c] = 1
-            result.append(countIslands(grid))
-    return result
-def countIslands(self, grid):
-    m = len(grid), n = grid[0].__len__()
-    list[list[bool>> visited(m, list[bool>(n, False))
-    count = 0
-    for (i = 0 i < m i += 1) :
-    for (j = 0 j < n j += 1) :
-    if grid[i][j] == 1  and  not visited[i][j]:
-        dfs(grid, visited, i, j)
-        count += 1
-return count
-def dfs(self, grid, visited, r, c):
-    m = len(grid), n = grid[0].__len__()
-    if r < 0  or  r >= m  or  c < 0  or  c >= n  or  grid[r][c] == 0  or  visited[r][c]:
-        return
-    visited[r][c] = True
-    dfs(grid, visited, r + 1, c)
-    dfs(grid, visited, r - 1, c)
-    dfs(grid, visited, r, c + 1)
-    dfs(grid, visited, r, c - 1)
+    def numIslands2(self, m, n, positions):
+        grid = [[0] * n for _ in range(m)]
+        result = []
 
+        for r, c in positions:
+            if grid[r][c] == 1:
+                result.append(self.countIslands(grid))
+                continue
+
+            grid[r][c] = 1
+            result.append(self.countIslands(grid))
+
+        return result
+
+    def countIslands(self, grid):
+        m, n = len(grid), len(grid[0])
+        visited = [[False] * n for _ in range(m)]
+        count = 0
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1 and not visited[i][j]:
+                    self.dfs(grid, visited, i, j)
+                    count += 1
+
+        return count
+
+    def dfs(self, grid, visited, r, c):
+        m, n = len(grid), len(grid[0])
+
+        if (r < 0 or r >= m or c < 0 or c >= n or
+            grid[r][c] == 0 or visited[r][c]):
+            return
+
+        visited[r][c] = True
+
+        self.dfs(grid, visited, r + 1, c)
+        self.dfs(grid, visited, r - 1, c)
+        self.dfs(grid, visited, r, c + 1)
+        self.dfs(grid, visited, r, c - 1)
 ```
 
 **Time Complexity:** O(k × m × n) - Too slow for large inputs  

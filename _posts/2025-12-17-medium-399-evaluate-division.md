@@ -89,47 +89,60 @@ This solution uses Union-Find with path compression and union by weight to maint
 
 ```python
 class Solution:
-dict[str, pair<str, double>> weights
-pair<str, double> find(str node) :
-if not node in weights:
-    weights[node] = :node, 1.0
-entry = weights[node]
-if entry.first != node:
-    parentEntry = find(entry.first)
-    weights[node] = {}
-    parentEntry.first,
-    entry.second  parentEntry.second
-return weights[node]
-def unite(self, dividend, divisor, value):
-    dividendEntry = find(dividend)
-    divisorEntry = find(divisor)
-    str dividendRoot = dividendEntry.first
-    str divisorRoot = divisorEntry.first
-    if dividendRoot != divisorRoot:
-        weights[dividendRoot] = {}
-        divisorRoot,
-        divisorEntry.second  value / dividendEntry.second
-def calcEquation(self, equations, values, queries):
-    for(i = 0 i < len(equations) i += 1) :
-    str dividend = equations[i][0]
-    str divisor = equations[i][1]
-    double value = values[i]
-    unite(dividend, divisor, value)
-list[double> rtn
-for query in queries:
-    str dividend = query[0]
-    str divisor = query[1]
-    if not dividend in weights  or  not divisor in weights:
-        rtn.append(-1.0)
-        continue
-    dividendEntry = find(dividend)
-    divisorEntry = find(divisor)
-    if dividendEntry.first != divisorEntry.first:
-        rtn.append(-1.0)
-         else :
-        rtn.append(dividendEntry.second / divisorEntry.second)
-return rtn
+    def __init__(self):
+        self.parent = {}
+        self.weight = {}
 
+    def find(self, x):
+        if x not in self.parent:
+            self.parent[x] = x
+            self.weight[x] = 1.0
+            return x
+
+        if self.parent[x] != x:
+            orig_parent = self.parent[x]
+            root = self.find(orig_parent)
+
+            self.weight[x] *= self.weight[orig_parent]
+            self.parent[x] = root
+
+        return self.parent[x]
+
+    def union(self, a, b, value):
+        if a not in self.parent:
+            self.parent[a] = a
+            self.weight[a] = 1.0
+        if b not in self.parent:
+            self.parent[b] = b
+            self.weight[b] = 1.0
+
+        rootA = self.find(a)
+        rootB = self.find(b)
+
+        if rootA != rootB:
+            self.parent[rootA] = rootB
+            self.weight[rootA] = value * self.weight[b] / self.weight[a]
+
+    def calcEquation(self, equations, values, queries):
+        for (a, b), val in zip(equations, values):
+            self.union(a, b, val)
+
+        res = []
+
+        for a, b in queries:
+            if a not in self.parent or b not in self.parent:
+                res.append(-1.0)
+                continue
+
+            rootA = self.find(a)
+            rootB = self.find(b)
+
+            if rootA != rootB:
+                res.append(-1.0)
+            else:
+                res.append(self.weight[a] / self.weight[b])
+
+        return res
 ```
 
 ### How Solution 1 Works
@@ -166,39 +179,42 @@ The Union-Find structure maintains ratios relative to the root:
 Build a graph and use DFS to find paths between variables.
 
 ```python
+from collections import defaultdict
+
 class Solution:
-def calcEquation(self, equations, values, queries):
-    dict[str, list[pair<str, double>>> graph
-    # Build graph
-    for(i = 0 i < len(equations) i += 1) :
-    str a = equations[i][0]
-    str b = equations[i][1]
-    double val = values[i]
-    graph[a].append(:b, val)
-    graph[b].append(:a, 1.0 / val)
-list[double> result
-for query in queries:
-    str start = query[0]
-    str end = query[1]
-    if graph.find(start) == graph.end()  or  graph.find(end) == graph.end():
-        result.append(-1.0)
-        continue
-    set[str> visited
-    double ans = dfs(start, end, graph, visited, 1.0)
-    result.append(ans)
-return result
-double dfs(str curr, str target, dict[str, list[pair<str, double>>> graph,
-set[str> visited, double product) :
-if curr == target:
-    return product
-visited.insert(curr)
-for([neighbor, weight] : graph[curr]) :
-if visited.find(neighbor) == visited.end():
-    double result = dfs(neighbor, target, graph, visited, product  weight)
-    if result != -1.0:
+    def calcEquation(self, equations, values, queries):
+        graph = defaultdict(list)
+
+        # Build graph
+        for (a, b), val in zip(equations, values):
+            graph[a].append((b, val))
+            graph[b].append((a, 1.0 / val))
+
+        def dfs(curr, target, visited, product):
+            if curr == target:
+                return product
+
+            visited.add(curr)
+
+            for neighbor, weight in graph[curr]:
+                if neighbor not in visited:
+                    res = dfs(neighbor, target, visited, product * weight)
+                    if res != -1.0:
+                        return res
+
+            return -1.0
+
+        result = []
+
+        for start, end in queries:
+            if start not in graph or end not in graph:
+                result.append(-1.0)
+                continue
+
+            visited = set()
+            result.append(dfs(start, end, visited, 1.0))
+
         return result
-visited.erase(curr)
-return -1.0
 
 ```
 

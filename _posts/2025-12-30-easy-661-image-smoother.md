@@ -119,20 +119,26 @@ This problem requires applying a 3×3 smoothing filter to each cell in the image
 
 ```python
 class Solution:
-def imageSmoother(self, img):
-    m = len(img), n = img[0].__len__()
-    list[list[int>> rtn(m, list[int>(n))
-    for(i = 0 i < m i += 1) :
-    for(j = 0 j < n j += 1) :
-    num = 0, sum = 0
-    for(x = i - 1 x <= i + 1 x += 1) :
-    for(y = j - 1 y <= j + 1 y += 1) :
-    if x >= 0  and  x < m  and  y >= 0  and  y < n:
-        num += 1
-        sum += img[x][y]
-rtn[i][j] = sum / num
-return rtn
+    def imageSmoother(self, img):
+        m, n = len(img), len(img[0])
 
+        res = [[0] * n for _ in range(m)]
+
+        for i in range(m):
+            for j in range(n):
+                total = 0
+                count = 0
+
+                for x in range(i - 1, i + 2):
+                    for y in range(j - 1, j + 2):
+
+                        if 0 <= x < m and 0 <= y < n:
+                            total += img[x][y]
+                            count += 1
+
+                res[i][j] = total // count
+
+        return res
 ```
 
 ### **Algorithm Explanation:**
@@ -203,13 +209,9 @@ Original:          Neighbors for (1,1):    Smoothed:
 
 The algorithm handles boundaries correctly by checking bounds before accessing:
 ```python
-if x >= 0  and  x < m  and  y >= 0  and  y < n:
-    num += 1
-    sum += img[x][y]
-
-
-
-
+if 0 <= x < m and 0 <= y < n:
+    count += 1
+    total += img[x][y]
 ```
 
 This ensures:

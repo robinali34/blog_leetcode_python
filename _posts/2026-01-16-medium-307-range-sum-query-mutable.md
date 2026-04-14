@@ -101,57 +101,63 @@ This is a classic **Segment Tree** problem. We need to support:
 
 ```python
 class NumArray:
-NumArray(list[int> nums):
-n = len(nums)
-tree.resize(4  n)
-build(0, 0, n - 1, nums)
-def update(self, index, val):
-    update(0, 0, n - 1, index, val)
-def sumRange(self, left, right):
-    return (int)query(0, 0, n - 1, left, right)
-list[long long> tree
-n
-def build(self, node, l, r, nums):
-    if l == r:
-        tree[node] = nums[l]
-        return
-    mid = l + (r - l) / 2
-    build(2  node + 1, l, mid, nums)
-    build(2  node + 2, mid + 1, r, nums)
-    tree[node] = tree[2  node + 1] + tree[2  node + 2]
-def update(self, node, l, r, idx, val):
-    if l == r:
-        tree[node] = val
-        return
-    mid = l + (r - l) / 2
-    if idx <= mid:
-        update(2  node + 1, l, mid, idx, val)
-         else :
-        update(2  node + 2, mid + 1, r, idx, val)
-    tree[node] = tree[2  node + 1] + tree[2  node + 2]
-def query(self, node, l, r, ql, qr):
-    if(qr < l  or  r < ql) return 0
-    if(ql <= l  and  r <= qr) return tree[node]
-    mid = l + (r - l) / 2
-    return query(2  node + 1, l, mid, ql, qr) + query(2 node + 2, mid + 1, r, ql, qr)
-/
- Your NumArray object will be instantiated and called as such:
- NumArray obj = new NumArray(nums)
- obj.update(index,val)
- param_2 = obj.sumRange(left,right)
-/
+    def __init__(self, nums: list[int]) -> None:
+        self.n = len(nums)
+        self.tree = [0] * (4 * self.n)
+        self._build(0, 0, self.n - 1, nums)
 
+    def _build(self, node: int, l: int, r: int, nums: list[int]) -> None:
+        if l == r:
+            self.tree[node] = nums[l]
+            return
+        mid = (l + r) // 2
+        self._build(2 * node + 1, l, mid, nums)
+        self._build(2 * node + 2, mid + 1, r, nums)
+        self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]
+
+    def update(self, index: int, val: int) -> None:
+        self._update(0, 0, self.n - 1, index, val)
+
+    def _update(self, node: int, l: int, r: int, idx: int, val: int) -> None:
+        if l == r:
+            self.tree[node] = val
+            return
+        mid = (l + r) // 2
+        if idx <= mid:
+            self._update(2 * node + 1, l, mid, idx, val)
+        else:
+            self._update(2 * node + 2, mid + 1, r, idx, val)
+        self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]
+
+    def sumRange(self, left: int, right: int) -> int:
+        return self._query(0, 0, self.n - 1, left, right)
+
+    def _query(self, node: int, l: int, r: int, ql: int, qr: int) -> int:
+        if qr < l or r < ql:
+            return 0
+        if ql <= l and r <= qr:
+            return self.tree[node]
+        mid = (l + r) // 2
+        return self._query(2 * node + 1, l, mid, ql, qr) + self._query(
+            2 * node + 2, mid + 1, r, ql, qr
+        )
+
+
+# Your NumArray object will be instantiated and called as such:
+# obj = NumArray(nums)
+# obj.update(index, val)
+# param_2 = obj.sumRange(left, right)
 ```
 
 ### **Algorithm Explanation:**
 
 #### **NumArray Class:**
 
-1. **Constructor (Lines 3-7)**:
+1. **`__init__`**:
    - Initialize segment tree with size `4 * n`
    - Build tree from `nums` array starting at root node (index 0)
 
-2. **build() (Lines 15-25)**:
+2. **`_build()`**:
    - Recursively build segment tree
    - **Base Case**: Leaf node (`l == r`) stores `nums[l]`
    - **Recursive Case**: 
@@ -159,7 +165,7 @@ def query(self, node, l, r, ql, qr):
      - Build right subtree: `2 * node + 2` for range `[mid + 1, r]`
      - Parent node stores sum of children: `tree[node] = tree[left] + tree[right]`
 
-3. **update() (Lines 5-6, 27-37)**:
+3. **`update()` / `_update()`**:
    - Public method delegates to private recursive method
    - Update element at index `idx` to value `val`
    - **Base Case**: Leaf node (`l == r`) → update directly
@@ -168,7 +174,7 @@ def query(self, node, l, r, ql, qr):
      - Update child subtree
      - Recalculate parent: `tree[node] = tree[left] + tree[right]`
 
-4. **query() (Lines 8-9, 39-45)**:
+4. **`sumRange()` / `_query()`**:
    - Public method delegates to private recursive method
    - Query sum over range `[ql, qr]`
    - **No Overlap**: `qr < l || r < ql` → return 0
@@ -180,7 +186,7 @@ def query(self, node, l, r, ql, qr):
 For array `[1, 3, 5]`:
 
 ```
-        [9]          ]  ← node 0
+        [9]              ← node 0
        /   \
     [4]     [5]      ← nodes 1, 2
    /   \   /   \
@@ -244,7 +250,7 @@ Step 4: Query [0, 2]
 
 1. **0-Indexed vs 1-Indexed**: This solution uses 0-indexed (left child = `2*node+1`). 1-indexed uses `2*node` and `2*node+1`.
 2. **Array Size**: Allocate `4 * n` to handle worst-case tree structure
-3. **Long Long**: Use `long long` to prevent integer overflow for large sums
+3. **Overflow**: In Python ints are arbitrary precision; in other languages use a wide integer type for large sums
 4. **Recursive vs Iterative**: Recursive is cleaner; iterative can avoid stack overflow
 5. **Range Query Logic**: Three cases: no overlap, complete overlap, partial overlap
 
@@ -262,7 +268,7 @@ Step 4: Query [0, 2]
 2. **Index calculation errors**: Wrong child indices (off-by-one)
 3. **Not updating parent**: Forgetting to recalculate parent after update
 4. **Query boundary errors**: Incorrect overlap checking logic
-5. **Integer overflow**: Not using `long long` for large sums
+5. **Integer overflow**: In C++/Java, use 64-bit types when sums can exceed 32-bit range
 
 ## Alternative Approaches
 
@@ -272,41 +278,42 @@ Fenwick Tree is a more space-efficient alternative to Segment Tree. It uses O(n)
 
 ```python
 class NumArray:
-NumArray(list[int> nums) :
-n = len(nums)
-tree.assign(n + 1, 0)
-arr = nums
-for(i = 0 i < n i += 1) :
-add(i + 1, nums[i])
-def update(self, index, val):
-    diff = val - arr[index]
-    arr[index] = val
-    add(index + 1, diff)
-def sumRange(self, left, right):
-    return prefixSum(right + 1) - prefixSum(left)
-list[int> tree
-list[int> arr
-n
-def lowbit(self, x):
-    return x  (-x)
-def add(self, index, val):
-    while index <= n:
-        tree[index] += val
-        index += lowbit(index)
-# Prefix sum [1 .. index]
-def prefixSum(self, index):
-    sum = 0
-    while index > 0:
-        sum += tree[index]
-        index -= lowbit(index)
-    return sum
-/
- Your NumArray object will be instantiated and called as such:
- NumArray obj = new NumArray(nums)
- obj.update(index,val)
- param_2 = obj.sumRange(left,right)
-/
+    def __init__(self, nums: list[int]) -> None:
+        self.n = len(nums)
+        self.tree = [0] * (self.n + 1)
+        self.arr = list(nums)
+        for i in range(self.n):
+            self._add(i + 1, nums[i])
 
+    @staticmethod
+    def _lowbit(x: int) -> int:
+        return x & (-x)
+
+    def _add(self, index: int, delta: int) -> None:
+        while index <= self.n:
+            self.tree[index] += delta
+            index += self._lowbit(index)
+
+    def _prefix_sum(self, index: int) -> int:
+        s = 0
+        while index > 0:
+            s += self.tree[index]
+            index -= self._lowbit(index)
+        return s
+
+    def update(self, index: int, val: int) -> None:
+        diff = val - self.arr[index]
+        self.arr[index] = val
+        self._add(index + 1, diff)
+
+    def sumRange(self, left: int, right: int) -> int:
+        return self._prefix_sum(right + 1) - self._prefix_sum(left)
+
+
+# Your NumArray object will be instantiated and called as such:
+# obj = NumArray(nums)
+# obj.update(index, val)
+# param_2 = obj.sumRange(left, right)
 ```
 
 ### **Algorithm Explanation:**
@@ -324,22 +331,22 @@ def prefixSum(self, index):
 
 1. **lowbit(x)**: 
    - Helper function to extract the lowest set bit
-   - Used for tree traversal in both `add` and `prefixSum`
+   - Used for tree traversal in both `_add` and `_prefix_sum`
 
-2. **add(index, val)**: 
-   - Add `val` to position `index` (1-indexed) and all ancestors
+2. **`_add(index, delta)`**: 
+   - Add `delta` to position `index` (1-indexed) and all ancestors
    - Traverse upward: `index += lowbit(index)`
    - Updates all nodes that include index `index` in their range
    - Stops when `index > n`
 
-3. **prefixSum(index)**:
+3. **`_prefix_sum(index)`**:
    - Get prefix sum from index 1 to `index` (both 1-indexed)
    - Traverse downward: `index -= lowbit(index)`
    - Sums all nodes on path from `index` to root
    - Stops when `index <= 0`
 
-4. **sumRange(left, right)**:
-   - Range sum = `prefixSum(right + 1) - prefixSum(left)`
+4. **`sumRange(left, right)`**:
+   - Range sum = `_prefix_sum(right + 1) - _prefix_sum(left)`
    - Converts 0-indexed range `[left, right]` to 1-indexed prefix sums
    - Uses inclusion-exclusion principle: sum from 1 to (right+1) minus sum from 1 to left
 
@@ -354,7 +361,7 @@ tree[2] = 1 + 3 = 4
 tree[3] = 5
 tree[4] = 1 + 3 + 5 = 9 (not used for n=3)
 
-Query prefixSum(3):
+Query `_prefix_sum(3)`:
   index = 3, sum += tree[3] = 5
   index = 2 (3 - lowbit(3) = 3 - 1 = 2), sum += tree[2] = 4, total = 9
   index = 0 (2 - lowbit(2) = 2 - 2 = 0), stop
@@ -373,8 +380,8 @@ Step 1: Build Fenwick Tree
   add(3, 5): tree[3] = 5
   
 Step 2: Query sumRange(0, 2)
-  prefixSum(3) = tree[3] + tree[2] = 5 + 4 = 9
-  prefixSum(0) = 0
+  `_prefix_sum(3)` = tree[3] + tree[2] = 5 + 4 = 9
+  `_prefix_sum(0)` = 0
   Result: 9 - 0 = 9 ✓
   
 Step 3: Update index 1 to 2
@@ -385,15 +392,15 @@ Step 3: Update index 1 to 2
     tree[4] = ... (if n >= 4, but n=3, so stop)
     
 Step 4: Query sumRange(0, 2)
-  prefixSum(3) = tree[3] + tree[2] = 5 + 3 = 8
-  prefixSum(0) = 0
+  `_prefix_sum(3)` = tree[3] + tree[2] = 5 + 3 = 8
+  `_prefix_sum(0)` = 0
   Result: 8 - 0 = 8 ✓
 ```
 
 ### **Complexity Analysis:**
 
 - **Time Complexity:**
-  - **Build**: O(n log n) - Each `add` takes O(log n)
+  - **Build**: O(n log n) - Each `_add` takes O(log n)
   - **Update**: O(log n) - Traverse tree height
   - **Query**: O(log n) - Traverse tree height
   - **Overall**: O(n log n) build + O(k log n) for k operations
@@ -428,15 +435,14 @@ Step 4: Query sumRange(0, 2)
 
 ```python
 class NumArray:
-list[int> nums
-NumArray(list[int> nums) : nums(nums) :
-def update(self, index, val):
-    nums[index] = val
-def sumRange(self, left, right):
-    sum = 0
-    for (i = left i <= right i += 1) :
-    sum += nums[i]
-return sum
+    def __init__(self, nums: list[int]) -> None:
+        self.nums = nums
+
+    def update(self, index: int, val: int) -> None:
+        self.nums[index] = val
+
+    def sumRange(self, left: int, right: int) -> int:
+        return sum(self.nums[left : right + 1])
 
 ```
 
@@ -447,8 +453,8 @@ return sum
 
 - [LC 303: Range Sum Query - Immutable](https://leetcode.com/problems/range-sum-query-immutable/) - Prefix sum (no updates)
 - [LC 308: Range Sum Query 2D - Mutable](https://leetcode.com/problems/range-sum-query-2d-mutable/) - 2D segment tree
-- [LC 850: Rectangle Area II](https://robinali34.github.io/blog_leetcode/posts/2025-12-16-hard-850-rectangle-area-ii/) - Segment tree with coordinate compression
-- [LC 3477: Number of Unplaced Fruits](https://robinali34.github.io/blog_leetcode/2026/01/16/medium-3477-number-of-unplaced-fruits/) - Segment tree for leftmost query
+- [LC 850: Rectangle Area II](https://robinali34.github.io/blog_leetcode_python/2025/12/16/hard-850-rectangle-area-ii/) - Segment tree with coordinate compression
+- [LC 3477: Number of Unplaced Fruits](https://robinali34.github.io/blog_leetcode_python/2026/01/16/medium-3477-number-of-unplaced-fruits/) - Segment tree for leftmost query
 - [LC 699: Falling Squares](https://leetcode.com/problems/falling-squares/) - Segment tree for range max updates
 
 ---

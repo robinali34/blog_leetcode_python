@@ -100,19 +100,23 @@ This is a **greedy algorithm** problem. The key insight is to count the number o
 
 ```python
 class Solution:
-def wiggleMaxLength(self, nums):
-    N = len(nums)
-    if(N < 2) return N
-    prevDiff = nums[1] - nums[0]
-    (2 if         rtn = prevDiff != 0 else 1)
-    for(i = 2 i < N i += 1) :
-    diff = nums[i] - nums[i - 1]
-    if((diff > 0  and  prevDiff <= 0)  or
-    diff < 0  and  prevDiff >= 0) :
-    rtn += 1
-    prevDiff = diff
-return rtn
+    def wiggleMaxLength(self, nums):
+        N = len(nums)
+        if N < 2:
+            return N
 
+        prevDiff = nums[1] - nums[0]
+
+        rtn = 2 if prevDiff != 0 else 1
+
+        for i in range(2, N):
+            diff = nums[i] - nums[i - 1]
+
+            if (diff > 0 and prevDiff <= 0) or (diff < 0 and prevDiff >= 0):
+                rtn += 1
+                prevDiff = diff
+
+        return rtn
 ```
 
 ### **Algorithm Explanation:**
@@ -340,21 +344,27 @@ Actually, let me reconsider. If we have `[1, 2, 2, 3]`:
 - **Idea**: Track two states: `up[i]` (ending with up) and `down[i]` (ending with down)
 - **Code**:
 ```python
-def wiggleMaxLength(self, nums):
-    n = len(nums)
-    list[int> up(n, 1), down(n, 1)
-    for(i = 1 i < n i += 1) :
-    if nums[i] > nums[i-1]:
-        up[i] = down[i-1] + 1
-        down[i] = down[i-1]
-         else if(nums[i] < nums[i-1]) :
-        down[i] = up[i-1] + 1
-        up[i] = up[i-1]
-         else :
-        up[i] = up[i-1]
-        down[i] = down[i-1]
-return max(up[n-1], down[n-1])
+class Solution:
+    def wiggleMaxLength(self, nums):
+        n = len(nums)
 
+        up = [1] * n
+        down = [1] * n
+
+        for i in range(1, n):
+            if nums[i] > nums[i - 1]:
+                up[i] = down[i - 1] + 1
+                down[i] = down[i - 1]
+
+            elif nums[i] < nums[i - 1]:
+                down[i] = up[i - 1] + 1
+                up[i] = up[i - 1]
+
+            else:
+                up[i] = up[i - 1]
+                down[i] = down[i - 1]
+
+        return max(up[n - 1], down[n - 1])
 ```
 
 ### **Approach 3: Space-Optimized DP**

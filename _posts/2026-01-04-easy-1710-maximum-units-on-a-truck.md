@@ -109,19 +109,21 @@ This is a classic **greedy algorithm** problem. The key insight is to prioritize
 
 ```python
 class Solution:
-def maximumUnits(self, boxTypes, truckSize):
-    sort(boxTypes.begin(), boxTypes.end(), [](u, v):
-    return u[1] > v[1]
-    )
-    remainSize = truckSize
-    maximumUnits = 0
-    for boxType in boxTypes:
-        if(remainSize == 0) break
-        cnt = min(remainSize, boxType[0])
-        maximumUnits += cnt  boxType[1]
-        remainSize -= cnt
-    return maximumUnits
+    def maximumUnits(self, boxTypes, truckSize):
+        boxTypes.sort(key=lambda x: x[1], reverse=True)
 
+        remainSize = truckSize
+        maximumUnits = 0
+
+        for boxType in boxTypes:
+            if remainSize == 0:
+                break
+
+            cnt = min(remainSize, boxType[0])
+            maximumUnits += cnt * boxType[1]
+            remainSize -= cnt
+
+        return maximumUnits
 ```
 
 ### **Algorithm Explanation:**

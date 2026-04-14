@@ -100,21 +100,32 @@ This problem requires checking if a substring can be rearranged and have at most
 
 ```python
 class Solution:
-def canMakePaliQueries(self, s, queries):
-    N = len(s)
-    list[int> count(N + 1)
-    for(i = 0 i < N i += 1) :
-    count[i + 1] = count[i] ^ (1 << (s[i] - 'a'))
-list[bool> rtn
-for query in queries:
-    left = query[0], right = query[1], k = query[2]
-    bits = 0, x = count[right + 1] ^ count[left]
-    while x > 0:
-        x = x - 1
-        bits += 1
-    rtn.append(bits <= k  2 + 1)
-return rtn
+    def canMakePaliQueries(self, s, queries):
+        n = len(s)
 
+        # prefix bitmask
+        count = [0] * (n + 1)
+
+        for i in range(n):
+            bit = 1 << (ord(s[i]) - ord('a'))
+            count[i + 1] = count[i] ^ bit
+
+        def bit_count(x):
+            c = 0
+            while x:
+                x &= x - 1
+                c += 1
+            return c
+
+        res = []
+
+        for l, r, k in queries:
+            x = count[r + 1] ^ count[l]
+            odd = bit_count(x)
+
+            res.append(odd // 2 <= k)
+
+        return res
 ```
 
 ### **Algorithm Explanation:**
@@ -250,10 +261,8 @@ Counting set bits efficiently:
 ```python
 bits = 0
 while x > 0:
-    x = x - 1  # Clear rightmost set bit
+    x &= x - 1   # removes lowest set bit
     bits += 1
-
-
 ```
 
 Time: O(number of set bits) instead of O(32)

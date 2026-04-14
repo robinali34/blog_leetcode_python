@@ -106,20 +106,35 @@ This problem requires maximizing vacation days over `k` weeks by choosing which 
 
 ```python
 class Solution:
-def maxVacationDays(self, flights, days):
-    if(len(days) == 0  or  len(flights) == 0) return 0
-    N = len(flights), M = days[0].__len__()
-    list[int> dp(N)
-    for(week = M - 1 week >= 0 week -= 1) :
-    list[int> temp(N)
-    for(cur_city = 0 cur_city < N cur_city += 1) :
-    temp[cur_city] = days[cur_city][week] + dp[cur_city]
-    for(dest_city = 0 dest_city < N dest_city += 1) :
-    if flights[cur_city][dest_city] == 1:
-        temp[cur_city] = max(days[dest_city][week] + dp[dest_city], temp[cur_city])
-dp = move(temp)
-return dp[0]
+    def maxVacationDays(self, flights, days):
+        if not flights or not days:
+            return 0
 
+        n = len(flights)
+        m = len(days[0])
+
+        # dp[city] = max vacation starting from this city
+        dp = [-float('inf')] * n
+        dp[0] = 0
+
+        for week in range(m - 1, -1, -1):
+            temp = [-float('inf')] * n
+
+            for cur_city in range(n):
+                # option 1: stay in same city
+                temp[cur_city] = days[cur_city][week] + dp[cur_city]
+
+                # option 2: come from any city that can fly here
+                for dest_city in range(n):
+                    if flights[cur_city][dest_city]:
+                        temp[cur_city] = max(
+                            temp[cur_city],
+                            days[dest_city][week] + dp[dest_city]
+                        )
+
+            dp = temp
+
+        return dp[0]
 ```
 
 ### **Algorithm Explanation:**

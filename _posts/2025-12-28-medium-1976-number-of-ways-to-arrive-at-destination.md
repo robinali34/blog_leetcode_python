@@ -101,33 +101,47 @@ This problem requires finding the **number of shortest paths** from node `0` to 
 ### **Solution: Dijkstra's Algorithm with Path Counting**
 
 ```python
-class Solution:
-def countPaths(self, n, roads):
-    MOD = 1e9 + 7
-    list[list[pair<int, int>>> adjList(n)
-    for road in roads:
-        startNode = road[0], endNode = road[1], travelTime = road[2]
-        adjList[startNode].emplace_back(endNode, travelTime)
-        adjList[endNode].emplace_back(startNode, travelTime)
-    heapq[pair<long long, int>, list[pair<long long, int>>, greater<>> minHeap
-    list[long long> shortestTime(n, LLONG_MAX)
-    list[int> pathCount(n, 0)
-    shortestTime[0] = 0
-    pathCount[0] = 1
-    minHeap.emplace(0, 0)
-    while not not minHeap:
-        [currTime, currNode] = minHeap.top()
-        minHeap.pop()
-        if(currTime > shortestTime[currNode]) continue
-        for([neighborNode, roadTime]: adjList[currNode]) :
-        if currTime + roadTime < shortestTime[neighborNode]:
-            shortestTime[neighborNode] = currTime + roadTime
-            pathCount[neighborNode] = pathCount[currNode]
-            minHeap.emplace(shortestTime[neighborNode], neighborNode)
-        def if(self, shortestTime[neighborNode]):
-            pathCount[neighborNode] = (pathCount[neighborNode] + pathCount[currNode]) % MOD
-return pathCount[n - 1]
+import heapq
+from math import inf
 
+class Solution:
+    def countPaths(self, n, roads):
+        MOD = 10**9 + 7
+
+        # build graph
+        adjList = [[] for _ in range(n)]
+        for u, v, w in roads:
+            adjList[u].append((v, w))
+            adjList[v].append((u, w))
+
+        shortestTime = [inf] * n
+        pathCount = [0] * n
+
+        shortestTime[0] = 0
+        pathCount[0] = 1
+
+        minHeap = [(0, 0)]  # (time, node)
+
+        while minHeap:
+            currTime, node = heapq.heappop(minHeap)
+
+            if currTime > shortestTime[node]:
+                continue
+
+            for neighbor, roadTime in adjList[node]:
+                newTime = currTime + roadTime
+
+                # found shorter path
+                if newTime < shortestTime[neighbor]:
+                    shortestTime[neighbor] = newTime
+                    pathCount[neighbor] = pathCount[node]
+                    heapq.heappush(minHeap, (newTime, neighbor))
+
+                # found another shortest path
+                elif newTime == shortestTime[neighbor]:
+                    pathCount[neighbor] = (pathCount[neighbor] + pathCount[node]) % MOD
+
+        return pathCount[n - 1] % MOD
 ```
 
 ### **Algorithm Explanation:**
@@ -209,36 +223,42 @@ Result: 4 ways to reach node 6 with shortest time 7
 Here's the general template for Dijkstra's algorithm with path counting:
 
 ```python
-def countShortestPaths(self, n, list[list[pair<int, adjList, start, end):
-    MOD = 1e9 + 7
-    long long INF = LLONG_MAX
-    # Distance and path count arrays
-    list[long long> dist(n, INF)
-    list[int> pathCount(n, 0)
-    # Priority queue: (distance, node)
-    heapq[pair<long long, int>, list[pair<long long, int>>, greater<>> pq
-    # Initialize start node
-    dist[start] = 0
-    pathCount[start] = 1
-    pq.emplace(0, start)
-    while not not pq:
-        [currDist, currNode] = pq.top()
-        pq.pop()
-        # Skip if outdated (already found shorter path)
-        if (currDist > dist[currNode]) continue
-        # Explore neighbors
-        for ([neighbor, weight] : adjList[currNode]) :
-        long long newDist = currDist + weight
-        # Found shorter path: update distance and reset count
-        if newDist < dist[neighbor]:
-            dist[neighbor] = newDist
-            pathCount[neighbor] = pathCount[currNode]
-            pq.emplace(newDist, neighbor)
-        # Found equal path: add to count
-        def if(self, dist[neighbor]):
-            pathCount[neighbor] = (pathCount[neighbor] + pathCount[currNode]) % MOD
-return pathCount[end]
+import heapq
+from math import inf
 
+class Solution:
+    def countShortestPaths(self, n, adjList, start, end):
+        MOD = 10**9 + 7
+
+        dist = [inf] * n
+        pathCount = [0] * n
+
+        dist[start] = 0
+        pathCount[start] = 1
+
+        pq = [(0, start)]  # (distance, node)
+
+        while pq:
+            currDist, node = heapq.heappop(pq)
+
+            # skip outdated entry
+            if currDist > dist[node]:
+                continue
+
+            for neighbor, weight in adjList[node]:
+                newDist = currDist + weight
+
+                # found shorter path
+                if newDist < dist[neighbor]:
+                    dist[neighbor] = newDist
+                    pathCount[neighbor] = pathCount[node]
+                    heapq.heappush(pq, (newDist, neighbor))
+
+                # found another shortest path
+                elif newDist == dist[neighbor]:
+                    pathCount[neighbor] = (pathCount[neighbor] + pathCount[node]) % MOD
+
+        return pathCount[end] % MOD
 ```
 
 ### **Key Template Components:**

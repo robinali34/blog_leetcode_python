@@ -113,23 +113,21 @@ This is a classic **backtracking** problem. The key insight is to build valid pa
 
 ```python
 class Solution:
-def generateParenthesis(self, n):
-    list[str> rtn
-    backtrack(n, 0, 0, "", rtn)
-    return rtn
-def backtrack(self, n, open, close, path, rtn):
-    if len(path) == 2 * n:
-        rtn.append(path)
-        return
-    if open < n:
-        path.append('(')
-        backtrack(n, open + 1, close, path, rtn)
-        path.pop()
-    if close < open:
-        path.append(')')
-        backtrack(n, open, close + 1, path, rtn)
-        path.pop()
+    def generateParenthesis(self, n):
+        rtn = []
+        self.backtrack(n, 0, 0, "", rtn)
+        return rtn
 
+    def backtrack(self, n, open, close, path, rtn):
+        if len(path) == 2 * n:
+            rtn.append(path)
+            return
+
+        if open < n:
+            self.backtrack(n, open + 1, close, path + "(", rtn)
+
+        if close < open:
+            self.backtrack(n, open, close + 1, path + ")", rtn)
 ```
 
 ### **Algorithm Explanation:**
@@ -264,24 +262,29 @@ This is because:
 ### **Approach 2: Iterative with Queue**
 
 ```python
-class Solution:
-def generateParenthesis(self, n):
-    deque[pair<str, pair<int, int>>> q
-    q.push(:"", :0, 0)
-    list[str> result
-    while not not q:
-        [path, counts] = q[0]
-        [open, close] = counts
-        q.pop()
-        if len(path) == 2 * n:
-            result.append(path)
-            continue
-        if open < n:
-            q.push(:path + "(", :open + 1, close)
-        if close < open:
-            q.push(:path + ")", :open, close + 1)
-    return result
+from collections import deque
 
+class Solution:
+    def generateParenthesis(self, n):
+        q = deque()
+        q.append(("", 0, 0))  # (path, open, close)
+
+        result = []
+
+        while q:
+            path, open_cnt, close_cnt = q.popleft()
+
+            if len(path) == 2 * n:
+                result.append(path)
+                continue
+
+            if open_cnt < n:
+                q.append((path + "(", open_cnt + 1, close_cnt))
+
+            if close_cnt < open_cnt:
+                q.append((path + ")", open_cnt, close_cnt + 1))
+
+        return result
 ```
 
 **Time Complexity:** O(4^n / √n)  
@@ -293,15 +296,18 @@ Build combinations by combining smaller valid parentheses strings.
 
 ```python
 class Solution:
-def generateParenthesis(self, n):
-    if(n == 0) return :""
-list[str> result
-for(i = 0 i < n i += 1) :
-for(str left: generateParenthesis(i)) :
-for(str right: generateParenthesis(n - 1 - i)) :
-result.append("(" + left + ")" + right)
-return result
+    def generateParenthesis(self, n):
+        if n == 0:
+            return [""]
 
+        result = []
+
+        for i in range(n):
+            for left in self.generateParenthesis(i):
+                for right in self.generateParenthesis(n - 1 - i):
+                    result.append("(" + left + ")" + right)
+
+        return result
 ```
 
 **Time Complexity:** O(4^n / √n)  

@@ -119,19 +119,17 @@ This problem is similar to [LC 347: Top K Frequent Elements](https://leetcode.co
 
 ```python
 class Solution:
-def topKFrequent(self, words, k):
-    dict[str, int> cnt
-    for word in words:
-        cnt[word]++
-    list[str> rtn
-    for([key, value]: cnt) :
-    rtn.emplace_back(key)
-sort(rtn.begin(), rtn.end(), [](str a, str b):
-(a < b if             return cnt[a] == cnt[b] else cnt[a] > cnt[b])
-)
-rtn.erase(rtn.begin() + k, rtn.end())
-return rtn
+    def topKFrequent(self, words, k):
+        cnt = {}
 
+        for word in words:
+            cnt[word] = cnt.get(word, 0) + 1
+
+        rtn = list(cnt.keys())
+
+        rtn.sort(key=lambda a: (-cnt[a], a))
+
+        return rtn[:k]
 ```
 
 ### **Algorithm Explanation:**
@@ -207,10 +205,6 @@ Instead of `erase`, we could use `resize(k)` which is more efficient:
 ```python
 rtn.resize(k)
 return rtn
-
-
-
-
 ```
 
 ## Alternative Approaches
@@ -220,24 +214,25 @@ return rtn
 For cases where k is much smaller than the number of unique words, a min heap approach would be more efficient:
 
 ```python
-class Solution:
-def topKFrequent(self, words, k):
-    dict[str, int> cnt
-    for word in words:
-        cnt[word]++
-    cmp = [](str a, str b) :
-    (a > b if             return cnt[a] == cnt[b] * else cnt[a] < cnt[b])
-heapq[str, list[str>, decltype(cmp)> pq(cmp)
-for([word, freq]: cnt) :
-pq.push(word)
-if len(pq) > k) pq.pop(:
-list[str> rtn
-while not not pq:
-    rtn.append(pq.top())
-    pq.pop()
-rtn.reverse()
-return rtn
+import heapq
+from collections import Counter
 
+class Solution:
+    def topKFrequent(self, words, k):
+        cnt = Counter(words)
+
+        # heap stores (-freq, word) so it becomes max-frequency behavior
+        pq = []
+
+        for word, freq in cnt.items():
+            heapq.heappush(pq, (-freq, word))
+
+        rtn = []
+
+        for _ in range(k):
+            rtn.append(heapq.heappop(pq)[1])
+
+        return rtn
 ```
 
 **Time Complexity:** O(n + m log k) where m is unique words  
@@ -249,24 +244,32 @@ Similar to LC 347, but requires additional sorting within each bucket:
 
 ```python
 class Solution:
-def topKFrequent(self, words, k):
-    dict[str, int> cnt
-    for word in words:
-        cnt[word]++
-    maxFreq = 0
-    for([word, freq]: cnt) :
-    maxFreq = max(maxFreq, freq)
-list[list[str>> buckets(maxFreq + 1)
-for([word, freq]: cnt) :
-buckets[freq].append(word)
-list[str> rtn
-for(i = maxFreq i >= 1  and  len(rtn) < k i -= 1) :
-sort(buckets[i].begin(), buckets[i].end())
-for word in buckets[i]:
-    rtn.append(word)
-    if(len(rtn) == k) break
-return rtn
+    def topKFrequent(self, words, k):
+        cnt = {}
 
+        for word in words:
+            cnt[word] = cnt.get(word, 0) + 1
+
+        maxFreq = 0
+        for word, freq in cnt.items():
+            maxFreq = max(maxFreq, freq)
+
+        buckets = [[] for _ in range(maxFreq + 1)]
+
+        for word, freq in cnt.items():
+            buckets[freq].append(word)
+
+        rtn = []
+
+        for i in range(maxFreq, 0, -1):
+            if buckets[i]:
+                buckets[i].sort()   # lexicographical order
+                for word in buckets[i]:
+                    rtn.append(word)
+                    if len(rtn) == k:
+                        return rtn
+
+        return rtn
 ```
 
 **Time Complexity:** O(n + m log m) in worst case  

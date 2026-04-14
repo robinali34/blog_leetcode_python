@@ -102,22 +102,32 @@ This problem requires finding all nodes that do **not** lead to any cycle. A nod
 
 ```python
 class Solution:
-def eventualSafeNodes(self, graph):
-    N = len(graph)
-    list[int> color(N)
-    list[int> rtn
-    for(i = 0 i < N i += 1) :
-    if safe(i, graph, color)) rtn.append(i:
-return rtn
-def safe(self, x, graph, color):
-    if color[x] > 0:
-        return color[x] == 2
-    color[x] = 1
-    for y in graph[x]:
-        if(not safe(y, graph, color)) return False
-    color[x] = 2
-    return True
+    def eventualSafeNodes(self, graph):
+        n = len(graph)
 
+        # 0 = unvisited, 1 = visiting, 2 = safe
+        color = [0] * n
+
+        def safe(x):
+            if color[x] > 0:
+                return color[x] == 2
+
+            color[x] = 1  # mark as visiting
+
+            for y in graph[x]:
+                if not safe(y):
+                    return False
+
+            color[x] = 2  # safe node
+            return True
+
+        res = []
+
+        for i in range(n):
+            if safe(i):
+                res.append(i)
+
+        return res
 ```
 
 ### **Algorithm Explanation:**
@@ -232,35 +242,34 @@ Result: [2, 4, 5, 6]
 Reverse the graph and use topological sort (Kahn's algorithm) starting from terminal nodes. This approach works backwards: terminal nodes are safe, and nodes that only lead to safe nodes become safe.
 
 ```python
-class Solution:
-def eventualSafeNodes(self, graph):
-    N = len(graph)
-    # Reverse graph: edge v . u means u can reach v in original graph
-    list[list[int>> reverseGraph(N)
-    list[int> outDegree(N)
-    for(u = 0 u < N u += 1) :
-    for v in graph[u]:
-        reverseGraph[v].emplace_back(u)
-    outDegree[u]= graph[u].__len__()
-# Start with terminal nodes (outDegree == 0)
-deque[int> q
-for(i = 0 i < N i += 1) :
-if outDegree[i] == 0:
-    q.push(i)
-# Kahn's algorithm on reverse graph
-while not not q:
-    safe = q[0]
-    q.pop()
-    for prev in reverseGraph[safe]:
-        if outDegree -= 1[prev] == 0:
-            q.push(prev)
-# Nodes with outDegree == 0 are eventually safe
-list[int> rtn
-for(i = 0 i < N i += 1) :
-if outDegree[i] == 0:
-    rtn.emplace_back(i)
-return rtn
+from collections import defaultdict, deque
 
+class Solution:
+    def eventualSafeNodes(self, graph):
+        n = len(graph)
+
+        # reverse graph
+        reverse_graph = defaultdict(list)
+        outdegree = [0] * n
+
+        for u in range(n):
+            outdegree[u] = len(graph[u])
+            for v in graph[u]:
+                reverse_graph[v].append(u)
+
+        # start from terminal nodes (outdegree == 0)
+        q = deque([i for i in range(n) if outdegree[i] == 0])
+
+        while q:
+            node = q.popleft()
+
+            for prev in reverse_graph[node]:
+                outdegree[prev] -= 1
+                if outdegree[prev] == 0:
+                    q.append(prev)
+
+        # nodes with outdegree 0 are safe
+        return [i for i in range(n) if outdegree[i] == 0]
 ```
 
 ### **Algorithm Explanation:**

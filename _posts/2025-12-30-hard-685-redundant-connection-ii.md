@@ -108,45 +108,56 @@ This problem is the **directed graph** version of LC 684. Unlike the undirected 
 ### **Solution: Union-Find with Conflict Detection**
 
 ```python
-struct UnionFind :
-list[int> ancestor
-UnionFind(n) :
-ancestor.resize(n)
-for(i = 0 i < n i += 1) :
-ancestor[i] = i
-def find(self, index):
-    (index if         return index == ancestor[index] * else ancestor[index] = find(ancestor[index]))
-def merge(self, u, v):
-    ancestor[find(u)] = find(v)
-class Solution:
-def findRedundantDirectedConnection(self, edges):
-    n = len(edges)
-    UnionFind uf = UnionFind(n + 1)
-    list[int> parent(n + 1)
-    for(i = 1 i <= n i += 1) :
-    parent[i] = i
-conflict = -1
-cycle = -1
-for(i = 0 i < n i += 1) :
-list[int> edge = edges[i]
-node1 = edge[0], node2 = edge[1]
-if parent[node2] != node2:
-    conflict = i
-     else :
-    parent[node2] = node1
-    if uf.find(node1) == uf.find(node2):
-        cycle = i
-         else :
-        uf.merge(node1, node2)
-if conflict < 0:
-    return :edges[cycle][0], edges[cycle][1]
- else :
-list[int> conflictEdge = edges[conflict]
-if cycle >= 0:
-    return :parent[conflictEdge[1]], conflictEdge[1]
- else :
-return :conflictEdge[0], conflictEdge[1]
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n + 1))
 
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False
+        self.parent[px] = py
+        return True
+
+
+class Solution:
+    def findRedundantDirectedConnection(self, edges):
+        n = len(edges)
+
+        parent = [0] * (n + 1)
+        uf = UnionFind(n)
+
+        conflict = -1
+        cycle = -1
+
+        # Step 1: detect node with two parents
+        for i, (u, v) in enumerate(edges):
+            if parent[v] != 0:
+                conflict = i
+            else:
+                parent[v] = u
+
+                if not uf.union(u, v):
+                    cycle = i
+
+        # Case 1: no conflict → return cycle edge
+        if conflict == -1:
+            return edges[cycle]
+
+        # Case 2: conflict exists
+        conflict_edge = edges[conflict]
+
+        # If cycle exists, remove earlier edge causing conflict
+        if cycle != -1:
+            return [parent[conflict_edge[1]], conflict_edge[1]]
+
+        # Otherwise remove the conflicting edge itself
+        return conflict_edge
 ```
 
 ### **Algorithm Explanation:**
@@ -321,16 +332,19 @@ In a directed graph that should be a rooted tree:
 ```python
 if conflict < 0:
     # No conflict, just return cycle edge
-    return cycle_edge
-     else :
+    return edges[cycle]
+
+else:
     # Conflict exists
+    conflict_edge = edges[conflict]
+
     if cycle >= 0:
         # Both conflict and cycle: return first parent edge
-        return :parent[conflictNode], conflictNode
-     else :
-    # Only conflict: return conflict edge
-    return conflict_edge
+        return [parent[conflict_edge[1]], conflict_edge[1]]
 
+    else:
+        # Only conflict: return conflict edge
+        return conflict_edge
 ```
 
 **Why this works:**

@@ -72,35 +72,47 @@ This problem is similar to [LC 207: Course Schedule](https://leetcode.com/proble
 ### **Solution: DFS with Three-State Coloring**
 
 ```python
-class Solution:
-def findOrder(self, numCourses, prerequisites):
-    adj.resize(numCourses)
-    visited.resize(numCourses, 0)
-    for info in prerequisites:
-        # Build reverse order, so the DFS path can be directed returned
-        adj[info[0]].emplace_back(info[1])
-    # DFS on each un-visited node
-    for(i = 0 i < numCourses  and  isValid i += 1) :
-    if visited[i] == 0:
-        dfs(i)
-if(not isValid) return:
-return rtn
-list[list[int>> adj
-list[int> visited
-list[int> rtn
-bool isValid = True
-def dfs(self, u):
-    visited[u] = 1  # Mark as visiting
-    for v in adj[u]:
-        if visited[v] == 0:
-            dfs(v)
-            if(not isValid) return
-             else if(visited[v] == 1) :
-            isValid = False  # Cycle detected
-            return
-    visited[u] = 2  # Mark as visited
-    rtn.emplace_back(u)  # Add to result (post-order)
+from collections import defaultdict
 
+class Solution:
+    def findOrder(self, numCourses, prerequisites):
+        adj = defaultdict(list)
+
+        # build graph (prereq -> course direction is important)
+        for course, pre in prerequisites:
+            adj[course].append(pre)
+
+        visited = [0] * numCourses  # 0=unvisited, 1=visiting, 2=visited
+        result = []
+        isValid = True
+
+        def dfs(u):
+            nonlocal isValid
+
+            if not isValid:
+                return
+
+            visited[u] = 1  # visiting
+
+            for v in adj[u]:
+                if visited[v] == 0:
+                    dfs(v)
+                elif visited[v] == 1:
+                    isValid = False
+                    return
+
+            visited[u] = 2  # done
+            result.append(u)
+
+        # run DFS
+        for i in range(numCourses):
+            if visited[i] == 0:
+                dfs(i)
+
+        if not isValid:
+            return []
+
+        return result
 ```
 
 ### **Algorithm Explanation:**
@@ -233,29 +245,37 @@ Result: [] (empty array) ✓
 ### **Approach 2: Kahn's Algorithm (BFS)**
 
 ```python
-class Solution:
-def findOrder(self, numCourses, prerequisites):
-    list[list[int>> adj(numCourses)
-    list[int> indegree(numCourses, 0)
-    for p in prerequisites:
-        adj[p[1]].append(p[0])
-        indegree[p[0]]++
-    deque[int> q
-    for(i = 0 i < numCourses i += 1) :
-    if indegree[i] == 0:
-        q.push(i)
-list[int> result
-while not not q:
-    u = q[0]
-    q.pop()
-    result.append(u)
-    for v in adj[u]:
-        if indegree -= 1[v] == 0:
-            q.push(v)
-if len(result) != numCourses:
-    return :  # Cycle exists
-return result
+from collections import defaultdict, deque
 
+class Solution:
+    def findOrder(self, numCourses, prerequisites):
+        adj = defaultdict(list)
+        indegree = [0] * numCourses
+
+        # build graph: prereq -> course
+        for course, pre in prerequisites:
+            adj[pre].append(course)
+            indegree[course] += 1
+
+        # init queue with 0 indegree nodes
+        q = deque([i for i in range(numCourses) if indegree[i] == 0])
+
+        result = []
+
+        while q:
+            u = q.popleft()
+            result.append(u)
+
+            for v in adj[u]:
+                indegree[v] -= 1
+                if indegree[v] == 0:
+                    q.append(v)
+
+        # cycle check
+        if len(result) != numCourses:
+            return []
+
+        return result
 ```
 
 **Time Complexity:** O(V + E)  

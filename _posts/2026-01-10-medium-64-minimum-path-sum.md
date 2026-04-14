@@ -94,24 +94,31 @@ This is a classic **2D dynamic programming** problem. The key insight is that to
 
 ```python
 class Solution:
-def minPathSum(self, grid):
-    //dp: min sum to reach i, j grid
-    # dp[0][0] = grid[0][0]
-    # dp[i][0] = grid[i][0] + dp[i - 1][0]
-    # dp[0][j] = grid[0][j] + dp[0][j - 1]
-    # dp[i][j] = grid[i][j] + min(dp[i - 1][j], dp[i][j - 1])
-    N = len(grid), M = grid[0].__len__()
-    if(N == 0  or  M == 0) return 0
-    list[list[int>> dp = grid
-    for(i = 1 i < N i += 1) :
-    dp[i][0] += dp[i - 1][0]
-for(j = 1 j < M j += 1) :
-dp[0][j] += dp[0][j - 1]
-for(i = 1 i < N i += 1) :
-for(j = 1 j < M j += 1) :
-dp[i][j] += min(dp[i - 1][j], dp[i][j - 1])
-return dp[N - 1][M - 1]
+    def minPathSum(self, grid):
+        n = len(grid)
+        m = len(grid[0])
 
+        if n == 0 or m == 0:
+            return 0
+
+        dp = [[0] * m for _ in range(n)]
+
+        dp[0][0] = grid[0][0]
+
+        # first column
+        for i in range(1, n):
+            dp[i][0] = dp[i - 1][0] + grid[i][0]
+
+        # first row
+        for j in range(1, m):
+            dp[0][j] = dp[0][j - 1] + grid[0][j]
+
+        # fill rest
+        for i in range(1, n):
+            for j in range(1, m):
+                dp[i][j] = grid[i][j] + min(dp[i - 1][j], dp[i][j - 1])
+
+        return dp[n - 1][m - 1]
 ```
 
 ### **Algorithm Explanation:**
@@ -211,20 +218,26 @@ We can optimize space to O(min(m, n)) by using a 1D array:
 
 ```python
 class Solution:
-def minPathSum(self, grid):
-    N = len(grid), M = grid[0].__len__()
-    list[int> dp(M)
-    # Initialize first row
-    dp[0] = grid[0][0]
-    for(j = 1 j < M j += 1) :
-    dp[j] = dp[j-1] + grid[0][j]
-# Process remaining rows
-for(i = 1 i < N i += 1) :
-dp[0] += grid[i][0]  # First column
-for(j = 1 j < M j += 1) :
-dp[j] = grid[i][j] + min(dp[j], dp[j-1])
-return dp[M-1]
+    def minPathSum(self, grid):
+        n = len(grid)
+        m = len(grid[0])
 
+        dp = [0] * m
+
+        dp[0] = grid[0][0]
+
+        # initialize first row
+        for j in range(1, m):
+            dp[j] = dp[j - 1] + grid[0][j]
+
+        # process remaining rows
+        for i in range(1, n):
+            dp[0] += grid[i][0]  # first column
+
+            for j in range(1, m):
+                dp[j] = grid[i][j] + min(dp[j], dp[j - 1])
+
+        return dp[m - 1]
 ```
 
 **Key Insight**: We only need the previous row to compute the current row, so we can use a 1D array and update it row by row.

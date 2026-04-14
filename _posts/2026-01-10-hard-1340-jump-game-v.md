@@ -111,27 +111,35 @@ This is a **dynamic programming with memoization** problem. The key insight is t
 
 ```python
 class Solution:
-def maxJumps(self, arr, d):
-    N = len(arr)
-    dp.resize(N, -1)
-    for(i = 0 i < N i += 1) :
-    dfs(arr, i, d)
-return max_element(dp.begin(), dp.end())
-list[int> dp
-def dfs(self, arr, id, d):
-    if dp[id] != -1:
-        return
-    dp[id] = 1
-    N = len(arr)
-    # Check left:
-    for(i = id - 1 i >= 0  and  id - i <= d  and  arr[id] > arr[i] i -= 1) :
-    dfs(arr, i, d)
-    dp[id] = max(dp[id], dp[i] + 1)
-# Check right:
-for(i = id + 1 i < N  and  i - id <= d  and  arr[id] > arr[i] i += 1) :
-dfs(arr, i, d)
-dp[id] = max(dp[id], dp[i] + 1)
+    def maxJumps(self, arr, d):
+        n = len(arr)
+        self.dp = [-1] * n
 
+        for i in range(n):
+            self.dfs(arr, i, d)
+
+        return max(self.dp)
+
+    def dfs(self, arr, i, d):
+        if self.dp[i] != -1:
+            return self.dp[i]
+
+        n = len(arr)
+        self.dp[i] = 1
+
+        # check left
+        for j in range(i - 1, max(i - d - 1, -1), -1):
+            if arr[i] <= arr[j]:
+                break
+            self.dp[i] = max(self.dp[i], 1 + self.dfs(arr, j, d))
+
+        # check right
+        for j in range(i + 1, min(n, i + d + 1)):
+            if arr[i] <= arr[j]:
+                break
+            self.dp[i] = max(self.dp[i], 1 + self.dfs(arr, j, d))
+
+        return self.dp[i]
 ```
 
 ### **Algorithm Explanation:**
@@ -267,8 +275,11 @@ Final: dp[0] = maximum path length starting from index 0
 The loop conditions elegantly handle all constraints:
 
 ```python
-for(i = id - 1 i >= 0  and  id - i <= d  and  arr[id] > arr[i] i -= 1)
-
+for i in range(id - 1, -1, -1):
+    if id - i > d:
+        break
+    if arr[id] <= arr[i]:
+        break
 ```
 
 - `i >= 0`: Stay within array bounds (left)
