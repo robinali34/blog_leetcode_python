@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1804. Implement Trie II (Prefix Tree)"
+title: "[Medium] 1804. Implement Trie II (Prefix Tree)"
 date: 2026-03-03 00:00:00 -0700
 categories: [leetcode, medium, trie, data-structure]
 tags: [leetcode, medium, trie, prefix-tree, design]
 permalink: /2026/03/03/medium-1804-implement-trie-ii-prefix-tree/
 ---
 
-# 1804. Implement Trie II (Prefix Tree)
+# [Medium] 1804. Implement Trie II (Prefix Tree)
 
 ## Problem Statement
 

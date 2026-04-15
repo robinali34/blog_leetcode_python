@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "155. Min Stack"
+title: "[Medium] 155. Min Stack"
 date: 2026-02-11 00:00:00 -0700
 categories: [leetcode, medium, stack]
 tags: [leetcode, medium, stack, data-structure-design]
 permalink: /2026/02/11/medium-155-min-stack/
 ---
 
-# 155. Min Stack
+# [Medium] 155. Min Stack
 
 ## Problem Statement
 

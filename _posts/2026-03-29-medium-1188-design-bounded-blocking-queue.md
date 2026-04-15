@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1188. Design Bounded Blocking Queue"
+title: "[Medium] 1188. Design Bounded Blocking Queue"
 date: 2026-03-29 00:00:00 -0700
 categories: [leetcode, medium, concurrency, design]
 tags: [leetcode, medium, threading, semaphore, queue]
 permalink: /2026/03/29/medium-1188-design-bounded-blocking-queue/
 ---
 
-# 1188. Design Bounded Blocking Queue
+# [Medium] 1188. Design Bounded Blocking Queue
 
 ## Problem Statement
 

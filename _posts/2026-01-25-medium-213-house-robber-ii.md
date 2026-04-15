@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "213. House Robber II"
+title: "[Medium] 213. House Robber II"
 date: 2026-01-25 00:00:00 -0700
 categories: [leetcode, medium, array, dynamic-programming]
 permalink: /2026/01/25/medium-213-house-robber-ii/
 tags: [leetcode, medium, array, dynamic-programming, dp, circular-array]
 ---
 
-# 213. House Robber II
+# [Medium] 213. House Robber II
 
 ## Problem Statement
 

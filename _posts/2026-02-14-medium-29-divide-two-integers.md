@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "29. Divide Two Integers"
+title: "[Medium] 29. Divide Two Integers"
 date: 2026-02-14 00:00:00 -0700
 categories: [leetcode, medium, math, bit-manipulation]
 tags: [leetcode, medium, bit-manipulation, math]
 permalink: /2026/02/14/medium-29-divide-two-integers/
 ---
 
-# 29. Divide Two Integers
+# [Medium] 29. Divide Two Integers
 
 ## Problem Statement
 

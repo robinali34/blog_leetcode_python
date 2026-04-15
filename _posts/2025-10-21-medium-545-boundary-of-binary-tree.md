@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 545: Boundary of Binary Tree"
+title: "[Medium] LC 545: Boundary of Binary Tree"
 date: 2025-10-21 16:30:00 -0700
 categories: leetcode medium tree dfs
 permalink: /posts/2025-10-21-medium-545-boundary-of-binary-tree/
 tags: [leetcode, medium, tree, dfs, binary-tree, boundary-traversal]
 ---
 
-# LC 545: Boundary of Binary Tree
+# [Medium] LC 545: Boundary of Binary Tree
 
 **Difficulty:** Medium  
 **Category:** Tree, DFS, Binary Tree  

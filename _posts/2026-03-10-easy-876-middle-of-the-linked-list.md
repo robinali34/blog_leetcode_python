@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "876. Middle of the Linked List"
+title: "[Easy] 876. Middle of the Linked List"
 date: 2026-03-10 00:00:00 -0700
 categories: [leetcode, easy, linked-list, two-pointers]
 tags: [leetcode, easy, linked-list, fast-slow]
 permalink: /2026/03/10/easy-876-middle-of-the-linked-list/
 ---
 
-# 876. Middle of the Linked List
+# [Easy] 876. Middle of the Linked List
 
 ## Problem Statement
 

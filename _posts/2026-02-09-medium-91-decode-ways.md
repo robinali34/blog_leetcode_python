@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "91. Decode Ways"
+title: "[Medium] 91. Decode Ways"
 date: 2026-02-09 00:00:00 -0700
 categories: [leetcode, medium, dynamic-programming]
 permalink: /2026/02/09/medium-91-decode-ways/
 tags: [leetcode, medium, dynamic-programming, string]
 ---
 
-# 91. Decode Ways
+# [Medium] 91. Decode Ways
 
 ## Problem Statement
 

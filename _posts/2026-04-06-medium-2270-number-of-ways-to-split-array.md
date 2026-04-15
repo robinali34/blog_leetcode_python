@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "2270. Number of Ways to Split Array"
+title: "[Medium] 2270. Number of Ways to Split Array"
 date: 2026-04-06 00:00:00 -0700
 categories: [leetcode, medium, array, prefix-sum]
 tags: [leetcode, medium, prefix-sum, two-pointers]
 permalink: /2026/04/06/medium-2270-number-of-ways-to-split-array/
 ---
 
-# 2270. Number of Ways to Split Array
+# [Medium] 2270. Number of Ways to Split Array
 
 ## Problem Statement
 

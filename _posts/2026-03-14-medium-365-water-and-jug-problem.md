@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "365. Water and Jug Problem"
+title: "[Medium] 365. Water and Jug Problem"
 date: 2026-03-14 00:00:00 -0700
 categories: [leetcode, medium, math, number-theory]
 tags: [leetcode, medium, gcd, bezout]
 permalink: /2026/03/14/medium-365-water-and-jug-problem/
 ---
 
-# 365. Water and Jug Problem
+# [Medium] 365. Water and Jug Problem
 
 ## Problem Statement
 

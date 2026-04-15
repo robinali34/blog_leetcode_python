@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1087. Brace Expansion"
+title: "[Medium] 1087. Brace Expansion"
 date: 2026-03-26 00:00:00 -0700
 categories: [leetcode, medium, backtracking, string]
 tags: [leetcode, medium, backtracking, dfs, string-parsing]
 permalink: /2026/03/26/medium-1087-brace-expansion/
 ---
 
-# 1087. Brace Expansion
+# [Medium] 1087. Brace Expansion
 
 ## Problem Statement
 

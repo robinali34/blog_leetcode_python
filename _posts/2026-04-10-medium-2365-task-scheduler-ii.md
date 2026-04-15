@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "2365. Task Scheduler II"
+title: "[Medium] 2365. Task Scheduler II"
 date: 2026-04-10 00:00:00 -0700
 categories: [leetcode, medium, array, simulation, hash-table]
 tags: [leetcode, medium, simulation, greedy]
 permalink: /2026/04/10/medium-2365-task-scheduler-ii/
 ---
 
-# 2365. Task Scheduler II
+# [Medium] 2365. Task Scheduler II
 
 ## Problem Statement
 

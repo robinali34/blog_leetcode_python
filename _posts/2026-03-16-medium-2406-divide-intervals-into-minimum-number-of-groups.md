@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "2406. Divide Intervals Into Minimum Number of Groups"
+title: "[Medium] 2406. Divide Intervals Into Minimum Number of Groups"
 date: 2026-03-16 00:00:00 -0700
 categories: [leetcode, medium, interval, heap, sweep-line]
 tags: [leetcode, medium, intervals, heap, sweep-line]
 permalink: /2026/03/16/medium-2406-divide-intervals-into-minimum-number-of-groups/
 ---
 
-# 2406. Divide Intervals Into Minimum Number of Groups
+# [Medium] 2406. Divide Intervals Into Minimum Number of Groups
 
 ## Problem Statement
 

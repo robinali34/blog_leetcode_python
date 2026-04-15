@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "729. My Calendar I"
+title: "[Medium] 729. My Calendar I"
 date: 2026-01-17 00:00:00 -0700
 categories: [leetcode, medium, array, binary-search, design, ordered-set]
 permalink: /2026/01/17/medium-729-my-calendar-i/
 tags: [leetcode, medium, array, binary-search, design, ordered-set, interval, overlap-detection]
 ---
 
-# 729. My Calendar I
+# [Medium] 729. My Calendar I
 
 ## Problem Statement
 

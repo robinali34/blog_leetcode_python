@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "409. Longest Palindrome"
+title: "[Easy] 409. Longest Palindrome"
 date: 2026-01-19 00:00:00 -0700
 categories: [leetcode, easy, string, hash-table, greedy]
 permalink: /2026/01/19/easy-409-longest-palindrome/
 tags: [leetcode, easy, string, hash-table, greedy, bit-manipulation, palindrome]
 ---
 
-# 409. Longest Palindrome
+# [Easy] 409. Longest Palindrome
 
 ## Problem Statement
 

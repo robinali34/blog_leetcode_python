@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "79. Word Search"
+title: "[Medium] 79. Word Search"
 date: 2026-01-12 00:00:00 -0700
 categories: [leetcode, medium, array, backtracking, matrix, dfs]
 permalink: /2026/01/12/medium-79-word-search/
 tags: [leetcode, medium, array, backtracking, matrix, dfs, recursion]
 ---
 
-# 79. Word Search
+# [Medium] 79. Word Search
 
 ## Problem Statement
 

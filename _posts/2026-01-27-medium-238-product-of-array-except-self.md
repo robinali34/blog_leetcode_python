@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "238. Product of Array Except Self"
+title: "[Medium] 238. Product of Array Except Self"
 date: 2026-01-27 00:00:00 -0700
 categories: [leetcode, medium, array, prefix-sum, two-pointers]
 permalink: /2026/01/27/medium-238-product-of-array-except-self/
 tags: [leetcode, medium, array, prefix-sum, two-pointers]
 ---
 
-# 238. Product of Array Except Self
+# [Medium] 238. Product of Array Except Self
 
 ## Problem Statement
 

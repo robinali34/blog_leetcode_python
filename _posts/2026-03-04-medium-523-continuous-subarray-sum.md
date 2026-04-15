@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "523. Continuous Subarray Sum"
+title: "[Medium] 523. Continuous Subarray Sum"
 date: 2026-03-04 00:00:00 -0700
 categories: [leetcode, medium, array, prefix-sum, hash-map]
 tags: [leetcode, medium, array, prefix-sum, hash-map, math]
 permalink: /2026/03/04/medium-523-continuous-subarray-sum/
 ---
 
-# 523. Continuous Subarray Sum
+# [Medium] 523. Continuous Subarray Sum
 
 ## Problem Statement
 

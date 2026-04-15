@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "382. Linked List Random Node"
+title: "[Medium] 382. Linked List Random Node"
 date: 2026-04-08 00:00:00 -0700
 categories: [leetcode, medium, linked-list, reservoir-sampling]
 tags: [leetcode, medium, linked-list, random, reservoir-sampling]
 permalink: /2026/04/08/medium-382-linked-list-random-node/
 ---
 
-# 382. Linked List Random Node
+# [Medium] 382. Linked List Random Node
 
 ## Problem Statement
 

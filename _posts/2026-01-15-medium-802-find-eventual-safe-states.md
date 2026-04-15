@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "802. Find Eventual Safe States"
+title: "[Medium] 802. Find Eventual Safe States"
 date: 2026-01-15 00:00:00 -0700
 categories: [leetcode, medium, graph, dfs, cycle-detection]
 permalink: /2026/01/15/medium-802-find-eventual-safe-states/
 tags: [leetcode, medium, graph, dfs, cycle-detection, three-state-coloring]
 ---
 
-# 802. Find Eventual Safe States
+# [Medium] 802. Find Eventual Safe States
 
 ## Problem Statement
 

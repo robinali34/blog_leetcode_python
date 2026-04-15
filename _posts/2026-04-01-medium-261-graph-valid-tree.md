@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "261. Graph Valid Tree"
+title: "[Medium] 261. Graph Valid Tree"
 date: 2026-04-01 00:00:00 -0700
 categories: [leetcode, medium, graph, union-find, dfs]
 tags: [leetcode, medium, graph, union-find, dfs, tree]
 permalink: /2026/04/01/medium-261-graph-valid-tree/
 ---
 
-# 261. Graph Valid Tree
+# [Medium] 261. Graph Valid Tree
 
 ## Problem Statement
 

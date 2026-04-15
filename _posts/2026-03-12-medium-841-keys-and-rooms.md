@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "841. Keys and Rooms"
+title: "[Medium] 841. Keys and Rooms"
 date: 2026-03-12 00:00:00 -0700
 categories: [leetcode, medium, graph, dfs, bfs]
 tags: [leetcode, medium, graph, reachability, stack, queue]
 permalink: /2026/03/12/medium-841-keys-and-rooms/
 ---
 
-# 841. Keys and Rooms
+# [Medium] 841. Keys and Rooms
 
 ## Problem Statement
 

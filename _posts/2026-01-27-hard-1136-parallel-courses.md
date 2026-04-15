@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1136. Parallel Courses"
+title: "[Hard] 1136. Parallel Courses"
 date: 2026-01-27 00:00:00 -0700
 categories: [leetcode, hard, graph, topological-sort, dfs, dynamic-programming]
 permalink: /2026/01/27/hard-1136-parallel-courses/
 tags: [leetcode, hard, graph, topological-sort, dfs, dynamic-programming, memoization]
 ---
 
-# 1136. Parallel Courses
+# [Hard] 1136. Parallel Courses
 
 ## Problem Statement
 

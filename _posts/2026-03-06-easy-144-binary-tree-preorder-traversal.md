@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "144. Binary Tree Preorder Traversal"
+title: "[Easy] 144. Binary Tree Preorder Traversal"
 date: 2026-03-06 00:00:00 -0700
 categories: [leetcode, easy, tree, dfs]
 tags: [leetcode, easy, tree, preorder, stack]
 permalink: /2026/03/06/easy-144-binary-tree-preorder-traversal/
 ---
 
-# 144. Binary Tree Preorder Traversal
+# [Easy] 144. Binary Tree Preorder Traversal
 
 ## Problem Statement
 

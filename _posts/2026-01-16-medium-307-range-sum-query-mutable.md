@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "307. Range Sum Query - Mutable"
+title: "[Medium] 307. Range Sum Query - Mutable"
 date: 2026-01-16 00:00:00 -0700
 categories: [leetcode, medium, array, segment-tree, binary-indexed-tree]
 permalink: /2026/01/16/medium-307-range-sum-query-mutable/
 tags: [leetcode, medium, array, segment-tree, binary-indexed-tree, data-structure]
 ---
 
-# 307. Range Sum Query - Mutable
+# [Medium] 307. Range Sum Query - Mutable
 
 ## Problem Statement
 

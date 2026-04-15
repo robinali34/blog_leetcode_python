@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "429. N-ary Tree Level Order Traversal"
+title: "[Medium] 429. N-ary Tree Level Order Traversal"
 date: 2026-01-07 00:00:00 -0700
 categories: [leetcode, medium, tree, bfs, n-ary-tree]
 permalink: /2026/01/07/medium-429-n-ary-tree-level-order-traversal/
 tags: [leetcode, medium, tree, bfs, level-order-traversal, n-ary-tree]
 ---
 
-# 429. N-ary Tree Level Order Traversal
+# [Medium] 429. N-ary Tree Level Order Traversal
 
 ## Problem Statement
 

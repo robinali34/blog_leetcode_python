@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "310. Minimum Height Trees"
+title: "[Medium] 310. Minimum Height Trees"
 date: 2026-01-14 00:00:00 -0700
 categories: [leetcode, medium, graph, tree, topological-sort, bfs]
 permalink: /2026/01/14/medium-310-minimum-height-trees/
 tags: [leetcode, medium, graph, tree, topological-sort, bfs, peeling-leaves]
 ---
 
-# 310. Minimum Height Trees
+# [Medium] 310. Minimum Height Trees
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "59. Spiral Matrix II"
+title: "[Medium] 59. Spiral Matrix II"
 date: 2026-02-18 00:00:00 -0700
 categories: [leetcode, medium, matrix, simulation]
 tags: [leetcode, medium, matrix, simulation, spiral]
 permalink: /2026/02/18/medium-59-spiral-matrix-ii/
 ---
 
-# 59. Spiral Matrix II
+# [Medium] 59. Spiral Matrix II
 
 ## Problem Statement
 

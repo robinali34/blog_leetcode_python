@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "309. Best Time to Buy and Sell Stock with Cooldown"
+title: "[Medium] 309. Best Time to Buy and Sell Stock with Cooldown"
 date: 2026-03-20 00:00:00 -0700
 categories: [leetcode, medium, dp, stock]
 tags: [leetcode, medium, dynamic-programming, cooldown]
 permalink: /2026/03/20/medium-309-best-time-to-buy-and-sell-stock-with-cooldown/
 ---
 
-# 309. Best Time to Buy and Sell Stock with Cooldown
+# [Medium] 309. Best Time to Buy and Sell Stock with Cooldown
 
 ## Problem Statement
 

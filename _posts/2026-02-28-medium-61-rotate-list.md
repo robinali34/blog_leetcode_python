@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "61. Rotate List"
+title: "[Medium] 61. Rotate List"
 date: 2026-02-28 00:00:00 -0700
 categories: [leetcode, medium, linked-list, python]
 permalink: /2026/02/28/medium-61-rotate-list/
 tags: [leetcode, medium, linked-list, two-pointers]
 ---
 
-# 61. Rotate List
+# [Medium] 61. Rotate List
 
 ## Problem Statement
 

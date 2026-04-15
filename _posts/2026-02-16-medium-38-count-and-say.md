@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "38. Count and Say"
+title: "[Medium] 38. Count and Say"
 date: 2026-02-16 00:00:00 -0700
 categories: [leetcode, medium, string, simulation]
 tags: [leetcode, medium, string, simulation, run-length-encoding]
 permalink: /2026/02/16/medium-38-count-and-say/
 ---
 
-# 38. Count and Say
+# [Medium] 38. Count and Say
 
 ## Problem Statement
 

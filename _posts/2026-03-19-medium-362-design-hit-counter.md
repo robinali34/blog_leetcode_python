@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "362. Design Hit Counter"
+title: "[Medium] 362. Design Hit Counter"
 date: 2026-03-19 00:00:00 -0700
 categories: [leetcode, medium, design, queue, sliding-window]
 tags: [leetcode, medium, design, deque, sliding-window]
 permalink: /2026/03/19/medium-362-design-hit-counter/
 ---
 
-# 362. Design Hit Counter
+# [Medium] 362. Design Hit Counter
 
 ## Problem Statement
 

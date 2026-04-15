@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1319. Number of Operations to Make Network Connected"
+title: "[Medium] 1319. Number of Operations to Make Network Connected"
 date: 2026-03-10 00:00:00 -0700
 categories: [leetcode, medium, graph, union-find]
 tags: [leetcode, medium, graph, dsu, connected-components]
 permalink: /2026/03/10/medium-1319-number-of-operations-to-make-network-connected/
 ---
 
-# 1319. Number of Operations to Make Network Connected
+# [Medium] 1319. Number of Operations to Make Network Connected
 
 ## Problem Statement
 

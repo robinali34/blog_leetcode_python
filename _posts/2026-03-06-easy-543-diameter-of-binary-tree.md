@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "543. Diameter of Binary Tree"
+title: "[Easy] 543. Diameter of Binary Tree"
 date: 2026-03-06 00:00:00 -0700
 categories: [leetcode, easy, tree, dfs]
 tags: [leetcode, easy, tree, diameter, height]
 permalink: /2026/03/06/easy-543-diameter-of-binary-tree/
 ---
 
-# 543. Diameter of Binary Tree
+# [Easy] 543. Diameter of Binary Tree
 
 ## Problem Statement
 

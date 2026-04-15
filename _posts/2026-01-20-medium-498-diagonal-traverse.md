@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "498. Diagonal Traverse"
+title: "[Medium] 498. Diagonal Traverse"
 date: 2026-01-20 00:00:00 -0700
 categories: [leetcode, medium, array, matrix, simulation]
 permalink: /2026/01/20/medium-498-diagonal-traverse/
 tags: [leetcode, medium, array, matrix, simulation]
 ---
 
-# 498. Diagonal Traverse
+# [Medium] 498. Diagonal Traverse
 
 ## Problem Statement
 

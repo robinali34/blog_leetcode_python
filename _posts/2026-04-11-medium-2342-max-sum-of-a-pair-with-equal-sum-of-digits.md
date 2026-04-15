@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "2342. Max Sum of a Pair With Equal Sum of Digits"
+title: "[Medium] 2342. Max Sum of a Pair With Equal Sum of Digits"
 date: 2026-04-11 00:00:00 -0700
 categories: [leetcode, medium, array, hash-table]
 tags: [leetcode, medium, hash-map, digits]
 permalink: /2026/04/11/medium-2342-max-sum-of-a-pair-with-equal-sum-of-digits/
 ---
 
-# 2342. Max Sum of a Pair With Equal Sum of Digits
+# [Medium] 2342. Max Sum of a Pair With Equal Sum of Digits
 
 ## Problem Statement
 

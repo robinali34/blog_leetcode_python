@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "211. Design Add and Search Words Data Structure"
+title: "[Medium] 211. Design Add and Search Words Data Structure"
 date: 2026-01-19 00:00:00 -0700
 categories: [leetcode, medium, string, design, trie]
 permalink: /2026/01/19/medium-211-design-add-and-search-words-data-structure/
 tags: [leetcode, medium, string, design, trie, wildcard-search, dfs]
 ---
 
-# 211. Design Add and Search Words Data Structure
+# [Medium] 211. Design Add and Search Words Data Structure
 
 ## Problem Statement
 

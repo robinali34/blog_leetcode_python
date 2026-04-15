@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "187. Repeated DNA Sequences"
+title: "[Medium] 187. Repeated DNA Sequences"
 date: 2026-02-27 00:00:00 -0700
 categories: [leetcode, medium, string, hashing, sliding-window, bit-manipulation]
 permalink: /2026/02/27/medium-187-repeated-dna-sequences/
 tags: [leetcode, medium, string, hashing, sliding-window, bit-manipulation]
 ---
 
-# 187. Repeated DNA Sequences
+# [Medium] 187. Repeated DNA Sequences
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "249. Group Shifted Strings"
+title: "[Medium] 249. Group Shifted Strings"
 date: 2026-03-07 00:00:00 -0700
 categories: [leetcode, medium, string, hash-table]
 tags: [leetcode, medium, string, grouping, shift]
 permalink: /2026/03/07/medium-249-group-shifted-strings/
 ---
 
-# 249. Group Shifted Strings
+# [Medium] 249. Group Shifted Strings
 
 ## Problem Statement
 

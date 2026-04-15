@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1870. Minimum Speed to Arrive on Time"
+title: "[Medium] 1870. Minimum Speed to Arrive on Time"
 date: 2026-03-30 00:00:00 -0700
 categories: [leetcode, medium, binary-search]
 tags: [leetcode, medium, binary-search, math]
 permalink: /2026/03/30/medium-1870-minimum-speed-to-arrive-on-time/
 ---
 
-# 1870. Minimum Speed to Arrive on Time
+# [Medium] 1870. Minimum Speed to Arrive on Time
 
 ## Problem Statement
 

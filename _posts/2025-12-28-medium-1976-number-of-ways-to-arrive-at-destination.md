@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "1976. Number of Ways to Arrive at Destination"
+title: "[Medium] 1976. Number of Ways to Arrive at Destination"
 date: 2025-12-28 14:30:00 -0700
 categories: [leetcode, medium, dijkstra, shortest-path, graph, dynamic-programming]
 permalink: /2025/12/28/medium-1976-number-of-ways-to-arrive-at-destination/
 ---
 
-# 1976. Number of Ways to Arrive at Destination
+# [Medium] 1976. Number of Ways to Arrive at Destination
 
 ## Problem Statement
 

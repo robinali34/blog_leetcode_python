@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "875. Koko Eating Bananas"
+title: "[Medium] 875. Koko Eating Bananas"
 date: 2026-02-06 00:00:00 -0700
 categories: [leetcode, medium, array, binary-search]
 permalink: /2026/02/06/medium-875-koko-eating-bananas/
 tags: [leetcode, medium, array, binary-search]
 ---
 
-# 875. Koko Eating Bananas
+# [Medium] 875. Koko Eating Bananas
 
 ## Problem Statement
 

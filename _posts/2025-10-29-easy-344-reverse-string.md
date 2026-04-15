@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 344: Reverse String"
+title: "[Easy] LC 344: Reverse String"
 date: 2025-10-29 00:00:00 -0700
 categories: leetcode easy two-pointers string
 permalink: /posts/2025-10-29-easy-344-reverse-string/
 tags: [leetcode, easy, two-pointers, string]
 ---
 
-# LC 344: Reverse String
+# [Easy] LC 344: Reverse String
 
 Reverse the array of characters in-place using O(1) extra memory.
 

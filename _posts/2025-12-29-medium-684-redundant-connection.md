@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "684. Redundant Connection"
+title: "[Medium] 684. Redundant Connection"
 date: 2025-12-29 14:30:00 -0700
 categories: [leetcode, medium, union-find, dsu, graph, cycle-detection, dfs]
 permalink: /2025/12/29/medium-684-redundant-connection/
 ---
 
-# 684. Redundant Connection
+# [Medium] 684. Redundant Connection
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1275. Find Winner on a Tic Tac Toe Game"
+title: "[Easy] 1275. Find Winner on a Tic Tac Toe Game"
 date: 2026-03-03 00:00:00 -0700
 categories: [leetcode, easy, array, simulation]
 tags: [leetcode, easy, array, simulation, game]
 permalink: /2026/03/03/easy-1275-find-winner-on-a-tic-tac-toe-game/
 ---
 
-# 1275. Find Winner on a Tic Tac Toe Game
+# [Easy] 1275. Find Winner on a Tic Tac Toe Game
 
 ## Problem Statement
 

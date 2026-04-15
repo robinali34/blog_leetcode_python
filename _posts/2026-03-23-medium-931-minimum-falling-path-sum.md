@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "931. Minimum Falling Path Sum"
+title: "[Medium] 931. Minimum Falling Path Sum"
 date: 2026-03-23 00:00:00 -0700
 categories: [leetcode, medium, dp, matrix]
 tags: [leetcode, medium, dynamic-programming, matrix]
 permalink: /2026/03/23/medium-931-minimum-falling-path-sum/
 ---
 
-# 931. Minimum Falling Path Sum
+# [Medium] 931. Minimum Falling Path Sum
 
 ## Problem Statement
 

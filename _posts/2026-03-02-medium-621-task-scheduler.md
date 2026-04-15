@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "621. Task Scheduler"
+title: "[Medium] 621. Task Scheduler"
 date: 2026-03-02 00:00:00 -0700
 categories: [leetcode, medium, greedy, counting]
 tags: [leetcode, medium, array, greedy, counting, scheduling]
 permalink: /2026/03/02/medium-621-task-scheduler/
 ---
 
-# 621. Task Scheduler
+# [Medium] 621. Task Scheduler
 
 ## Problem Statement
 

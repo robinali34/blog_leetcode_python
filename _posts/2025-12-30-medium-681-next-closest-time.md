@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "681. Next Closest Time"
+title: "[Medium] 681. Next Closest Time"
 date: 2025-12-30 16:30:00 -0700
 categories: [leetcode, medium, string, simulation, brute-force]
 permalink: /2025/12/30/medium-681-next-closest-time/
 ---
 
-# 681. Next Closest Time
+# [Medium] 681. Next Closest Time
 
 ## Problem Statement
 

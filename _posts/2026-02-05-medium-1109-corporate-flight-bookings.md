@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1109. Corporate Flight Bookings"
+title: "[Medium] 1109. Corporate Flight Bookings"
 date: 2026-02-05 00:00:00 -0700
 categories: [leetcode, medium, array, prefix-sum, difference-array]
 permalink: /2026/02/05/medium-1109-corporate-flight-bookings/
 tags: [leetcode, medium, array, prefix-sum, difference-array]
 ---
 
-# 1109. Corporate Flight Bookings
+# [Medium] 1109. Corporate Flight Bookings
 
 ## Problem Statement
 

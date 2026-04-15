@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "416. Partition Equal Subset Sum"
+title: "[Medium] 416. Partition Equal Subset Sum"
 date: 2026-02-11 00:00:00 -0700
 categories: [leetcode, medium, dynamic-programming]
 tags: [leetcode, medium, dp, knapsack]
 permalink: /2026/02/11/medium-416-partition-equal-subset-sum/
 ---
 
-# 416. Partition Equal Subset Sum
+# [Medium] 416. Partition Equal Subset Sum
 
 ## Problem Statement
 

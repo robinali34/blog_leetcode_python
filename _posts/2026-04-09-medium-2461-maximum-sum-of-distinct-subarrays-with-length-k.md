@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "2461. Maximum Sum of Distinct Subarrays With Length K"
+title: "[Medium] 2461. Maximum Sum of Distinct Subarrays With Length K"
 date: 2026-04-09 00:00:00 -0700
 categories: [leetcode, medium, array, sliding-window]
 tags: [leetcode, medium, sliding-window, hash-map]
 permalink: /2026/04/09/medium-2461-maximum-sum-of-distinct-subarrays-with-length-k/
 ---
 
-# 2461. Maximum Sum of Distinct Subarrays With Length K
+# [Medium] 2461. Maximum Sum of Distinct Subarrays With Length K
 
 ## Problem Statement
 

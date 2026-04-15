@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1768. Merge Strings Alternately"
+title: "[Easy] 1768. Merge Strings Alternately"
 date: 2026-03-27 00:00:00 -0700
 categories: [leetcode, easy, string, two-pointers]
 tags: [leetcode, easy, string, two-pointers]
 permalink: /2026/03/27/easy-1768-merge-strings-alternately/
 ---
 
-# 1768. Merge Strings Alternately
+# [Easy] 1768. Merge Strings Alternately
 
 ## Problem Statement
 

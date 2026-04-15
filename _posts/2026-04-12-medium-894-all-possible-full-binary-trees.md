@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "894. All Possible Full Binary Trees"
+title: "[Medium] 894. All Possible Full Binary Trees"
 date: 2026-04-12 00:00:00 -0700
 categories: [leetcode, medium, tree, dynamic-programming]
 tags: [leetcode, medium, binary-tree, recursion, memoization]
 permalink: /2026/04/12/medium-894-all-possible-full-binary-trees/
 ---
 
-# 894. All Possible Full Binary Trees
+# [Medium] 894. All Possible Full Binary Trees
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "215. Kth Largest Element in an Array"
+title: "[Medium] 215. Kth Largest Element in an Array"
 date: 2026-01-05 00:00:00 -0700
 categories: [leetcode, medium, array, heap, quickselect, divide-and-conquer]
 permalink: /2026/01/05/medium-215-kth-largest-element-in-an-array/
 tags: [leetcode, medium, array, heap, priority-queue, quickselect, divide-and-conquer, sorting]
 ---
 
-# 215. Kth Largest Element in an Array
+# [Medium] 215. Kth Largest Element in an Array
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "358. Rearrange String k Distance Apart"
+title: "[Hard] 358. Rearrange String k Distance Apart"
 date: 2026-03-02 00:00:00 -0700
 categories: [leetcode, hard, string, heap, greedy]
 tags: [leetcode, hard, string, heap, greedy, scheduling]
 permalink: /2026/03/02/hard-358-rearrange-string-k-distance-apart/
 ---
 
-# 358. Rearrange String k Distance Apart
+# [Hard] 358. Rearrange String k Distance Apart
 
 ## Problem Statement
 

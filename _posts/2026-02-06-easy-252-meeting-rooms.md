@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "252. Meeting Rooms"
+title: "[Easy] 252. Meeting Rooms"
 date: 2026-02-06 00:00:00 -0700
 categories: [leetcode, easy, array, sorting, intervals]
 permalink: /2026/02/06/easy-252-meeting-rooms/
 tags: [leetcode, easy, array, sorting, intervals]
 ---
 
-# 252. Meeting Rooms
+# [Easy] 252. Meeting Rooms
 
 ## Problem Statement
 

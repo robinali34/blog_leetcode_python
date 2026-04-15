@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 426: Convert Binary Search Tree to Sorted Doubly Linked List"
+title: "[Medium] LC 426: Convert Binary Search Tree to Sorted Doubly Linked List"
 date: 2025-10-22 12:00:00 -0700
 categories: leetcode medium tree linked-list
 permalink: /posts/2025-10-22-medium-426-convert-binary-search-tree-to-sorted-doubly-linked-list/
 tags: [leetcode, medium, tree, linked-list, bst, inorder-traversal, recursion]
 ---
 
-# LC 426: Convert Binary Search Tree to Sorted Doubly Linked List
+# [Medium] LC 426: Convert Binary Search Tree to Sorted Doubly Linked List
 
 **Difficulty:** Medium  
 **Category:** Tree, Linked List, DFS  

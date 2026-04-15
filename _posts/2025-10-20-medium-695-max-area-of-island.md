@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "695. Max Area of Island"
+title: "[Medium] 695. Max Area of Island"
 date: 2025-10-20 13:35:00 -0700
 categories: leetcode algorithm medium dfs graph matrix
 permalink: /2025/10/20/medium-695-max-area-of-island/
 ---
 
-# 695. Max Area of Island
+# [Medium] 695. Max Area of Island
 
 **Difficulty:** Medium  
 **Category:** DFS, Graph, Matrix

@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "1868. Product of Two Run-Length Encoded Arrays"
+title: "[Medium] 1868. Product of Two Run-Length Encoded Arrays"
 date: 2025-10-20 13:30:00 -0700
 categories: leetcode algorithm medium run-length-encoding two-pointers array-processing
 permalink: /2025/10/20/medium-1868-product-of-two-run-length-encoded-arrays/
 ---
 
-# 1868. Product of Two Run-Length Encoded Arrays
+# [Medium] 1868. Product of Two Run-Length Encoded Arrays
 
 **Difficulty:** Medium  
 **Category:** Run-Length Encoding, Two Pointers, Array Processing

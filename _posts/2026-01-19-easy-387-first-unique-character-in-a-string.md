@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "387. First Unique Character in a String"
+title: "[Easy] 387. First Unique Character in a String"
 date: 2026-01-19 00:00:00 -0700
 categories: [leetcode, easy, string, hash-table]
 permalink: /2026/01/19/easy-387-first-unique-character-in-a-string/
 tags: [leetcode, easy, string, hash-table, bit-manipulation, frequency-counting]
 ---
 
-# 387. First Unique Character in a String
+# [Easy] 387. First Unique Character in a String
 
 ## Problem Statement
 

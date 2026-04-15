@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1091. Shortest Path in Binary Matrix"
+title: "[Medium] 1091. Shortest Path in Binary Matrix"
 date: 2026-03-11 00:00:00 -0700
 categories: [leetcode, medium, graph, bfs]
 tags: [leetcode, medium, grid, bfs, shortest-path]
 permalink: /2026/03/11/medium-1091-shortest-path-in-binary-matrix/
 ---
 
-# 1091. Shortest Path in Binary Matrix
+# [Medium] 1091. Shortest Path in Binary Matrix
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "433. Minimum Genetic Mutation"
+title: "[Medium] 433. Minimum Genetic Mutation"
 date: 2026-03-15 00:00:00 -0700
 categories: [leetcode, medium, graph, bfs]
 tags: [leetcode, medium, bfs, shortest-path, string]
 permalink: /2026/03/15/medium-433-minimum-genetic-mutation/
 ---
 
-# 433. Minimum Genetic Mutation
+# [Medium] 433. Minimum Genetic Mutation
 
 ## Problem Statement
 

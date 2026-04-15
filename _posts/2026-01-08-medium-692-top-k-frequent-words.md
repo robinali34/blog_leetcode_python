@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "692. Top K Frequent Words"
+title: "[Medium] 692. Top K Frequent Words"
 date: 2026-01-08 00:00:00 -0700
 categories: [leetcode, medium, hash-table, heap, sorting, string]
 permalink: /2026/01/08/medium-692-top-k-frequent-words/
 tags: [leetcode, medium, hash-table, heap, sorting, string, priority-queue]
 ---
 
-# 692. Top K Frequent Words
+# [Medium] 692. Top K Frequent Words
 
 ## Problem Statement
 

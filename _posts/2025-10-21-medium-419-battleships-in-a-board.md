@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 419: Battleships in a Board"
+title: "[Medium] LC 419: Battleships in a Board"
 date: 2025-10-21 17:00:00 -0700
 categories: leetcode medium array matrix
 permalink: /posts/2025-10-21-medium-419-battleships-in-a-board/
 tags: [leetcode, medium, array, matrix, dfs, battleship]
 ---
 
-# LC 419: Battleships in a Board
+# [Medium] LC 419: Battleships in a Board
 
 **Difficulty:** Medium  
 **Category:** Array, Matrix, DFS  

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "918. Maximum Sum Circular Subarray"
+title: "[Medium] 918. Maximum Sum Circular Subarray"
 date: 2026-03-25 00:00:00 -0700
 categories: [leetcode, medium, array, kadane]
 tags: [leetcode, medium, array, dynamic-programming, kadane]
 permalink: /2026/03/25/medium-918-maximum-sum-circular-subarray/
 ---
 
-# 918. Maximum Sum Circular Subarray
+# [Medium] 918. Maximum Sum Circular Subarray
 
 ## Problem Statement
 

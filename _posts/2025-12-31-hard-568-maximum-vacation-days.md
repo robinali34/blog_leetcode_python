@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "568. Maximum Vacation Days"
+title: "[Hard] 568. Maximum Vacation Days"
 date: 2025-12-31 20:30:00 -0700
 categories: [leetcode, hard, dynamic-programming, graph, optimization]
 permalink: /2025/12/31/hard-568-maximum-vacation-days/
 ---
 
-# 568. Maximum Vacation Days
+# [Hard] 568. Maximum Vacation Days
 
 ## Problem Statement
 

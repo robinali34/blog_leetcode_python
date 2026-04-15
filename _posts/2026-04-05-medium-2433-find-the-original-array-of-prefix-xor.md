@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "2433. Find The Original Array of Prefix Xor"
+title: "[Medium] 2433. Find The Original Array of Prefix Xor"
 date: 2026-04-05 00:00:00 -0700
 categories: [leetcode, medium, array, bit-manipulation]
 tags: [leetcode, medium, xor, prefix]
 permalink: /2026/04/05/medium-2433-find-the-original-array-of-prefix-xor/
 ---
 
-# 2433. Find The Original Array of Prefix Xor
+# [Medium] 2433. Find The Original Array of Prefix Xor
 
 ## Problem Statement
 

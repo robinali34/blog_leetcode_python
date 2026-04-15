@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "110. Balanced Binary Tree"
+title: "[Easy] 110. Balanced Binary Tree"
 date: 2026-03-06 00:00:00 -0700
 categories: [leetcode, easy, tree, dfs]
 tags: [leetcode, easy, tree, height, balance]
 permalink: /2026/03/06/easy-110-balanced-binary-tree/
 ---
 
-# 110. Balanced Binary Tree
+# [Easy] 110. Balanced Binary Tree
 
 ## Problem Statement
 

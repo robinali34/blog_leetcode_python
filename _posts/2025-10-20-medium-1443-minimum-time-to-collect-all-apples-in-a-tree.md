@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "1443. Minimum Time to Collect All Apples in a Tree"
+title: "[Medium] 1443. Minimum Time to Collect All Apples in a Tree"
 date: 2025-10-20 13:45:00 -0700
 categories: leetcode algorithm medium tree dfs bfs graph
 permalink: /2025/10/20/medium-1443-minimum-time-to-collect-all-apples-in-a-tree/
 ---
 
-# 1443. Minimum Time to Collect All Apples in a Tree
+# [Medium] 1443. Minimum Time to Collect All Apples in a Tree
 
 **Difficulty:** Medium  
 **Category:** Tree, DFS, BFS, Graph

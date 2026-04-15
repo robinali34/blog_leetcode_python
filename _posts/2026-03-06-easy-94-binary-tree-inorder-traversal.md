@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "94. Binary Tree Inorder Traversal"
+title: "[Easy] 94. Binary Tree Inorder Traversal"
 date: 2026-03-06 00:00:00 -0700
 categories: [leetcode, easy, tree, dfs]
 tags: [leetcode, easy, tree, inorder, stack]
 permalink: /2026/03/06/easy-94-binary-tree-inorder-traversal/
 ---
 
-# 94. Binary Tree Inorder Traversal
+# [Easy] 94. Binary Tree Inorder Traversal
 
 ## Problem Statement
 

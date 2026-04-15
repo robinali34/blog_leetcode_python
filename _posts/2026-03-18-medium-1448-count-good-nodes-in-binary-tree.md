@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1448. Count Good Nodes in Binary Tree"
+title: "[Medium] 1448. Count Good Nodes in Binary Tree"
 date: 2026-03-18 00:00:00 -0700
 categories: [leetcode, medium, tree, dfs, bfs]
 tags: [leetcode, medium, tree, dfs, bfs]
 permalink: /2026/03/18/medium-1448-count-good-nodes-in-binary-tree/
 ---
 
-# 1448. Count Good Nodes in Binary Tree
+# [Medium] 1448. Count Good Nodes in Binary Tree
 
 ## Problem Statement
 

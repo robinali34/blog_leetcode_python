@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "3112. Minimum Time to Visit Disappearing Nodes"
+title: "[Medium] 3112. Minimum Time to Visit Disappearing Nodes"
 date: 2026-02-08 00:00:00 -0700
 categories: [leetcode, medium, graph, shortest-path, dijkstra]
 permalink: /2026/02/08/medium-3112-minimum-time-to-visit-disappearing-nodes/
 tags: [leetcode, medium, graph, shortest-path, dijkstra]
 ---
 
-# 3112. Minimum Time to Visit Disappearing Nodes
+# [Medium] 3112. Minimum Time to Visit Disappearing Nodes
 
 ## Problem Statement
 

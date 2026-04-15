@@ -1,11 +1,10 @@
 ---
-
-## layout: page
-
+layout: page
 title: "LeetCode Questions List"
-permalink: /leetcode-questions-list/
+permalink: /leetcode-questions-list.html
 date: 2025-10-19 12:51:31 -0700
 categories: leetcode algorithm problem-solving
+---
 
 # LeetCode Questions List
 

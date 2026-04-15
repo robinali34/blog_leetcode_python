@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1115. Print FooBar Alternately"
+title: "[Medium] 1115. Print FooBar Alternately"
 date: 2026-03-28 00:00:00 -0700
 categories: [leetcode, medium, concurrency, threading]
 tags: [leetcode, medium, threading, semaphore, condition-variable]
 permalink: /2026/03/28/medium-1115-print-foobar-alternately/
 ---
 
-# 1115. Print FooBar Alternately
+# [Medium] 1115. Print FooBar Alternately
 
 ## Problem Statement
 

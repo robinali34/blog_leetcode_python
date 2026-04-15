@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "260. Single Number III"
+title: "[Medium] 260. Single Number III"
 date: 2026-03-31 00:00:00 -0700
 categories: [leetcode, medium, array, bit-manipulation]
 tags: [leetcode, medium, xor, bit-manipulation]
 permalink: /2026/03/31/medium-260-single-number-iii/
 ---
 
-# 260. Single Number III
+# [Medium] 260. Single Number III
 
 ## Problem Statement
 

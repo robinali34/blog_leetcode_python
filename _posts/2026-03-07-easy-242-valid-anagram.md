@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "242. Valid Anagram"
+title: "[Easy] 242. Valid Anagram"
 date: 2026-03-07 00:00:00 -0700
 categories: [leetcode, easy, string, hash-table]
 tags: [leetcode, easy, string, anagram, counting]
 permalink: /2026/03/07/easy-242-valid-anagram/
 ---
 
-# 242. Valid Anagram
+# [Easy] 242. Valid Anagram
 
 ## Problem Statement
 

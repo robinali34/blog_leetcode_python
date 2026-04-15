@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1584. Min Cost to Connect All Points"
+title: "[Medium] 1584. Min Cost to Connect All Points"
 date: 2026-03-08 00:00:00 -0700
 categories: [leetcode, medium, graph, mst, union-find]
 tags: [leetcode, medium, graph, kruskal, dsu, manhattan]
 permalink: /2026/03/08/medium-1584-min-cost-to-connect-all-points/
 ---
 
-# 1584. Min Cost to Connect All Points
+# [Medium] 1584. Min Cost to Connect All Points
 
 ## Problem Statement
 

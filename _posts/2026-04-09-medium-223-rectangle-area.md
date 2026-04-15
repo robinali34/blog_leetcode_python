@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "223. Rectangle Area"
+title: "[Medium] 223. Rectangle Area"
 date: 2026-04-09 00:00:00 -0700
 categories: [leetcode, medium, math, geometry]
 tags: [leetcode, medium, math, geometry]
 permalink: /2026/04/09/medium-223-rectangle-area/
 ---
 
-# 223. Rectangle Area
+# [Medium] 223. Rectangle Area
 
 ## Problem Statement
 

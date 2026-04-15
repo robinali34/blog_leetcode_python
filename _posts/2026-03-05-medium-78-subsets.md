@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "78. Subsets"
+title: "[Medium] 78. Subsets"
 date: 2026-03-05 00:00:00 -0700
 categories: [leetcode, medium, backtracking, dfs]
 tags: [leetcode, medium, backtracking, dfs, recursion]
 permalink: /2026/03/05/medium-78-subsets/
 ---
 
-# 78. Subsets
+# [Medium] 78. Subsets
 
 ## Problem Statement
 

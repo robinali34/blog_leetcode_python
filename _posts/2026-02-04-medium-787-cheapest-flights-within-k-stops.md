@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "787. Cheapest Flights Within K Stops"
+title: "[Medium] 787. Cheapest Flights Within K Stops"
 date: 2026-02-04 00:00:00 -0700
 categories: [leetcode, medium, graph, shortest-path, dynamic-programming, bellman-ford]
 permalink: /2026/02/04/medium-787-cheapest-flights-within-k-stops/
 tags: [leetcode, medium, graph, shortest-path, dynamic-programming, bellman-ford]
 ---
 
-# 787. Cheapest Flights Within K Stops
+# [Medium] 787. Cheapest Flights Within K Stops
 
 ## Problem Statement
 

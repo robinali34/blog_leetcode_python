@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "3341. Find Minimum Time to Reach Last Room I"
+title: "[Medium] 3341. Find Minimum Time to Reach Last Room I"
 date: 2026-02-10 00:00:00 -0700
 categories: [leetcode, medium, graph, shortest-path, dijkstra, grid]
 permalink: /2026/02/10/medium-3341-find-minimum-time-to-reach-last-room-i/
 tags: [leetcode, medium, graph, shortest-path, dijkstra, grid]
 ---
-
+# [Medium] 3341. Find Minimum Time to Reach Last Room I
 ## Problem Statement
 
 There is a dungeon with `n x m` rooms arranged as a grid.

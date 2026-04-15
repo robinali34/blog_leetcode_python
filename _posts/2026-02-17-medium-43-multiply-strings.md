@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "43. Multiply Strings"
+title: "[Medium] 43. Multiply Strings"
 date: 2026-02-17 00:00:00 -0700
 categories: [leetcode, medium, string, math, simulation]
 tags: [leetcode, medium, string, math, big-integer, simulation]
 permalink: /2026/02/17/medium-43-multiply-strings/
 ---
 
-# 43. Multiply Strings
+# [Medium] 43. Multiply Strings
 
 ## Problem Statement
 

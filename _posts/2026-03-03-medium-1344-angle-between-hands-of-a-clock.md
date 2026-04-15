@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1344. Angle Between Hands of a Clock"
+title: "[Medium] 1344. Angle Between Hands of a Clock"
 date: 2026-03-03 00:00:00 -0700
 categories: [leetcode, medium, math, geometry]
 tags: [leetcode, medium, math, geometry, simulation]
 permalink: /2026/03/03/medium-1344-angle-between-hands-of-a-clock/
 ---
 
-# 1344. Angle Between Hands of a Clock
+# [Medium] 1344. Angle Between Hands of a Clock
 
 ## Problem Statement
 

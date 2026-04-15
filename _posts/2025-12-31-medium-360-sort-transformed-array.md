@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "360. Sort Transformed Array"
+title: "[Medium] 360. Sort Transformed Array"
 date: 2025-12-31 17:30:00 -0700
 categories: [leetcode, medium, array, two-pointers, math, parabola]
 permalink: /2025/12/31/medium-360-sort-transformed-array/
 ---
 
-# 360. Sort Transformed Array
+# [Medium] 360. Sort Transformed Array
 
 ## Problem Statement
 

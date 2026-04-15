@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "42. Trapping Rain Water"
+title: "[Hard] 42. Trapping Rain Water"
 date: 2026-02-17 00:00:00 -0700
 categories: [leetcode, hard, two-pointers, stack, dp]
 tags: [leetcode, hard, two-pointers, monotonic-stack, prefix-suffix, dp]
 permalink: /2026/02/17/hard-42-trapping-rain-water/
 ---
 
-# 42. Trapping Rain Water
+# [Hard] 42. Trapping Rain Water
 
 ## Problem Statement
 

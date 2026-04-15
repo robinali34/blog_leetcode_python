@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "673. Number of Longest Increasing Subsequence"
+title: "[Medium] 673. Number of Longest Increasing Subsequence"
 date: 2026-01-09 00:00:00 -0700
 categories: [leetcode, medium, array, dynamic-programming]
 permalink: /2026/01/09/medium-673-number-of-longest-increasing-subsequence/
 tags: [leetcode, medium, array, dynamic-programming, longest-increasing-subsequence]
 ---
 
-# 673. Number of Longest Increasing Subsequence
+# [Medium] 673. Number of Longest Increasing Subsequence
 
 ## Problem Statement
 

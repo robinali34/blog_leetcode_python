@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1202. Smallest String With Swaps"
+title: "[Medium] 1202. Smallest String With Swaps"
 date: 2026-03-09 00:00:00 -0700
 categories: [leetcode, medium, string, union-find, graph]
 tags: [leetcode, medium, string, dsu, connected-components]
 permalink: /2026/03/09/medium-1202-smallest-string-with-swaps/
 ---
 
-# 1202. Smallest String With Swaps
+# [Medium] 1202. Smallest String With Swaps
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 1094: Car Pooling"
+title: "[Medium] LC 1094: Car Pooling"
 date: 2025-10-22 13:30:00 -0700
 categories: leetcode medium array sorting
 permalink: /posts/2025-10-22-medium-1094-car-pooling/
 tags: [leetcode, medium, array, sorting, simulation, bucket-sort]
 ---
 
-# LC 1094: Car Pooling
+# [Medium] LC 1094: Car Pooling
 
 **Difficulty:** Medium  
 **Category:** Array, Sorting, Simulation  

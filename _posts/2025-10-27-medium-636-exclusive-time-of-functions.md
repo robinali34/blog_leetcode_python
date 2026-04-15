@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 636: Exclusive Time of Functions"
+title: "[Medium] LC 636: Exclusive Time of Functions"
 date: 2025-10-27 21:04:00 -0700
 categories: leetcode medium stack parsing
 permalink: /posts/2025-10-27-medium-636-exclusive-time-of-functions/
 tags: [leetcode, medium, stack, parsing, logs, simulation]
 ---
 
-# LC 636: Exclusive Time of Functions
+# [Medium] LC 636: Exclusive Time of Functions
 
 **Difficulty:** Medium  
 **Category:** Stack, Parsing, Simulation  

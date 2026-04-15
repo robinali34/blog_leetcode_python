@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "322. Coin Change"
+title: "[Medium] 322. Coin Change"
 date: 2025-10-20 14:30:00 -0700
 categories: [leetcode, medium, dynamic-programming, dp, coin-change]
 permalink: /2025/10/20/medium-322-coin-change/
 ---
 
-# 322. Coin Change
+# [Medium] 322. Coin Change
 
 ## Problem Statement
 

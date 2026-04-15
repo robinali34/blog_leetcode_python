@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "713. Subarray Product Less Than K"
+title: "[Medium] 713. Subarray Product Less Than K"
 date: 2026-03-21 00:00:00 -0700
 categories: [leetcode, medium, array, sliding-window]
 tags: [leetcode, medium, array, sliding-window, two-pointers]
 permalink: /2026/03/21/medium-713-subarray-product-less-than-k/
 ---
 
-# 713. Subarray Product Less Than K
+# [Medium] 713. Subarray Product Less Than K
 
 ## Problem Statement
 

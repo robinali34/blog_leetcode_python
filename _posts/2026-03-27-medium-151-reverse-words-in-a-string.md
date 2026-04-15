@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "151. Reverse Words in a String"
+title: "[Medium] 151. Reverse Words in a String"
 date: 2026-03-27 00:00:00 -0700
 categories: [leetcode, medium, string, two-pointers]
 tags: [leetcode, medium, string, deque, two-pointers]
 permalink: /2026/03/27/medium-151-reverse-words-in-a-string/
 ---
 
-# 151. Reverse Words in a String
+# [Medium] 151. Reverse Words in a String
 
 ## Problem Statement
 

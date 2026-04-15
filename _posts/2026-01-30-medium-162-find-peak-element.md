@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "162. Find Peak Element"
+title: "[Medium] 162. Find Peak Element"
 date: 2026-01-30 00:00:00 -0700
 categories: [leetcode, medium, array, binary-search]
 permalink: /2026/01/30/medium-162-find-peak-element/
 tags: [leetcode, medium, array, binary-search]
 ---
 
-# 162. Find Peak Element
+# [Medium] 162. Find Peak Element
 
 ## Problem Statement
 

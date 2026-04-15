@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "389. Find the Difference"
+title: "[Easy] 389. Find the Difference"
 date: 2026-03-27 00:00:00 -0700
 categories: [leetcode, easy, string, bit-manipulation, hash-table]
 tags: [leetcode, easy, string, xor, frequency]
 permalink: /2026/03/27/easy-389-find-the-difference/
 ---
 
-# 389. Find the Difference
+# [Easy] 389. Find the Difference
 
 ## Problem Statement
 

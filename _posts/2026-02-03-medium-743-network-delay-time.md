@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "743. Network Delay Time"
+title: "[Medium] 743. Network Delay Time"
 date: 2026-02-03 00:00:00 -0700
 categories: [leetcode, medium, graph, shortest-path, dijkstra]
 permalink: /2026/02/03/medium-743-network-delay-time/
 tags: [leetcode, medium, graph, shortest-path, dijkstra]
 ---
 
-# 743. Network Delay Time
+# [Medium] 743. Network Delay Time
 
 ## Problem Statement
 

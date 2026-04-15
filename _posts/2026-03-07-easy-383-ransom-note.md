@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "383. Ransom Note"
+title: "[Easy] 383. Ransom Note"
 date: 2026-03-07 00:00:00 -0700
 categories: [leetcode, easy, string, hash-table]
 tags: [leetcode, easy, string, counting]
 permalink: /2026/03/07/easy-383-ransom-note/
 ---
 
-# 383. Ransom Note
+# [Easy] 383. Ransom Note
 
 ## Problem Statement
 

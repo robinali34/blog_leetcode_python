@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 1249: Minimum Remove to Make Valid Parentheses"
+title: "[Medium] LC 1249: Minimum Remove to Make Valid Parentheses"
 date: 2025-10-22 13:30:00 -0700
 categories: leetcode medium string stack
 permalink: /posts/2025-10-22-medium-1249-minimum-remove-to-make-valid-parentheses/
 tags: [leetcode, medium, string, stack, parentheses, validation]
 ---
 
-# LC 1249: Minimum Remove to Make Valid Parentheses
+# [Medium] LC 1249: Minimum Remove to Make Valid Parentheses
 
 **Difficulty:** Medium  
 **Category:** String, Stack  

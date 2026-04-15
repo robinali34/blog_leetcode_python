@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "219. Contains Duplicate II"
+title: "[Easy] 219. Contains Duplicate II"
 date: 2026-03-07 00:00:00 -0700
 categories: [leetcode, easy, array, hash-table, sliding-window]
 tags: [leetcode, easy, array, set, sliding-window]
 permalink: /2026/03/07/easy-219-contains-duplicate-ii/
 ---
 
-# 219. Contains Duplicate II
+# [Easy] 219. Contains Duplicate II
 
 ## Problem Statement
 

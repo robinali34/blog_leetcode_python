@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit"
+title: "[Medium] 1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit"
 date: 2026-02-12 00:00:00 -0700
 categories: [leetcode, medium, sliding-window, monotonic-queue]
 tags: [leetcode, medium, sliding-window, monotonic-queue]
 permalink: /2026/02/12/medium-1438-longest-continuous-subarray-with-absolute-diff/
 ---
-
+# [Medium] 1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit
 ## Problem
 
 Given an integer array `nums` and an integer `limit`, return the size of the longest continuous subarray such that the absolute difference between the maximum and minimum element in the subarray is less than or equal to `limit`.

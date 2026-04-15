@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "134. Gas Station"
+title: "[Medium] 134. Gas Station"
 date: 2026-03-22 00:00:00 -0700
 categories: [leetcode, medium, greedy, array]
 tags: [leetcode, medium, greedy, prefix-sum]
 permalink: /2026/03/22/medium-134-gas-station/
 ---
 
-# 134. Gas Station
+# [Medium] 134. Gas Station
 
 ## Problem Statement
 

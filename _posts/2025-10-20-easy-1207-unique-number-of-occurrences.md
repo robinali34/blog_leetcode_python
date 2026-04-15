@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 1207: Unique Number of Occurrences"
+title: "[Easy] LC 1207: Unique Number of Occurrences"
 date: 2025-10-20 18:00:00 -0700
 categories: leetcode easy array hash-table
 permalink: /posts/2025-10-20-easy-1207-unique-number-of-occurrences/
 tags: [leetcode, easy, array, hash-table, counting]
 ---
 
-# LC 1207: Unique Number of Occurrences
+# [Easy] LC 1207: Unique Number of Occurrences
 
 **Difficulty:** Easy  
 **Category:** Array, Hash Table  

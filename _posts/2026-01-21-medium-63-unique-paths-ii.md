@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "63. Unique Paths II"
+title: "[Medium] 63. Unique Paths II"
 date: 2026-01-21 00:00:00 -0700
 categories: [leetcode, medium, array, dynamic-programming, matrix]
 permalink: /2026/01/21/medium-63-unique-paths-ii/
 tags: [leetcode, medium, array, dynamic-programming, matrix, grid, obstacles]
 ---
 
-# 63. Unique Paths II
+# [Medium] 63. Unique Paths II
 
 ## Problem Statement
 

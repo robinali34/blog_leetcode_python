@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "80. Remove Duplicates from Sorted Array II"
+title: "[Medium] 80. Remove Duplicates from Sorted Array II"
 date: 2026-03-01 00:00:00 -0700
 categories: [leetcode, medium, array, two-pointers]
 tags: [leetcode, medium, array, two-pointers, in-place]
 permalink: /2026/03/01/medium-80-remove-duplicates-from-sorted-array-ii/
 ---
 
-# 80. Remove Duplicates from Sorted Array II
+# [Medium] 80. Remove Duplicates from Sorted Array II
 
 ## Problem Statement
 

@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "797. All Paths From Source to Target"
+title: "[Medium] 797. All Paths From Source to Target"
 date: 2026-03-12 00:00:00 -0700
 categories: [leetcode, medium, graph, dfs, backtracking]
 tags: [leetcode, medium, graph, dfs, backtracking]
 permalink: /2026/03/12/medium-797-all-paths-from-source-to-target/
 ---
 
-# 797. All Paths From Source to Target
+# [Medium] 797. All Paths From Source to Target
 
 ## Problem Statement
 

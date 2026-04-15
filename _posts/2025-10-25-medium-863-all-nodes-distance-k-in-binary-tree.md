@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 863: All Nodes Distance K in Binary Tree"
+title: "[Medium] LC 863: All Nodes Distance K in Binary Tree"
 date: 2025-10-25 13:00:00 -0700
 categories: leetcode medium tree dfs bfs
 permalink: /posts/2025-10-25-medium-863-all-nodes-distance-k-in-binary-tree/
 tags: [leetcode, medium, tree, binary-tree, dfs, bfs, graph, recursion]
 ---
 
-# LC 863: All Nodes Distance K in Binary Tree
+# [Medium] LC 863: All Nodes Distance K in Binary Tree
 
 **Difficulty:** Medium  
 **Category:** Tree, DFS, BFS  

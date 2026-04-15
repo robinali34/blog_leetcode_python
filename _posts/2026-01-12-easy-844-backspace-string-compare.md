@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "844. Backspace String Compare"
+title: "[Easy] 844. Backspace String Compare"
 date: 2026-01-12 00:00:00 -0700
 categories: [leetcode, easy, string, two-pointers, stack]
 permalink: /2026/01/12/easy-844-backspace-string-compare/
 tags: [leetcode, easy, string, two-pointers, stack, simulation]
 ---
 
-# 844. Backspace String Compare
+# [Easy] 844. Backspace String Compare
 
 ## Problem Statement
 

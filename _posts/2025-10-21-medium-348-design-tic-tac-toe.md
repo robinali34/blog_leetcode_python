@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "LC 348: Design Tic-Tac-Toe"
+title: "[Medium] LC 348: Design Tic-Tac-Toe"
 date: 2025-10-21 17:30:00 -0700
 categories: leetcode medium design array
 permalink: /posts/2025-10-21-medium-348-design-tic-tac-toe/
 tags: [leetcode, medium, design, array, matrix, optimization]
 ---
 
-# LC 348: Design Tic-Tac-Toe
+# [Medium] LC 348: Design Tic-Tac-Toe
 
 **Difficulty:** Medium  
 **Category:** Design, Array, Matrix  

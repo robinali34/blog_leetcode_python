@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "1670. Design Front Middle Back Queue"
+title: "[Medium] 1670. Design Front Middle Back Queue"
 date: 2026-01-13 00:00:00 -0700
 categories: [leetcode, medium, design, deque, data-structure]
 permalink: /2026/01/13/medium-1670-design-front-middle-back-queue/
 tags: [leetcode, medium, design, deque, data-structure, two-deques]
 ---
 
-# 1670. Design Front Middle Back Queue
+# [Medium] 1670. Design Front Middle Back Queue
 
 ## Problem Statement
 
