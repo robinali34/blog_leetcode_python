@@ -7,13 +7,21 @@ layout: default
   <header class="post-header">
     <div class="header-content">
       <h1 class="site-title">
-        <a href="{{ '/' | relative_url }}">{{ site.title | default: "Robina Li" }}</a>
+        {%- if jekyll.environment == "development" -%}
+          <a href="/">{{ site.title | default: "Robina Li" }}</a>
+        {%- else -%}
+          <a href="{{ '/' | relative_url }}">{{ site.title | default: "Robina Li" }}</a>
+        {%- endif -%}
       </h1>
       <nav class="site-nav">
         {%- for page_path in site.header_pages -%}
           {%- assign page_obj = site.pages | where: "path", page_path | first -%}
           {%- if page_obj -%}
-            <a href="{{ page_obj.url | relative_url }}">{{ page_obj.title | escape }}</a>
+            {%- if jekyll.environment == "development" -%}
+              <a href="{{ page_obj.url }}">{{ page_obj.title | escape }}</a>
+            {%- else -%}
+              <a href="{{ page_obj.url | relative_url }}">{{ page_obj.title | escape }}</a>
+            {%- endif -%}
           {%- endif -%}
         {%- endfor -%}
       </nav>

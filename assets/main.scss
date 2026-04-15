@@ -2591,7 +2591,8 @@ a {
   max-width: 240px;
   box-sizing: border-box;
   min-height: 0;
-  max-height: 100%;
+  /* Always allow scroll for long TOCs */
+  max-height: min(72vh, calc(100vh - 180px));
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--morandi-border-dark) var(--morandi-bg-primary);

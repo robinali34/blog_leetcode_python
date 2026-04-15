@@ -341,226 +341,49 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Problems by Difficulty
 
+See the **All LeetCode Problems** table above for the full list.
+
 ### Easy (57 problems)
 
-See the **All LeetCode Problems** table above for the full list with links.
-
-### Medium (222 problems)
-
-See the **All LeetCode Problems** table above for the full list with links. Sample:
-
-- [3. Longest Substring Without Repeating Characters](https://robinali34.github.io/blog_leetcode_python/2025/10/09/medium-3-longest-substring-without-repeating-characters/)
-- [23. Swap Nodes in Pairs](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-23-swap-nodes-in-pairs/)
-- [33. Search in Rotated Sorted Array](https://robinali34.github.io/blog_leetcode_python/2025/09/23/medium-33-search-in-rotated-sorted-array/)
-- [46. Permutations](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-46-permutations/)
-- [47. Permutations II](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-47-permutations-ii/)
-- [48. Rotate Image](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-48-rotate-image/)
-- [394. Decode String](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-394-decode-string/)
-- [50. Pow(x, n)](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-50-pow-x-n/)
-- [54. Spiral Matrix](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-54-spiral-matrix/)
-- [62. Unique Paths](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-62-unique-paths/)
-- [695. Max Area of Island](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-695-max-area-of-island/)
-- [77. Combinations](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-77-combinations/)
-- [89. Gray Code](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-89-gray-code/)
-- [96. Unique Binary Search Trees](https://robinali34.github.io/blog_leetcode_python/2025/10/03/medium-96-unique-binary-search-trees/)
-- [131. Palindrome Partitioning](https://robinali34.github.io/blog_leetcode_python/2025/09/30/medium-131-palindrome-partitioning/)
-- [1443. Minimum Time to Collect All Apples in a Tree](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-1443-minimum-time-to-collect-all-apples-in-a-tree/)
-- [1650. Lowest Common Ancestor of a Binary Tree III](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-1650-lowest-common-ancestor-of-a-binary-tree-iii/)
-- [150. Evaluate Reverse Polish Notation](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-150-evaluate-reverse-polish-notation/)
-- [240. Search a 2D Matrix II](https://robinali34.github.io/blog_leetcode_python/2025/10/07/medium-240-search-a-2d-matrix-ii/)
-- [300. Longest Increasing Subsequence](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-300-longest-increasing-subsequence/)
-- [316. Remove Duplicate Letters](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-316-remove-duplicate-letters/)
-- [406. Queue Reconstruction by Height](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-406-queue-reconstruction-by-height/)
-- [417. Pacific Atlantic Water Flow](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-417-pacific-atlantic-water-flow/)
-- [437. Path Sum III](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-437-path-sum-iii/)
-- [494. Target Sum](https://robinali34.github.io/blog_leetcode_python/2025/10/15/medium-494-target-sum/)
-- [503. Next Greater Element II](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-503-next-greater-element-ii/)
-- [636. Exclusive Time of Functions](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-27-medium-636-exclusive-time-of-functions/)
-- [648. Replace Words](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-648-replace-words/)
-- [708. Insert into a Sorted Circular Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-27-medium-708-insert-into-a-sorted-circular-linked-list/)
-- [863. All Nodes Distance K in Binary Tree](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-25-medium-863-all-nodes-distance-k-in-binary-tree/)
-- [912. Sort an Array](https://robinali34.github.io/blog_leetcode_python/2025/10/06/medium-912-sort-an-array/)
-- [990. Satisfiability of Equality Equations](https://robinali34.github.io/blog_leetcode_python/2025/10/04/medium-990-satisfiability-of-equality-equations/)
-- [1124. Longest Well-Performing Interval](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-1124-longest-well-performing-interval/)
-- [1242. Web Crawler Multithreaded](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-1242-web-crawler-multithreaded/)
-- [1570. Dot Product of Two Sparse Vectors](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-1570-dot-product-of-two-sparse-vectors/)
-- [1856. Maximum Sum of Minimum Product](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-1856-maximum-sum-of-minimum-product/)
-- [1865. Finding Pairs With a Certain Sum](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-1865-finding-pairs-with-a-certain-sum/)
-- [1868. Product of Two Run-Length Encoded Arrays](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-1868-product-of-two-run-length-encoded-arrays/)
-- [187. Repeated DNA Sequences](https://robinali34.github.io/blog_leetcode_python/2026/02/27/medium-187-repeated-dna-sequences/)
-- [2043. Simple Bank System](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-2043-simple-bank-system/)
-- [2466. Count Ways To Build Good Strings](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-2466-count-ways-to-build-good-strings/)
-- [2799. Count Complete Subarrays in an Array](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-2799-count-complete-subarrays-in-an-array/)
-- [794. Valid Tic-Tac-Toe State](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-794-valid-tic-tac-toe-state/)
-- [973. K Closest Points to Origin](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-21-medium-973-k-closest-points-to-origin/)
+### Medium (224 problems)
 
 ### Hard (34 problems)
 
-See the **All LeetCode Problems** table above for the full list with links.
-
-*(Below: sample links from the original curated list.)*
-
-- [25. Reverse Nodes in k-Group](https://robinali34.github.io/blog_leetcode_python/2025/09/24/hard-25-reverse-nodes-in-k-group/)
-- [84. Largest Rectangle in Histogram](https://robinali34.github.io/blog_leetcode_python/2025/10/21/hard-84-largest-rectangle-in-histogram/)
-- [218. The Skyline Problem](https://robinali34.github.io/blog_leetcode_python/2025/10/05/hard-218-skyline-problem/)
-- [317. Shortest Distance from All Buildings](https://robinali34.github.io/blog_leetcode_python/2025/09/24/hard-317-shortest-distance-from-all-buildings/)
-
 ## Problems by Category
 
-### Spring 2026 highlights (recent posts by theme)
+_Counts are computed from the `Category` + `Solution Approach` columns in the full table by tag matching (a problem can appear in multiple categories)._
 
-- **Sliding window:** [2461. Maximum Sum of Distinct Subarrays With Length K](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-2461-maximum-sum-of-distinct-subarrays-with-length-k/)
-- **Prefix sum:** [2270. Number of Ways to Split Array](https://robinali34.github.io/blog_leetcode_python/2026/04/06/medium-2270-number-of-ways-to-split-array/)
-- **Matrix in-place:** [73. Set Matrix Zeroes](https://robinali34.github.io/blog_leetcode_python/2026/04/02/medium-73-set-matrix-zeroes/)
-- **Geometry (overlap):** [223. Rectangle Area](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-223-rectangle-area/)
-- **Trees (enumeration):** [894. All Possible Full Binary Trees](https://robinali34.github.io/blog_leetcode_python/2026/04/12/medium-894-all-possible-full-binary-trees/)
-- **Graph valid tree:** [261. Graph Valid Tree](https://robinali34.github.io/blog_leetcode_python/2026/04/01/medium-261-graph-valid-tree/)
-- **Hash / digit sum:** [2342. Max Sum of a Pair With Equal Sum of Digits](https://robinali34.github.io/blog_leetcode_python/2026/04/11/medium-2342-max-sum-of-a-pair-with-equal-sum-of-digits/)
-- **Scheduling:** [2365. Task Scheduler II](https://robinali34.github.io/blog_leetcode_python/2026/04/10/medium-2365-task-scheduler-ii/)
-- **Linked list / random:** [382. Linked List Random Node](https://robinali34.github.io/blog_leetcode_python/2026/04/08/medium-382-linked-list-random-node/)
-- **XOR:** [2433. Find The Original Array of Prefix Xor](https://robinali34.github.io/blog_leetcode_python/2026/04/05/medium-2433-find-the-original-array-of-prefix-xor/) · [260. Single Number III](https://robinali34.github.io/blog_leetcode_python/2026/03/31/medium-260-single-number-iii/)
-- **String greedy:** [1328. Break a Palindrome](https://robinali34.github.io/blog_leetcode_python/2026/04/07/medium-1328-break-a-palindrome/)
-- **Binary search on answer:** [1870. Minimum Speed to Arrive on Time](https://robinali34.github.io/blog_leetcode_python/2026/03/30/medium-1870-minimum-speed-to-arrive-on-time/)
+- **Array & Matrix** (128): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
+- **String Processing** (94): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
+- **Linked List** (16): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
+- **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
+- **Dynamic Programming** (37): [Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/)
+- **Backtracking** (15): [Backtracking](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/)
+- **Monotonic Stack / Queue** (11): [Stack](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/), [Queue](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-queue/)
+- **Graph & Union Find** (38): [Graph](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/)
+- **Data Structure Design** (33): [Data Structure Design](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/)
+- **Intervals & Sweep Line** (12): [Greedy](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/)
+- **Math & Bit Manipulation** (26): [Math & Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-math-bit-manipulation/), [Math & Geometry](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-math-geometry/)
+- **Run-Length Encoding** (2)
 
-### Array & Matrix
-
-- [73. Set Matrix Zeroes](https://robinali34.github.io/blog_leetcode_python/2026/04/02/medium-73-set-matrix-zeroes/) - In-place markers
-- [2270. Number of Ways to Split Array](https://robinali34.github.io/blog_leetcode_python/2026/04/06/medium-2270-number-of-ways-to-split-array/) - Prefix sum, split
-- [2461. Maximum Sum of Distinct Subarrays With Length K](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-2461-maximum-sum-of-distinct-subarrays-with-length-k/) - Sliding window, distinct
-- [2342. Max Sum of a Pair With Equal Sum of Digits](https://robinali34.github.io/blog_leetcode_python/2026/04/11/medium-2342-max-sum-of-a-pair-with-equal-sum-of-digits/) - Hash map, digit-sum buckets
-- [2365. Task Scheduler II](https://robinali34.github.io/blog_leetcode_python/2026/04/10/medium-2365-task-scheduler-ii/) - Simulation, greedy / cooldown
-- [1870. Minimum Speed to Arrive on Time](https://robinali34.github.io/blog_leetcode_python/2026/03/30/medium-1870-minimum-speed-to-arrive-on-time/) - Binary search on answer
-- [33. Search in Rotated Sorted Array](https://robinali34.github.io/blog_leetcode_python/2025/09/23/medium-33-search-in-rotated-sorted-array/) - Binary Search
-- [48. Rotate Image](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-48-rotate-image/) - Matrix Rotation
-- [54. Spiral Matrix](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-54-spiral-matrix/) - Simulation
-- [62. Unique Paths](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-62-unique-paths/) - DP, Combinatorics
-- [695. Max Area of Island](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-695-max-area-of-island/) - DFS, Connected Components
-- [240. Search a 2D Matrix II](https://robinali34.github.io/blog_leetcode_python/2025/10/07/medium-240-search-a-2d-matrix-ii/) - Binary Search, Divide & Conquer
-- [300. Longest Increasing Subsequence](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-300-longest-increasing-subsequence/) - DP, Binary Search
-- [406. Queue Reconstruction by Height](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-406-queue-reconstruction-by-height/) - Greedy, Sorting
-- [417. Pacific Atlantic Water Flow](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-417-pacific-atlantic-water-flow/) - DFS, BFS
-- [494. Target Sum](https://robinali34.github.io/blog_leetcode_python/2025/10/15/medium-494-target-sum/) - DP, Subset Sum
-- [503. Next Greater Element II](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-503-next-greater-element-ii/) - Monotonic Stack
-- [912. Sort an Array](https://robinali34.github.io/blog_leetcode_python/2025/10/06/medium-912-sort-an-array/) - Merge Sort, Heap Sort, Counting Sort
-- [1124. Longest Well-Performing Interval](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-1124-longest-well-performing-interval/) - Hash Map, Prefix Sum
-- [1856. Maximum Sum of Minimum Product](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-1856-maximum-sum-of-minimum-product/) - Monotonic Stack, Prefix Sum
-- [2799. Count Complete Subarrays in an Array](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-2799-count-complete-subarrays-in-an-array/) - Sliding Window, Hash Map
-- [1094. Car Pooling](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-22-medium-1094-car-pooling/) - Bucket Sort, Event Processing
-- [1207. Unique Number of Occurrences](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-20-easy-1207-unique-number-of-occurrences/) - Hash Map, Hash Set
-- [347. Top K Frequent Elements](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-21-medium-347-top-k-frequent-elements/) - Bucket Sort, Quickselect, Heap
-- [419. Battleships in a Board](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-21-medium-419-battleships-in-a-board/) - Top-Left Corner, DFS
-- [973. K Closest Points to Origin](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-21-medium-973-k-closest-points-to-origin/) - Sorting, Heap, Quickselect
-
-### String Processing
-
-- [1328. Break a Palindrome](https://robinali34.github.io/blog_leetcode_python/2026/04/07/medium-1328-break-a-palindrome/) - Greedy, first half
-- [3. Longest Substring Without Repeating Characters](https://robinali34.github.io/blog_leetcode_python/2025/10/09/medium-3-longest-substring-without-repeating-characters/) - Hash Map, Two Pointers
-- [187. Repeated DNA Sequences](https://robinali34.github.io/blog_leetcode_python/2026/02/27/medium-187-repeated-dna-sequences/) - Rolling Hash, Bit Encoding
-- [316. Remove Duplicate Letters](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-316-remove-duplicate-letters/) - Monotonic Stack, Greedy
-- [394. Decode String](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-394-decode-string/) - Stack, String Processing
-- [648. Replace Words](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-648-replace-words/) - Trie, Hash Set
-- [794. Valid Tic-Tac-Toe State](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-794-valid-tic-tac-toe-state/) - Simulation, Validation
-- [1249. Minimum Remove to Make Valid Parentheses](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-22-medium-1249-minimum-remove-to-make-valid-parentheses/) - Stack Validation, Parentheses
-
-### Linked List
-
-- [382. Linked List Random Node](https://robinali34.github.io/blog_leetcode_python/2026/04/08/medium-382-linked-list-random-node/) - Reservoir sampling / array
-- [23. Swap Nodes in Pairs](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-23-swap-nodes-in-pairs/) - Recursion, Iteration
-- [25. Reverse Nodes in k-Group](https://robinali34.github.io/blog_leetcode_python/2025/09/24/hard-25-reverse-nodes-in-k-group/) - Recursion, Iteration
-- [708. Insert into a Sorted Circular Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-27-medium-708-insert-into-a-sorted-circular-linked-list/) - Two Pointers, Circular List
-
-### Tree & DFS
-
-- [894. All Possible Full Binary Trees](https://robinali34.github.io/blog_leetcode_python/2026/04/12/medium-894-all-possible-full-binary-trees/) - Recursion, memoization, Catalan-style
-- [314. Binary Tree Vertical Order Traversal](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-314-binary-tree-vertical-order-traversal/) - BFS, Level Order
-- [426. Convert Binary Search Tree to Sorted Doubly Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-22-medium-426-convert-binary-search-tree-to-sorted-doubly-linked-list/) - Inorder Traversal, Recursion
-- [437. Path Sum III](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-437-path-sum-iii/) - DFS, Recursion
-- [545. Boundary of Binary Tree](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-21-medium-545-boundary-of-binary-tree/) - DFS, Boundary Traversal
-- [863. All Nodes Distance K in Binary Tree](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-25-medium-863-all-nodes-distance-k-in-binary-tree/) - Graph Conversion, DFS, Parent Pointer
-- [1443. Minimum Time to Collect All Apples in a Tree](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-1443-minimum-time-to-collect-all-apples-in-a-tree/) - DFS, Tree Traversal
-- [1650. Lowest Common Ancestor of a Binary Tree III](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-1650-lowest-common-ancestor-of-a-binary-tree-iii/) - Two Pointers, Tree Traversal
-
-### Dynamic Programming
-
-- [62. Unique Paths](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-62-unique-paths/) - DP, Combinatorics
-- [96. Unique Binary Search Trees](https://robinali34.github.io/blog_leetcode_python/2025/10/03/medium-96-unique-binary-search-trees/) - DP, Catalan Numbers
-- [300. Longest Increasing Subsequence](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-300-longest-increasing-subsequence/) - DP, Binary Search
-- [494. Target Sum](https://robinali34.github.io/blog_leetcode_python/2025/10/15/medium-494-target-sum/) - DP, Subset Sum
-- [2466. Count Ways To Build Good Strings](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-2466-count-ways-to-build-good-strings/) - DP, Bottom-up, Top-down
-
-### Backtracking
-
-- [46. Permutations](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-46-permutations/) - Backtracking, STL
-- [47. Permutations II](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-47-permutations-ii/) - Backtracking, STL, Duplicates
-- [77. Combinations](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-77-combinations/) - Backtracking
-- [131. Palindrome Partitioning](https://robinali34.github.io/blog_leetcode_python/2025/09/30/medium-131-palindrome-partitioning/) - Backtracking, DFS
-
-### Stack & Queue
-
-- [84. Largest Rectangle in Histogram](https://robinali34.github.io/blog_leetcode_python/2025/10/21/hard-84-largest-rectangle-in-histogram/) - Monotonic Stack
-- [150. Evaluate Reverse Polish Notation](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-150-evaluate-reverse-polish-notation/) - Stack
-- [316. Remove Duplicate Letters](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-316-remove-duplicate-letters/) - Monotonic Stack, Greedy
-- [636. Exclusive Time of Functions](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-27-medium-636-exclusive-time-of-functions/) - Stack, Log Parsing
-- [503. Next Greater Element II](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-503-next-greater-element-ii/) - Monotonic Stack
-- [1856. Maximum Sum of Minimum Product](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-1856-maximum-sum-of-minimum-product/) - Monotonic Stack, Prefix Sum
-
-### Graph & Union Find
-
-- [261. Graph Valid Tree](https://robinali34.github.io/blog_leetcode_python/2026/04/01/medium-261-graph-valid-tree/) - Union-find / DFS, n-1 edges
-- [417. Pacific Atlantic Water Flow](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-417-pacific-atlantic-water-flow/) - DFS, BFS
-- [863. All Nodes Distance K in Binary Tree](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-25-medium-863-all-nodes-distance-k-in-binary-tree/) - Graph Conversion, DFS, Parent Pointer
-- [990. Satisfiability of Equality Equations](https://robinali34.github.io/blog_leetcode_python/2025/10/04/medium-990-satisfiability-of-equality-equations/) - Union Find, DFS
-- [317. Shortest Distance from All Buildings](https://robinali34.github.io/blog_leetcode_python/2025/09/24/hard-317-shortest-distance-from-all-buildings/) - BFS, Multi-source
-
-### Data Structure Design
-
-- [1570. Dot Product of Two Sparse Vectors](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-1570-dot-product-of-two-sparse-vectors/) - Hash Map, Optimization
-- [1865. Finding Pairs With a Certain Sum](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-1865-finding-pairs-with-a-certain-sum/) - Hash Map, Count Tracking
-- [2043. Simple Bank System](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-2043-simple-bank-system/) - Data Structure Design
-- [348. Design Tic-Tac-Toe](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-21-medium-348-design-tic-tac-toe/) - Counter Optimization, State Tracking
-
-### Advanced Algorithms
-
-- [218. The Skyline Problem](https://robinali34.github.io/blog_leetcode_python/2025/10/05/hard-218-skyline-problem/) - Sweep Line, Priority Queue
-- [1242. Web Crawler Multithreaded](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-1242-web-crawler-multithreaded/) - Multithreading, BFS
-
-### Math & Bit Manipulation
-
-- [223. Rectangle Area](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-223-rectangle-area/) - Axis-aligned overlap
-- [2433. Find The Original Array of Prefix Xor](https://robinali34.github.io/blog_leetcode_python/2026/04/05/medium-2433-find-the-original-array-of-prefix-xor/) - XOR inverse
-- [260. Single Number III](https://robinali34.github.io/blog_leetcode_python/2026/03/31/medium-260-single-number-iii/) - XOR, lowest set bit
-- [50. Pow(x, n)](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-50-pow-x-n/) - Fast Exponentiation
-- [89. Gray Code](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-89-gray-code/) - Bit Manipulation
-
-### Run-Length Encoding
-
-- [1868. Product of Two Run-Length Encoded Arrays](https://robinali34.github.io/blog_leetcode_python/2025/10/21/medium-1868-product-of-two-run-length-encoded-arrays/) - Two Pointers, Array Processing
+See the **All LeetCode Problems** table above for concrete problems in each category.
 
 ## Solution Approaches Summary
 
 ### Most Common Approaches
 
-1. **Dynamic Programming (DP)** - 5 problems
-2. **Monotonic Stack** - 4 problems
-3. **Binary Search** - 4 problems
-4. **Hash Map/Set** - 6 problems
-5. **DFS/BFS** - 5 problems
-6. **Backtracking** - 2 problems
-7. **Sliding Window** - 2 problems
-8. **Two Pointers** - 2 problems
-9. **Trie** - 1 problem
-10. **Union Find** - 1 problem
-11. **Sweep Line** - 1 problem
-12. **Data Structure Design** - 2 problems
-
-### Algorithm Patterns
-
-- **Array Processing:** Sliding window, two pointers, prefix sum
-- **String Processing:** Trie, hash map, monotonic stack
-- **Graph Traversal:** DFS, BFS, Union Find
-- **Optimization:** Dynamic programming, greedy algorithms
-- **Data Structures:** Stack, queue, heap, trie
-- **Search:** Binary search, divide and conquer
+1. **Dynamic Programming (DP)** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/))
+2. **Monotonic Stack** - 9 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/))
+3. **Binary Search** - 20 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/))
+4. **Hash Map/Set** - 44 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
+5. **DFS/BFS** - 62 problems ([DFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/))
+6. **Backtracking** - 15 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/))
+7. **Sliding Window** - 17 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
+8. **Two Pointers** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
+9. **Trie** - 8 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-data-structures/))
+10. **Union Find** - 10 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/))
+11. **Sweep Line** - 4 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/))
+12. **Data Structure Design** - 33 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/))
 
 ## Tips for Problem Solving
 

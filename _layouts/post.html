@@ -7,13 +7,21 @@ layout: default
   <header class="post-header">
     <div class="header-content">
       <h1 class="site-title">
-        <a href="{{ '/' | relative_url }}">{{ site.title | default: "C++ & Systems Blog" }}</a>
+        {%- if jekyll.environment == "development" -%}
+          <a href="/">{{ site.title | default: "C++ & Systems Blog" }}</a>
+        {%- else -%}
+          <a href="{{ '/' | relative_url }}">{{ site.title | default: "C++ & Systems Blog" }}</a>
+        {%- endif -%}
       </h1>
       <nav class="site-nav">
         {%- for page_path in site.header_pages -%}
           {%- assign page_obj = site.pages | where: "path", page_path | first -%}
           {%- if page_obj -%}
-            <a href="{{ page_obj.url | relative_url }}">{{ page_obj.title | escape }}</a>
+            {%- if jekyll.environment == "development" -%}
+              <a href="{{ page_obj.url }}">{{ page_obj.title | escape }}</a>
+            {%- else -%}
+              <a href="{{ page_obj.url | relative_url }}">{{ page_obj.title | escape }}</a>
+            {%- endif -%}
           {%- endif -%}
         {%- endfor -%}
       </nav>
@@ -191,58 +199,27 @@ layout: default
     const tocList = document.getElementById('tocList');
     if (!tocList) return;
 
-    let tocHTML = '';
-    let lastLevel = 0; // Track the level of the last item we processed
-    let openLists = 0; // Track how many nested lists are currently open
-
+    tocList.innerHTML = '';
     headings.forEach((heading, index) => {
-      const level = parseInt(heading.tagName.charAt(1));
-      // Skip levels beyond 4 (h5, h6) - only process h2, h3, h4
+      const level = parseInt(heading.tagName.charAt(1), 10);
       if (level > 4) return;
-      
+
       const id = heading.id || `heading-${index}`;
-      
-      // Set ID if not already set
       if (!heading.id) {
         heading.id = id;
       }
 
-      // Close previous list item (except for the first one)
-      if (index > 0) {
-        tocHTML += '</li>';
-      }
+      const li = document.createElement('li');
+      li.className = `toc-item toc-level-${level}`;
 
-      // Close nested lists if we're going up in level (not same level)
-      while (openLists > 0 && level < lastLevel) {
-        tocHTML += '</ul>';
-        openLists--;
-      }
+      const link = document.createElement('a');
+      link.href = `#${id}`;
+      link.className = 'toc-link';
+      link.textContent = heading.textContent.trim();
 
-      // If going deeper (and we have a previous item), open a new nested list
-      // Don't open a list for the first item - it goes in the root list
-      if (index > 0 && level > lastLevel) {
-        tocHTML += '<ul class="toc-sublist">';
-        openLists++;
-      }
-
-      // Start new list item
-      const text = heading.textContent.trim();
-      tocHTML += `<li class="toc-item toc-level-${level}">`;
-      tocHTML += `<a href="#${id}" class="toc-link">${text}</a>`;
-
-      lastLevel = level;
+      li.appendChild(link);
+      tocList.appendChild(li);
     });
-
-    // Close all remaining open items and lists
-    if (headings.length > 0) {
-      tocHTML += '</li>';
-    }
-    while (openLists > 0) {
-      tocHTML += '</ul>';
-      openLists--;
-    }
-
-    tocList.innerHTML = tocHTML;
 
     // Add smooth scroll behavior
     tocList.querySelectorAll('a').forEach(link => {
