@@ -293,6 +293,7 @@ def partition(head: ListNode | None, x: int) -> ListNode | None:
 |---|---|---|---|
 | 876 | Middle of the Linked List | [Link](https://leetcode.com/problems/middle-of-the-linked-list/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/10/easy-876-middle-of-the-linked-list/) |
 | 143 | Reorder List | [Link](https://leetcode.com/problems/reorder-list/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/14/medium-143-reorder-list/) |
+| 1669 | Merge In Between Linked Lists | [Link](https://leetcode.com/problems/merge-in-between-linked-lists/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/15/medium-1669-merge-in-between-linked-lists/) |
 | 19 | Remove Nth Node From End of List | [Link](https://leetcode.com/problems/remove-nth-node-from-end-of-list/) | - |
 
 ## Dummy Node Pattern

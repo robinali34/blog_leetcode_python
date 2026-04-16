@@ -12,9 +12,9 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 315 (LC problem posts)
+- **Total Posts:** 316 (LC problem posts)
 - **Easy:** 57 problems
-- **Medium:** 224 problems
+- **Medium:** 225 problems
 - **Hard:** 34 problems
 
 ## All LeetCode Problems
@@ -98,6 +98,7 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 | [151](https://robinali34.github.io/blog_leetcode_python/2026/03/27/medium-151-reverse-words-in-a-string/)                                     | [Reverse Words In A String](https://leetcode.com/problems/reverse-words-in-a-string/)                                                             | Medium     | String, Two Pointers                                                                    | [String, Deque, Two Pointers](https://robinali34.github.io/blog_leetcode_python/2026/03/27/medium-151-reverse-words-in-a-string/)                                                               | 2026-03-27 |
 | [155](https://robinali34.github.io/blog_leetcode_python/2026/02/11/medium-155-min-stack/)                                                     | [Min Stack](https://leetcode.com/problems/min-stack/)                                                                                             | Medium     | Stack                                                                                   | [Stack, Data Structure Design](https://robinali34.github.io/blog_leetcode_python/2026/02/11/medium-155-min-stack/)                                                                              | 2026-02-11 |
 | [162](https://robinali34.github.io/blog_leetcode_python/2026/01/30/medium-162-find-peak-element/)                                             | [Find Peak Element](https://leetcode.com/problems/find-peak-element/)                                                                             | Medium     | Array, Binary Search                                                                    | [Array, Binary Search](https://robinali34.github.io/blog_leetcode_python/2026/01/30/medium-162-find-peak-element/)                                                                              | 2026-01-30 |
+| [1669](https://robinali34.github.io/blog_leetcode_python/2026/04/15/medium-1669-merge-in-between-linked-lists/)                               | [Merge In Between Linked Lists](https://leetcode.com/problems/merge-in-between-linked-lists/)                                                     | Medium     | Linked List                                                                             | [Pointer Rewiring, Dummy Node, Linked List](https://robinali34.github.io/blog_leetcode_python/2026/04/15/medium-1669-merge-in-between-linked-lists/)                                            | 2026-04-15 |
 | [187](https://robinali34.github.io/blog_leetcode_python/2026/02/27/medium-187-repeated-dna-sequences/)                                        | [Repeated Dna Sequences](https://leetcode.com/problems/repeated-dna-sequences/)                                                                   | Medium     | String, Hashing, Sliding Window, Bit Manipulation                                       | [String, Hashing, Sliding Window, Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/2026/02/27/medium-187-repeated-dna-sequences/)                                            | 2026-02-27 |
 | [189](https://robinali34.github.io/blog_leetcode_python/2026/01/20/medium-189-rotate-array/)                                                  | [Rotate Array](https://leetcode.com/problems/rotate-array/)                                                                                       | Medium     | Array                                                                                   | [Array, Rotation, Two Pointers](https://robinali34.github.io/blog_leetcode_python/2026/01/20/medium-189-rotate-array/)                                                                          | 2026-01-20 |
 | [198](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-18-medium-198-house-robber/)                                            | [House Robber](https://leetcode.com/problems/house-robber/)                                                                                       | Medium     | Dynamic Programming, DP                                                                 | [Dynamic Programming, DP, Array, Optimization](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-18-medium-198-house-robber/)                                                     | 2025-11-18 |
@@ -339,23 +340,13 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 | [3477](https://robinali34.github.io/blog_leetcode_python/2026/01/16/medium-3477-number-of-unplaced-fruits/)                                   | [Number Of Unplaced Fruits](https://leetcode.com/problems/number-of-unplaced-fruits/)                                                             | Medium     | Array, Greedy, Segment Tree                                                             | [Array, Greedy, Segment Tree, Data Structure](https://robinali34.github.io/blog_leetcode_python/2026/01/16/medium-3477-number-of-unplaced-fruits/)                                              | 2026-01-16 |
 
 
-## Problems by Difficulty
-
-See the **All LeetCode Problems** table above for the full list.
-
-### Easy (57 problems)
-
-### Medium (224 problems)
-
-### Hard (34 problems)
-
 ## Problems by Category
 
 _Counts are computed from the `Category` + `Solution Approach` columns in the full table by tag matching (a problem can appear in multiple categories)._
 
 - **Array & Matrix** (128): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
 - **String Processing** (94): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
-- **Linked List** (16): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
+- **Linked List** (17): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
 - **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
 - **Dynamic Programming** (37): [Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/)
 - **Backtracking** (15): [Backtracking](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/)
@@ -395,5 +386,5 @@ See the **All LeetCode Problems** table above for concrete problems in each cate
 
 ---
 
-*Last updated: April 14, 2026*
-*Total posts (LC problems): 315*
+*Last updated: April 15, 2026*
+*Total posts (LC problems): 316*

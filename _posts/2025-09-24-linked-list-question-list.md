@@ -30,6 +30,7 @@ categories: leetcode algorithm linked-list data-structures interview-preparation
 | 82  | Remove Duplicates from Sorted List II | [🔗 LeetCode](https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii) | ☐ |
 | 24  | Swap Nodes in Pairs | [🔗 LeetCode](https://leetcode.com/problems/swap-nodes-in-pairs) | ☑ |
 | 143 | Reorder List | [🔗 LeetCode](https://leetcode.com/problems/reorder-list) | ☑ |
+| 1669 | Merge In Between Linked Lists | [🔗 LeetCode](https://leetcode.com/problems/merge-in-between-linked-lists) | ☑ |
 | 92  | Reverse Linked List II | [🔗 LeetCode](https://leetcode.com/problems/reverse-linked-list-ii) | ☐ |
 | 86  | Partition List | [🔗 LeetCode](https://leetcode.com/problems/partition-list) | ☐ |
 | 328 | Odd Even Linked List | [🔗 LeetCode](https://leetcode.com/problems/odd-even-linked-list) | ☐ |

@@ -18,17 +18,7 @@ Have fun~
 - **Software Engineering**: Best practices and patterns in software development
 - **Learning Resources**: Tutorials and guides for technical topics
 
-## Contact
-
-Feel free to reach out if you have any questions or would like to discuss technical topics!
-
-### Get in Touch
-
-- **GitHub**: [@robinali34](https://github.com/robinali34)
-- **LinkedIn**: Connect with me for professional discussions
-- **Email**: For direct inquiries and collaborations
-
-### What I'm Interested In
+## What I'm Interested In
 
 - Algorithm discussions and problem-solving
 - Software engineering best practices
@@ -36,6 +26,6 @@ Feel free to reach out if you have any questions or would like to discuss techni
 - Open source contributions
 - Technical writing and documentation
 
-### Response Time
+### Get in Touch
 
-I typically respond to messages within 24-48 hours. For urgent matters, please mention it in your message.
+- **GitHub**: [@robinali34](https://github.com/robinali34)
