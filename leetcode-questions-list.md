@@ -17,6 +17,50 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 - **Medium:** 225 problems
 - **Hard:** 34 problems
 
+## Problems by Category
+
+_Counts are computed from the `Category` + `Solution Approach` columns in the full table by tag matching (a problem can appear in multiple categories)._
+
+- **Array & Matrix** (128): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
+- **String Processing** (94): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
+- **Linked List** (17): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
+- **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
+- **Dynamic Programming** (37): [Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/)
+- **Backtracking** (15): [Backtracking](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/)
+- **Monotonic Stack / Queue** (11): [Stack](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/), [Queue](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-queue/)
+- **Graph & Union Find** (38): [Graph](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/)
+- **Data Structure Design** (33): [Data Structure Design](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/)
+- **Intervals & Sweep Line** (12): [Greedy](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/)
+- **Math & Bit Manipulation** (26): [Math & Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-math-bit-manipulation/), [Math & Geometry](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-math-geometry/)
+- **Run-Length Encoding** (2)
+
+See the **All LeetCode Problems** table below for concrete problems in each category.
+
+## Solution Approaches Summary
+
+### Most Common Approaches
+
+1. **Dynamic Programming (DP)** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/))
+2. **Monotonic Stack** - 9 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/))
+3. **Binary Search** - 20 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/))
+4. **Hash Map/Set** - 44 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
+5. **DFS/BFS** - 62 problems ([DFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/))
+6. **Backtracking** - 15 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/))
+7. **Sliding Window** - 17 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
+8. **Two Pointers** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
+9. **Trie** - 8 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-data-structures/))
+10. **Union Find** - 10 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/))
+11. **Sweep Line** - 4 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/))
+12. **Data Structure Design** - 33 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/))
+
+## Tips for Problem Solving
+
+1. **Identify the Pattern:** Look for common algorithm patterns (DP, sliding window, etc.)
+2. **Start Simple:** Begin with brute force, then optimize
+3. **Use Data Structures:** Choose appropriate DS for the problem
+4. **Consider Edge Cases:** Handle boundary conditions
+5. **Optimize Space/Time:** Trade-offs between complexity and efficiency
+
 ## All LeetCode Problems
 
 
@@ -338,51 +382,6 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 | [3342](https://robinali34.github.io/blog_leetcode_python/2026/02/10/medium-3342-find-minimum-time-to-reach-last-room-ii/)                     | [Find Minimum Time To Reach Last Room Ii](https://leetcode.com/problems/find-minimum-time-to-reach-last-room-ii/)                                 | Medium     | Graph, Shortest Path, Dijkstra, Grid                                                    | [Graph, Shortest Path, Dijkstra, Grid](https://robinali34.github.io/blog_leetcode_python/2026/02/10/medium-3342-find-minimum-time-to-reach-last-room-ii/)                                       | 2026-02-10 |
 | [3439](https://robinali34.github.io/blog_leetcode_python/2026/02/06/medium-3439-reschedule-meetings-for-maximum-free-time-i/)                 | [Reschedule Meetings For Maximum Free Time I](https://leetcode.com/problems/reschedule-meetings-for-maximum-free-time-i/)                         | Medium     | Array, Intervals, Sliding Window, Prefix Sum                                            | [Array, Intervals, Sliding Window, Prefix Sum](https://robinali34.github.io/blog_leetcode_python/2026/02/06/medium-3439-reschedule-meetings-for-maximum-free-time-i/)                           | 2026-02-06 |
 | [3477](https://robinali34.github.io/blog_leetcode_python/2026/01/16/medium-3477-number-of-unplaced-fruits/)                                   | [Number Of Unplaced Fruits](https://leetcode.com/problems/number-of-unplaced-fruits/)                                                             | Medium     | Array, Greedy, Segment Tree                                                             | [Array, Greedy, Segment Tree, Data Structure](https://robinali34.github.io/blog_leetcode_python/2026/01/16/medium-3477-number-of-unplaced-fruits/)                                              | 2026-01-16 |
-
-
-## Problems by Category
-
-_Counts are computed from the `Category` + `Solution Approach` columns in the full table by tag matching (a problem can appear in multiple categories)._
-
-- **Array & Matrix** (128): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
-- **String Processing** (94): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
-- **Linked List** (17): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
-- **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
-- **Dynamic Programming** (37): [Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/)
-- **Backtracking** (15): [Backtracking](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/)
-- **Monotonic Stack / Queue** (11): [Stack](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/), [Queue](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-queue/)
-- **Graph & Union Find** (38): [Graph](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/)
-- **Data Structure Design** (33): [Data Structure Design](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/)
-- **Intervals & Sweep Line** (12): [Greedy](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/)
-- **Math & Bit Manipulation** (26): [Math & Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-math-bit-manipulation/), [Math & Geometry](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-math-geometry/)
-- **Run-Length Encoding** (2)
-
-See the **All LeetCode Problems** table above for concrete problems in each category.
-
-## Solution Approaches Summary
-
-### Most Common Approaches
-
-1. **Dynamic Programming (DP)** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/))
-2. **Monotonic Stack** - 9 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/))
-3. **Binary Search** - 20 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/))
-4. **Hash Map/Set** - 44 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
-5. **DFS/BFS** - 62 problems ([DFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/))
-6. **Backtracking** - 15 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/))
-7. **Sliding Window** - 17 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
-8. **Two Pointers** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
-9. **Trie** - 8 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-data-structures/))
-10. **Union Find** - 10 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/))
-11. **Sweep Line** - 4 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/))
-12. **Data Structure Design** - 33 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/))
-
-## Tips for Problem Solving
-
-1. **Identify the Pattern:** Look for common algorithm patterns (DP, sliding window, etc.)
-2. **Start Simple:** Begin with brute force, then optimize
-3. **Use Data Structures:** Choose appropriate DS for the problem
-4. **Consider Edge Cases:** Handle boundary conditions
-5. **Optimize Space/Time:** Trade-offs between complexity and efficiency
 
 ---
 
