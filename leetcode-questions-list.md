@@ -12,9 +12,9 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 316 (LC problem posts)
+- **Total Posts:** 317 (LC problem posts)
 - **Easy:** 57 problems
-- **Medium:** 225 problems
+- **Medium:** 226 problems
 - **Hard:** 34 problems
 
 ## Problems by Category
@@ -23,7 +23,7 @@ _Counts are computed from the `Category` + `Solution Approach` columns in the fu
 
 - **Array & Matrix** (128): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
 - **String Processing** (94): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
-- **Linked List** (17): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
+- **Linked List** (18): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
 - **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
 - **Dynamic Programming** (37): [Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/)
 - **Backtracking** (15): [Backtracking](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/)
@@ -112,6 +112,7 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 | [80](https://robinali34.github.io/blog_leetcode_python/2026/03/01/medium-80-remove-duplicates-from-sorted-array-ii/)                          | [Remove Duplicates From Sorted Array II](https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/)                                   | Medium     | Array, Two Pointers                                                                     | [Array, Two Pointers, In Place](https://robinali34.github.io/blog_leetcode_python/2026/03/01/medium-80-remove-duplicates-from-sorted-array-ii/)                                                 | 2026-03-01 |
 | [84](https://robinali34.github.io/blog_leetcode_python/2025/10/20/hard-84-largest-rectangle-in-histogram/)                                    | [Largest Rectangle In Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/)                                                   | Hard       | Stack, Monotonic Stack                                                                  | [Stack, Monotonic Stack](https://robinali34.github.io/blog_leetcode_python/2025/10/20/hard-84-largest-rectangle-in-histogram/)                                                                  | 2025-10-20 |
 | [89](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-89-gray-code/)                                                       | [Gray Code](https://leetcode.com/problems/gray-code/)                                                                                             | Medium     | Gray Code                                                                               | [Gray Code](https://robinali34.github.io/blog_leetcode_python/2025/09/25/medium-89-gray-code/)                                                                                                  | 2025-09-25 |
+| [92](https://robinali34.github.io/blog_leetcode_python/2026/04/16/medium-92-reverse-linked-list-ii/)                                         | [Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/)                                                                   | Medium     | Linked List                                                                             | [Linked List, In Place, Head Insertion, Pointer Manipulation](https://robinali34.github.io/blog_leetcode_python/2026/04/16/medium-92-reverse-linked-list-ii/)                                  | 2026-04-16 |
 | [91](https://robinali34.github.io/blog_leetcode_python/2026/02/09/medium-91-decode-ways/)                                                     | [Decode Ways](https://leetcode.com/problems/decode-ways/)                                                                                         | Medium     | Dynamic Programming                                                                     | [Dynamic Programming, String](https://robinali34.github.io/blog_leetcode_python/2026/02/09/medium-91-decode-ways/)                                                                              | 2026-02-09 |
 | [93](https://robinali34.github.io/blog_leetcode_python/2025/11/14/medium-93-restore-ip-addresses/)                                            | [Restore Ip Addresses](https://leetcode.com/problems/restore-ip-addresses/)                                                                       | Medium     | Backtracking, String                                                                    | [Backtracking, String](https://robinali34.github.io/blog_leetcode_python/2025/11/14/medium-93-restore-ip-addresses/)                                                                            | 2025-11-14 |
 | [94](https://robinali34.github.io/blog_leetcode_python/2026/03/06/easy-94-binary-tree-inorder-traversal/)                                     | [Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/)                                                     | Easy       | Tree, DFS                                                                               | [Tree, Inorder, Stack](https://robinali34.github.io/blog_leetcode_python/2026/03/06/easy-94-binary-tree-inorder-traversal/)                                                                     | 2026-03-06 |
@@ -385,5 +386,5 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 
 ---
 
-*Last updated: April 15, 2026*
-*Total posts (LC problems): 316*
+*Last updated: April 16, 2026*
+*Total posts (LC problems): 317*
