@@ -10,30 +10,6 @@ categories: leetcode algorithm problem-solving
 
 This page contains a comprehensive list of all LeetCode problems solved in this blog, organized by difficulty level, category, and solution approach.
 
-## Translate This Page
-
-<label for="translate-lang"><strong>Choose language:</strong></label>
-<select id="translate-lang" onchange="translateCurrentPage(this.value)">
-  <option value="">Select language</option>
-  <option value="es">Spanish</option>
-  <option value="fr">French</option>
-  <option value="de">German</option>
-  <option value="it">Italian</option>
-  <option value="pt">Portuguese</option>
-  <option value="ja">Japanese</option>
-  <option value="ko">Korean</option>
-  <option value="zh-CN">Chinese (Simplified)</option>
-</select>
-
-<script>
-  function translateCurrentPage(lang) {
-    if (!lang) return;
-    var pageUrl = window.location.href;
-    var target = "https://translate.google.com/translate?sl=auto&tl=" + encodeURIComponent(lang) + "&u=" + encodeURIComponent(pageUrl);
-    window.open(target, "_blank", "noopener,noreferrer");
-  }
-</script>
-
 ## Summary Statistics
 
 - **Total Posts:** 316 (LC problem posts)
