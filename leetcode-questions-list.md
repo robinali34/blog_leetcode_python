@@ -12,16 +12,16 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 317 (LC problem posts)
+- **Total Posts:** 318 (LC problem posts)
 - **Easy:** 57 problems
-- **Medium:** 226 problems
+- **Medium:** 227 problems
 - **Hard:** 34 problems
 
 ## Problems by Category
 
 _Counts are computed from the `Category` + `Solution Approach` columns in the full table by tag matching (a problem can appear in multiple categories)._
 
-- **Array & Matrix** (128): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
+- **Array & Matrix** (129): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
 - **String Processing** (94): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
 - **Linked List** (18): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
 - **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
@@ -178,6 +178,7 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 | [261](https://robinali34.github.io/blog_leetcode_python/2026/04/01/medium-261-graph-valid-tree/)                                              | [Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/)                                                                               | Medium     | Graph, Union Find, DFS                                                                  | [Graph, Union Find, DFS, Tree](https://robinali34.github.io/blog_leetcode_python/2026/04/01/medium-261-graph-valid-tree/)                                                                       | 2026-04-01 |
 | [269](https://robinali34.github.io/blog_leetcode_python/2026/01/14/hard-269-alien-dictionary/)                                                | [Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)                                                                               | Hard       | Graph, Topological Sort, String                                                         | [Graph, Topological Sort, String, BFS, Kahn](https://robinali34.github.io/blog_leetcode_python/2026/01/14/hard-269-alien-dictionary/)                                                           | 2026-01-14 |
 | [270](https://robinali34.github.io/blog_leetcode_python/2025/12/30/easy-270-closest-binary-search-tree-value/)                                | [Closest Binary Search Tree Value](https://leetcode.com/problems/closest-binary-search-tree-value/)                                               | Easy       | Binary Search Tree, Tree, Recursion, Binary Search                                      | [Binary Search Tree, Tree, Recursion, Binary Search](https://robinali34.github.io/blog_leetcode_python/2025/12/30/easy-270-closest-binary-search-tree-value/)                                   | 2025-12-30 |
+| [274](https://robinali34.github.io/blog_leetcode_python/2026/04/17/medium-274-h-index/)                                                       | [H Index](https://leetcode.com/problems/h-index/)                                                                                               | Medium     | Array, Sorting, Greedy                                                                  | [Array, Sorting, H-Index, Greedy](https://robinali34.github.io/blog_leetcode_python/2026/04/17/medium-274-h-index/)                                                                            | 2026-04-17 |
 | [277](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-medium-277-find-the-celebrity/)                                      | [Find The Celebrity](https://leetcode.com/problems/find-the-celebrity/)                                                                           | Medium     | Graph, Two Pointers                                                                     | [Graph, Two Pointers, Celebrity](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-medium-277-find-the-celebrity/)                                                             | 2025-11-24 |
 | [279](https://robinali34.github.io/blog_leetcode_python/2025/12/14/medium-279-perfect-squares/)                                               | [Perfect Squares](https://leetcode.com/problems/perfect-squares/)                                                                                 | Medium     | Math, Dynamic Programming, BFS                                                          | [Math, Dynamic Programming, BFS](https://robinali34.github.io/blog_leetcode_python/2025/12/14/medium-279-perfect-squares/)                                                                      | 2025-12-14 |
 | [281](https://robinali34.github.io/blog_leetcode_python/2025/12/10/medium-281-zigzag-iterator/)                                               | [Zigzag Iterator](https://leetcode.com/problems/zigzag-iterator/)                                                                                 | Medium     | Design, Iterator                                                                        | [Design, Iterator](https://robinali34.github.io/blog_leetcode_python/2025/12/10/medium-281-zigzag-iterator/)                                                                                    | 2025-12-10 |
@@ -386,5 +387,5 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 
 ---
 
-*Last updated: April 16, 2026*
-*Total posts (LC problems): 317*
+*Last updated: April 17, 2026*
+*Total posts (LC problems): 318*

@@ -300,6 +300,7 @@ def reconstructQueue(self, people):
 | 621 | Task Scheduler | [Link](https://leetcode.com/problems/task-scheduler/) | - |
 | 435 | Non-overlapping Intervals | [Link](https://leetcode.com/problems/non-overlapping-intervals/) | [Solution](https://robinali34.github.io/blog_leetcode/2026/01/03/medium-435-non-overlapping-intervals/) |
 | 55 | Jump Game | [Link](https://leetcode.com/problems/jump-game/) | [Solution](https://robinali34.github.io/blog_leetcode/2026/01/03/medium-55-jump-game/) |
+| 274 | H-Index | [Link](https://leetcode.com/problems/h-index/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/17/medium-274-h-index/) |
 | 1094 | Car Pooling | [Link](https://leetcode.com/problems/car-pooling/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-10-22-medium-1094-car-pooling/) |
 | 45 | Jump Game II | [Link](https://leetcode.com/problems/jump-game-ii/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-18-medium-45-jump-game-ii/) |
 | 134 | Gas Station | [Link](https://leetcode.com/problems/gas-station/) | - |
