@@ -78,7 +78,7 @@ def unique_paths_with_obstacles(g: list[list[int]]) -> int:
 |---|---|---|
 | 62 | Unique Paths | [Unique Paths](https://leetcode.com/problems/unique-paths/) |
 | 63 | Unique Paths II | [Unique Paths II](https://leetcode.com/problems/unique-paths-ii/) |
-| 221 | Maximal Square | [Maximal Square](https://leetcode.com/problems/maximal-square/) |
+| 221 | Maximal Square | [Problem](https://leetcode.com/problems/maximal-square/) · [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/18/medium-221-maximal-square/) |
 
 ## Digit DP (count numbers with property)
 

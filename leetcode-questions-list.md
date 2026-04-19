@@ -12,20 +12,20 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 318 (LC problem posts)
+- **Total Posts:** 319 (LC problem posts)
 - **Easy:** 57 problems
-- **Medium:** 227 problems
+- **Medium:** 228 problems
 - **Hard:** 34 problems
 
 ## Problems by Category
 
 _Counts are computed from the `Category` + `Solution Approach` columns in the full table by tag matching (a problem can appear in multiple categories)._
 
-- **Array & Matrix** (129): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
+- **Array & Matrix** (130): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
 - **String Processing** (94): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
 - **Linked List** (18): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
 - **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
-- **Dynamic Programming** (37): [Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/)
+- **Dynamic Programming** (38): [Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/)
 - **Backtracking** (15): [Backtracking](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/)
 - **Monotonic Stack / Queue** (11): [Stack](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/), [Queue](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-queue/)
 - **Graph & Union Find** (38): [Graph](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/)
@@ -40,7 +40,7 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 
 ### Most Common Approaches
 
-1. **Dynamic Programming (DP)** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/))
+1. **Dynamic Programming (DP)** - 38 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/))
 2. **Monotonic Stack** - 9 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/))
 3. **Binary Search** - 20 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/))
 4. **Hash Map/Set** - 44 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
@@ -162,6 +162,7 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 | [217](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-217-contains-duplicate/)                                              | [Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)                                                                           | Easy       | Array, Hash Table                                                                       | [Array, Set](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-217-contains-duplicate/)                                                                                         | 2026-03-07 |
 | [218](https://robinali34.github.io/blog_leetcode_python/2025/10/05/hard-218-skyline-problem/)                                                 | [Skyline Problem](https://leetcode.com/problems/skyline-problem/)                                                                                 | Hard       | Sweep Line, Priority Queue, Data Structures, Union Find                                 | [Sweep Line, Priority Queue, Data Structures, Union Find](https://robinali34.github.io/blog_leetcode_python/2025/10/05/hard-218-skyline-problem/)                                               | 2025-10-05 |
 | [219](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-219-contains-duplicate-ii/)                                           | [Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/)                                                                     | Easy       | Array, Hash Table, Sliding Window                                                       | [Array, Set, Sliding Window](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-219-contains-duplicate-ii/)                                                                      | 2026-03-07 |
+| [221](https://robinali34.github.io/blog_leetcode_python/2026/04/18/medium-221-maximal-square/)                                                | [Maximal Square](https://leetcode.com/problems/maximal-square/)                                                                                 | Medium     | Array, Matrix, Dynamic Programming                                                      | [Matrix, 2D DP, Square](https://robinali34.github.io/blog_leetcode_python/2026/04/18/medium-221-maximal-square/)                                                                              | 2026-04-18 |
 | [223](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-223-rectangle-area/)                                                | [Rectangle Area](https://leetcode.com/problems/rectangle-area/)                                                                                   | Medium     | Math, Geometry                                                                          | [Math, Geometry](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-223-rectangle-area/)                                                                                       | 2026-04-09 |
 | [224](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-medium-224-basic-calculator/)                                        | [Basic Calculator](https://leetcode.com/problems/basic-calculator/)                                                                               | Medium     | String, Stack, Expression Evaluation                                                    | [String, Stack, Calculator, Expression Evaluation, Parentheses](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-medium-224-basic-calculator/)                                | 2025-11-13 |
 | [226](https://robinali34.github.io/blog_leetcode_python/2026/01/19/easy-226-invert-binary-tree/)                                              | [Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)                                                                           | Easy       | Tree, DFS                                                                               | [Tree, DFS, Recursion](https://robinali34.github.io/blog_leetcode_python/2026/01/19/easy-226-invert-binary-tree/)                                                                               | 2026-01-19 |
@@ -387,5 +388,5 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 
 ---
 
-*Last updated: April 17, 2026*
-*Total posts (LC problems): 318*
+*Last updated: April 18, 2026*
+*Total posts (LC problems): 319*
