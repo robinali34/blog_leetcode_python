@@ -197,7 +197,7 @@ def dfs_with_memo(
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 329 | Longest Increasing Path in a Matrix | [Link](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/) | - |
+| 329 | Longest Increasing Path in a Matrix | [Link](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/18/medium-329-longest-increasing-path-in-a-matrix/) |
 
 ## Iterative DFS
 
