@@ -12,9 +12,9 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 321 (LC problem posts)
+- **Total Posts:** 322 (LC problem posts)
 - **Easy:** 57 problems
-- **Medium:** 230 problems
+- **Medium:** 231 problems
 - **Hard:** 34 problems
 
 ## Problems by Category
@@ -31,7 +31,7 @@ _Counts are computed from the `Category` + `Solution Approach` columns in the fu
 - **Graph & Union Find** (38): [Graph](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/)
 - **Data Structure Design** (33): [Data Structure Design](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/)
 - **Intervals & Sweep Line** (12): [Greedy](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/)
-- **Math & Bit Manipulation** (27): [Math & Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-math-bit-manipulation/), [Math & Geometry](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-math-geometry/)
+- **Math & Bit Manipulation** (28): [Math & Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-math-bit-manipulation/), [Math & Geometry](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-math-geometry/)
 - **Run-Length Encoding** (2)
 
 See the **All LeetCode Problems** table below for concrete problems in each category.
@@ -44,7 +44,7 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 2. **Monotonic Stack** - 9 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/))
 3. **Binary Search** - 20 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/))
 4. **Hash Map/Set** - 45 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
-5. **DFS/BFS** - 63 problems ([DFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/))
+5. **DFS/BFS** - 64 problems ([DFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/))
 6. **Backtracking** - 15 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/))
 7. **Sliding Window** - 17 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
 8. **Two Pointers** - 37 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
@@ -380,6 +380,7 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 | [2461](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-2461-maximum-sum-of-distinct-subarrays-with-length-k/)             | [Maximum Sum Of Distinct Subarrays With Length K](https://leetcode.com/problems/maximum-sum-of-distinct-subarrays-with-length-k/)                 | Medium     | Array, Sliding Window                                                                   | [Sliding Window, Hash Map](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-2461-maximum-sum-of-distinct-subarrays-with-length-k/)                                           | 2026-04-09 |
 | [2466](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-2466-count-ways-to-build-good-strings/)                            | [Count Ways To Build Good Strings](https://leetcode.com/problems/count-ways-to-build-good-strings/)                                               | Medium     | Dynamic Programming, DP                                                                 | [Dynamic Programming, DP](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-2466-count-ways-to-build-good-strings/)                                                           | 2025-10-16 |
 | [2539](https://robinali34.github.io/blog_leetcode_python/2026/04/19/medium-2539-count-the-number-of-good-subsequences/)                       | [Count The Number Of Good Subsequences](https://leetcode.com/problems/count-the-number-of-good-subsequences/)                                       | Medium     | String, Combinatorics, Hash Map                                                         | [String, Frequency, Combinatorics, Modular Arithmetic](https://robinali34.github.io/blog_leetcode_python/2026/04/19/medium-2539-count-the-number-of-good-subsequences/)                        | 2026-04-19 |
+| [2571](https://robinali34.github.io/blog_leetcode_python/2026/04/20/medium-2571-minimum-operations-to-reduce-an-integer-to-0/)                  | [Minimum Operations To Reduce An Integer To 0](https://leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0/)                         | Medium     | Math, Greedy, Bit Manipulation                                                          | [Greedy, Bit Manipulation, BFS](https://robinali34.github.io/blog_leetcode_python/2026/04/20/medium-2571-minimum-operations-to-reduce-an-integer-to-0/)                                           | 2026-04-20 |
 | [2799](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-2799-count-complete-subarrays-in-an-array/)                        | [Count Complete Subarrays In An Array](https://leetcode.com/problems/count-complete-subarrays-in-an-array/)                                       | Medium     | Sliding Window, Hash Map                                                                | [Sliding Window, Hash Map](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-2799-count-complete-subarrays-in-an-array/)                                                      | 2025-10-17 |
 | [3110](https://robinali34.github.io/blog_leetcode_python/2026/01/18/easy-3110-score-of-a-string/)                                             | [Score Of A String](https://leetcode.com/problems/score-of-a-string/)                                                                             | Easy       | String, Array                                                                           | [String, Array, Simulation, Ascii](https://robinali34.github.io/blog_leetcode_python/2026/01/18/easy-3110-score-of-a-string/)                                                                   | 2026-01-18 |
 | [3112](https://robinali34.github.io/blog_leetcode_python/2026/02/08/medium-3112-minimum-time-to-visit-disappearing-nodes/)                    | [Minimum Time To Visit Disappearing Nodes](https://leetcode.com/problems/minimum-time-to-visit-disappearing-nodes/)                               | Medium     | Graph, Shortest Path, Dijkstra                                                          | [Graph, Shortest Path, Dijkstra](https://robinali34.github.io/blog_leetcode_python/2026/02/08/medium-3112-minimum-time-to-visit-disappearing-nodes/)                                            | 2026-02-08 |
@@ -390,5 +391,5 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 
 ---
 
-*Last updated: April 19, 2026*
-*Total posts (LC problems): 321*
+*Last updated: April 20, 2026*
+*Total posts (LC problems): 322*
