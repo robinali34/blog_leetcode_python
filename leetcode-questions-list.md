@@ -12,16 +12,16 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 324 (LC problem posts)
+- **Total Posts:** 325 (LC problem posts)
 - **Easy:** 57 problems
-- **Medium:** 233 problems
+- **Medium:** 234 problems
 - **Hard:** 34 problems
 
 ## Problems by Category
 
 _Counts are computed from the `Category` + `Solution Approach` columns in the full table by tag matching (a problem can appear in multiple categories)._
 
-- **Array & Matrix** (133): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
+- **Array & Matrix** (134): [Array & Matrix](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-array-matrix/), [Arrays & Strings](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/)
 - **String Processing** (95): [String Processing](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-string-processing/)
 - **Linked List** (18): [Linked List](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-linked-list/)
 - **Trees & Binary Trees** (45): [Trees](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-trees/), [DFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/)
@@ -368,6 +368,7 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 | [1868](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-1868-product-of-two-run-length-encoded-arrays/)                    | [Product Of Two Run Length Encoded Arrays](https://leetcode.com/problems/product-of-two-run-length-encoded-arrays/)                               | Medium     | Run Length Encoding, Two Pointers, Array Processing                                     | [Run Length Encoding, Two Pointers, Array Processing](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-1868-product-of-two-run-length-encoded-arrays/)                       | 2025-10-20 |
 | [1870](https://robinali34.github.io/blog_leetcode_python/2026/03/30/medium-1870-minimum-speed-to-arrive-on-time/)                             | [Minimum Speed To Arrive On Time](https://leetcode.com/problems/minimum-speed-to-arrive-on-time/)                                                 | Medium     | Binary Search                                                                           | [Binary Search, Math](https://robinali34.github.io/blog_leetcode_python/2026/03/30/medium-1870-minimum-speed-to-arrive-on-time/)                                                                | 2026-03-30 |
 | [1944](https://robinali34.github.io/blog_leetcode_python/2026/02/09/hard-1944-number-of-visible-people-in-a-queue/)                           | [Number Of Visible People In A Queue](https://leetcode.com/problems/number-of-visible-people-in-a-queue/)                                         | Hard       | Stack, Monotonic Stack                                                                  | [Stack, Monotonic Stack](https://robinali34.github.io/blog_leetcode_python/2026/02/09/hard-1944-number-of-visible-people-in-a-queue/)                                                           | 2026-02-09 |
+| [1962](https://robinali34.github.io/blog_leetcode_python/2026/04/22/medium-1962-remove-stones-to-minimize-the-total/)                         | [Remove Stones To Minimize The Total](https://leetcode.com/problems/remove-stones-to-minimize-the-total/)                                         | Medium     | Array, Greedy, Heap                                                                     | [Greedy, Max Heap, Priority Queue](https://robinali34.github.io/blog_leetcode_python/2026/04/22/medium-1962-remove-stones-to-minimize-the-total/)                                               | 2026-04-22 |
 | [1976](https://robinali34.github.io/blog_leetcode_python/2025/12/28/medium-1976-number-of-ways-to-arrive-at-destination/)                     | [Number Of Ways To Arrive At Destination](https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/)                                 | Medium     | Dijkstra, Shortest Path, Graph, Dynamic Programming                                     | [Dijkstra, Shortest Path, Graph, Dynamic Programming](https://robinali34.github.io/blog_leetcode_python/2025/12/28/medium-1976-number-of-ways-to-arrive-at-destination/)                        | 2025-12-28 |
 | [2043](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-2043-simple-bank-system/)                                          | [Simple Bank System](https://leetcode.com/problems/simple-bank-system/)                                                                           | Medium     | Design, Data Structure                                                                  | [Design, Data Structure](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-2043-simple-bank-system/)                                                                          | 2025-10-20 |
 | [2080](https://robinali34.github.io/blog_leetcode_python/2026/01/28/medium-2080-range-frequency-queries/)                                     | [Range Frequency Queries](https://leetcode.com/problems/range-frequency-queries/)                                                                 | Medium     | Array, Hash Map, Binary Search, Design                                                  | [Array, Hash Map, Binary Search, Design](https://robinali34.github.io/blog_leetcode_python/2026/01/28/medium-2080-range-frequency-queries/)                                                     | 2026-01-28 |
@@ -393,5 +394,5 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 
 ---
 
-*Last updated: April 21, 2026*
-*Total posts (LC problems): 324*
+*Last updated: April 22, 2026*
+*Total posts (LC problems): 325*
