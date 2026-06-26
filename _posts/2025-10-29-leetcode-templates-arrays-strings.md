@@ -6,7 +6,9 @@ categories: leetcode templates arrays strings
 permalink: /posts/2025-10-29-leetcode-templates-arrays-strings/
 tags: [leetcode, templates, arrays, strings]
 ---
-Arrays and strings are the foundation of coding interviews — you'll encounter them in nearly every problem set. This page provides battle-tested C++ templates for the most important patterns: sliding window, two pointers, binary search on answer, prefix sum, hash maps, and string algorithms like KMP and Manacher. Master these and you'll have the tools to solve a huge fraction of Medium-level problems.
+
+{% raw %}
+Arrays and strings are the foundation of coding interviews — you'll encounter them in nearly every problem set. This page provides battle-tested Python templates for the most important patterns: sliding window, two pointers, binary search on answer, prefix sum, hash maps, and string algorithms like KMP and Manacher. Master these and you'll have the tools to solve a huge fraction of Medium-level problems.
 
 > **This template covers the fundamental patterns for array and string problems.** Sliding window, two pointers, and prefix sum together solve a huge fraction of Medium problems.
 

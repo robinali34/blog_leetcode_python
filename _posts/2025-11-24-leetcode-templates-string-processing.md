@@ -6,6 +6,8 @@ categories: leetcode templates string
 permalink: /posts/2025-11-24-leetcode-templates-string-processing/
 tags: [leetcode, templates, string, algorithms]
 ---
+
+{% raw %}
 Welcome to the String Processing template collection! These are ready-to-use C++ snippets for the core string patterns: sliding window, two pointers, string matching, manipulation, and parsing. If you already know the array templates, you're most of the way there — strings use the same ideas with character-level twists. See also [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/) for KMP and rolling hash.
 
 > **String problems are array problems in disguise.** Most string patterns — sliding window, two pointers, prefix computation — work identically to their array counterparts. The main difference is that you operate on characters and often track frequencies with a hash map or fixed-size array.

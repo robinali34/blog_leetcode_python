@@ -6,6 +6,8 @@ categories: leetcode templates greedy
 permalink: /posts/2025-12-14-leetcode-templates-greedy/
 tags: [leetcode, templates, greedy, algorithms]
 ---
+
+{% raw %}
 Greedy algorithms are among the most elegant tools in competitive programming — when they work, they're simpler and faster than dynamic programming. This guide covers the core greedy patterns you'll encounter on LeetCode, with ready-to-use C++ templates for interval scheduling, activity selection, fractional knapsack, and greedy strategies on arrays and strings. Each section includes the key intuition so you know *why* the greedy choice is correct, not just *how* to code it.
 
 > **New to Greedy?** Greedy algorithms make the locally best choice at each step. Unlike DP, you never reconsider previous choices. The challenge is proving that local optimality leads to global optimality — if you can, greedy is simpler and faster than DP.

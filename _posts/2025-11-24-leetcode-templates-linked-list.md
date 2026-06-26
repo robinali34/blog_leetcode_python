@@ -6,7 +6,9 @@ categories: leetcode templates linked-list
 permalink: /posts/2025-11-24-leetcode-templates-linked-list/
 tags: [leetcode, templates, linked-list]
 ---
-This page collects battle-tested C++ templates for every major linked-list pattern you'll see on LeetCode. Each section includes ready-to-use code, the signal phrases that tell you which pattern to reach for, and a quick explanation of the core idea. Bookmark it, copy what you need, and focus your energy on the actual problem logic.
+
+{% raw %}
+This page collects battle-tested Python templates for every major linked-list pattern you'll see on LeetCode. Each section includes ready-to-use code, the signal phrases that tell you which pattern to reach for, and a quick explanation of the core idea. Bookmark it, copy what you need, and focus your energy on the actual problem logic.
 
 > **New to Linked Lists?** A linked list is a chain of nodes where each node points to the next. Unlike arrays, you can't jump to index *i* — you must walk from the head. The tradeoff: O(1) insert/delete at known positions, but O(n) access.
 

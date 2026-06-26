@@ -13,6 +13,15 @@ def extract_code_blocks(text: str, lang: str) -> list[str]:
     return re.findall(rf"```{lang}\n(.*?)\n```", text, flags=re.DOTALL)
 
 
+def split_frontmatter(text: str) -> tuple[str, str]:
+    if not text.startswith("---"):
+        return "", text
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return "", text
+    return parts[1], parts[2].lstrip("\n")
+
+
 def replace_code_blocks(text: str, lang_from: str, blocks_to: list[str]) -> str:
     pattern = rf"```{lang_from}\n.*?\n```"
 
@@ -59,10 +68,20 @@ def sync_file(name: str) -> bool:
 
     merged = adapt_content(merged)
 
-    if "<svg" in merged and "{% raw %}" not in merged:
-        merged = re.sub(r"(---\n\n)", r"\1{% raw %}\n", merged, count=1)
-        if "{% endraw %}" not in merged:
-            merged = merged.rstrip() + "\n{% endraw %}\n"
+    if "<svg" in merged:
+        fm, body = split_frontmatter(merged if merged.startswith("---") else f"---\n{merged}")
+        if fm or merged.startswith("---"):
+            if not merged.startswith("---"):
+                merged = f"---\n{merged}"
+            parts = merged.split("---", 2)
+            body = parts[2].lstrip("\n") if len(parts) == 3 else merged
+            if "{% raw %}" not in body.split("{% endraw %}")[0][:800]:
+                body = "{% raw %}\n" + body
+            if "{% endraw %}" not in body:
+                body = body.rstrip() + "\n{% endraw %}\n"
+            merged = f"---{parts[1]}---\n\n{body}" if len(parts) == 3 else body
+        elif "{% endraw %}" in merged and "{% raw %}" not in merged:
+            merged = merged.replace("\n{% endraw %}\n", "\n").replace("{% endraw %}\n", "")
 
     py_path.write_text(merged, encoding="utf-8")
     return True

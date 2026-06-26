@@ -6,6 +6,8 @@ categories: leetcode templates search binary-search
 permalink: /posts/2026-01-20-leetcode-templates-search/
 tags: [leetcode, templates, search, binary-search, divide-and-conquer]
 ---
+
+{% raw %}
 This page collects ready-to-use C++ templates for every major binary search pattern you'll encounter on LeetCode — from basic sorted-array lookup to rotated arrays, 2D matrices, and "search on the answer" optimization problems. Each section includes the template, a quick "when to use" guide, and a curated problem list so you can drill the pattern immediately. Templates match the [Data Structures](/posts/2025-10-29-leetcode-templates-data-structures/#binary-search-bounds) lower/upper bound style.
 
 > **New to Binary Search?** Binary search cuts the search space in half at each step, giving O(log n) time. The key: you need a *monotonic condition* — some property that's false on one side and true on the other.

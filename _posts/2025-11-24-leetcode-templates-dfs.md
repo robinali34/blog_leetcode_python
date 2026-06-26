@@ -6,6 +6,8 @@ categories: leetcode templates dfs graph
 permalink: /posts/2025-11-24-leetcode-templates-dfs/
 tags: [leetcode, templates, dfs, graph, traversal]
 ---
+
+{% raw %}
 **Depth-First Search (DFS)** is one of the most fundamental graph traversal algorithms. It works by starting at a node and exploring as far down each branch as possible before backtracking — making it ideal for problems involving reachability, connected components, paths, and tree structure. This page collects ready-to-use C++ templates for the most common DFS patterns you'll encounter on LeetCode. See also [Graph](/posts/2025-10-29-leetcode-templates-graph/) and [Backtracking](/posts/2025-11-24-leetcode-templates-backtracking/).
 
 > **New to DFS?** DFS explores as deep as possible before backtracking. Think of it like exploring a maze — go straight until you hit a dead end, then back up and try the next turn.
