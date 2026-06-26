@@ -16,7 +16,7 @@ Have fun~
 - **Algorithm Solutions**: Step-by-step solutions to LeetCode problems and coding challenges
 - **Technical Insights**: Deep dives into data structures and algorithmic concepts
 - **Software Engineering**: Best practices and patterns in software development
-- **Learning Resources**: Tutorials and guides for technical topics
+- **Learning Resources**: [Python 3 Guide](/python-guide/), tutorials, and reference material
 
 ## What I'm Interested In
 

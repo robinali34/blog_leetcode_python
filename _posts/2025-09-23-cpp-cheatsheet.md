@@ -2,10 +2,14 @@
 layout: post
 title: "Python Quick Reference for LeetCode"
 date: 2025-09-23 23:33:00 -0000
-categories: python data-structures reference cheat-sheet programming containers algorithms competitive-programming
+categories: python data-structures reference cheat-sheet programming containers algorithms competitive-programming guide
+permalink: /2025/09/23/python-quick-reference-for-leetcode/
+tags: [python, reference, cheat-sheet, leetcode, guide]
 ---
 
 # 📚 Python Quick Reference for LeetCode
+
+Part of the [Python 3 Guide](/python-guide/) — see also [Basics](/posts/2026-04-22-python-3-guide-basics/) and [Modern Features](/posts/2026-04-22-python-3-guide-modern-features/).
 
 ---
 
@@ -380,4 +384,10 @@ import sys
 sys.setrecursionlimit(10**6)
 ```
 
----
+## More in the Python guide
+
+- [Python 3 Guide (hub)](/python-guide/)
+- [Intro & learning path](/posts/2026-04-22-python-3-guide/)
+- [Basics & idioms](/posts/2026-04-22-python-3-guide-basics/)
+- [Modern features (3.8–3.13)](/posts/2026-04-22-python-3-guide-modern-features/)
+- [LeetCode templates](/posts/2025-10-29-leetcode-categories-and-templates/)

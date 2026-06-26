@@ -52,6 +52,7 @@ exclude:
 # Navigation
 header_pages:
   - about.md
+  - python-guide.html
   - leetcode-questions-list.md
   - leetcode-templates.html
 
