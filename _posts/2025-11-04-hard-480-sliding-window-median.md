@@ -7,8 +7,7 @@ permalink: /posts/2025-11-04-hard-480-sliding-window-median/
 tags: [leetcode, hard, array, multiset, sliding-window, two-heaps, median]
 ---
 
-# [Hard] 480. Sliding Window Median
-
+{% raw %}
 The **median** is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle values.
 
 - For example, for `arr = [2,3,4]`, the median is `3`.
@@ -46,40 +45,47 @@ Output: [2.00000,3.00000,3.00000,3.00000,2.00000,3.00000,2.00000]
 - `1 <= k <= nums.length <= 10^5`
 - `-2^31 <= nums[i] <= 2^31 - 1`
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+The **median** is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle values.
 
-1. **Sliding window**: What is a sliding window? (Assumption: Contiguous subarray of size k that moves from left to right)
+- For example, for `arr = [2,3,4]`, the median is `3`.
 
-2. **Median calculation**: How is median calculated? (Assumption: For odd k, middle element; for even k, average of two middle elements)
+- Maintain a window `[left, right]` satisfying a constraint.
+- Expand `right` to grow; shrink `left` when invalid.
+- Fixed window: slide both pointers together.
 
-3. **Return format**: What should we return? (Assumption: Array of medians - one for each window position)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 115" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Sliding window</text>
 
-4. **Window count**: How many windows are there? (Assumption: nums.length - k + 1 windows - from index 0 to nums.length - k)
+  <rect x="20" y="45" width="32" height="32" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="36" y="63" text-anchor="middle" font-size="11">a</text>
+  <rect x="52" y="45" width="32" height="32" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="68" y="63" text-anchor="middle" font-size="11">b</text>
+  <rect x="84" y="45" width="32" height="32" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="100" y="63" text-anchor="middle" font-size="11">c</text>
+  <rect x="116" y="45" width="32" height="32" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="132" y="63" text-anchor="middle" font-size="11">d</text>
+  <rect x="148" y="45" width="32" height="32" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="164" y="63" text-anchor="middle" font-size="11">e</text>
+  <rect x="52" y="38" width="64" height="42" rx="4" fill="none" stroke="#C4956A" stroke-width="2" stroke-dasharray="4"/>
+  <text x="84" y="32" text-anchor="middle" font-size="10" fill="#C4956A" font-weight="600">window</text>
+  <text x="110" y="105" text-anchor="middle" font-size="11" fill="#6B6560">expand right, shrink left when invalid</text>
 
-5. **Time complexity**: What time complexity is expected? (Assumption: O(n log k) - maintain sorted window using balanced BST or heaps)
+</svg>
 
-## Interview Deduction Process (30 minutes)
+## Common Approaches
 
-**Step 1: Brute-Force Approach (8 minutes)**
+Typical techniques for this pattern:
 
-For each window position, extract the window, sort it, find the median, and add to result. This approach has O(n × k log k) time complexity: O(n) windows, each requiring O(k log k) to sort, which is too slow for large inputs.
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Fixed-size window** *(this problem)* | O(n) | O(1) | Window size known upfront |
+| Variable-size window | O(n) | O(1) | Expand/shrink until valid |
+| Window + hash map | O(n) | O(k) | Track character/count frequencies |
+| Deque window max | O(n) | O(k) | Monotonic deque for max/min in window |
 
-**Step 2: Semi-Optimized Approach (10 minutes)**
-
-Maintain a sorted data structure (like a multiset or balanced BST) for the current window. When sliding the window, remove the leftmost element and add the new rightmost element, then find the median. This reduces time to O(n log k) since each insertion/deletion takes O(log k). However, finding the median in a balanced BST requires tracking the size or using iterators, which adds complexity.
-
-**Step 3: Optimized Solution (12 minutes)**
-
-Use two multisets (two-heaps pattern): maintain a small multiset (for smaller half) and a large multiset (for larger half). Keep them balanced so the median is easily accessible. When sliding the window, remove the outgoing element and add the incoming element, rebalancing if needed. This achieves O(n log k) time: O(n) windows, each requiring O(log k) for insert/delete operations. The key insight is that maintaining two balanced heaps/multisets allows O(1) median access while supporting efficient insertions and deletions as the window slides.
-
-## Solution 1: Two Multisets (Two-Heaps Pattern)
+## Solution
 
 **Time Complexity:** O(n log k) - Each insertion/deletion is O(log k)  
 **Space Complexity:** O(k) - Two multisets store window elements
 
-Use a sorted window and `bisect` for insert/remove (same idea as two balanced multisets, implemented with sorted order).
+Use two multisets to maintain a balanced structure: `lo` contains the smaller half, `hi` contains the larger half. The median is the maximum of `lo` (odd k) or average of max(lo) and min(hi) (even k).
 
 ```python
 import bisect
@@ -102,6 +108,33 @@ class Solution:
         return res
 ```
 
+### Solution Explanation
+
+**Approach:** Fixed-size window (this problem)
+
+**Key idea:** The **median** is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle values.
+
+**How the code works:**
+- For example, for `arr = [2,3,4]`, the median is `3`.
+- Maintain a window `[left, right]` satisfying a constraint.
+- Expand `right` to grow; shrink `left` when invalid.
+- Fixed window: slide both pointers together.
+
+**Walkthrough** — input `nums = [1,3,-1,-3,5,3,6,7], k = 3`, expected output `[1.00000,-1.00000,-1.00000,3.00000,5.00000,6.00000]`:
+
+Window position                Median
+---------------                -----
+[1  3  -1] -3  5  3  6  7        1
+ 1 [3  -1  -3] 5  3  6  7       -1
+ 1  3 [-1  -3  5] 3  6  7       -1
+ 1  3  -1 [-3  5  3] 6  7        3
+ 1  3  -1  -3 [5  3  6] 7        5
+ 1  3  -1  -3  5 [3  6  7]       6
+
+| Solution | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Solution 1 (Two Multisets)** | O(n log k) | O(k) | Clear separation, easier to understand |
+| **Solution 2 (Single Multiset)** | O(n log k) | O(k) | More compact, requires careful iterator management |
 ## How Solution 1 Works
 
 ### Key Insight: Two-Heaps Pattern
@@ -151,12 +184,30 @@ Step 4: Window [-1, -3, 5]
   Median = max(lo) = -1
 ```
 
-## Solution 2: Single Multiset with Median Iterator
+## How Solution 2 Works
 
-**Time Complexity:** O(n log k) - Insertion/deletion is O(log k), iterator movement is O(1) amortized  
-**Space Complexity:** O(k) - Single multiset stores window elements
+### Key Insight: Median Iterator Tracking
 
-Maintain a single multiset and a pointer to the median element. When adding/removing elements, adjust the median pointer incrementally.
+- **`window`**: Multiset containing all elements in current window
+- **`mid`**: Iterator pointing to the median element(s)
+  - Odd k: `mid` points to middle element
+  - Even k: `mid` points to the right median (we average with `next(mid, -1)`)
+- **Incremental Updates**: When adding/removing, adjust `mid` by at most 1 position
+
+### Step-by-Step Example: `nums = [1,3,-1,-3,5,3,6,7], k = 3`
+
+| Step | i | nums[i] | Insert | mid points to | Remove | mid points to | Window | Median |
+|------|---|---------|--------|---------------|--------|---------------|--------|--------|
+| 0 | - | - | - | - | - | - | {1,3,-1} | 1 |
+| 1 | 3 | -3 | {-3} | 1→-1 | 1 | -1→-1 | {-3,-1,3} | -1 |
+| 2 | 4 | 5 | {5} | -1→-1 | -1 | -1→3 | {-3,3,5} | -1 |
+| 3 | 5 | 3 | {3} | 3→3 | -3 | 3→3 | {3,3,5} | 3 |
+| 4 | 6 | 6 | {6} | 3→5 | 3 | 5→5 | {3,5,6} | 5 |
+| 5 | 7 | 7 | {7} | 5→6 | 3 | 6→6 | {3,6,7} | 6 |
+
+**Note:** After sorting: `{-3,-1,3}` → `mid` points to `-1` (index 1 in sorted array)
+
+### Median Calculation Trick
 
 ```python
 class Solution:
@@ -186,40 +237,17 @@ class Solution:
         return medians
 ```
 
-## How Solution 2 Works
+- **k is odd**: `k % 2 - 1 = 0` → `*mid` (use same element twice, divide by 2)
+  - Actually, for odd k, we should use `*mid` directly, but this formula works
+- **k is even**: `k % 2 - 1 = -1` → `(*mid + *prev(mid)) / 2.0`
 
-### Key Insight: Median Iterator Tracking
-
-- **`window`**: Multiset containing all elements in current window
-- **`mid`**: Iterator pointing to the median element(s)
-  - Odd k: `mid` points to middle element
-  - Even k: `mid` points to the right median (we average with `next(mid, -1)`)
-- **Incremental Updates**: When adding/removing, adjust `mid` by at most 1 position
-
-### Step-by-Step Example: `nums = [1,3,-1,-3,5,3,6,7], k = 3`
-
-| Step | i | nums[i] | Insert | mid points to | Remove | mid points to | Window | Median |
-|------|---|---------|--------|---------------|--------|---------------|--------|--------|
-| 0 | - | - | - | - | - | - | {1,3,-1} | 1 |
-| 1 | 3 | -3 | {-3} | 1→-1 | 1 | -1→-1 | {-3,-1,3} | -1 |
-| 2 | 4 | 5 | {5} | -1→-1 | -1 | -1→3 | {-3,3,5} | -1 |
-| 3 | 5 | 3 | {3} | 3→3 | -3 | 3→3 | {3,3,5} | 3 |
-| 4 | 6 | 6 | {6} | 3→5 | 3 | 5→5 | {3,5,6} | 5 |
-| 5 | 7 | 7 | {7} | 5→6 | 3 | 6→6 | {3,6,7} | 6 |
-
-**Note:** After sorting: `{-3,-1,3}` → `mid` points to `-1` (index 1 in sorted array)
-
-### Median Calculation Trick
-
+**Correction for odd k:**
 ```python
 if k % 2 == 1:
     medians.append(float(window[k // 2]))
 else:
     medians.append((window[k // 2 - 1] + window[k // 2]) / 2.0)
 ```
-
-- **k is odd**: use the single middle element `window[k // 2]`.
-- **k is even**: average the two middle elements `window[k // 2 - 1]` and `window[k // 2]`.
 
 ## Algorithm Breakdown
 
@@ -231,7 +259,8 @@ import bisect
 
 bisect.insort(window, nums[i])
 ```
-- Keep `window` sorted after each insert (multiset behavior).
+
+- Insert into appropriate multiset based on comparison with max of `lo`
 
 #### 2. Balance the Two Multisets
 ```python
@@ -241,7 +270,8 @@ while len(lo) > len(hi) + 1:
 while len(lo) < len(hi):
     bisect.insort(lo, hi.pop(0))
 ```
-- Maintain: `len(lo) == len(hi)` (even k) or `len(lo) == len(hi) + 1` (odd k) when using two sorted halves.
+
+- Maintain: `lo.size() == hi.size()` (even k) or `lo.size() == hi.size() + 1` (odd k)
 
 #### 3. Remove Element Leaving Window
 ```python
@@ -249,7 +279,8 @@ if i >= k:
     out = nums[i - k]
     window.pop(bisect.bisect_left(window, out))
 ```
-- Remove one occurrence of the value leaving the window (`bisect_left` + `pop`).
+
+- Find and remove element from appropriate multiset
 
 #### 4. Calculate Median
 ```python
@@ -266,24 +297,29 @@ else:
 window = sorted(nums[:k])
 # Median index: k // 2 (odd k) or k//2-1 and k//2 for even k
 ```
-- Start with the first `k` elements sorted.
+
+- Create multiset with first k elements
+- Set `mid` to point to median position
 
 #### 2. Insert and Adjust
 ```python
 bisect.insort(window, nums[i])
 # If tracking an index into window, adjust when order changes
 ```
-- Insert new element in sorted order.
+
+- Insert new element
+- Adjust median iterator if needed
 
 #### 3. Remove and Adjust
 ```python
 out = nums[i - k]
 window.pop(bisect.bisect_left(window, out))
 ```
-- Remove one occurrence of the outgoing value, then recompute median from `window`.
 
-## Complexity Analysis
+- Adjust median iterator before removal
+- Remove element using `lower_bound` to handle duplicates
 
+### Complexity
 | Solution | Time | Space | Notes |
 |----------|------|-------|-------|
 | **Solution 1 (Two Multisets)** | O(n log k) | O(k) | Clear separation, easier to understand |
@@ -306,15 +342,13 @@ window.pop(bisect.bisect_left(window, out))
 | **Median Calc** | ✅ Straightforward | ⚠️ Formula needs careful handling |
 | **Maintainability** | ✅ Easier to debug | ⚠️ More complex logic |
 
-## Edge Cases
+## Common Mistakes
 
 1. **k = 1**: Each window has one element → return all elements as doubles
 2. **k = nums.size()**: Single window → return single median
 3. **All same elements**: `[3,3,3,3], k=3` → `[3.0, 3.0]`
 4. **Duplicates**: `[1,2,2,3], k=3` → Need careful handling of duplicate removal
 5. **Large numbers**: Use `long long` or handle overflow in median calculation
-
-## Common Mistakes
 
 ### Solution 1
 1. **Wrong balance condition**: Should be `lo.size() > hi.size() + 1` not `lo.size() > hi.size()`
@@ -359,10 +393,10 @@ class Solution:
 
 ## Related Problems
 
-- [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/) - Two heaps pattern
-- [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/) - Similar sliding window
-- [480. Sliding Window Median](https://leetcode.com/problems/sliding-window-median/) - This problem
-- [1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit](https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/) - Use two deques
+- [295. Find Median from Data Stream](https://www.leetcode.com/problems/find-median-from-data-stream/) - Two heaps pattern
+- [239. Sliding Window Maximum](https://www.leetcode.com/problems/sliding-window-maximum/) - Similar sliding window
+- [480. Sliding Window Median](https://www.leetcode.com/problems/sliding-window-median/) - This problem
+- [1438. Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit](https://www.leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/) - Use two deques
 
 ## Pattern Recognition
 
@@ -429,3 +463,20 @@ For sliding window median, we need to remove specific elements, so multiset is t
 
 *This problem extends the sliding window pattern to find median instead of maximum. The two-heaps pattern (implemented with multisets) is essential for efficiently maintaining order statistics in dynamic sets.*
 
+## Key Takeaways
+
+- **Pattern:** Fixed-size window (this problem)
+- For example, for `arr = [2,3,4]`, the median is `3`.
+- Maintain a window `[left, right]` satisfying a constraint.
+
+## References
+
+- [LC 480: Sliding Window Median on LeetCode](https://www.leetcode.com/problems/sliding-window-median/)
+- [LeetCode Discuss — LC 480: Sliding Window Median](https://www.leetcode.com/problems/sliding-window-median/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/sliding-window-median/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Array & Matrix](/posts/2025-11-24-leetcode-templates-array-matrix/)
+
+{% endraw %}

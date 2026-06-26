@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "[Medium] 89. Gray Code"
-categories: python gray-code problem-solving
+categories: leetcode algorithm backtracking data-structures recursion bit-manipulation medium cpp gray-code problem-solving
 ---
 
-# [Medium] 89. Gray Code
-
+{% raw %}
 An n-bit gray code sequence is a sequence of 2^n integers where:
 
 - Every integer is between 0 and 2^n - 1 (inclusive)
@@ -41,7 +40,7 @@ Output: [0,1]
 
 - 1 <= n <= 16
 
-## Approach
+## Thinking Process
 
 There are several approaches to generate Gray codes:
 
@@ -50,7 +49,29 @@ There are several approaches to generate Gray codes:
 3. **Iterative Construction**: Build Gray code iteratively using the same mirroring principle
 4. **Mathematical Formula**: Use the formula `i ^ (i >> 1)` for each number
 
-## Solution 1: Backtracking Approach
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Backtracking tree</text>
+
+  <circle cx="140" cy="30" r="12" fill="#E0D8E4" stroke="#A098A8"/><text x="140" y="34" text-anchor="middle" font-size="9">start</text>
+  <line x1="140" y1="42" x2="90" y2="65" stroke="#9A9792"/><line x1="140" y1="42" x2="190" y2="65" stroke="#9A9792"/>
+  <circle cx="90" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/><circle cx="190" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/>
+  <line x1="90" y1="82" x2="60" y2="100" stroke="#9A9792" stroke-dasharray="3"/><line x1="190" y1="82" x2="220" y2="100" stroke="#9A9792" stroke-dasharray="3"/>
+  <text x="140" y="118" text-anchor="middle" font-size="11" fill="#6B6560">choose → explore → undo (prune)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Choose / explore / unchoose** *(this problem)* | O(2^n) | O(n) | Subsets, combinations |
+| Constraint pruning | Reduced search | O(n) | Early exit on invalid partial |
+| Sort + skip duplicates | O(2^n) | O(n) | Combination sum II style |
+| Path recording | O(n!) worst | O(n) | Permutations |
+
+## Solution
 
 ```python
 class Solution:
@@ -76,117 +97,26 @@ class Solution:
         return False
 ```
 
-**Time Complexity:** O(2^n) - Exponential time due to backtracking
-**Space Complexity:** O(2^n) - For the result vector and visited set
+### Solution Explanation
 
-## Solution 2: Recursive Mirror Construction
+**Approach:** Choose / explore / unchoose (this problem)
 
-```python
-class Solution:
-    def grayCode(self, n: int) -> list[int]:
-        result = []
-        self.getGrayCode(result, n)
-        return result
+**Key idea:** There are several approaches to generate Gray codes:
 
-    def getGrayCode(self, result: list[int], n: int) -> None:
-        if n == 0:
-            result.append(0)
-            return
-        self.getGrayCode(result, n - 1)
-        cur = len(result)
-        mask = 1 << (n - 1)
-        for i in range(cur - 1, -1, -1):
-            result.append(result[i] | mask)
-```
+**How the code works:**
+1. **Backtracking**: Try all possible sequences and backtrack when invalid
+2. **Recursive Construction**: Build Gray code recursively by mirroring previous sequence
+3. **Iterative Construction**: Build Gray code iteratively using the same mirroring principle
+4. **Mathematical Formula**: Use the formula `i ^ (i >> 1)` for each number
 
-**Time Complexity:** O(2^n) - Each recursive call doubles the sequence
-**Space Complexity:** O(2^n) - For the result vector
+**Walkthrough** — input `n = 2`, expected output `[0,1,3,2]`:
 
-## Solution 3: Iterative Mirror Construction
-
-```python
-class Solution:
-    def grayCode(self, n: int) -> list[int]:
-        result = [0]
-        for i in range(1, n + 1):
-            pre = len(result)
-            mask = 1 << (i - 1)
-            for j in range(pre - 1, -1, -1):
-                result.append(mask | result[j])
-        return result
-```
-
-**Time Complexity:** O(2^n) - Builds sequence iteratively
-**Space Complexity:** O(2^n) - For the result vector
-
-## Solution 4: Mathematical Formula Approach
-
-```python
-class Solution:
-    def grayCode(self, n: int) -> list[int]:
-        result = []
-        for i in range(1 << n):
-            result.append(i ^ (i >> 1))
-        return result
-```
-
-**Time Complexity:** O(2^n) - Generate each Gray code number
-**Space Complexity:** O(2^n) - For the result vector
-
-## Solution 5: Alternative Recursive with Global Variable
-
-```python
-class Solution:
-    def __init__(self):
-        self.nextNum = 0
-
-    def grayCode(self, n: int) -> list[int]:
-        result = []
-        self.nextNum = 0
-        self.getGrayCode(result, n)
-        return result
-
-    def getGrayCode(self, result: list[int], n: int) -> None:
-        if n == 0:
-            result.append(self.nextNum)
-            return
-        self.getGrayCode(result, n - 1)
-        self.nextNum = self.nextNum ^ (1 << (n - 1))
-        self.getGrayCode(result, n - 1)
-```
-
-**Time Complexity:** O(2^n) - Recursive construction
-**Space Complexity:** O(2^n) - For the result vector
-
-## Step-by-Step Example (Solution 3)
-
-For n = 3:
-
-1. Start with [0]
-2. i = 1: mirror and add 1-bit mask
-   - [0] → [0, 1]
-3. i = 2: mirror and add 2-bit mask  
-   - [0, 1] → [0, 1, 3, 2]
-4. i = 3: mirror and add 3-bit mask
-   - [0, 1, 3, 2] → [0, 1, 3, 2, 6, 7, 5, 4]
-
-Final result: [0, 1, 3, 2, 6, 7, 5, 4]
-
-## Key Insights
-
-1. **Mirror Property**: Gray codes can be constructed by mirroring the previous sequence and adding a high-order bit
-2. **Bit Manipulation**: Use XOR (`^`) to flip bits and OR (`|`) to set bits
-3. **Mathematical Formula**: `i ^ (i >> 1)` directly computes the i-th Gray code
-4. **Recursive Structure**: Gray codes have a natural recursive structure
-
-## Solution Comparison
-
-- **Backtracking**: Most intuitive but inefficient for large n
-- **Recursive Mirror**: Clean recursive approach, moderate efficiency
-- **Iterative Mirror**: Most efficient iterative approach
-- **Mathematical Formula**: Most concise and efficient
-- **Alternative Recursive**: Uses global state, less clean
-
+The binary representation of the gray code sequence is [00, 01, 11, 10].
+- 00 and 01 differ by one bit
+- 01 and 11 differ by one bit  
+- 11 and 10 differ by one bit
+- 10 and 00 differ by one bit
+[0,2,3,1] is also a valid gray code sequence, whose binary representation is [00, 10, 11, 01].
 ## Common Mistakes
 
 1. **Off-by-one errors** in bit shifting (`1 << (n-1)` vs `1 << n`)
@@ -196,5 +126,20 @@ Final result: [0, 1, 3, 2, 6, 7, 5, 4]
 
 ## Related Problems
 
-- [1238. Circular Permutation in Binary Representation](https://leetcode.com/problems/circular-permutation-in-binary-representation/)
-- [89. Gray Code](https://leetcode.com/problems/gray-code/) (this problem)
+- [1238. Circular Permutation in Binary Representation](https://www.leetcode.com/problems/circular-permutation-in-binary-representation/)
+- [89. Gray Code](https://www.leetcode.com/problems/gray-code/) (this problem)
+
+## References
+
+- [LC 89: Gray Code on LeetCode](https://www.leetcode.com/problems/gray-code/)
+- [LeetCode Discuss — LC 89: Gray Code](https://www.leetcode.com/problems/gray-code/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/gray-code/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Mirror Property**: Gray codes can be constructed by mirroring the previous sequence and adding a high-order bit
+2. **Bit Manipulation**: Use XOR (`^`) to flip bits and OR (`|`) to set bits
+3. **Mathematical Formula**: `i ^ (i >> 1)` directly computes the i-th Gray code
+4. **Recursive Structure**: Gray codes have a natural recursive structure
+
+{% endraw %}

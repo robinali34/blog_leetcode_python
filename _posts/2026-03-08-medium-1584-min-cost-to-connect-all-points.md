@@ -1,36 +1,27 @@
 ---
 layout: post
 title: "[Medium] 1584. Min Cost to Connect All Points"
-date: 2026-03-08 00:00:00 -0700
-categories: [leetcode, medium, graph, mst, union-find]
-tags: [leetcode, medium, graph, kruskal, dsu, manhattan]
+date: 2026-03-08
+categories: [leetcode, medium, graph, mst, dsu]
+tags: [leetcode, medium, graph, mst, kruskal, dsu]
 permalink: /2026/03/08/medium-1584-min-cost-to-connect-all-points/
 ---
 
-# [Medium] 1584. Min Cost to Connect All Points
-
-## Problem Statement
-
-You are given an array `points` representing integer coordinates of some points on a 2D plane, where `points[i] = [xi, yi]`.
-
-The **cost of connecting** two points `[xi, yi]` and `[xj, yj]` is the **Manhattan distance**: `|xi - xj| + |yi - yj|`, where `|val|` denotes the absolute value of `val`.
-
-Return the **minimum cost** to make all points connected. All points are connected if there is **exactly one simple path** between any two points.
+{% raw %}
+You are given an array `points` where `points[i] = [xi, yi]` represents a point on the 2D plane. The cost to connect two points is the **Manhattan distance**: `|xi - xj| + |yi - yj|`. Return the minimum cost to connect all points such that every pair of points has a path between them.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
 Output: 20
-# One way: connect (0,0)-(2,2)=4, (0,0)-(3,10)=13, (0,0)-(5,2)=7, (0,0)-(7,0)=7
-# Minimum total is achieved by an MST; e.g. 4+6+5+5=20 or similar.
 ```
 
 **Example 2:**
 
-```python
+```
 Input: points = [[3,12],[-2,5],[-4,1]]
 Output: 18
 ```
@@ -39,119 +30,123 @@ Output: 18
 
 - `1 <= points.length <= 1000`
 - `-10^6 <= xi, yi <= 10^6`
-- All pairs `(xi, yi)` are distinct.
+- All pairs `(xi, yi)` are distinct
 
-## Clarification Questions
+## Common Approaches
 
-1. **Meaning of “connected”**: Exactly one simple path between every pair → the graph must be a **tree** spanning all points.  
-   **Assumption**: Yes — we need a spanning tree.
-2. **Edge cost**: Manhattan distance only?  
-   **Assumption**: Yes — no other cost function.
-3. **Multiple edges**: We can use any subset of the possible edges (any pair of points); we are not limited to a given edge list.  
-   **Assumption**: Yes — we can connect any two points at cost = Manhattan distance.
+Typical techniques for this pattern:
 
-## Interview Deduction Process (20 minutes)
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **BFS / DFS traversal** *(this problem)* | O(V+E) | O(V) | Connectivity, flood fill |
+| Dijkstra | O((V+E)log V) | O(V) | Non-negative edge weights |
+| Union-Find (DSU) | O(α(n)) | O(n) | Dynamic connectivity |
+| Topological sort | O(V+E) | O(V) | DAG ordering, cycle detection |
 
-**Step 1: Recognize MST (5 min)**  
-We need a tree that spans all nodes and minimizes total edge weight. That is the **minimum spanning tree (MST)**. The graph is complete (every pair has an edge); weight = Manhattan distance.
+## Thinking Process
 
-**Step 2: Kruskal (10 min)**  
-Generate all \(\binom{n}{2}\) edges with weights, sort by weight, then add edges in order using a DSU: if the two endpoints are in different components, unite them and add the weight. Stop after adding \(n - 1\) edges. Total cost is the sum of those edge weights.
+This is a **Minimum Spanning Tree (MST)** problem on a complete graph. Each point is a node, and the edge weight between any two points is their Manhattan distance.
 
-**Step 3: DSU (5 min)**  
-Use union-find with path compression and union by rank so each find/unite is effectively O(α(n)).
+### Kruskal's Algorithm
 
-## Solution Approach
+1. Generate all binom{n}{2} edges with their Manhattan distance weights
+2. Sort edges by weight (ascending)
+3. Greedily add edges using **DSU (Union-Find)** -- skip edges that would create a cycle
+4. Stop after adding n - 1 edges (MST is complete)
 
-**Kruskal's algorithm:** Treat each point as a vertex. There is an edge between every pair of points with weight = Manhattan distance. Sort all edges by weight. Initialize a DSU of size \(n\). For each edge in sorted order, if the two endpoints are not in the same component, unite them and add the edge weight to the answer. After \(n - 1\) edges, we have an MST and return the total cost.
+### Why Kruskal?
 
-**DSU:** Path compression in `find` and union by rank in `unite` keep the structure efficient.
+For a complete graph with n nodes, there are O(n^2) edges. Kruskal's sorts them and processes greedily, giving O(n^2 log n) total. Prim's with a heap is also O(n^2 log n) here, but Kruskal + DSU is cleaner for complete graphs.
 
-### Key Insights
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-1. **MST** — “Minimum cost to connect all points with exactly one path between any two” is the definition of a minimum spanning tree.
-2. **Complete graph** — Every pair of points can be connected; edge weight = Manhattan distance. So we have O(n²) edges.
-3. **Kruskal** — Sort edges, add in order without creating a cycle (DSU). Greedy choice is correct for MST.
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
 
-## Python Solution
+</svg>
 
-### Kruskal with DSU (O(n² log n) time, O(n²) space for edges)
-
+## Approach: Kruskal's MST + DSU -- O(n^2 log n)
 ```python
-from typing import List
-
-
-class DSU:
-    def __init__(self, n: int) -> None:
-        self.parent = list(range(n))
-        self.rank = [0] * n
-
-    def find(self, x: int) -> int:
-        if x != self.parent[x]:
-            self.parent[x] = self.find(self.parent[x])  # path compression
-        return self.parent[x]
-
-    def unite(self, x: int, y: int) -> bool:
-        px, py = self.find(x), self.find(y)
-        if px == py:
-            return False
-        if self.rank[px] < self.rank[py]:
-            px, py = py, px
-        self.parent[py] = px
-        if self.rank[px] == self.rank[py]:
-            self.rank[px] += 1
-        return True
-
-
-class Solution:
-    def minCostConnectPoints(self, points: List[List[int]]) -> int:
-        n = len(points)
-        all_edges: List[tuple[int, int, int]] = []
-
-        for i in range(n):
-            for j in range(i + 1, n):
-                w = abs(points[i][0] - points[j][0]) + abs(points[i][1] - points[j][1])
-                all_edges.append((w, i, j))
-
-        all_edges.sort()
-
-        dsu = DSU(n)
-        mst_cost = 0
-        edges_used = 0
-
-        for weight, u, v in all_edges:
-            if edges_used == n - 1:
-                break
-            if dsu.unite(u, v):
-                mst_cost += weight
-                edges_used += 1
-        return mst_cost
+Input: points = [[0,0],[2,2],[3,10],[5,2],[7,0]]
+Output: 20
+# One way: connect (0,0)-(2,2)=4, (0,0)-(3,10)=13, (0,0)-(5,2)=7, (0,0)-(7,0)=7
+# Minimum total is achieved by an MST; e.g. 4+6+5+5=20 or similar.
 ```
 
-## Algorithm Explanation
+### Solution Explanation
 
-We build the complete graph: for each pair of points \((i, j)\) with \(i < j\), we add an edge with weight \(|x_i - x_j| + |y_i - y_j|\). We sort these edges by weight. We then run Kruskal: start with each point in its own component (DSU); for each edge in increasing order, if the two endpoints are in different components we unite them and add the edge weight to the answer. After \(n - 1\) such edges we have an MST and return the total cost. The DSU uses path compression in `find` and union by rank in `unite` (only increment rank when the two roots have equal rank) so operations are effectively O(α(n)).
+**Approach:** BFS / DFS traversal (this problem)
 
-## Complexity Analysis
+**Key idea:** This is a **Minimum Spanning Tree (MST)** problem on a complete graph. Each point is a node, and the edge weight between any two points is their Manhattan distance.
 
-- **Time**: O(n² log n) — we have O(n²) edges, sort them in O(n² log n), then process each with DSU operations O(α(n)) ≈ O(1).
-- **Space**: O(n²) for the list of edges; O(n) for the DSU.
+**How the code works:**
+1. Generate all binom{n}{2} edges with their Manhattan distance weights
+2. Sort edges by weight (ascending)
+3. Greedily add edges using **DSU (Union-Find)** -- skip edges that would create a cycle
+4. Stop after adding n - 1 edges (MST is complete)
 
-## Edge Cases
+**Walkthrough** — input `points = [[0,0],[2,2],[3,10],[5,2],[7,0]]`, expected output `20`:
 
-- **n == 1** — No edges needed; return 0.
-- **n == 2** — One edge; cost = Manhattan distance between the two points.
-- **Collinear or grid points** — Algorithm is the same; many edges may have equal weight.
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Walk-Through
+
+```
+Points: [0,0], [2,2], [3,10], [5,2], [7,0]
+
+Edges sorted by weight (first few):
+  (0,1) w=4, (1,3) w=3, (0,3) w=7, (0,4) w=7, (3,4) w=4, ...
+
+Process:
+  (1,3) w=3  → unite 1,3  → cost=3,  edges=1
+  (0,1) w=4  → unite 0,1  → cost=7,  edges=2
+  (3,4) w=4  → unite 3,4  → cost=11, edges=3
+  (0,2) w=13 → unite 0,2  → cost=20, edges=4 = n-1 → done!
+
+MST cost = 20 ✓
+```
+
+## DSU (Union-Find) Recap
+
+- **Path compression** (`find`): flattens the tree so future finds are nearly O(1)
+- **Union by rank**: always attach the smaller tree under the larger root
+- Combined: amortized O(α(n)) per operation (practically constant)
 
 ## Common Mistakes
 
-- **DSU rank update** — In union by rank, only increase the root’s rank by 1 when the two roots have the **same** rank. Adding `rank[py]` to `rank[px]` breaks the rank invariant and can make the tree deeper than intended.
-- **Stopping condition** — We need exactly \(n - 1\) edges; we can break once `edges_used == n - 1`.
-- **Manhattan distance** — Use `|x1-x2| + |y1-y2|`, not Euclidean.
+- Forgetting to stop after n - 1 edges (MST of n nodes always has exactly n - 1 edges)
+- Generating duplicate edges (only iterate `j = i + 1` to `n`, not all pairs)
+- Using edge weight for rank in DSU (rank tracks tree height/size, not edge weight)
+
+## Key Takeaways
+
+- **Complete graph MST** = generate all edges + Kruskal's. Simple and effective for n ≤ 1000
+- **DSU** is the natural companion to Kruskal's -- it answers "are these connected?" in near-constant time
+- For larger n, Prim's with adjacency list or geometric optimizations (e.g., only considering nearest neighbors) would be needed
 
 ## Related Problems
 
-- [LC 1135: Connecting Cities With Minimum Cost](https://leetcode.com/problems/connecting-cities-with-minimum-cost/) — MST with given edge list.
-- [LC 1168: Optimize Water Distribution in a Village](https://leetcode.com/problems/optimize-water-distribution-in-a-village/) — MST with virtual node.
-- [LC 684: Redundant Connection](https://leetcode.com/problems/redundant-connection/) — Detect cycle with DSU.
-- [LC 1319: Number of Operations to Make Network Connected](https://leetcode.com/problems/number-of-operations-to-make-network-connected/) — Count components; use DSU or DFS.
+- [1135. Connecting Cities With Minimum Cost](https://www.leetcode.com/problems/connecting-cities-with-minimum-cost/) -- Kruskal on given edges
+- [1168. Optimize Water Distribution in a Village](https://www.leetcode.com/problems/optimize-water-distribution-in-a-village/) -- MST with virtual node
+- [261. Graph Valid Tree](https://www.leetcode.com/problems/graph-valid-tree/) -- DSU for connectivity check
+
+## References
+
+- [LC 1584: Min Cost to Connect All Points on LeetCode](https://www.leetcode.com/problems/min-cost-to-connect-all-points/)
+- [LeetCode Discuss — LC 1584: Min Cost to Connect All Points](https://www.leetcode.com/problems/min-cost-to-connect-all-points/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/min-cost-to-connect-all-points/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Graph](/posts/2025-10-29-leetcode-templates-graph/)
+- [Data Structures (DSU)](/posts/2025-10-29-leetcode-templates-data-structures/)
+
+{% endraw %}

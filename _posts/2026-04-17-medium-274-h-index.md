@@ -1,50 +1,127 @@
 ---
 layout: post
 title: "[Medium] 274. H-Index"
-date: 2026-04-17 00:00:00 -0700
-categories: [leetcode, medium, array, sorting]
+date: 2026-04-17
+categories: [leetcode, medium, sorting]
+tags: [leetcode, medium, array, sorting, counting-sort, greedy]
 permalink: /2026/04/17/medium-274-h-index/
-tags: [leetcode, medium, array, sorting, greedy, h-index]
 ---
 
-# [Medium] 274. H-Index
+{% raw %}
+Given an array of integers `citations` where `citations[i]` is the number of citations a researcher received for their `i`-th paper, return the researcher's **h-index**.
 
-You are given an array `citations` where `citations[i]` is the number of citations of the *i*-th paper.
+The h-index is defined as: the maximum value of `h` such that the researcher has published at least `h` papers that have each been cited at least `h` times.
 
-Return the **maximum** integer `h` such that there are **at least** `h` papers with **at least** `h` citations each.
+## Examples
 
-## Problem Core
+**Example 1:**
 
-This is not about total citations.
+```
+Input: citations = [3, 0, 6, 1, 5]
+Output: 3
 
-It is about a **balance point**:
+Sort descending: [6, 5, 3, 1, 0]
 
-How large can `h` be such that enough papers “support” that threshold?
+  i (papers seen)   citations[i]   >= i+1 ?
+  1                 6              >= 1  YES
+  2                 5              >= 2  YES
+  3                 3              >= 3  YES
+  4                 1              >= 4  NO   ← stop
 
-## Key Insight
+Answer = 3 (3 papers with >= 3 citations each)
+```
 
-Sort citations in **descending** order. After sorting, the *i*-th position (1-based) asks:
+**Example 2:**
 
-“Do I have at least `i` papers with citation count ≥ `i`?”
+```
+Input: citations = [1, 3, 1]
+Output: 1
+```
 
-The largest `i` where `citations[i-1] >= i` holds is the answer; the first index where `citations[i] < i + 1` (0-based) stops the streak.
+## Constraints
 
-## Example
+- `n == citations.length`
+- `1 <= n <= 5000`
+- `0 <= citations[i] <= 1000`
 
-`[3, 0, 6, 1, 5]`
+## Thinking Process
 
-Sort descending: `[6, 5, 3, 1, 0]`
+### What Are We Really Looking For?
 
-| papers (h) | citations at rank | check   |
-| ---------- | ----------------- | ------- |
-| 1          | 6                 | 6 ≥ 1   |
-| 2          | 5                 | 5 ≥ 2   |
-| 3          | 3                 | 3 ≥ 3   |
-| 4          | 1                 | 1 < 4   |
+This is **not** about total citations. It's about finding a **balance point**: the largest `h` where at least `h` papers have `>= h` citations.
 
-Answer: **3**.
+### Why Sorting Works
 
-## Solution — Sorting (interview-friendly)
+After sorting in descending order:
+- **Position `i+1`** = number of papers we've seen so far
+- **Value `citations[i]`** = the citation count of the current paper
+
+At each position, we're asking: "Does this paper have enough citations to support the current count of papers?"
+
+The moment `citations[i] < i + 1`, the balance breaks and we've found our answer.
+
+```
+Sorted: [6, 5, 3, 1, 0]
+
+Index 0: 6 >= 1  →  at least 1 paper with >= 1 citations  ✓
+Index 1: 5 >= 2  →  at least 2 papers with >= 2 citations ✓
+Index 2: 3 >= 3  →  at least 3 papers with >= 3 citations ✓
+Index 3: 1 >= 4  →  at least 4 papers with >= 4 citations ✗  ← STOP
+
+h = 3
+```
+
+### Can We Do Better Than O(n log n)?
+
+Yes — since `h` can be at most `n`, we can bucket citation counts and scan in linear time.
+
+### Counting Sort — O(n) time, O(n) space
+
+Any citation count above `n` cannot increase the h-index (we only have `n` papers), so clamp each count to `min(c, n)` and build a frequency array of size `n + 1`. Scan from `h = n` down to `0`, accumulating how many papers have at least `h` citations:
+
+```
+citations = [3, 0, 6, 1, 5], n = 5
+Buckets (after clamp): 0→1, 1→1, 3→1, 5→1  (6 clamped to 5)
+
+h = 5: papers with ≥5 citations = 1  →  1 < 5
+h = 4: papers with ≥4 citations = 1  →  1 < 4
+h = 3: papers with ≥3 citations = 3  →  3 ≥ 3  ✓  answer = 3
+```
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Greedy choice</text>
+
+  <line x1="30" y1="55" x2="250" y2="55" stroke="#D4D1CC" stroke-width="2"/>
+  <rect x="60" y="43" width="40" height="22" rx="3" fill="#A8B5A2" stroke="#6B8B6B"/>
+  <rect x="130" y="43" width="55" height="22" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <rect x="200" y="43" width="35" height="22" rx="3" fill="#E8D5D0" stroke="#B8A5A0"/>
+  <text x="140" y="90" text-anchor="middle" font-size="11" fill="#6B6560">pick locally best after sorting</text>
+
+</svg>
+
+## Comparison
+
+| Aspect | Sorting | Counting Sort |
+|---|---|---|
+| Time | O(n log n) | O(n) |
+| Space | O(1) (in-place sort) | O(n) (frequency array) |
+| Interview preference | Most common, easy to explain | Good follow-up for optimization |
+| Key idea | Descending order gives "papers seen" naturally | Bucket citations, scan from top |
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Sort + greedy** *(this problem)* | O(n log n) | O(1) | Interval scheduling, assignment |
+| Local greedy choice | O(n) | O(1) | Jump game, gas station |
+| Greedy + heap | O(n log n) | O(n) | Merge streams, room allocation |
+| Exchange argument | O(n) | O(1) | Prove greedy choice is safe |
+
+## Solution
+
+### Sort Descending — O(n log n)
 
 ```python
 from typing import List
@@ -59,7 +136,69 @@ class Solution:
         return len(citations)
 ```
 
-## Complexity
+### Counting Sort — O(n) time, O(n) space
 
-- **Time:** `O(n log n)` for sorting
-- **Space:** `O(1)` extra (in-place sort aside from the language/runtime)
+```python
+class Solution:
+    def hIndex(self, citations: List[int]) -> int:
+        n = len(citations)
+        count = [0] * (n + 1)
+        for c in citations:
+            count[min(c, n)] += 1
+        papers = 0
+        for h in range(n, -1, -1):
+            papers += count[h]
+            if papers >= h:
+                return h
+        return 0
+```
+
+### Solution Explanation
+
+**Approach:** Sort descending, then scan until the balance breaks.
+
+**Key idea:** After sorting descending, index `i` represents `i + 1` papers seen. The first position where `citations[i] < i + 1` means we cannot support `i + 1` papers with that many citations — so the answer is `i`.
+
+**How the code works:**
+- Sort with `greater<int>()` so the highest citations come first.
+- At index `i`, we have `i + 1` papers; if the smallest among them (`citations[i]`) is still `>= i + 1`, the h-index is at least `i + 1`.
+- When `citations[i] < i + 1`, return `i` (the largest valid h-index).
+- If every paper passes the check, return `n`.
+
+**Walkthrough** — `citations = [3, 0, 6, 1, 5]`, expected output `3`:
+
+1. Sort descending → `[6, 5, 3, 1, 0]`.
+2. `i = 0`: `6 >= 1` ✓ · `i = 1`: `5 >= 2` ✓ · `i = 2`: `3 >= 3` ✓.
+3. `i = 3`: `1 < 4` → return `3`.
+
+## Common Mistakes
+
+- **Confusing h-index with max citations:** `h` is bounded by the number of papers, not the citation values
+- **Off-by-one in sorting approach:** Position `i` means `i + 1` papers (0-indexed), so the check is `citations[i] < i + 1`
+- **Forgetting the `min(c, n)` clamp in counting sort:** Any citation count `>= n` is equivalent since `h <= n`
+
+## Key Takeaways
+
+- The h-index is a **balance point** between quantity (number of papers) and quality (citation count)
+- Sort descending and scan gives the most intuitive solution
+- Counting sort exploits the fact that `h <= n` to achieve linear time
+- This pattern of "find the largest k satisfying a threshold" appears in many problems
+
+## Related Problems
+
+- [275. H-Index II](https://www.leetcode.com/problems/h-index-ii/) -- sorted input, use binary search for O(log n)
+- [287. Find the Duplicate Number](https://www.leetcode.com/problems/find-the-duplicate-number/) -- counting / pigeonhole
+- [169. Majority Element](https://www.leetcode.com/problems/majority-element/) -- finding a threshold in an array
+
+## References
+
+- [LC 274: H-Index on LeetCode](https://www.leetcode.com/problems/h-index/)
+- [LeetCode Discuss — LC 274: H-Index](https://www.leetcode.com/problems/h-index/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/h-index/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Greedy (Sorting + Greedy)](/posts/2025-12-14-leetcode-templates-greedy/)
+- [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/)
+
+{% endraw %}

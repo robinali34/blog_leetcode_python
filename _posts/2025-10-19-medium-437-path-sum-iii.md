@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 437. Path Sum III"
 date: 2025-10-19 17:25:53 -0700
-categories: python tree dfs recursion problem-solving
+categories: leetcode algorithm medium cpp tree dfs recursion problem-solving
 ---
 
-# [Medium] 437. Path Sum III
-
+{% raw %}
 Given the `root` of a binary tree and an integer `targetSum`, return the number of paths where the sum of the values along the path equals `targetSum`.
 
 The path does not need to start or end at the root or a leaf, but it must go downwards (i.e., traveling only from parent nodes to child nodes).
@@ -39,7 +38,48 @@ Explanation: The paths that sum to 22 are:
 - `-10^9 <= Node.val <= 10^9`
 - `-1000 <= targetSum <= 1000`
 
-## Solution: DFS with Recursion
+## Thinking Process
+
+1. **Start from each node:** Check all paths starting from each node
+1. **Current node check:** If node value equals target, count it
+
+- Trees have no cycles — recursion is natural.
+- Combine results from left and right subtrees at each node.
+- Base case is usually `null`; height drives stack space.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
+
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Solution
 
 **Time Complexity:** O(n²) where n is the number of nodes  
 **Space Complexity:** O(h) where h is the height of the tree
@@ -70,8 +110,7 @@ class Solution:
         )
 ```
 
-## How the Algorithm Works
-
+### Solution Explanation
 **Key Insight:** For each node, check all paths starting from that node, then recursively check paths starting from its children.
 
 **Steps:**
@@ -152,8 +191,7 @@ def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
 3. **Recursive calls:** Count paths starting from left and right subtrees
 4. **Return total count** from all sources
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time Complexity | Space Complexity |
 |-----------|----------------|------------------|
 | DFS from each node | O(n) | O(h) |
@@ -161,27 +199,6 @@ def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
 | **Total** | **O(n²)** | **O(h)** |
 
 Where n is the number of nodes and h is the height of the tree.
-
-## Edge Cases
-
-1. **Empty tree:** `root = null` → `0`
-2. **Single node:** `root = [5]`, `targetSum = 5` → `1`
-3. **No valid paths:** `root = [1,2,3]`, `targetSum = 10` → `0`
-4. **Negative values:** `root = [1,-2,3]`, `targetSum = 1` → `2`
-
-## Key Insights
-
-### DFS Approach:
-1. **Start from each node:** Check all paths starting from each node
-2. **Path continuation:** Paths can start from any node and go downwards
-3. **Target reduction:** Subtract current node value from target
-4. **Recursive exploration:** Explore all possible paths
-
-### Path Counting:
-1. **Current node check:** If node value equals target, count it
-2. **Subtree exploration:** Continue checking with updated target
-3. **Sum accumulation:** Add counts from all subtrees
-4. **Complete coverage:** Check all possible starting points
 
 ## Detailed Example Walkthrough
 
@@ -215,75 +232,12 @@ Where n is the number of nodes and h is the height of the tree.
 
 **Total count:** 2 + 1 = 3
 
-## Alternative Approaches
-
-### Approach 1: Prefix Sum with Hash Map
-```python
-class Solution:
-    def dfs(self, node: 'TreeNode | None', targetSum: int,
-            prefixSum: dict[int, int], currentSum: int) -> int:
-
-        if not node:
-            return 0
-
-        currentSum += node.val
-
-        count = prefixSum.get(currentSum - targetSum, 0)
-
-        prefixSum[currentSum] = prefixSum.get(currentSum, 0) + 1
-
-        count += self.dfs(node.left, targetSum, prefixSum, currentSum)
-        count += self.dfs(node.right, targetSum, prefixSum, currentSum)
-
-        prefixSum[currentSum] -= 1  # backtrack
-
-        return count
-
-    def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
-        prefixSum = {0: 1}
-        return self.dfs(root, targetSum, prefixSum, 0)
-```
-
-**Time Complexity:** O(n)  
-**Space Complexity:** O(n)
-
-### Approach 2: Iterative DFS
-```python
-class Solution:
-    def pathSum(self, root: 'TreeNode | None', targetSum: int) -> int:
-        if not root:
-            return 0
-
-        stk = [root]
-        count = 0
-
-        while stk:
-            node = stk.pop()
-            count += self.dfs(node, targetSum)
-
-            if node.left:
-                stk.append(node.left)
-            if node.right:
-                stk.append(node.right)
-
-        return count
-
-    def dfs(self, node: 'TreeNode | None', targetSum: int) -> int:
-        if not node:
-            return 0
-
-        cnt = 1 if node.val == targetSum else 0
-
-        cnt += self.dfs(node.left, targetSum - node.val)
-        cnt += self.dfs(node.right, targetSum - node.val)
-
-        return cnt
-```
-
-**Time Complexity:** O(n²)  
-**Space Complexity:** O(n)
-
 ## Common Mistakes
+
+1. **Empty tree:** `root = null` → `0`
+2. **Single node:** `root = [5]`, `targetSum = 5` → `1`
+3. **No valid paths:** `root = [1,2,3]`, `targetSum = 10` → `0`
+4. **Negative values:** `root = [1,-2,3]`, `targetSum = 1` → `2`
 
 1. **Wrong path direction:** Allowing paths to go upwards
 2. **Missing base cases:** Not handling null nodes properly
@@ -292,10 +246,10 @@ class Solution:
 
 ## Related Problems
 
-- [112. Path Sum](https://leetcode.com/problems/path-sum/)
-- [113. Path Sum II](https://leetcode.com/problems/path-sum-ii/)
-- [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
-- [257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths/)
+- [112. Path Sum](https://www.leetcode.com/problems/path-sum/)
+- [113. Path Sum II](https://www.leetcode.com/problems/path-sum-ii/)
+- [124. Binary Tree Maximum Path Sum](https://www.leetcode.com/problems/binary-tree-maximum-path-sum/)
+- [257. Binary Tree Paths](https://www.leetcode.com/problems/binary-tree-paths/)
 
 ## Why This Solution Works
 
@@ -316,3 +270,25 @@ class Solution:
 2. **Completeness:** Checks all possible paths
 3. **Efficiency:** O(n²) time complexity
 4. **Simplicity:** Easy to understand and implement
+
+## References
+
+- [LC 437: Path Sum III on LeetCode](https://www.leetcode.com/problems/path-sum-iii/)
+- [LeetCode Discuss — LC 437: Path Sum III](https://www.leetcode.com/problems/path-sum-iii/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/path-sum-iii/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### DFS Approach:
+1. **Start from each node:** Check all paths starting from each node
+2. **Path continuation:** Paths can start from any node and go downwards
+3. **Target reduction:** Subtract current node value from target
+4. **Recursive exploration:** Explore all possible paths
+
+### Path Counting:
+1. **Current node check:** If node value equals target, count it
+2. **Subtree exploration:** Continue checking with updated target
+3. **Sum accumulation:** Add counts from all subtrees
+4. **Complete coverage:** Check all possible starting points
+
+{% endraw %}

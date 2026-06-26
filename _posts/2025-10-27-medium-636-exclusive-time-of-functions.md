@@ -1,19 +1,16 @@
 ---
 layout: post
-title: "[Medium] LC 636: Exclusive Time of Functions"
+title: "[Medium] 636. Exclusive Time of Functions"
 date: 2025-10-27 21:04:00 -0700
 categories: leetcode medium stack parsing
 permalink: /posts/2025-10-27-medium-636-exclusive-time-of-functions/
 tags: [leetcode, medium, stack, parsing, logs, simulation]
 ---
 
-# [Medium] LC 636: Exclusive Time of Functions
-
+{% raw %}
 **Difficulty:** Medium  
 **Category:** Stack, Parsing, Simulation  
 **Companies:** Amazon, Facebook, Google, Twitter
-
-## Problem Statement
 
 On a **single-threaded** CPU, we can only execute one function at a time. When a function call starts, it's recorded with a start timestamp. When a call ends, it's recorded with an end timestamp. Functions can call other functions, creating a call stack.
 
@@ -21,8 +18,7 @@ Given an integer `n` representing the number of functions, and an array `logs`, 
 
 **Exclusive time** is the sum of execution times for all calls to a function, excluding time spent calling other functions.
 
-### Examples
-
+## Examples
 **Example 1:**
 ```
 Input: n = 2, logs = ["0:start:0","1:start:2","1:end:5","0:end:6"]
@@ -53,8 +49,7 @@ Explanation:
 - Function 1: runs at timestamp 6 (1 unit)
 ```
 
-### Constraints
-
+## Constraints
 - `1 <= n <= 100`
 - `1 <= logs.length <= 500`
 - `0 <= function_id < n`
@@ -108,9 +103,28 @@ class Solution:
         return result
 ```
 
-### Approach 2: Using String Splitting for Parsing
+### Solution Explanation
 
-**Algorithm:** Same logic but using Python string splitting for cleaner parsing.
+**Approach:** Monotonic stack (this problem)
+
+**Key idea:** Difficulty:** Medium
+
+**How the code works:**
+**Difficulty:** Medium
+**Category:** Stack, Parsing, Simulation
+- Stack matches nested or LIFO structure (parentheses, monotonic scans).
+- Push on open / larger; pop when the current element resolves pending work.
+- Monotonic stack finds next greater/smaller in O(n).
+
+**Walkthrough** — input `n = 2, logs = ["0:start:0","1:start:2","1:end:5","0:end:6"]`, expected output `[3,4]`:
+
+- Function 0 starts at 0 and ends at 6, taking 6 units total
+- Function 0 calls function 1, which runs from 2 to 5 (3 units)
+- Function 0 exclusive time: 6 - 3 = 3 units
+- Function 1 exclusive time: 5 - 2 + 1 = 4 units (inclusive of end timestamp)
+## Implementation Details
+
+### Manual String Parsing
 
 ```python
 class Solution:
@@ -138,9 +152,7 @@ class Solution:
         return result
 ```
 
-### Approach 3: Store Only Start Time
-
-**Algorithm:** Store only the start timestamp on the stack.
+### Stack Operations
 
 ```python
 class Solution:
@@ -170,72 +182,6 @@ class Solution:
         return result
 ```
 
-## Algorithm Analysis
-
-### Key Insights
-
-1. **Nested Function Calls**: The stack naturally models the call stack hierarchy
-2. **Exclusive vs Inclusive Time**: When a function calls another, the time spent in the nested call must be subtracted from the parent
-3. **End Timestamp Inclusion**: The end timestamp is inclusive in exclusive time calculation (`+1`)
-4. **Parent Tracking**: The stack maintains parent-child relationships
-
-### Understanding the Subtraction Logic
-
-```
-Function 0: starts at 0
-  Function 1: starts at 2
-    Function 1: ends at 5 (duration = 4)
-  Function 0: ends at 6
-
-Without subtraction:
-  Function 0: 0 to 6 = 7 units (WRONG - includes nested call)
-  Function 1: 2 to 5 = 4 units (CORRECT)
-
-With subtraction:
-  Function 0: 7 - 4 = 3 units (CORRECT)
-  Function 1: 4 units (CORRECT)
-```
-
-## Implementation Details
-
-### Manual String Parsing
-
-```python
-# Parse function ID (numeric str to int)
-id = 0
-i = 0
-
-while i < len(log) and log[i] != ':':
-    id = id * 10 + int(log[i])
-    i += 1
-
-i += 1  # skip ':'
-
-# Check for "start" or "end"
-if i + 1 < len(log) and log[i:i+5] == 'start':
-    isStart = True
-else:
-    isStart = False
-```
-
-### Stack Operations
-
-```python
-# Start event: push function onto stack
-if isStart:
-    st.append((id, time))
-
-# End event: pop and calculate
-else:
-    funcId, startTime = st.pop()
-    duration = time - startTime + 1
-    rtn[funcId] += duration
-
-    # Subtract from parent
-    if st:
-        rtn[st[-1][0]] -= duration
-```
-
 ## Edge Cases
 
 1. **Single Function**: Only one function, no nesting → straightforward timing
@@ -251,11 +197,17 @@ else:
 - What if you needed to track inclusive time instead?
 - How would you detect mismatched start/end events?
 
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
 ## Related Problems
 
-- [LC 394: Decode String](https://leetcode.com/problems/decode-string/) - Nested structure processing
-- [LC 150: Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/) - Stack-based evaluation
-- [LC 1249: Minimum Remove to Make Valid Parentheses](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/) - Stack validation
+- [LC 394: Decode String](https://www.leetcode.com/problems/decode-string/) - Nested structure processing
+- [LC 150: Evaluate Reverse Polish Notation](https://www.leetcode.com/problems/evaluate-reverse-polish-notation/) - Stack-based evaluation
+- [LC 1249: Minimum Remove to Make Valid Parentheses](https://www.leetcode.com/problems/minimum-remove-to-make-valid-parentheses/) - Stack validation
 
 ## Optimization Techniques
 
@@ -275,3 +227,53 @@ else:
 
 *This problem elegantly demonstrates how to model a call stack using a stack data structure and calculate exclusive time by tracking parent-child relationships in function calls.*
 
+## Key Takeaways
+
+- **Pattern:** Monotonic stack (this problem)
+- Difficulty:** Medium
+- Category:** Stack, Parsing, Simulation
+
+## References
+
+- [LC 636: Exclusive Time of Functions on LeetCode](https://www.leetcode.com/problems/exclusive-time-of-functions/)
+- [LeetCode Discuss — LC 636: Exclusive Time of Functions](https://www.leetcode.com/problems/exclusive-time-of-functions/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/exclusive-time-of-functions/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Stack](/posts/2025-11-13-leetcode-templates-stack/)
+
+## Thinking Process
+
+**Difficulty:** Medium
+
+**Category:** Stack, Parsing, Simulation
+
+- Stack matches nested or LIFO structure (parentheses, monotonic scans).
+- Push on open / larger; pop when the current element resolves pending work.
+- Monotonic stack finds next greater/smaller in O(n).
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Stack</text>
+
+  <rect x="100" y="30" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="46" text-anchor="middle" font-size="10">top</text>
+  <rect x="100" y="54" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="100" y="78" width="80" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="200" y="70" font-size="11" fill="#6B6560">push / pop</text>
+  <path d="M90 42v60" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="115" text-anchor="middle" font-size="11" fill="#6B6560">LIFO — monotonic stack scans array</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Monotonic stack** *(this problem)* | O(n) | O(n) | Next greater/smaller element |
+| Parentheses matching | O(n) | O(n) | Push open, pop on close |
+| Expression evaluation | O(n) | O(n) | Operand + operator stacks |
+| Stack simulation | O(n) | O(n) | Process in LIFO order |
+
+{% endraw %}

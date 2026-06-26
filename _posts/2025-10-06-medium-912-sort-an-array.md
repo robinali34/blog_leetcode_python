@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 912. Sort an Array"
 date: 2025-10-06 00:00:00 -0000
-categories: python sorting merge-sort heap-sort counting-sort data-structures divide-conquer problem-solving
+categories: leetcode algorithm medium cpp sorting merge-sort heap-sort counting-sort data-structures divide-conquer problem-solving
 ---
 
-# [Medium] 912. Sort an Array
-
+{% raw %}
 Given an array of integers `nums`, sort the array in ascending order and return it.
 
 You must solve the problem in **O(n log n)** time complexity and with the smallest possible space complexity.
@@ -30,7 +29,37 @@ Output: [0,0,1,1,2,5]
 - `1 <= nums.length <= 5 * 10^4`
 - `-5 * 10^4 <= nums[i] <= 5 * 10^4`
 
-## Solution 1: Merge Sort
+## Thinking Process
+
+1. **Merge Sort** guarantees O(n log n) time complexity and is stable
+
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 105" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Intervals on timeline</text>
+
+  <line x1="30" y1="60" x2="250" y2="60" stroke="#D4D1CC" stroke-width="2"/>
+  <rect x="50" y="48" width="60" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <rect x="100" y="48" width="50" height="24" rx="3" fill="#E0D8E4" stroke="#A098A8"/>
+  <rect x="160" y="48" width="70" height="24" rx="3" fill="#E8D5D0" stroke="#B8A5A0"/>
+  <text x="140" y="95" text-anchor="middle" font-size="11" fill="#6B6560">sort by start → scan overlaps</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| Brute force | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| **Sort + scan** *(this problem)* | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
+
+## Solution
 
 **Time Complexity:** O(n log n)  
 **Space Complexity:** O(n)
@@ -86,102 +115,23 @@ class Solution:
             k += 1
 ```
 
-### How Merge Sort Works:
+### Solution Explanation
 
-1. **Divide**: Split the array into two halves
-2. **Conquer**: Recursively sort both halves
-3. **Combine**: Merge the sorted halves back together
+**Approach:** Sort + scan (this problem)
 
-The merge operation compares elements from both halves and places them in the correct order.
+**Key idea:** 1. **Merge Sort** guarantees O(n log n) time complexity and is stable
 
-## Solution 2: Heap Sort
+**How the code works:**
+1. **Merge Sort** guarantees O(n log n) time complexity and is stable
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
 
-**Time Complexity:** O(n log n)  
-**Space Complexity:** O(1)
+**Walkthrough** — input `nums = [5,2,3,1]`, expected output `[1,2,3,5]`:
 
-Heap sort uses a max-heap to sort the array in-place.
-
-```python
-class Solution:
-    def heapify(self, arr: list[int], n: int, i: int) -> None:
-        largest = i
-        left = 2 * i + 1
-        right = 2 * i + 2
-
-        # Find largest among root and children
-        if left < n and arr[left] > arr[largest]:
-            largest = left
-
-        if right < n and arr[right] > arr[largest]:
-            largest = right
-
-        # If root is not largest, swap and continue heapifying
-        if largest != i:
-            arr[i], arr[largest] = arr[largest], arr[i]
-            self.heapify(arr, n, largest)
-
-    def heapSort(self, arr: list[int]) -> None:
-        n = len(arr)
-
-        # Build max heap
-        for i in range(n // 2 - 1, -1, -1):
-            self.heapify(arr, n, i)
-
-        # Extract elements one by one
-        for i in range(n - 1, 0, -1):
-            arr[0], arr[i] = arr[i], arr[0]
-            self.heapify(arr, i, 0)
-
-    def sortArray(self, nums: list[int]) -> list[int]:
-        self.heapSort(nums)
-        return nums
-```
-
-### How Heap Sort Works:
-
-1. **Build Max Heap**: Convert array to max-heap
-2. **Extract Maximum**: Repeatedly extract the maximum element and place it at the end
-3. **Heapify**: Maintain heap property after each extraction
-
-## Solution 3: Counting Sort
-
-**Time Complexity:** O(n + k) where k is the range of input  
-**Space Complexity:** O(k)
-
-Counting sort works well when the range of numbers is small.
-
-```python
-class Solution:
-    def countSort(self, arr: list[int]) -> None:
-        from collections import defaultdict
-
-        counts = defaultdict(int)
-
-        # Step 1: count frequencies
-        for val in arr:
-            counts[val] += 1
-
-        minVal = min(arr)
-        maxVal = max(arr)
-
-        # Step 2: rebuild array
-        idx = 0
-        for val in range(minVal, maxVal + 1):
-            while counts[val] > 0:
-                arr[idx] = val
-                idx += 1
-                counts[val] -= 1
-
-    def sortArray(self, nums: list[int]) -> list[int]:
-        self.countSort(nums)
-        return nums
-```
-
-### How Counting Sort Works:
-
-1. **Count**: Count frequency of each element
-2. **Reconstruct**: Place elements back in sorted order based on their counts
-
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Algorithm Comparison
 
 | Algorithm | Time Complexity | Space Complexity | Stability | In-Place |
@@ -196,15 +146,29 @@ class Solution:
 - **Heap Sort**: When you need in-place sorting and don't care about stability
 - **Counting Sort**: When the range of numbers is small compared to array size
 
-## Key Insights
+## Related Problems
+
+- [75. Sort Colors](https://www.leetcode.com/problems/sort-colors/) - Counting sort variant
+- [148. Sort List](https://www.leetcode.com/problems/sort-list/) - Merge sort on linked list
+- [215. Kth Largest Element in an Array](https://www.leetcode.com/problems/kth-largest-element-in-an-array/) - Heap-based approach
+
+## References
+
+- [LC 912: Sort an Array on LeetCode](https://www.leetcode.com/problems/sort-an-array/)
+- [LeetCode Discuss — LC 912: Sort an Array](https://www.leetcode.com/problems/sort-an-array/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/sort-an-array/editorial/) *(may require premium)*
+
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
 
 1. **Merge Sort** guarantees O(n log n) time complexity and is stable
 2. **Heap Sort** is in-place but not stable
 3. **Counting Sort** can be very fast when the range is small
 4. All three solutions meet the O(n log n) requirement for this problem
 
-## Related Problems
-
-- [75. Sort Colors](https://leetcode.com/problems/sort-colors/) - Counting sort variant
-- [148. Sort List](https://leetcode.com/problems/sort-list/) - Merge sort on linked list
-- [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) - Heap-based approach
+{% endraw %}

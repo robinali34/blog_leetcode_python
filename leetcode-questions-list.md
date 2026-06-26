@@ -12,7 +12,7 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 327 (LC problem posts)
+- **Total Posts:** 328 (LC problem posts)
 - **Easy:** 57 problems
 - **Medium:** 236 problems
 - **Hard:** 34 problems
@@ -32,6 +32,8 @@ _Counts are computed from the `Category` + `Solution Approach` columns in the fu
 - **Data Structure Design** (34): [Data Structure Design](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/)
 - **Intervals & Sweep Line** (12): [Greedy](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/)
 - **Math & Bit Manipulation** (28): [Math & Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-math-bit-manipulation/), [Math & Geometry](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-math-geometry/)
+- **Heap / Priority Queue** (18): [Heap](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-05-leetcode-templates-heap/)
+- **Search** (21): [Search](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/)
 - **Run-Length Encoding** (2)
 
 See the **All LeetCode Problems** table below for concrete problems in each category.
@@ -53,16 +55,20 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 11. **Sweep Line** - 4 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/))
 12. **Data Structure Design** - 34 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/))
 
-## Tips for Problem Solving
+## Guides & References
 
-1. **Identify the Pattern:** Look for common algorithm patterns (DP, sliding window, etc.)
-2. **Start Simple:** Begin with brute force, then optimize
-3. **Use Data Structures:** Choose appropriate DS for the problem
-4. **Consider Edge Cases:** Handle boundary conditions
-5. **Optimize Space/Time:** Trade-offs between complexity and efficiency
+New to LeetCode or Python? Start here. For a curated interview path, see the [NeetCode 150](https://neetcode.io/practice/practice/neetcode150) list (full breakdown in the [Beginner's Guide](/2026/06/25/leetcode-beginners-guide/)).
+
+| Guide | Description |
+|---|---|
+| [LeetCode Beginner's Guide](/2026/06/25/leetcode-beginners-guide/) | What LeetCode is, how it works, difficulty levels, Blind 75, **NeetCode 150 full problem list**, and a step-by-step roadmap |
+| [Python 3 Guide](/python-guide/) | Language essentials, stdlib patterns, and modern Python features for LeetCode |
+| [LeetCode Templates Index](/leetcode-templates/) | All algorithm pattern templates with relationship diagram |
+| [NeetCode 150 (official)](https://neetcode.io/practice/practice/neetcode150) | 150 curated problems with progress tracking on NeetCode |
+
+---
 
 ## All LeetCode Problems
-
 
 | Problem                                                                                                                                       | Title                                                                                                                                             | Difficulty | Category                                                                                | Solution Approach                                                                                                                                                                               | Date Added |
 | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
@@ -393,8 +399,9 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 | [3342](https://robinali34.github.io/blog_leetcode_python/2026/02/10/medium-3342-find-minimum-time-to-reach-last-room-ii/)                     | [Find Minimum Time To Reach Last Room Ii](https://leetcode.com/problems/find-minimum-time-to-reach-last-room-ii/)                                 | Medium     | Graph, Shortest Path, Dijkstra, Grid                                                    | [Graph, Shortest Path, Dijkstra, Grid](https://robinali34.github.io/blog_leetcode_python/2026/02/10/medium-3342-find-minimum-time-to-reach-last-room-ii/)                                       | 2026-02-10 |
 | [3439](https://robinali34.github.io/blog_leetcode_python/2026/02/06/medium-3439-reschedule-meetings-for-maximum-free-time-i/)                 | [Reschedule Meetings For Maximum Free Time I](https://leetcode.com/problems/reschedule-meetings-for-maximum-free-time-i/)                         | Medium     | Array, Intervals, Sliding Window, Prefix Sum                                            | [Array, Intervals, Sliding Window, Prefix Sum](https://robinali34.github.io/blog_leetcode_python/2026/02/06/medium-3439-reschedule-meetings-for-maximum-free-time-i/)                           | 2026-02-06 |
 | [3477](https://robinali34.github.io/blog_leetcode_python/2026/01/16/medium-3477-number-of-unplaced-fruits/)                                   | [Number Of Unplaced Fruits](https://leetcode.com/problems/number-of-unplaced-fruits/)                                                             | Medium     | Array, Greedy, Segment Tree                                                             | [Array, Greedy, Segment Tree, Data Structure](https://robinali34.github.io/blog_leetcode_python/2026/01/16/medium-3477-number-of-unplaced-fruits/)                                              | 2026-01-16 |
+| [lcr113](https://robinali34.github.io/blog_leetcode_python/2026/01/14/medium-lcr113-course-schedule-ii/)                                      | [LCR 113. Course Schedule II](https://leetcode.cn/problems/QA2IGt/description/)                                                                   | Medium     | Graph, Topological Sort, DFS                                                            | [Graph, Topological Sort, DFS, Cycle Detection](https://robinali34.github.io/blog_leetcode_python/2026/01/14/medium-lcr113-course-schedule-ii/)                                                     | 2026-01-14 |
 
 ---
 
-*Last updated: April 22, 2026*
-*Total posts (LC problems): 327*
+*Last updated: June 26, 2026*
+*Total posts (LC problems): 328*

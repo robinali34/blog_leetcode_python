@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 240. Search a 2D Matrix II"
 date: 2025-10-07 22:01:10 -0700
-categories: python binary-search matrix 2d-array divide-conquer search optimization problem-solving
+categories: leetcode algorithm medium cpp binary-search matrix 2d-array divide-conquer search optimization problem-solving
 ---
 
-# [Medium] 240. Search a 2D Matrix II
-
+{% raw %}
 Write an efficient algorithm that searches for a value `target` in an `m x n` integer matrix. This matrix has the following properties:
 
 - Integers in each row are sorted in ascending from left to right.
@@ -43,6 +42,7 @@ Matrix visualization:
 [10, 13, 14, 17, 24]
 [18, 21, 23, 26, 30]
 ```
+
 Target = 20 not found in matrix
 
 ## Constraints
@@ -55,7 +55,37 @@ Target = 20 not found in matrix
 - All the integers in each column are sorted in ascending order.
 - `-10^9 <= target <= 10^9`
 
-## Solution 1: Binary Search per Row
+## Thinking Process
+
+1. **Matrix properties** allow elimination strategies
+
+- The search space must shrink monotonically each step.
+- Decide which half still satisfies the predicate, discard the other.
+- Use `mid = left + (right - left) / 2` to avoid overflow.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Grid traversal</text>
+
+  <rect x="50" y="40" width="28" height="28" fill="#D4D8E0" stroke="#8B8680"/><rect x="78" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="106" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="50" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="78" y="68" width="28" height="28" fill="#E0D8E4" stroke="#A098A8"/>
+  <rect x="106" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <text x="110" y="115" text-anchor="middle" font-size="11" fill="#6B6560">BFS/DFS flood from each cell</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Standard binary search** *(this problem)* | O(log n) | O(1) | Sorted array, `left <= right` |
+| Lower / upper bound | O(log n) | O(1) | First/last position, insert index |
+| Binary search on rotated array | O(log n) | O(1) | Identify sorted half, discard other |
+| Binary search on answer | O(n log M) | O(1) | Monotonic predicate over search space |
+
+## Solution
 
 **Time Complexity:** O(m log n)  
 **Space Complexity:** O(1)
@@ -86,99 +116,23 @@ class Solution:
         return False
 ```
 
-### How it Works:
+### Solution Explanation
 
-1. **Iterate through each row**
-2. **Binary search** within each row for the target
-3. **Return true** if found in any row, **false** otherwise
+**Approach:** Standard binary search (this problem)
 
-## Solution 2: Divide and Conquer
+**Key idea:** 1. **Matrix properties** allow elimination strategies
 
-**Time Complexity:** O(n log n) average case  
-**Space Complexity:** O(log n) for recursion stack
+**How the code works:**
+1. **Matrix properties** allow elimination strategies
+- The search space must shrink monotonically each step.
+- Decide which half still satisfies the predicate, discard the other.
+- Use `mid = left + (right - left) / 2` to avoid overflow.
 
-Use divide and conquer by eliminating regions based on the middle column.
+**Walkthrough** — input `matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5`, expected output `true`:
 
-```python
-class Solution:
-    def searchMatrixHelper(self, matrix, target, top, left, bottom, right):
-        if top > bottom or left > right:
-            return False
-
-        if target < matrix[top][left] or target > matrix[bottom][right]:
-            return False
-
-        midCol = (left + right) // 2
-
-        row = top
-
-        # find split row
-        while row <= bottom and matrix[row][midCol] <= target:
-            if matrix[row][midCol] == target:
-                return True
-            row += 1
-
-        return (
-            self.searchMatrixHelper(matrix, target, top, midCol + 1, row - 1, right) or
-            self.searchMatrixHelper(matrix, target, row, left, bottom, midCol - 1)
-        )
-
-    def searchMatrix(self, matrix, target):
-        if not matrix or not matrix[0]:
-            return False
-
-        return self.searchMatrixHelper(
-            matrix,
-            target,
-            0, 0,
-            len(matrix) - 1,
-            len(matrix[0]) - 1
-        )
-```
-
-### How it Works:
-
-1. **Choose middle column** and find the boundary where elements ≤ target
-2. **Eliminate regions**: Search only in top-right and bottom-left quadrants
-3. **Recursively search** the remaining regions
-
-## Solution 3: Optimal Search from Top-Right (Recommended)
-
-**Time Complexity:** O(m + n)  
-**Space Complexity:** O(1)
-
-Start from top-right corner and eliminate row or column at each step.
-
-```python
-class Solution:
-    def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:
-        if not matrix or not matrix[0]:
-            return False
-
-        rows, cols = len(matrix), len(matrix[0])
-
-        row, col = 0, cols - 1
-
-        while row < rows and col >= 0:
-            if matrix[row][col] == target:
-                return True
-            elif matrix[row][col] > target:
-                col -= 1
-            else:
-                row += 1
-
-        return False
-```
-
-### How it Works:
-
-1. **Start from top-right corner** (matrix[0][cols-1])
-2. **Compare with target**:
-   - If equal: found target
-   - If greater: eliminate current column (move left)
-   - If smaller: eliminate current row (move down)
-3. **Continue until** target found or out of bounds
-
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Algorithm Comparison
 
 | Solution | Time Complexity | Space Complexity | Approach |
@@ -214,15 +168,8 @@ For target = 5 in the matrix:
 [10, 13, 14, 17, 24]
 [18, 21, 23, 26, 30]
 ```
+
 Path: 15 → 11 → 7 → 4 → 5 ✓
-
-## Key Insights
-
-1. **Matrix properties** allow elimination strategies
-2. **Top-right approach** is optimal with O(m + n) time
-3. **Binary search per row** is simple but not optimal
-4. **Divide and conquer** provides good average performance
-5. **Elimination strategy** leverages sorted properties
 
 ## Why Top-Right Works
 
@@ -232,6 +179,28 @@ Path: 15 → 11 → 7 → 4 → 5 ✓
 
 ## Related Problems
 
-- [74. Search a 2D Matrix](https://leetcode.com/problems/search-a-2d-matrix/) - Strictly sorted matrix
-- [378. Kth Smallest Element in a Sorted Matrix](https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/) - Finding kth element
-- [1428. Leftmost Column with at Least a One](https://leetcode.com/problems/leftmost-column-with-at-least-a-one/) - Binary matrix search
+- [74. Search a 2D Matrix](https://www.leetcode.com/problems/search-a-2d-matrix/) - Strictly sorted matrix
+- [378. Kth Smallest Element in a Sorted Matrix](https://www.leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix/) - Finding kth element
+- [1428. Leftmost Column with at Least a One](https://www.leetcode.com/problems/leftmost-column-with-at-least-a-one/) - Binary matrix search
+
+## References
+
+- [LC 240: Search a 2D Matrix II on LeetCode](https://www.leetcode.com/problems/search-a-2d-matrix-ii/)
+- [LeetCode Discuss — LC 240: Search a 2D Matrix II](https://www.leetcode.com/problems/search-a-2d-matrix-ii/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/search-a-2d-matrix-ii/editorial/) *(may require premium)*
+
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+1. **Matrix properties** allow elimination strategies
+2. **Top-right approach** is optimal with O(m + n) time
+3. **Binary search per row** is simple but not optimal
+4. **Divide and conquer** provides good average performance
+5. **Elimination strategy** leverages sorted properties
+
+{% endraw %}

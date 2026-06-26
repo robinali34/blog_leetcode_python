@@ -2,21 +2,17 @@
 layout: post
 title: "[Medium] 77. Combinations"
 date: 2025-09-29 00:00:00 -0000
-categories: python combinations dfs problem-solving
+categories: leetcode algorithm backtracking data-structures recursion medium cpp combinations dfs problem-solving
 ---
 
-# [Medium] 77. Combinations
-
+{% raw %}
 This is a classic backtracking problem that requires generating all possible combinations of k numbers chosen from the range [1, n]. The key insight is using DFS with backtracking to explore all possible paths while avoiding duplicates.
-
-## Problem Description
 
 Given two integers n and k, return all possible combinations of k numbers chosen from the range [1, n].
 
 You may return the answer in any order.
 
-### Examples
-
+## Examples
 **Example 1:**
 ```
 Input: n = 4, k = 2
@@ -35,11 +31,11 @@ Input: n = 3, k = 3
 Output: [[1,2,3]]
 ```
 
-### Constraints
+## Constraints
 - 1 <= n <= 20
 - 1 <= k <= n
 
-## Approach
+## Thinking Process
 
 The solution uses backtracking (DFS) with the following strategy:
 
@@ -49,8 +45,39 @@ The solution uses backtracking (DFS) with the following strategy:
 4. **Backtrack**: Remove the last element before trying the next number
 5. **Avoid Duplicates**: Start from `i + 1` in the next recursive call to ensure ascending order
 
-## Solution in Python
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
 
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Solution
 **Time Complexity:** O(C(n,k) × k) - We generate C(n,k) combinations, each taking O(k) time  
 **Space Complexity:** O(k) - For the recursion stack and current path
 
@@ -73,6 +100,24 @@ class Solution:
                     path.pop()
 ```
 
+### Solution Explanation
+
+**Approach:** Recursive DFS (this problem)
+
+**Key idea:** The solution uses backtracking (DFS) with the following strategy:
+
+**How the code works:**
+1. **Base Case**: When the current path has k elements, add it to the result
+2. **Early Termination**: If not enough numbers remain to form a valid combination, return early
+3. **Recursive Case**: For each number from `first_num` to n, add it to the path and recurse
+4. **Backtrack**: Remove the last element before trying the next number
+5. **Avoid Duplicates**: Start from `i + 1` in the next recursive call to ensure ascending order
+
+**Walkthrough** — input `n = 4, k = 2`, expected output `[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Step-by-Step Example
 
 Let's trace through the solution with n = 4, k = 2:
@@ -107,14 +152,6 @@ Let's trace through the solution with n = 4, k = 2:
 
 **Result:** `[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]`
 
-## Key Insights
-
-1. **Backtracking Pattern**: Add → Recurse → Remove
-2. **Avoiding Duplicates**: Use `first_num` parameter to ensure ascending order
-3. **Early Termination**: Prune branches where `path.size() + (n - first_num + 1) < k`
-4. **Pruning**: Stop when `i > n` or when remaining numbers can't form a valid combination
-5. **Base Case**: When path size equals k, we have a valid combination
-
 ## Backtracking Template
 
 This problem follows the classic backtracking template:
@@ -133,9 +170,9 @@ def backtrack(self, parameters) -> None:
         undo_choice(choice)
 ```
 
-## Alternative Approaches
+## Optimization Techniques
 
-### Iterative Solution
+### Early Termination
 ```python
 def combine(self, n: int, k: int) -> list[list[int]]:
     result = []
@@ -151,30 +188,6 @@ def combine(self, n: int, k: int) -> list[list[int]]:
         for j in range(i + 1, k):
             combination[j] = combination[j - 1] + 1
     return result
-```
-
-### Mathematical Approach (Using Next Permutation)
-```python
-def combine(self, n: int, k: int) -> list[list[int]]:
-    from itertools import combinations
-    return list(combinations(range(1, n + 1), k))
-```
-
-## Optimization Techniques
-
-### Early Termination
-```python
-def dfs(self, n: int, k: int, result: list[list[int]], path: list[int], start: int) -> None:
-    # Early termination: not enough numbers left
-    if len(path) + (n - start + 1) < k:
-        return
-    if len(path) == k:
-        result.append(path[:])
-        return
-    for i in range(start, n + 1):
-        path.append(i)
-        self.dfs(n, k, result, path, i + 1)
-        path.pop()
 ```
 
 ## Common Mistakes
@@ -211,3 +224,19 @@ dfs(4,2,[],1)
 ```
 
 ---
+
+## References
+
+- [LC 77: Combinations on LeetCode](https://www.leetcode.com/problems/combinations/)
+- [LeetCode Discuss — LC 77: Combinations](https://www.leetcode.com/problems/combinations/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/combinations/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Backtracking Pattern**: Add → Recurse → Remove
+2. **Avoiding Duplicates**: Use `first_num` parameter to ensure ascending order
+3. **Early Termination**: Prune branches where `path.size() + (n - first_num + 1) < k`
+4. **Pruning**: Stop when `i > n` or when remaining numbers can't form a valid combination
+5. **Base Case**: When path size equals k, we have a valid combination
+
+{% endraw %}

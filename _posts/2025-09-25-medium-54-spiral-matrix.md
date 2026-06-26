@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "[Medium] 54. Spiral Matrix"
-categories: python spiral-matrix problem-solving
+categories: leetcode algorithm matrix data-structures simulation traversal medium cpp spiral-matrix problem-solving
 ---
 
-# [Medium] 54. Spiral Matrix
-
+{% raw %}
 Given an m x n matrix, return all elements of the matrix in spiral order.
 
 ## Examples
@@ -29,14 +28,36 @@ Output: [1,2,3,4,8,12,11,10,9,5,6,7]
 - 1 <= m, n <= 10
 - -100 <= matrix[i][j] <= 100
 
-## Approach
+## Thinking Process
 
 There are two main approaches to solve this problem:
 
 1. **Boundary Tracking**: Use four boundaries (top, bottom, left, right) and traverse in spiral order
 2. **Direction Simulation**: Use direction vectors and mark visited cells to simulate spiral movement
 
-## Solution 1: Boundary Tracking Approach
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Grid traversal</text>
+
+  <rect x="50" y="40" width="28" height="28" fill="#D4D8E0" stroke="#8B8680"/><rect x="78" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="106" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="50" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="78" y="68" width="28" height="28" fill="#E0D8E4" stroke="#A098A8"/>
+  <rect x="106" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <text x="110" y="115" text-anchor="middle" font-size="11" fill="#6B6560">BFS/DFS flood from each cell</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| Row/column traversal | O(nm) | O(1) | Simulation, spiral |
+| BFS/DFS on grid | O(nm) | O(nm) | Islands, shortest path |
+| **Matrix as graph** *(this problem)* | O(nm) | O(nm) | 4/8-directional neighbors |
+| Transpose / rotate | O(nm) | O(1) | In-place rotation tricks |
+
+## Solution
 
 ```python
 class Solution:
@@ -68,67 +89,21 @@ class Solution:
         return result
 ```
 
-**Time Complexity:** O(m × n) - Visit each cell exactly once
-**Space Complexity:** O(1) - Only using variables for boundaries
+### Solution Explanation
 
-## Solution 2: Direction Simulation Approach
+**Approach:** Matrix as graph (this problem)
 
-```python
-class Solution:
-    def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
-        VISITED = 101
-        rows, cols = len(matrix), len(matrix[0])
-        dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # right, down, left, up
-        dir_idx = 0
-        result = []
-        row, col = 0, 0
-        for _ in range(rows * cols):
-            result.append(matrix[row][col])
-            matrix[row][col] = VISITED  # Mark as visited
-            # Calculate next position
-            next_row = row + dirs[dir_idx][0]
-            next_col = col + dirs[dir_idx][1]
-            # Check if next position is valid and not visited
-            if (0 <= next_row < rows and 0 <= next_col < cols and
-                    matrix[next_row][next_col] != VISITED):
-                row, col = next_row, next_col
-            else:
-                # Change direction and move
-                dir_idx = (dir_idx + 1) % 4
-                row += dirs[dir_idx][0]
-                col += dirs[dir_idx][1]
-        return result
-```
+**Key idea:** There are two main approaches to solve this problem:
 
-**Time Complexity:** O(m × n) - Visit each cell exactly once
-**Space Complexity:** O(1) - Only using variables for direction and position
+**How the code works:**
+1. **Boundary Tracking**: Use four boundaries (top, bottom, left, right) and traverse in spiral order
+2. **Direction Simulation**: Use direction vectors and mark visited cells to simulate spiral movement
 
-## Step-by-Step Example (Solution 1)
+**Walkthrough** — input `matrix = [[1,2,3],[4,5,6],[7,8,9]]`, expected output `[1,2,3,6,9,8,7,4,5]`:
 
-For matrix = [[1,2,3],[4,5,6],[7,8,9]]:
-
-1. **Initial boundaries:** up=0, down=2, left=0, right=2
-2. **Right traversal:** [1,2,3] → rtn = [1,2,3]
-3. **Down traversal:** [6,9] → rtn = [1,2,3,6,9]
-4. **Left traversal:** [8,7] → rtn = [1,2,3,6,9,8,7]
-5. **Up traversal:** [4] → rtn = [1,2,3,6,9,8,7,4]
-6. **Update boundaries:** up=1, down=1, left=1, right=1
-7. **Right traversal:** [5] → rtn = [1,2,3,6,9,8,7,4,5]
-
-Final result: [1,2,3,6,9,8,7,4,5]
-
-## Key Insights
-
-1. **Boundary Management**: Track four boundaries and move them inward after each complete spiral
-2. **Edge Cases**: Handle single row/column matrices with conditional checks
-3. **Direction Changes**: Use direction vectors to simulate spiral movement
-4. **Visited Marking**: Mark cells as visited to avoid revisiting them
-
-## Solution Comparison
-
-- **Boundary Tracking**: More intuitive, doesn't modify input matrix, cleaner logic
-- **Direction Simulation**: More general approach, can be extended to other spiral problems
-
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Common Mistakes
 
 1. **Off-by-one errors** in boundary conditions
@@ -138,6 +113,21 @@ Final result: [1,2,3,6,9,8,7,4,5]
 
 ## Related Problems
 
-- [59. Spiral Matrix II](https://leetcode.com/problems/spiral-matrix-ii/)
-- [885. Spiral Matrix III](https://leetcode.com/problems/spiral-matrix-iii/)
-- [2326. Spiral Matrix IV](https://leetcode.com/problems/spiral-matrix-iv/)
+- [59. Spiral Matrix II](https://www.leetcode.com/problems/spiral-matrix-ii/)
+- [885. Spiral Matrix III](https://www.leetcode.com/problems/spiral-matrix-iii/)
+- [2326. Spiral Matrix IV](https://www.leetcode.com/problems/spiral-matrix-iv/)
+
+## References
+
+- [LC 54: Spiral Matrix on LeetCode](https://www.leetcode.com/problems/spiral-matrix/)
+- [LeetCode Discuss — LC 54: Spiral Matrix](https://www.leetcode.com/problems/spiral-matrix/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/spiral-matrix/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Boundary Management**: Track four boundaries and move them inward after each complete spiral
+2. **Edge Cases**: Handle single row/column matrices with conditional checks
+3. **Direction Changes**: Use direction vectors to simulate spiral movement
+4. **Visited Marking**: Mark cells as visited to avoid revisiting them
+
+{% endraw %}

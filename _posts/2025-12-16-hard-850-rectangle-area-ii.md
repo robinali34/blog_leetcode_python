@@ -6,8 +6,6 @@ categories: leetcode algorithm hard cpp geometry sweep-line segment-tree problem
 ---
 
 {% raw %}
-# [Hard] 850. Rectangle Area II
-
 You are given a 2D array of axis-aligned `rectangles`. For each `rectangle[i] = [xi1, yi1, xi2, yi2]`, where `(xi1, yi1)` is the bottom-left corner and `(xi2, yi2)` is the top-right corner of the `ith` rectangle.
 
 Calculate the **total area** covered by all `rectangles` in the plane. Any area covered by two or more rectangles should only be counted **once**.
@@ -39,35 +37,38 @@ Explanation: The answer is 10^18 modulo (10^9 + 7), which is 49.
 - `xi1 <= xi2`
 - `yi1 <= yi2`
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+1. **Sweep line**: Convert 2D problem to 1D by sweeping along one axis
 
-1. **Rectangle representation**: How are rectangles represented? (Assumption: [x1, y1, x2, y2] - bottom-left and top-right corners, half-open intervals)
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
 
-2. **Overlapping areas**: How should we handle overlapping rectangles? (Assumption: Count overlapping area only once - union of rectangles, not sum)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
 
-3. **Modulo requirement**: Should the result be modulo 10^9 + 7? (Assumption: Yes - per problem statement, return modulo 10^9 + 7)
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
 
-4. **Rectangle boundaries**: Are boundaries inclusive or exclusive? (Assumption: Typically half-open [x1, x2) x [y1, y2) - need to clarify)
+</svg>
 
-5. **Return value**: What should we return? (Assumption: Total area covered by union of all rectangles, modulo 10^9 + 7)
+## Common Approaches
 
-## Interview Deduction Process (30 minutes)
+Typical techniques for this pattern:
 
-**Step 1: Brute-Force Approach (8 minutes)**
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
 
-For each rectangle, mark all covered cells in a 2D grid. However, coordinates can be up to 10^9, making this approach infeasible due to memory constraints. Alternatively, iterate through all pairs of rectangles, calculate their intersections, and use inclusion-exclusion principle. This becomes exponentially complex with many rectangles and doesn't scale well.
-
-**Step 2: Semi-Optimized Approach (10 minutes)**
-
-Use a sweep line algorithm: sweep vertically along the y-axis and track horizontal coverage at each y-coordinate. For each y-value, maintain an array tracking which x-segments are covered. When processing events (rectangle start/end), update coverage counts and calculate area incrementally. Use coordinate compression to map large x-coordinates to indices. This reduces the problem to manageable size but still requires O(n) time per event to update coverage, resulting in O(n² log n) overall complexity.
-
-**Step 3: Optimized Solution (12 minutes)**
-
-Enhance the sweep line approach with a Segment Tree for efficient range updates. Instead of updating coverage counts in an array (O(n) per event), use a segment tree that supports range updates in O(log n) time. The segment tree tracks coverage counts and calculates total covered length efficiently. This reduces the time complexity to O(n log n) - optimal for this problem. The key insight is that we need range updates (increment/decrement coverage for x-intervals) and range queries (total covered length), which segment trees handle efficiently.
-
-## Solution 1: Sweep Line with Coordinate Compression
+## Solution
 
 **Time Complexity:** O(n² log n) - Sorting events + O(n) per event for coverage calculation  
 **Space Complexity:** O(n) - For events and coordinate arrays
@@ -126,6 +127,28 @@ class Solution:
         return res % MOD
 ```
 
+### Solution Explanation
+
+**Approach:** Brute force (this problem)
+
+**Key idea:** 1. **Sweep line**: Convert 2D problem to 1D by sweeping along one axis
+
+**How the code works:**
+1. **Sweep line**: Convert 2D problem to 1D by sweeping along one axis
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
+
+**Walkthrough** — input `rectangles = [[0,0,2,2],[1,0,2,3],[1,0,3,1]]`, expected output `6`:
+
+A total area of 6 is covered by all three rectangles, as illustrated in the picture.
+From (1,1) to (2,2), the green and red rectangles overlap.
+
+| Solution | Time | Space | Notes |
+|----------|------|-------|-------|
+| Sweep Line + Array | O(n² log n) | O(n) | Simple, good for n ≤ 200 |
+| Sweep Line + Segment Tree | O(n log n) | O(n) | Optimal for large n |
+
 ### How Solution 1 Works
 
 1. **Event Generation**:
@@ -150,115 +173,6 @@ class Solution:
 ### Key Insight
 
 The sweep line moves vertically (along y-axis), and at each position, we calculate the horizontal coverage. By processing events in order, we can compute the total area incrementally.
-
-## Solution 2: Segment Tree Optimization
-
-**Time Complexity:** O(n log n) - Sorting events + O(log n) per event for segment tree operations  
-**Space Complexity:** O(n) - For segment tree and coordinate arrays
-
-This solution uses a segment tree for O(log n) range updates and queries, significantly improving performance.
-
-```python
-class Solution:
-    def __init__(self):
-        self.xCoords = []
-        self.count = []
-        self.total = []
-
-    def update(self, node, lo, hi, left, right, delta):
-        if right <= lo or hi <= left:
-            return
-
-        if left <= lo and hi <= right:
-            self.count[node] += delta
-        else:
-            mid = (lo + hi) // 2
-            self.update(2 * node, lo, mid, left, right, delta)
-            self.update(2 * node + 1, mid, hi, left, right, delta)
-
-        if self.count[node] > 0:
-            self.total[node] = self.xCoords[hi] - self.xCoords[lo]
-        elif hi - lo == 1:
-            self.total[node] = 0
-        else:
-            self.total[node] = self.total[2 * node] + self.total[2 * node + 1]
-
-    def rectangleArea(self, rectangles):
-        MOD = 10**9 + 7
-        OPEN, CLOSE = 1, -1
-
-        xSet = set()
-        events = []
-
-        for x1, y1, x2, y2 in rectangles:
-            xSet.add(x1)
-            xSet.add(x2)
-            events.append((y1, OPEN, x1, x2))
-            events.append((y2, CLOSE, x1, x2))
-
-        self.xCoords = sorted(xSet)
-
-        xIdx = {x: i for i, x in enumerate(self.xCoords)}
-
-        events.sort(key=lambda x: (x[0], -x[1]))
-
-        n = len(self.xCoords)
-
-        self.count = [0] * (4 * n)
-        self.total = [0] * (4 * n)
-
-        res = 0
-        curY = events[0][0]
-
-        for y, typ, x1, x2 in events:
-            res += self.total[1] * (y - curY)
-            res %= MOD
-
-            self.update(1, 0, n - 1, xIdx[x1], xIdx[x2], typ)
-
-            curY = y
-
-        return res % MOD
-```
-
-### How Solution 2 Works
-
-1. **Segment Tree Structure**:
-   - `counts[node]`: Number of rectangles fully covering this segment
-   - `total[node]`: Total covered length in this segment's range
-
-2. **Update Logic**:
-   - If a node is fully covered by the update range, increment/decrement its count
-   - Otherwise, recursively update children
-   - Recalculate `total` based on:
-     - If `counts[node] > 0`: Entire segment is covered
-     - If leaf node with `counts = 0`: No coverage
-     - Otherwise: Sum of children's coverage
-
-3. **Query**:
-   - `total[1]` (root) always contains the total covered length
-   - O(1) query time after O(log n) updates
-
-### Why Segment Tree is Better
-
-| Operation | Solution 1 | Solution 2 |
-|-----------|-----------|-----------|
-| Range update | O(n) | O(log n) |
-| Query coverage | O(n) | O(1) |
-| **Total per event** | **O(n)** | **O(log n)** |
-| **Overall** | **O(n² log n)** | **O(n log n)** |
-
-## Comparison of Approaches
-
-| Aspect | Sweep Line + Array | Sweep Line + Segment Tree |
-|--------|-------------------|---------------------------|
-| **Time Complexity** | O(n² log n) | O(n log n) |
-| **Space Complexity** | O(n) | O(n) |
-| **Code Complexity** | Simple | Moderate |
-| **Best For** | Small n (≤ 200) | Large n |
-| **Update Time** | O(n) | O(log n) |
-| **Query Time** | O(n) | O(1) |
-
 ## Example Walkthrough
 
 **Input:** `rectangles = [[0,0,2,2],[1,0,2,3],[1,0,3,1]]`
@@ -299,14 +213,13 @@ y=2 to y=3:
 Total: 3 + 2 + 1 = 6
 ```
 
-## Complexity Analysis
-
+### Complexity
 | Solution | Time | Space | Notes |
 |----------|------|-------|-------|
 | Sweep Line + Array | O(n² log n) | O(n) | Simple, good for n ≤ 200 |
 | Sweep Line + Segment Tree | O(n log n) | O(n) | Optimal for large n |
 
-## Edge Cases
+## Common Mistakes
 
 1. **Single rectangle**: Just return its area modulo MOD
 2. **Large coordinates**: Use coordinate compression
@@ -314,21 +227,11 @@ Total: 3 + 2 + 1 = 6
 4. **Adjacent rectangles**: Properly counted as separate areas
 5. **Large area**: Result can exceed 10^18, must use modulo
 
-## Common Mistakes
-
 1. **Integer overflow**: Use `long long` for intermediate calculations
 2. **Modulo operations**: Apply modulo correctly to avoid overflow
 3. **Event ordering**: Process OPEN before CLOSE at same y-coordinate
 4. **Coordinate compression**: Don't forget to map back to actual lengths
 5. **Segment tree indexing**: Be careful with 0-based vs 1-based indexing
-
-## Key Insights
-
-1. **Sweep line**: Convert 2D problem to 1D by sweeping along one axis
-2. **Coordinate compression**: Handle large coordinates by mapping to indices
-3. **Event-based processing**: Track when rectangles start/end coverage
-4. **Coverage counting**: Count overlapping rectangles instead of boolean coverage
-5. **Segment tree**: Efficient range updates and queries
 
 ## Optimization Tips
 
@@ -339,10 +242,10 @@ Total: 3 + 2 + 1 = 6
 
 ## Related Problems
 
-- [218. The Skyline Problem](https://leetcode.com/problems/the-skyline-problem/) - Similar sweep line approach
-- [391. Perfect Rectangle](https://leetcode.com/problems/perfect-rectangle/) - Rectangle coverage
-- [836. Rectangle Overlap](https://leetcode.com/problems/rectangle-overlap/) - Simpler overlap detection
-- [223. Rectangle Area](https://leetcode.com/problems/rectangle-area/) - Two rectangles only
+- [218. The Skyline Problem](https://www.leetcode.com/problems/the-skyline-problem/) - Similar sweep line approach
+- [391. Perfect Rectangle](https://www.leetcode.com/problems/perfect-rectangle/) - Rectangle coverage
+- [836. Rectangle Overlap](https://www.leetcode.com/problems/rectangle-overlap/) - Simpler overlap detection
+- [223. Rectangle Area](https://www.leetcode.com/problems/rectangle-area/) - Two rectangles only
 
 ## Pattern Recognition
 
@@ -368,6 +271,18 @@ Similar problems:
 3. **Collision Detection**: Finding overlapping regions
 4. **Layout Algorithms**: Determining occupied space
 5. **Map Rendering**: Tile coverage calculations
+## References
+
+- [LC 850: Rectangle Area II on LeetCode](https://www.leetcode.com/problems/rectangle-area-ii/)
+- [LeetCode Discuss — LC 850: Rectangle Area II](https://www.leetcode.com/problems/rectangle-area-ii/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/rectangle-area-ii/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Sweep line**: Convert 2D problem to 1D by sweeping along one axis
+2. **Coordinate compression**: Handle large coordinates by mapping to indices
+3. **Event-based processing**: Track when rectangles start/end coverage
+4. **Coverage counting**: Count overlapping rectangles instead of boolean coverage
+5. **Segment tree**: Efficient range updates and queries
 
 {% endraw %}
-

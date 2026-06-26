@@ -1,48 +1,41 @@
 ---
 layout: post
 title: "[Medium] 1376. Time Needed to Inform All Employees"
-date: 2026-03-17 00:00:00 -0700
-categories: [leetcode, medium, tree, graph, dfs, bfs]
-tags: [leetcode, medium, tree, graph, dfs, bfs]
+date: 2026-03-17
+categories: [leetcode, medium, tree, dfs, bfs]
+tags: [leetcode, medium, tree, dfs, bfs, graph]
 permalink: /2026/03/17/medium-1376-time-needed-to-inform-all-employees/
 ---
 
-# [Medium] 1376. Time Needed to Inform All Employees
-
-## Problem Statement
-
-A company has `n` employees, numbered from `0` to `n - 1`. The **head** of the company has `id = headID`.
-
-You are given two integer arrays:
-
-- `manager[i]` — the direct manager of employee `i` (for the head, `manager[headID] == -1`).  
-- `informTime[i]` — the time it takes for employee `i` to inform all of their **direct** subordinates.
-
-The company structure forms a **tree** rooted at `headID` (directed edges from manager to subordinates).
-
-It takes `informTime[i]` minutes to pass information from employee `i` to all of their direct subordinates **in parallel**. Each subordinate then repeats the process with their own subordinates, and so on.
-
-Return the **number of minutes** needed to inform **all** employees about an urgent piece of news.
+{% raw %}
+A company has `n` employees numbered `0` to `n-1`. Each employee has exactly one direct manager given in `manager[i]`, except the head of the company (`manager[headID] == -1`). An employee needs `informTime[i]` minutes to inform **all** their direct subordinates. Return the total time needed to inform all employees.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: n = 1, headID = 0, manager = [-1], informTime = [0]
 Output: 0
+Explanation: Only the head, no one to inform.
 ```
 
 **Example 2:**
 
-```python
-Input: 
-n = 6, headID = 2
-manager = [2,2,-1,2,2,2]
-informTime = [0,0,1,0,0,0]
-
+```
+Input: n = 6, headID = 2,
+       manager = [2,2,-1,2,2,2], informTime = [0,0,1,0,0,0]
 Output: 1
-# Head 2 informs everyone in 1 minute (all its direct subordinates in parallel).
+Explanation: Head (2) informs all 5 subordinates in 1 minute.
+```
+
+**Example 3:**
+
+```
+Input: n = 7, headID = 6,
+       manager = [1,2,3,4,5,6,-1], informTime = [0,6,5,4,3,2,1]
+Output: 21
+Explanation: Chain 6→5→4→3→2→1→0, total = 1+2+3+4+5+6 = 21.
 ```
 
 ## Constraints
@@ -51,140 +44,102 @@ Output: 1
 - `0 <= headID < n`
 - `manager.length == n`
 - `informTime.length == n`
-- `manager[headID] == -1`
-- For all `i != headID`, `0 <= manager[i] < n`
-- The structure is a **tree**.
+- `informTime[i] >= 0`
+- The input forms a valid tree
 
-## Clarification Questions
+## Thinking Process
 
-1. **Parallel informing**: When a manager informs their direct subordinates, does that happen in parallel?  
-   **Assumption**: Yes — all direct subordinates receive the message after `informTime[manager]` minutes at the same time.
-2. **Leaf inform time**: For employees with no subordinates, is `informTime[i]` always 0?  
-   **Assumption**: Yes (no one to inform).
-3. **Answer definition**: We want the maximum time taken for any employee to receive the news (i.e., the longest root-to-leaf time)?  
-   **Assumption**: Yes.
+### Baseline (Naive) -- O(n^2)
 
-## Interview Deduction Process (20 minutes)
+For each employee, walk up through `manager[i] → manager[manager[i]] → ... → head` and sum `informTime` along the path. Track the maximum. In a chain structure each walk is O(n), giving O(n^2) total.
 
-**Step 1: Tree view (5 min)**  
-The `manager` array defines a **rooted tree** with edges from manager to subordinate:
+### Bottleneck
 
-- Node = employee.  
-- Edge = `manager[i] -> i`.  
-- The time to go from a manager to its children is `informTime[manager]`.
+Repeated traversal of the same paths -- computing the same prefix sums over and over.
 
-We need the **longest time** from `headID` to any leaf (employee with no subordinates).
+### Optimization
 
-**Step 2: Naive baseline (5 min)**  
-For each employee `i`:
+This is a **tree rooted at `headID`** where `manager → subordinate` forms a directed edge. The problem becomes:
 
-- Walk up the chain: `i → manager[i] → manager[manager[i]] → ... → headID`,  
-- Sum up the inform times along the path,  
-- Track the maximum across all employees.
+> Find the **longest weighted path** from root to any leaf.
 
-Worst case (a long chain): length `n`, and repeating this for each of `n` employees gives **O(n²)** time.
+Build an adjacency list and traverse once with DFS or BFS. Each node is visited exactly once.
 
-**Step 3: Optimization (10 min)**  
-Instead of repeatedly walking up, we can:
+### DFS Recurrence
 
-1. Build an **adjacency list**: `manager -> list of subordinates`.  
-2. Run one **DFS or BFS** from `headID`, accumulating the time along the path, and keep the maximum.
+$text{time}(node) = text{informTime}[node] + max_{child}(text{time}(child))
 
-This visits each node once → **O(n)** time.
+Base case: leaf nodes have no children, so `max(child times) = 0`.
 
-## Solution Approach
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-**Graph = tree rooted at headID:** Build `graph[m]` = list of employees that have `manager == m`. Then:
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
 
-- **DFS approach:**  
-  `time(node) = informTime[node] + max(time(child) for child in children)`.  
-  The answer is `time(headID)`.
+</svg>
 
-- **BFS approach:**  
-  Level-order traversal from `headID`, carrying the time accumulated so far; track the maximum time when popping nodes.
+## Common Approaches
 
-### Key Insights
+Typical techniques for this pattern:
 
-1. **Tree DP / longest path** — Time to a node is parent’s time plus `informTime[parent]`. We want the maximum over all leaves.  
-2. **Single pass** — Each node is visited once; no recomputing chains.  
-3. **Graph direction** — Edges go from manager to subordinate, not the other way around.
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
 
-## Python Solution — DFS
-
+## Solution
 ```python
-from collections import defaultdict
-from typing import List
-
-
-class Solution:
-    def numOfMinutes(self, n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
-        graph: dict[int, list[int]] = defaultdict(list)
-        for i in range(n):
-            if manager[i] != -1:
-                graph[manager[i]].append(i)
-
-        def dfs(node: int) -> int:
-            max_time = 0
-            for child in graph[node]:
-                max_time = max(max_time, dfs(child))
-            return informTime[node] + max_time
-
-        return dfs(headID)
+Input: n = 1, headID = 0, manager = [-1], informTime = [0]
+Output: 0
 ```
 
-## Python Solution — BFS
+### Solution Explanation
 
-```python
-from collections import defaultdict, deque
-from typing import List
+**Approach:** Recursive DFS (this problem)
 
+**Key idea:** ### Baseline (Naive) -- O(n^2)$
 
-class Solution:
-    def numOfMinutes(self, n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
-        graph: dict[int, list[int]] = defaultdict(list)
-        for i in range(n):
-            if manager[i] != -1:
-                graph[manager[i]].append(i)
+**Walkthrough** — input `n = 1, headID = 0, manager = [-1], informTime = [0]`, expected output `0`:
 
-        queue = deque([(headID, 0)])  # (node, time_so_far)
-        max_time = 0
-
-        while queue:
-            node, time = queue.popleft()
-            max_time = max(max_time, time)
-            for child in graph[node]:
-                queue.append((child, time + informTime[node]))
-
-        return max_time
-```
-
-## Algorithm Explanation
-
-In the DFS version, `dfs(node)` returns the total time needed to inform everyone in the subtree rooted at `node`. For each child, we compute `dfs(child)` and take the maximum, since informing subtrees happens in parallel; the total for `node` is its own `informTime[node]` plus the longest child time.
-
-In the BFS version, we propagate the accumulated time along edges: when we are at `(node, time)`, each child gets called with `time + informTime[node]`. The answer is the maximum `time` seen for any node.
-
-## Complexity Analysis
-
-- **Time**: O(n) — build adjacency list in O(n), then DFS or BFS visits each node once.  
-- **Space**: O(n) for adjacency list and recursion stack or queue.
-
-## Edge Cases
-
-- `n = 1` and `informTime[headID] = 0` → answer is `0`.  
-- A long chain (each employee manages exactly one subordinate) — DFS depth = n, BFS queue size up to n.  
-- A star (head manages everyone) — answer is `informTime[headID]`.
-
+Only the head, no one to inform.
 ## Common Mistakes
 
-- **Adding `informTime[child]` instead of `informTime[node]`** during propagation — children’s time is added on the **edge into** them; we must use the manager’s `informTime`.  
-- **Trying to walk up from each node** — leads to O(n²) re-traversal; better to build the tree and walk down once.  
-- **Forgetting parallelism** — We should take the **maximum** child time, not sum of all child times.
+- Confusing the direction: edges go from manager to subordinates, not the other way
+- Adding `informTime` of leaf nodes (leaves have `informTime = 0` but the logic should still be correct since it adds 0)
+- Forgetting to propagate accumulated time in BFS (each child's time = parent's accumulated time + parent's `informTime`)
+
+## Key Takeaways
+
+- **"Maximum time from root to any leaf"** = longest path in a weighted tree = single DFS/BFS
+- Building an adjacency list from the `manager[]` array converts the problem into standard tree traversal
+- DFS gives a clean recursive formulation; BFS carries accumulated time as state in the queue
 
 ## Related Problems
 
-- [LC 104: Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/) — Longest root-to-leaf depth.  
-- [LC 543: Diameter of Binary Tree](/2026/03/06/easy-543-diameter-of-binary-tree/) — Longest path in a tree.  
-- [LC 1339: Maximum Product of Splitted Binary Tree](https://leetcode.com/problems/maximum-product-of-splitted-binary-tree/) — Tree DP.  
-- [LC 207: Course Schedule](https://leetcode.com/problems/course-schedule/) — Directed graph / reachability.
+- [104. Maximum Depth of Binary Tree](https://www.leetcode.com/problems/maximum-depth-of-binary-tree/) -- longest path in unweighted tree
+- [543. Diameter of Binary Tree](https://www.leetcode.com/problems/diameter-of-binary-tree/) -- longest path through any node
+- [841. Keys and Rooms](https://www.leetcode.com/problems/keys-and-rooms/) -- graph reachability via DFS/BFS
+- [207. Course Schedule](https://www.leetcode.com/problems/course-schedule/) -- directed graph traversal
 
+## References
+
+- [LC 1376: Time Needed to Inform All Employees on LeetCode](https://www.leetcode.com/problems/time-needed-to-inform-all-employees/)
+- [LeetCode Discuss — LC 1376: Time Needed to Inform All Employees](https://www.leetcode.com/problems/time-needed-to-inform-all-employees/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/time-needed-to-inform-all-employees/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+- [DFS](/posts/2025-11-24-leetcode-templates-dfs/)
+- [BFS](/posts/2025-11-24-leetcode-templates-bfs/)
+
+{% endraw %}

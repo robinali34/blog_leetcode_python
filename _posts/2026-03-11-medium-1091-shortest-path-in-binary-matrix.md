@@ -1,31 +1,86 @@
 ---
 layout: post
 title: "[Medium] 1091. Shortest Path in Binary Matrix"
-date: 2026-03-11 00:00:00 -0700
+date: 2026-03-11
 categories: [leetcode, medium, graph, bfs]
-tags: [leetcode, medium, grid, bfs, shortest-path]
+tags: [leetcode, medium, graph, bfs, grid, shortest-path]
 permalink: /2026/03/11/medium-1091-shortest-path-in-binary-matrix/
 ---
 
-# [Medium] 1091. Shortest Path in Binary Matrix
-
-## Problem Statement
-
-You are given an `n x n` binary matrix `grid`.
-
-- `grid[r][c] == 0` → open cell  
-- `grid[r][c] == 1` → blocked cell
-
-You start at the **top-left** cell `(0, 0)` and want to reach the **bottom-right** cell `(n - 1, n - 1)`.
-
-You may move to any of the **8 neighboring cells** (horizontally, vertically, or diagonally) **that are open (0)**.
-
-Return the **length of the shortest path** from `(0, 0)` to `(n - 1, n - 1)`, where the length is the **number of cells visited** along the path (including start and end). If no such path exists, return `-1`.
+{% raw %}
+Given an `n x n` binary matrix `grid`, return the length of the shortest **clear path** from top-left `(0,0)` to bottom-right `(n-1,n-1)`. A clear path consists of cells with value `0`, and you can move in **8 directions** (including diagonals). The path length is the number of cells visited. Return `-1` if no such path exists.
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: grid = [[0,1],[1,0]]
+Output: 2
+Explanation: Path (0,0) → (1,1), length = 2
+```
+
+**Example 2:**
+
+```
+Input: grid = [[0,0,0],[1,1,0],[1,1,0]]
+Output: 4
+Explanation: Path (0,0) → (0,1) → (0,2) → (1,2) → (2,2), but
+             shorter: (0,0) → (0,1) → (1,2) → (2,2), length = 4
+```
+
+**Example 3:**
+
+```
+Input: grid = [[1,0,0],[1,1,0],[1,1,0]]
+Output: -1
+Explanation: Starting cell is blocked.
+```
+
+## Constraints
+
+- `n == grid.length == grid[i].length`
+- `1 <= n <= 100`
+- `grid[i][j]` is `0` or `1`
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Queue BFS** *(this problem)* | O(n) | O(n) | Shortest path in unweighted graphs |
+| Multi-source BFS | O(n) | O(n) | Start from all sources simultaneously |
+| 0-1 BFS / deque | O(n) | O(n) | Weights 0 or 1 |
+| Level-order BFS | O(n) | O(w) | Process by depth/layer |
+
+## Thinking Process
+
+### Why BFS?
+
+This is an unweighted shortest path problem on a grid. BFS explores all cells at distance `d` before any cell at distance `d+1`, guaranteeing the first time we reach the destination is the shortest path.
+
+### 8-Directional Movement
+
+Unlike typical grid BFS (4 directions), this problem allows diagonal movement. This means 8 neighbors per cell.
+
+### Edge Cases
+
+- Start or end cell is `1` (blocked) → return `-1` immediately
+- Grid is `1x1` with `grid[0][0] = 0` → return `1`
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Grid traversal</text>
+
+  <rect x="50" y="40" width="28" height="28" fill="#D4D8E0" stroke="#8B8680"/><rect x="78" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="106" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="50" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="78" y="68" width="28" height="28" fill="#E0D8E4" stroke="#A098A8"/>
+  <rect x="106" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <text x="110" y="115" text-anchor="middle" font-size="11" fill="#6B6560">BFS/DFS flood from each cell</text>
+
+</svg>
+
+## Approach: BFS -- O(n^2)
 ```python
 Input: grid = [
   [0,1],
@@ -35,177 +90,47 @@ Output: 2
 # Path: (0,0) → (1,1)
 ```
 
-**Example 2:**
+### Solution Explanation
 
-```python
-Input: grid = [
-  [0,0,0],
-  [1,1,0],
-  [1,1,0]
-]
-Output: 4
-# One shortest path: (0,0) → (0,1) → (0,2) → (1,2) → (2,2)
-```
+**Approach:** Queue BFS (this problem)
 
-**Example 3:**
+**Key idea:** ### Why BFS?
 
-```python
-Input: grid = [
-  [1,0],
-  [0,0]
-]
-Output: -1
-# Start is blocked → no path.
-```
+**How the code works:**
+- Start or end cell is `1` (blocked) → return `-1` immediately
+- Grid is `1x1` with `grid[0][0] = 0` → return `1`
 
-## Constraints
+**Walkthrough** — input `grid = [[0,1],[1,0]]`, expected output `2`:
 
-- `1 <= n <= 100`
-- `grid[r][c]` is either `0` or `1`.
-
-## Clarification Questions
-
-1. **Diagonal moves**: Can we move diagonally?  
-   **Assumption**: Yes — 8 directions (up, down, left, right, and 4 diagonals).
-2. **Start/end blocked**: If `grid[0][0] == 1` or `grid[n-1][n-1] == 1`, is the answer `-1`?  
-   **Assumption**: Yes — no valid path exists.
-3. **Path length definition**: Length counts **cells**, including both start and end?  
-   **Assumption**: Yes — a direct move `(0,0) → (1,1)` has length 2.
-4. **In-place modification**: Can we mark visited cells directly in `grid`?  
-   **Assumption**: Yes — common in LeetCode; otherwise use a separate `visited` matrix.
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: Abstraction (5 min)**  
-Model this as a shortest-path problem on a **grid graph**:
-
-- Nodes: cells `(r, c)` with `grid[r][c] == 0`.  
-- Edges: valid moves between neighboring open cells (8 directions).  
-- Edge weight: 1 for every move.
-
-We need the shortest path from `(0,0)` to `(n-1,n-1)` in an **unweighted** graph.
-
-**Step 2: Naive DFS (5 min)**  
-We could try all paths (DFS/backtracking) and track the minimum length, but:
-
-- Each cell has up to 8 neighbors.  
-- Number of possible paths can explode: worst-case exponential in `n²`.  
-- DFS does not guarantee we find the shortest path early.
-
-Too slow and complex; not suitable for `n` up to 100.
-
-**Step 3: BFS for unweighted shortest path (10 min)**  
-For unweighted graphs, **BFS** is the standard way to find shortest path:
-
-- Explore layer by layer from the start.  
-- The first time we reach `(n-1,n-1)`, we have the shortest path length.  
-- We maintain a queue of `(row, col, dist)` tuples.
-
-We need to:
-
-1. Early-return `-1` if start or end is blocked.  
-2. Initialize queue with `(0, 0, 1)` when `grid[0][0] == 0`.  
-3. Track visited cells (either a `visited` matrix or reusing `grid` by setting visited cells to 1).  
-4. For each cell, explore its 8 neighbors; if they are inside bounds and open (`0`), push them into the queue with `dist + 1` and mark visited.
-
-## Solution Approach
-
-**Algorithm (BFS):**
-
-1. Let `n = len(grid)`.  
-2. If `grid[0][0] == 1` or `grid[n-1][n-1] == 1`, return `-1`.  
-3. Maintain 8 directions:
-
-   ```python
-   directions = [
-       (-1, -1), (-1, 0), (-1, 1),
-       (0, -1),           (0, 1),
-       (1, -1),  (1, 0),  (1, 1),
-   ]
-   ```
-
-4. Use a queue for BFS, starting from `(0, 0, 1)` (distance 1).  
-5. Mark `(0, 0)` as visited (e.g. set `grid[0][0] = 1`).  
-6. While the queue is not empty:
-   - Pop `(r, c, dist)`.  
-   - If `(r, c)` is `(n-1, n-1)`, return `dist`.  
-   - For each direction `(dr, dc)`, compute neighbor `(nr, nc)`.  
-   - If `(nr, nc)` is in bounds and `grid[nr][nc] == 0`, push `(nr, nc, dist + 1)` and mark `grid[nr][nc] = 1` (visited).
-7. If we exhaust the queue without reaching the target, return `-1`.
-
-### Key Insights
-
-1. **BFS for shortest path** — In unweighted graphs, BFS guarantees the shortest number of edges (here, cells) from start to target.  
-2. **8-direction movement** — Just extend the standard 4-direction BFS with diagonals.  
-3. **Visited marking** — Marking visited cells directly in `grid` (changing `0` to `1`) avoids an extra `visited` array and ensures we don’t revisit cells.
-
-## Python Solution
-
-### BFS (O(n²) time, O(n²) space)
-
-```python
-from collections import deque
-from typing import List
-
-
-class Solution:
-    def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
-        n = len(grid)
-
-        # If start or end is blocked, no path exists.
-        if grid[0][0] == 1 or grid[n - 1][n - 1] == 1:
-            return -1
-
-        directions = [
-            (-1, -1), (-1, 0), (-1, 1),
-            (0, -1),           (0, 1),
-            (1, -1),  (1, 0),  (1, 1),
-        ]
-
-        queue = deque([(0, 0, 1)])  # (row, col, distance)
-        grid[0][0] = 1  # mark visited
-
-        while queue:
-            r, c, dist = queue.popleft()
-            if r == n - 1 and c == n - 1:
-                return dist
-
-            for dr, dc in directions:
-                nr, nc = r + dr, c + dc
-                if 0 <= nr < n and 0 <= nc < n and grid[nr][nc] == 0:
-                    grid[nr][nc] = 1
-                    queue.append((nr, nc, dist + 1))
-
-        return -1
-```
-
-## Algorithm Explanation
-
-We treat each open cell as a node and edges as moves to any of the 8 neighboring open cells. We run BFS from `(0, 0)` with initial distance 1. The queue stores `(row, col, dist)` so that when we pop the target cell `(n-1, n-1)`, `dist` is the shortest path length. We mark visited cells by setting `grid[r][c] = 1` to avoid revisiting them. If the BFS finishes without reaching the bottom-right cell, there is no valid path and we return `-1`.
-
-## Complexity Analysis
-
-- **Time**: O(n²), since each cell is enqueued and processed at most once and we check up to 8 neighbors per cell.  
-- **Space**: O(n²) in the worst case for the BFS queue (when many cells are reachable).
-
-## Edge Cases
-
-- **Blocked start or end** — Immediately return `-1`.  
-- **Single cell grid**:
-  - `[[0]]` → answer is 1 (start is end).  
-  - `[[1]]` → answer is -1 (blocked).
-- **All zeros** — BFS explores the whole grid but still runs in O(n²).
-
+Path (0,0) → (1,1), length = 2
 ## Common Mistakes
 
-- **Forgetting diagonal moves** — Using only 4 directions (up, down, left, right) instead of 8 changes the problem.  
-- **Not counting cells correctly** — Path length is number of cells visited, so we start distance at 1, not 0.  
-- **Missing start/end check** — If either is blocked, BFS will still run unless we short-circuit; problem requires -1 immediately.
+- Forgetting to check both start **and** end cells (either being blocked means no path)
+- Using DFS instead of BFS (DFS doesn't guarantee shortest path in unweighted graphs)
+- Marking visited **when popping** instead of **when pushing** (causes duplicate entries and TLE)
+- Only checking 4 directions instead of 8
+
+## Key Takeaways
+
+- **BFS on grid = shortest path** when all moves have equal cost
+- Mark cells as visited **when enqueueing**, not when dequeuing -- this prevents the same cell from being added multiple times
+- The path length counts **cells visited** (not edges), so start at distance `1`
 
 ## Related Problems
 
-- [LC 994: Rotting Oranges](https://leetcode.com/problems/rotting-oranges/) — Multi-source BFS on a grid.  
-- [LC 542: 01 Matrix](https://leetcode.com/problems/01-matrix/) — BFS to compute distance to nearest zero.  
-- [LC 286: Walls and Gates](https://leetcode.com/problems/walls-and-gates/) — Fill distances to the nearest gate.  
-- [LC 127: Word Ladder](https://leetcode.com/problems/word-ladder/) — BFS for shortest path in an unweighted graph.
+- [200. Number of Islands](https://www.leetcode.com/problems/number-of-islands/) -- BFS/DFS grid traversal
+- [994. Rotting Oranges](https://www.leetcode.com/problems/rotting-oranges/) -- multi-source BFS on grid
+- [542. 01 Matrix](https://www.leetcode.com/problems/01-matrix/) -- BFS from all zeros simultaneously
+- [127. Word Ladder](https://www.leetcode.com/problems/word-ladder/) -- BFS shortest path on implicit graph
 
+## References
+
+- [LC 1091: Shortest Path in Binary Matrix on LeetCode](https://www.leetcode.com/problems/shortest-path-in-binary-matrix/)
+- [LeetCode Discuss — LC 1091: Shortest Path in Binary Matrix](https://www.leetcode.com/problems/shortest-path-in-binary-matrix/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/shortest-path-in-binary-matrix/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [BFS](/posts/2025-11-24-leetcode-templates-bfs/)
+
+{% endraw %}

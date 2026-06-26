@@ -1,39 +1,36 @@
 ---
 layout: post
 title: "[Easy] 217. Contains Duplicate"
-date: 2026-03-07 00:00:00 -0700
-categories: [leetcode, easy, array, hash-table]
-tags: [leetcode, easy, array, set]
+date: 2026-03-07
+categories: [leetcode, easy, array, hash]
+tags: [leetcode, easy, array, hash, sorting]
 permalink: /2026/03/07/easy-217-contains-duplicate/
 ---
 
-# [Easy] 217. Contains Duplicate
-
-## Problem Statement
-
-Given an integer array `nums`, return `true` if any value appears **at least twice** in the array, and return `false` if every element is distinct.
+{% raw %}
+Given an integer array `nums`, return `true` if any value appears **at least twice**, and `false` if every element is distinct.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: nums = [1,2,3,1]
-Output: True
+Output: true
 ```
 
 **Example 2:**
 
-```python
+```
 Input: nums = [1,2,3,4]
-Output: False
+Output: false
 ```
 
 **Example 3:**
 
-```python
+```
 Input: nums = [1,1,1,3,3,4,3,2,4,2]
-Output: True
+Output: true
 ```
 
 ## Constraints
@@ -41,40 +38,86 @@ Output: True
 - `1 <= nums.length <= 10^5`
 - `-10^9 <= nums[i] <= 10^9`
 
-## Clarification Questions
+## Common Approaches
 
-1. **At least twice** — Any duplicate (two or more of the same value) suffices?  
-   **Assumption**: Yes.
-2. **Return as soon as duplicate found** — We can short-circuit.  
-   **Assumption**: Yes.
+Typical techniques for this pattern:
 
-## Interview Deduction Process (20 minutes)
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Prefix sum** *(this problem)* | O(n) | O(n) | Range queries, subarray sum |
+| Sort + scan | O(n log n) | O(1) | Intervals, meeting rooms |
+| Kadane's algorithm | O(n) | O(1) | Maximum subarray |
+| Hash map counting | O(n) | O(n) | Frequency, two-sum variants |
 
-**Step 1: Brute force (5 min)**  
-For each element, check if it appears again later — O(n²). Too slow for n up to 10^5.
+## Thinking Process
 
-**Step 2: Sort (5 min)**  
-Sort and scan adjacent pairs; if any pair is equal, return true. O(n log n) time, O(1) or O(log n) space depending on sort.
+We need to detect if any element appears more than once. Three standard approaches:
 
-**Step 3: Hash set (10 min)**  
-Maintain a set of seen values. For each number, if it is already in the set, return true; otherwise add it. One pass, O(n) time, O(n) space.
+1. **Hash set** -- insert elements one by one, return `true` the moment we see a duplicate. Early exit.
+2. **Sorting** -- sort the array, then adjacent duplicates are next to each other.
+3. **One-liner** -- build a set from the array and compare sizes.
 
-## Solution Approach
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
 
-**Set:** Iterate over `nums`. For each value, if it is in a set of previously seen values, return `True`. Otherwise add it to the set. If the loop finishes, return `False`.
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
 
-**Sort:** Sort `nums`, then check if any `nums[i] == nums[i+1]`. O(n log n) time.
+</svg>
 
-### Key Insights
+## Approach 1: Hash Set -- O(n)
 
-1. **Seen set** — One pass with a set gives O(n) time; first repeat triggers true.
-2. **No need to count** — We only care about “seen before,” not frequency.
-3. **Sort alternative** — If O(n) extra space is undesirable, sorting uses O(log n) stack space (or O(1) for some sorts) but O(n log n) time.
+Insert elements and check for duplicates in one pass. Early exit on first duplicate.
+```python
+Input: nums = [1,2,3,1]
+Output: True
+```
 
-## Python Solution
+### Solution Explanation
 
-### Set (O(n) time, O(n) space)
+**Approach:** Prefix sum (this problem)
 
+**Key idea:** We need to detect if any element appears more than once. Three standard approaches:
+
+**How the code works:**
+1. **Hash set** -- insert elements one by one, return `true` the moment we see a duplicate. Early exit.
+2. **Sorting** -- sort the array, then adjacent duplicates are next to each other.
+3. **One-liner** -- build a set from the array and compare sizes.
+
+**Walkthrough** — input `nums = [1,2,3,1]`, expected output `true`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Approach 2: Hash Map -- O(n)
+
+Same idea but tracks counts. Slightly more than needed here, but useful when the problem asks *how many* duplicates.
+```python
+Input: nums = [1,2,3,4]
+Output: False
+```
+
+**Time**: O(n)
+**Space**: O(n)
+
+## Approach 3: Sorting -- O(n log n)
+
+Sort first, then duplicates become adjacent.
+```python
+Input: nums = [1,1,1,3,3,4,3,2,4,2]
+Output: True
+```
+
+**Time**: O(n log n)
+**Space**: O(1) (in-place sort, modifies input)
+
+## Approach 4: One-Liner -- O(n)
+
+Build a set and compare sizes. Clean but no early exit.
 ```python
 class Solution:
     def containsDuplicate(self, nums: list[int]) -> bool:
@@ -86,42 +129,44 @@ class Solution:
         return False
 ```
 
-### Sort (O(n log n) time, O(1) extra if in-place)
+**Time**: O(n)
+**Space**: O(n)
 
-```python
-class Solution:
-    def containsDuplicate(self, nums: list[int]) -> bool:
-        nums.sort()
-        for i in range(1, len(nums)):
-            if nums[i] == nums[i - 1]:
-                return True
-        return False
-```
+## Comparison
 
-## Algorithm Explanation
-
-**Set:** We only need to know if we’ve seen a value before. As we scan, the first time we see a value we add it to `seen`. The second time we see it we return `True`. If we never see a repeat, return `False`.
-
-**Sort:** After sorting, duplicates (if any) are adjacent. One linear scan over adjacent pairs suffices.
-
-## Complexity Analysis
-
-- **Set**: Time O(n), space O(n).
-- **Sort**: Time O(n log n), space O(1) or O(log n) depending on sort implementation.
-
-## Edge Cases
-
-- Single element → no duplicate → `False`.
-- Two elements, same value → `True`.
-- All distinct → `False`.
+| Approach | Time | Space | Early Exit? | Modifies Input? |
+|---|---|---|---|---|
+| Hash Set | O(n) | O(n) | Yes | No |
+| Hash Map | O(n) | O(n) | Yes | No |
+| Sorting | O(n log n) | O(1) | Yes | Yes |
+| One-Liner | O(n) | O(n) | No | No |
 
 ## Common Mistakes
 
-- **Using a list instead of a set** — `x in list` is O(n) per check, making the overall solution O(n²). Use a set for O(1) membership.
-- **Counting with Counter** — Works but overkill; we only need “seen at least twice,” so a set is enough.
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+- **Hash set with early exit** is the best general approach -- O(n) time with short-circuit on first duplicate
+- Sorting trades time for space (O(1) extra) but modifies the input
+- The one-liner is elegant but always processes the entire array
 
 ## Related Problems
 
-- [LC 219: Contains Duplicate II](/2026/03/07/easy-219-contains-duplicate-ii/) — Duplicate within distance k.
-- [LC 220: Contains Duplicate III](https://leetcode.com/problems/contains-duplicate-iii/) — Near-duplicate within index and value range.
-- [LC 268: Missing Number](https://leetcode.com/problems/missing-number/) — Set or math on indices.
+- [219. Contains Duplicate II](https://www.leetcode.com/problems/contains-duplicate-ii/) -- duplicates within distance `k`
+- [220. Contains Duplicate III](https://www.leetcode.com/problems/contains-duplicate-iii/) -- duplicates within value range and distance
+- [242. Valid Anagram](https://www.leetcode.com/problems/valid-anagram/) -- frequency counting variant
+
+## References
+
+- [LC 217: Contains Duplicate on LeetCode](https://www.leetcode.com/problems/contains-duplicate/)
+- [LeetCode Discuss — LC 217: Contains Duplicate](https://www.leetcode.com/problems/contains-duplicate/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/contains-duplicate/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/)
+
+{% endraw %}

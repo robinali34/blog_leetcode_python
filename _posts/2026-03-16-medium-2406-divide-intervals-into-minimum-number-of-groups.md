@@ -1,221 +1,154 @@
 ---
 layout: post
 title: "[Medium] 2406. Divide Intervals Into Minimum Number of Groups"
-date: 2026-03-16 00:00:00 -0700
-categories: [leetcode, medium, interval, heap, sweep-line]
-tags: [leetcode, medium, intervals, heap, sweep-line]
+date: 2026-03-16
+categories: [leetcode, medium, greedy, heap, intervals]
+tags: [leetcode, medium, greedy, heap, intervals, sweep-line]
 permalink: /2026/03/16/medium-2406-divide-intervals-into-minimum-number-of-groups/
 ---
 
-# [Medium] 2406. Divide Intervals Into Minimum Number of Groups
-
-## Problem Statement
-
-You are given a 2D integer array `intervals`, where `intervals[i] = [start_i, end_i]` describes an interval on the number line **including** both endpoints.
-
-You must divide the intervals into **one or more groups** such that in each group, **no two intervals intersect** (i.e., no two intervals in the same group share any point).
-
-Return the **minimum number of groups** you need to partition all the intervals.
-
-Two intervals `[a, b]` and `[c, d]` intersect if there exists `x` such that `x` is in both intervals. Because intervals are inclusive, they intersect if `max(a, c) <= min(b, d)`.
+{% raw %}
+You are given a 2D array `intervals` where `intervals[i] = [left_i, right_i]` represents the **inclusive** interval `[left_i, right_i]`. Divide the intervals into one or more **groups** such that no two intervals in the same group **overlap** (two intervals overlap if there is at least one common number). Return the **minimum** number of groups needed.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: intervals = [[5,10],[6,8],[1,5],[2,3],[1,10]]
 Output: 3
+Explanation:
+  Group 1: [1,5], [6,8]
+  Group 2: [2,3], [5,10]
+  Group 3: [1,10]
+No two intervals in the same group overlap.
 ```
 
 **Example 2:**
 
-```python
+```
 Input: intervals = [[1,3],[5,6],[8,10],[11,13]]
 Output: 1
-# All intervals are non-overlapping; one group is enough.
+Explanation: No intervals overlap, so one group is enough.
 ```
 
 ## Constraints
 
 - `1 <= intervals.length <= 10^5`
 - `intervals[i].length == 2`
-- `1 <= start_i <= end_i <= 10^9`
+- `1 <= left_i <= right_i <= 10^6`
 
-## Clarification Questions
+## Thinking Process
 
-1. **Inclusive endpoints**: Are endpoints inclusive?  
-   **Assumption**: Yes. So `[a, b]` and `[c, d]` are non-overlapping iff `b < c` or `d < a`.
-2. **Touching intervals**: If `b < c`, they can be in the same group; if `b >= c`, they intersect and must be in different groups.
-3. **Reordering allowed**: We can reorder intervals arbitrarily to group them?  
-   **Assumption**: Yes — we just have to partition them into valid groups.
+### Key Insight
 
-## Interview Deduction Process (20 minutes)
+The minimum number of groups = the **maximum number of intervals that overlap at any point in time**.
 
-**Step 1: Relation to “maximum overlap” (7 min)**  
-Think of all intervals on the number line. The minimum number of groups needed so that no group has overlapping intervals is equal to the **maximum number of intervals overlapping at any point**. Intuition: if at some time `t` there are `k` overlapping intervals, they must all be in different groups → need at least `k` groups. Conversely, if you have `G` groups and `G` is at least the maximum overlap, you can greedily place intervals into these groups so that no group’s active intervals overlap.
+This is the classic **meeting rooms II** pattern: each interval is a "meeting," and each group is a "room." We need the minimum number of rooms so no two meetings in the same room overlap.
 
-**Step 2: How to compute max overlap (7 min)**  
-Two common ways:
+### Greedy + Min-Heap Strategy
 
-1. **Min-heap of end times** (meeting rooms pattern).  
-2. **Sweep line with events** (+1 at start, -1 after end).
+1. **Sort** intervals by start time
+2. Use a **min-heap** tracking the end times of each group's last interval
+3. For each new interval:
+   - If the earliest-ending group finishes **before** the new interval starts (`pq.top() < start`), reuse that group (pop it)
+   - Push the new interval's end time onto the heap
+4. The heap size at the end = minimum number of groups
 
-Both give the peak number of overlapping intervals.
+### Walk-through
 
-**Step 3: Details for inclusivity (6 min)**  
-Here endpoints are inclusive. So `[start, end]` and `[next_start, next_end]` are non-overlapping in a group only if `end < next_start`. That affects:
+```
+intervals (sorted): [1,5], [1,10], [2,3], [5,10], [6,8]
+                     min-heap (end times)
 
-- Heap solution: we can reuse a group (pop an end time) when `min_end < start` (strict).  
-- Sweep line: we add a `+1` at `start` and a `-1` at `end + 1` so that intervals are considered active on `[start, end]`.
+[1,5]:   heap empty → push 5          heap = {5}
+[1,10]:  top=5, 5 < 1? No → push 10  heap = {5, 10}
+[2,3]:   top=5, 5 < 2? No → push 3   heap = {3, 5, 10}
+[5,10]:  top=3, 3 < 5? Yes → pop 3, push 10  heap = {5, 10, 10}
+[6,8]:   top=5, 5 < 6? Yes → pop 5, push 8   heap = {8, 10, 10}
 
-## Solution Approach 1 — Min-heap of end times (Meeting Rooms style)
-
-**Idea:** Sort intervals by start time. Use a min-heap storing the **end times** of currently active intervals (one per group). For each new interval `[start, end]`:
-
-- If the earliest finishing group’s end time is **strictly less than** `start`, that group is now free (no overlap), so we pop it and reuse that group.  
-- Push `end` for the new interval into the heap (either a reused group or a new group).  
-- The heap size at the end is the number of groups used.
-
-### Python Solution — Heap
-
-```python
-import heapq
-from typing import List
-
-
-class Solution:
-    def minGroups(self, intervals: List[List[int]]) -> int:
-        intervals.sort()  # sort by start time, then end
-        heap: list[int] = []  # min-heap of end times
-
-        for start, end in intervals:
-            if heap and heap[0] < start:
-                heapq.heappop(heap)
-            heapq.heappush(heap, end)
-
-        return len(heap)
+Answer: heap.size() = 3
 ```
 
-### Explanation
+### Why `<` and Not `<=`?
 
-We sort by start time so we process intervals in chronological order. The heap keeps track of the end times of the last interval in each group. For each new interval `[start, end]`:
+Intervals are **inclusive**: `[1,5]` and `[5,10]` share the point 5, so they overlap. We can only reuse a group when `pq.top() < start` (strictly less), not `<=`.
 
-- If the smallest end time `heap[0]` is `< start`, that group’s last interval ends before this one starts; they do **not** overlap, so we can reuse that group: pop it.
-- Push `end` to represent assigning this interval to some group (possibly reused or new).  
-- The heap size is the number of groups used at any time; after processing all intervals, that is the minimum number of groups.
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 105" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Intervals on timeline</text>
 
-Because intervals are inclusive, we require `heap[0] < start` (strict) to say “no overlap.” If `heap[0] == start`, they share the point `start` and must be different groups.
+  <line x1="30" y1="60" x2="250" y2="60" stroke="#D4D1CC" stroke-width="2"/>
+  <rect x="50" y="48" width="60" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <rect x="100" y="48" width="50" height="24" rx="3" fill="#E0D8E4" stroke="#A098A8"/>
+  <rect x="160" y="48" width="70" height="24" rx="3" fill="#E8D5D0" stroke="#B8A5A0"/>
+  <text x="140" y="95" text-anchor="middle" font-size="11" fill="#6B6560">sort by start → scan overlaps</text>
 
-## Solution Approach 2 — Sweep Line (difference array / events)
+</svg>
 
-**Idea:** Convert intervals into events:
+## Common Approaches
 
-- At `start`: active interval count `+1`.  
-- At `end + 1`: active interval count `-1` (since they are active through `end`).
+Typical techniques for this pattern:
 
-Sort all events by coordinate and run a prefix sum to track current overlap and maximum overlap.
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Min/max heap** *(this problem)* | O(n log k) | O(k) | Top-K, streaming median |
+| Two heaps | O(n log n) | O(n) | Median from data stream |
+| Heap + lazy deletion | O(n log n) | O(n) | Delayed removal |
+| Priority-driven search | O(n log n) | O(n) | Dijkstra, best-first expansion |
 
-### Python Solution — Sweep Line
-
+## Solution
 ```python
-from typing import List
-
-
-class Solution:
-    def minGroups(self, intervals: List[List[int]]) -> int:
-        events: list[tuple[int, int]] = []
-        for start, end in intervals:
-            events.append((start, 1))
-            events.append((end + 1, -1))
-
-        events.sort()  # sort by coordinate
-
-        curr_overlap = 0
-        max_overlap = 0
-        for _, delta in events:
-            curr_overlap += delta
-            if curr_overlap > max_overlap:
-                max_overlap = curr_overlap
-
-        return max_overlap
+Input: intervals = [[5,10],[6,8],[1,5],[2,3],[1,10]]
+Output: 3
 ```
 
-### Explanation
+### Solution Explanation
 
-We process the line from left to right:
+**Approach:** Min/max heap (this problem)
 
-- When we see a `+1` event at `start`, an interval becomes active.  
-- When we see a `-1` event at `end + 1`, that interval stops being active after `end`.
+**Key idea:** ### Key Insight
 
-The prefix sum `curr_overlap` is the number of intervals active at the current coordinate. The maximum value of `curr_overlap` over all coordinates is the maximum number of overlapping intervals, which equals the minimum number of groups needed.
+**How the code works:**
+1. **Sort** intervals by start time
+2. Use a **min-heap** tracking the end times of each group's last interval
+3. For each new interval:
+- If the earliest-ending group finishes **before** the new interval starts (`pq.top() < start`), reuse that group (pop it)
+- Push the new interval's end time onto the heap
+4. The heap size at the end = minimum number of groups
 
-## Complexity Analysis
+**Walkthrough** — input `intervals = [[5,10],[6,8],[1,5],[2,3],[1,10]]`, expected output `3`:
 
-For both approaches:
-
-- **Time**: O(n log n) for sorting (`n = len(intervals)`); heap operations add O(n log n) in the first solution; sweep line’s event sort is also O(n log n).  
-- **Space**: O(n) for heap or events.
-
-## Edge Cases
-
-- Single interval → 1 group.  
-- Non-overlapping chain of intervals → 1 group.  
-- All intervals overlapping at a point → number of groups = number of intervals.  
-- Large coordinates (up to 1e9) → sweep line uses sparse events, not an array; fine.
-
+Group 1: [1,5], [6,8]
+  Group 2: [2,3], [5,10]
+  Group 3: [1,10]
+No two intervals in the same group overlap.
 ## Common Mistakes
 
-- **Using `<=` instead of `<`** in the heap condition — With inclusive intervals, `[a,b]` and `[b,c]` intersect at `b`, so we can only reuse a group when `end < next_start` (strict).
-- **Subtracting at `end` instead of `end + 1`** in sweep line — That would treat intervals as half-open and undercount overlaps at endpoints; use `end + 1` to honor inclusivity.
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+- **"Minimum groups with no overlap"** = **"Maximum overlap at any point"** = Meeting Rooms II pattern
+- Sort by start + min-heap of end times is the standard O(n log n) approach
+- The strict `<` vs `<=` depends on whether endpoints are inclusive or exclusive -- always check the problem statement
 
 ## Related Problems
 
-- [LC 253: Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/) — Same heap idea for maximum overlapping meetings.  
-- [LC 732: My Calendar III](https://leetcode.com/problems/my-calendar-iii/) — Sweep line / ordered map for maximum overlap.  
-- [LC 56: Merge Intervals](https://leetcode.com/problems/merge-intervals/) — Sort and merge overlapping intervals.
+- [253. Meeting Rooms II](https://www.leetcode.com/problems/meeting-rooms-ii/) -- identical pattern (exclusive endpoints)
+- [435. Non-overlapping Intervals](https://www.leetcode.com/problems/non-overlapping-intervals/) -- greedy interval scheduling
+- [452. Minimum Number of Arrows to Burst Balloons](https://www.leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/) -- greedy intervals
+- [56. Merge Intervals](https://www.leetcode.com/problems/merge-intervals/) -- interval merging
 
----
-layout: post
-title: "2406. Divide Intervals Into Minimum Number of Groups"
-date: 2026-03-16 00:00:00 -0700
-categories: [leetcode, medium, interval, heap, sweep-line]
-tags: [leetcode, medium, intervals, heap, sweep-line]
-permalink: /2026/03/16/medium-2406-divide-intervals-into-minimum-number-of-groups/
----
+## References
 
-# 2406. Divide Intervals Into Minimum Number of Groups
+- [LC 2406: Divide Intervals Into Minimum Number of Groups on LeetCode](https://www.leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/)
+- [LeetCode Discuss — LC 2406: Divide Intervals Into Minimum Number of Groups](https://www.leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/editorial/) *(may require premium)*
 
-## Problem Statement
+## Template Reference
 
-You are given a 2D integer array `intervals`, where `intervals[i] = [start_i, end_i]` describes an interval on the number line **including** both endpoints.
+- [Heap](/posts/2026-01-05-leetcode-templates-heap/)
 
-You must divide the intervals into **one or more groups** such that in each group, **no two intervals intersect** (i.e., no two intervals in the same group share any point).
-
-Return the **minimum number of groups** you need to partition all the intervals.
-
-Two intervals `[a, b]` and `[c, d]` intersect if there exists `x` such that `x` is in both intervals. Because intervals are inclusive, they intersect if `max(a, c) <= min(b, d)`.
-
-## Examples
-
-**Example 1:**
-
-```python
-Input: intervals = [[5,10],[6,8],[1,5],[2,3],[1,10]]
-Output: 3
-```
-
-**Example 2:**
-
-```python
-Input: intervals = [[1,3],[5,6],[8,10],[11,13]]\nOutput: 1\n# All intervals are non-overlapping; one group is enough.\n```
-
-## Constraints
-
-- `1 <= intervals.length <= 10^5`
-- `intervals[i].length == 2`
-- `1 <= start_i <= end_i <= 10^9`
-
-## Clarification Questions
-
-1. **Inclusive endpoints**: Are endpoints inclusive?  \n   **Assumption**: Yes. So `[a, b]` and `[c, d]` are non-overlapping iff `b < c` or `d < a`.\n2. **Touching intervals**: If `b < c`, they can be in the same group; if `b >= c`, they intersect and must be in different groups.\n3. **Reordering allowed**: We can reorder intervals arbitrarily to group them?  \n   **Assumption**: Yes — we just have to partition them into valid groups.\n\n## Interview Deduction Process (20 minutes)\n\n**Step 1: Relation to “maximum overlap” (7 min)**  \nThink of all intervals on the number line. The minimum number of groups needed so that no group has overlapping intervals is equal to the **maximum number of intervals overlapping at any point**. Intuition: if at some time `t` there are `k` overlapping intervals, they must all be in different groups → need at least `k` groups. Conversely, if you have `G` groups and `G` is at least the maximum overlap, you can greedily place intervals into these groups so that no group’s active intervals overlap.\n\n**Step 2: How to compute max overlap (7 min)**  \nTwo common ways:\n\n1. **Min-heap of end times** (meeting rooms pattern).  \n2. **Sweep line with events** (+1 at start, -1 after end).\n\nBoth give the peak number of overlapping intervals.\n\n**Step 3: Details for inclusivity (6 min)**  \nHere endpoints are inclusive. So `[start, end]` and `[next_start, next_end]` are non-overlapping in a group only if `end < next_start`. That affects:\n\n- Heap solution: we can reuse a group (pop an end time) when `min_end < start` (strict).  \n- Sweep line: we add a `+1` at `start` and a `-1` at `end + 1` so that intervals are considered active on `[start, end]`.\n\n## Solution Approach 1 — Min-heap of end times (Meeting Rooms style)\n\n**Idea:** Sort intervals by start time. Use a min-heap storing the **end times** of currently active intervals (one per group). For each new interval `[start, end]`:\n\n- If the earliest finishing group’s end time is **strictly less than** `start`, that group is now free (no overlap), so we pop it and reuse that group.  \n- Push `end` for the new interval into the heap (either a reused group or a new group).  \n- The heap size at the end is the number of groups used.\n\n### Python Solution — Heap\n\n```python\nimport heapq\nfrom typing import List\n\n\nclass Solution:\n    def minGroups(self, intervals: List[List[int]]) -> int:\n        intervals.sort()  # sort by start time, then end\n        heap: list[int] = []  # min-heap of end times\n\n        for start, end in intervals:\n            if heap and heap[0] < start:\n                heapq.heappop(heap)\n            heapq.heappush(heap, end)\n\n        return len(heap)\n```\n\n### Explanation\n\nWe sort by start time so we process intervals in chronological order. The heap keeps track of the end times of the last interval in each group. For each new interval `[start, end]`:\n\n- If the smallest end time `heap[0]` is `< start`, that group’s last interval ends before this one starts; they do **not** overlap, so we can reuse that group: pop it.\n- Push `end` to represent assigning this interval to some group (possibly reused or new).  \n- The heap size is the number of groups used at any time; after processing all intervals, that is the minimum number of groups.\n\nBecause intervals are inclusive, we require `heap[0] < start` (strict) to say “no overlap.” If `heap[0] == start`, they share the point `start` and must be different groups.\n\n## Solution Approach 2 — Sweep Line (difference array / events)\n\n**Idea:** Convert intervals into events:\n\n- At `start`: active interval count `+1`.  \n- At `end + 1`: active interval count `-1` (since they are active through `end`).\n\nSort all events by coordinate and run a prefix sum to track current overlap and maximum overlap.\n\n### Python Solution — Sweep Line\n\n```python\nfrom typing import List\n\n\nclass Solution:\n    def minGroups(self, intervals: List[List[int]]) -> int:\n        events: list[tuple[int, int]] = []\n        for start, end in intervals:\n            events.append((start, 1))\n            events.append((end + 1, -1))\n\n        events.sort()  # sort by coordinate\n\n        curr_overlap = 0\n        max_overlap = 0\n        for _, delta in events:\n            curr_overlap += delta\n            if curr_overlap > max_overlap:\n                max_overlap = curr_overlap\n\n        return max_overlap\n```\n\n### Explanation\n\nWe process the line from left to right:\n\n- When we see a `+1` event at `start`, an interval becomes active.  \n- When we see a `-1` event at `end + 1`, that interval stops being active after `end`.\n\nThe prefix sum `curr_overlap` is the number of intervals active at the current coordinate. The maximum value of `curr_overlap` over all coordinates is the maximum number of overlapping intervals, which equals the minimum number of groups needed.\n\n## Complexity Analysis\n\nFor both approaches:\n\n- **Time**: O(n log n) for sorting (`n = len(intervals)`); heap operations add O(n log n) in the first solution; sweep line’s event sort is also O(n log n).  \n- **Space**: O(n) for heap or events.\n\n## Edge Cases\n\n- Single interval → 1 group.  \n- Non-overlapping chain of intervals → 1 group.  \n- All intervals overlapping at a point → number of groups = number of intervals.  \n- Large coordinates (up to 1e9) → sweep line uses sparse events, not an array; fine.\n\n## Common Mistakes\n\n- **Using `<=` instead of `<`** in the heap condition — With inclusive intervals, `[a,b]` and `[b,c]` intersect at `b`, so we can only reuse a group when `end < next_start` (strict).\n- **Subtracting at `end` instead of `end + 1`** in sweep line — That would treat intervals as half-open and undercount overlaps at endpoints; use `end + 1` to honor inclusivity.\n\n## Related Problems\n\n- [LC 253: Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/) — Same heap idea for maximum overlapping meetings.  \n- [LC 732: My Calendar III](https://leetcode.com/problems/my-calendar-iii/) — Sweep line / ordered map for maximum overlap.  \n- [LC 56: Merge Intervals](https://leetcode.com/problems/merge-intervals/) — Sort and merge overlapping intervals.\n+\n*** End Patch```}github -->
+{% endraw %}

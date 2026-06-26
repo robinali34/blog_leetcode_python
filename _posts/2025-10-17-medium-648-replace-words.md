@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 648. Replace Words"
 date: 2025-10-17 16:17:34 -0700
-categories: python trie hash-set string-processing problem-solving
+categories: leetcode algorithm medium cpp trie hash-set string-processing problem-solving
 ---
 
-# [Medium] 648. Replace Words
-
+{% raw %}
 In English, we have a concept called **root**, which can be followed by some other word to form another longer word. Let's call this word **successor**. For example, when the root `"an"` is followed by the successor word `"other"`, we can form a new word `"another"`.
 
 Given a `dictionary` consisting of roots and a `sentence` consisting of words separated by spaces, replace all the successors in the sentence with the root forming it. If a successor can be formed by more than one root, replace it with the root that has the **shortest length**.
@@ -46,7 +45,39 @@ Explanation:
 - The length of each word in `sentence` is in the range `[1, 1000]`
 - Each word in `sentence` consists of only lower-case letters.
 
-## Solution 1: Hash Set with Prefix Matching
+## Thinking Process
+
+1. **Simple implementation:** Easy to understand and implement
+1. **Efficient traversal:** Character-by-character matching
+
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
+
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
+
+## Solution
 
 **Time Complexity:** O(n * m) where n is number of words, m is average word length  
 **Space Complexity:** O(d) where d is dictionary size
@@ -74,68 +105,35 @@ class Solution:
         return ' '.join(result)
 ```
 
-## Solution 2: Trie Data Structure
+### Solution Explanation
 
-**Time Complexity:** O(n * m) where n is number of words, m is average word length  
-**Space Complexity:** O(d * k) where d is dictionary size, k is average root length
+**Approach:** Brute force (this problem)
 
-Use a trie to efficiently find the shortest root prefix for each word.
+**Key idea:** 1. **Simple implementation:** Easy to understand and implement
 
-```python
-class TrieNode:
-    def __init__(self):
-        self.isEnd = False
-        self.children = [None] * 26
+**How the code works:**
+1. **Simple implementation:** Easy to understand and implement
+1. **Efficient traversal:** Character-by-character matching
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
 
+**Walkthrough** — input `dictionary = ["cat","bat","rat"], sentence = "the cattle was rattled by the battery"`, expected output `"the cat was rat by the bat"`:
 
-class Trie:
-    def __init__(self):
-        self.root = TrieNode()
+- "cattle" can be replaced by "cat" (shortest root)
+- "rattled" can be replaced by "rat" (shortest root)
+- "battery" can be replaced by "bat" (shortest root)
 
-    def insert(self, word: str) -> None:
-        current = self.root
+| Approach | Time Complexity | Space Complexity |
+|----------|----------------|------------------|
+| Hash Set | O(n * m) | O(d) |
+| Trie | O(n * m) | O(d * k) |
 
-        for c in word:
-            idx = ord(c) - ord('a')
-            if current.children[idx] is None:
-                current.children[idx] = TrieNode()
-            current = current.children[idx]
-
-        current.isEnd = True
-
-
-    def shortestRoot(self, word: str) -> str:
-        current = self.root
-
-        for i, ch in enumerate(word):
-            idx = ord(ch) - ord('a')
-
-            if current.children[idx] is None:
-                return word
-
-            current = current.children[idx]
-
-            if current.isEnd:
-                return word[:i + 1]
-
-        return word
-
-
-class Solution:
-    def replaceWords(self, dictionary: list[str], sentence: str) -> str:
-        trie = Trie()
-
-        for word in dictionary:
-            trie.insert(word)
-
-        result = []
-
-        for word in sentence.split():
-            result.append(trie.shortestRoot(word))
-
-        return ' '.join(result)
-```
-
+Where:
+- n = number of words in sentence
+- m = average word length
+- d = dictionary size
+- k = average root length
 ## How the Algorithms Work
 
 ### Solution 1: Hash Set Approach
@@ -195,12 +193,58 @@ root
 ### Solution 1: Hash Set
 
 ```python
-def shortestRoot(self, dic_set: set[str], word: str) -> str:
-    for i in range(1, len(word) + 1):
-        root = word[:i]
-        if root in dic_set:
-            return root
-    return word
+class TrieNode:
+    def __init__(self):
+        self.isEnd = False
+        self.children = [None] * 26
+
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        current = self.root
+
+        for c in word:
+            idx = ord(c) - ord('a')
+            if current.children[idx] is None:
+                current.children[idx] = TrieNode()
+            current = current.children[idx]
+
+        current.isEnd = True
+
+
+    def shortestRoot(self, word: str) -> str:
+        current = self.root
+
+        for i, ch in enumerate(word):
+            idx = ord(ch) - ord('a')
+
+            if current.children[idx] is None:
+                return word
+
+            current = current.children[idx]
+
+            if current.isEnd:
+                return word[:i + 1]
+
+        return word
+
+
+class Solution:
+    def replaceWords(self, dictionary: list[str], sentence: str) -> str:
+        trie = Trie()
+
+        for word in dictionary:
+            trie.insert(word)
+
+        result = []
+
+        for word in sentence.split():
+            result.append(trie.shortestRoot(word))
+
+        return ' '.join(result)
 ```
 
 **Process:**
@@ -211,20 +255,11 @@ def shortestRoot(self, dic_set: set[str], word: str) -> str:
 ### Solution 2: Trie
 
 ```python
-def shortestRoot(self, word: str) -> str:
-    current = self.root
-
-    for i, ch in enumerate(word):
-        idx = ord(ch) - ord('a')
-
-        if current.children[idx] is None:
-            return word
-
-        current = current.children[idx]
-
-        if current.isEnd:
-            return word[:i + 1]
-
+def shortestRoot(self, dic_set: set[str], word: str) -> str:
+    for i in range(1, len(word) + 1):
+        root = word[:i]
+        if root in dic_set:
+            return root
     return word
 ```
 
@@ -233,8 +268,7 @@ def shortestRoot(self, word: str) -> str:
 2. **Return prefix** when reaching end node
 3. **Return original word** if path doesn't exist
 
-## Complexity Analysis
-
+### Complexity
 | Approach | Time Complexity | Space Complexity |
 |----------|----------------|------------------|
 | Hash Set | O(n * m) | O(d) |
@@ -246,28 +280,12 @@ Where:
 - d = dictionary size
 - k = average root length
 
-## Edge Cases
+## Common Mistakes
 
 1. **Single word:** `dictionary = ["a"]`, `sentence = "a"` → `"a"`
 2. **No matches:** `dictionary = ["cat"]`, `sentence = "dog"` → `"dog"`
 3. **Empty dictionary:** `dictionary = []`, `sentence = "hello"` → `"hello"`
 4. **Single character roots:** `dictionary = ["a","b"]`, `sentence = "abc"` → `"a"`
-
-## Key Insights
-
-### Solution 1 (Hash Set):
-1. **Simple implementation:** Easy to understand and implement
-2. **Prefix checking:** Check all possible prefixes systematically
-3. **Shortest first:** Return first match (shortest root)
-4. **Space efficient:** Only stores dictionary roots
-
-### Solution 2 (Trie):
-1. **Efficient traversal:** Character-by-character matching
-2. **Early termination:** Stop at first end node found
-3. **Structured storage:** Organized prefix tree structure
-4. **Scalable:** Better for large dictionaries
-
-## Common Mistakes
 
 1. **Wrong prefix order:** Not checking shortest prefixes first
 2. **Missing edge cases:** Not handling empty dictionary or sentence
@@ -306,60 +324,12 @@ root
 
 **Final result:** `"a a a"`
 
-## Alternative Approaches
-
-### Approach 1: Brute Force
-```python
-class Solution:
-    def replaceWords(self, dictionary: list[str], sentence: str) -> str:
-        words = sentence.split()
-        out = []
-
-        for word in words:
-            shortest = word
-
-            for root in dictionary:
-                if word.startswith(root) and len(root) < len(shortest):
-                    shortest = root
-
-            out.append(shortest)
-
-        return " ".join(out)
-```
-
-**Time Complexity:** O(n * d * m)  
-**Space Complexity:** O(1)
-
-### Approach 2: Sorted Dictionary
-```python
-class Solution:
-    def replaceWords(self, dictionary: list[str], sentence: str) -> str:
-        dictionary.sort(key=len)
-        words = sentence.split()
-        out = []
-
-        for word in words:
-            shortest = word
-
-            for root in dictionary:
-                if word.startswith(root):
-                    shortest = root
-                    break
-
-            out.append(shortest)
-
-        return " ".join(out)
-```
-
-**Time Complexity:** O(d log d + n * d * m)  
-**Space Complexity:** O(1)
-
 ## Related Problems
 
-- [208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/)
-- [211. Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/)
-- [212. Word Search II](https://leetcode.com/problems/word-search-ii/)
-- [720. Longest Word in Dictionary](https://leetcode.com/problems/longest-word-in-dictionary/)
+- [208. Implement Trie (Prefix Tree)](https://www.leetcode.com/problems/implement-trie-prefix-tree/)
+- [211. Design Add and Search Words Data Structure](https://www.leetcode.com/problems/design-add-and-search-words-data-structure/)
+- [212. Word Search II](https://www.leetcode.com/problems/word-search-ii/)
+- [720. Longest Word in Dictionary](https://www.leetcode.com/problems/longest-word-in-dictionary/)
 
 ## Why These Solutions Work
 
@@ -374,3 +344,25 @@ class Solution:
 2. **Early termination:** Stops at first end node
 3. **Structured approach:** Organized prefix tree
 4. **Scalable design:** Better for large dictionaries
+
+## References
+
+- [LC 648: Replace Words on LeetCode](https://www.leetcode.com/problems/replace-words/)
+- [LeetCode Discuss — LC 648: Replace Words](https://www.leetcode.com/problems/replace-words/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/replace-words/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### Solution 1 (Hash Set):
+1. **Simple implementation:** Easy to understand and implement
+2. **Prefix checking:** Check all possible prefixes systematically
+3. **Shortest first:** Return first match (shortest root)
+4. **Space efficient:** Only stores dictionary roots
+
+### Solution 2 (Trie):
+1. **Efficient traversal:** Character-by-character matching
+2. **Early termination:** Stop at first end node found
+3. **Structured storage:** Organized prefix tree structure
+4. **Scalable:** Better for large dictionaries
+
+{% endraw %}

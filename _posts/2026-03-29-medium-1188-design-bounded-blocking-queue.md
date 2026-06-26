@@ -1,44 +1,95 @@
 ---
 layout: post
 title: "[Medium] 1188. Design Bounded Blocking Queue"
-date: 2026-03-29 00:00:00 -0700
+date: 2026-03-29
 categories: [leetcode, medium, concurrency, design]
-tags: [leetcode, medium, threading, semaphore, queue]
+tags: [leetcode, medium, concurrency, design, semaphore, producer-consumer]
 permalink: /2026/03/29/medium-1188-design-bounded-blocking-queue/
 ---
 
-# [Medium] 1188. Design Bounded Blocking Queue
+{% raw %}
+Implement a thread-safe bounded blocking queue with the following methods:
+- `BoundedBlockingQueue(int capacity)` -- initialize with max capacity
+- `void enqueue(int element)` -- add element to the back; **blocks** if the queue is full until space is available
+- `int dequeue()` -- remove and return the front element; **blocks** if the queue is empty until an element is available
+- `int size()` -- return the current number of elements
 
-## Problem Statement
+Multiple threads will call `enqueue` and `dequeue` concurrently.
 
-Implement a thread-safe bounded blocking queue with:
+## Examples
 
-- `BoundedBlockingQueue(capacity)` — fixed capacity
-- `enqueue(element)` — block until there is space, then add
-- `dequeue()` — block until non-empty, then remove and return front
-- `size()` — current number of elements (LeetCode tests often call this from a single inspector thread; see notes below)
+**Example 1:**
 
-## Clarification Questions
+```
+Input: capacity = 2
+  Thread 1: enqueue(1), dequeue(), dequeue()
+  Thread 2: enqueue(0), enqueue(2), enqueue(3)
 
-1. **What should `enqueue` do when the queue is full?** Block until `dequeue` frees a slot.
-2. **What should `dequeue` do when empty?** Block until something is enqueued.
-3. **Fairness?** Not required; any valid interleaving that respects blocking is fine.
+Output: [1,0,2]
+Explanation: Cannot enqueue(3) until a dequeue makes space.
+```
 
-## Analysis Process
+## Constraints
 
-Treat capacity as **two counts**:
+- `1 <= capacity <= 100`
+- Multiple producer and consumer threads
 
-- **Empty slots:** start at `capacity`; `enqueue` must take one before storing.
-- **Filled slots:** start at `0`; `dequeue` must take one before removing.
+## Thinking Process
 
-`threading.Semaphore` gives exactly that: `acquire()` blocks at `0`, `release()` increments.
+This is the classic **bounded producer-consumer** problem. We need to coordinate:
 
-Pair with a `collections.deque` for FIFO storage.
+1. **Producers** (`enqueue`) must block when the queue is full
+2. **Consumers** (`dequeue`) must block when the queue is empty
+3. **Mutual exclusion** on the shared queue
 
-Alternatively, use one **`threading.Condition`**: producers `wait` while full, consumers `wait` while empty, and `notify` / `notify_all` after changing length.
+### Three Semaphores
 
-## Solution Option 1: Semaphores + deque
+| Semaphore | Initial Value | Purpose |
+|---|---|---|
+| `empty` | `capacity` | Tracks available slots (producers acquire, consumers release) |
+| `full` | `0` | Tracks available items (consumers acquire, producers release) |
+| `mutex` | `1` | Protects the shared queue (binary semaphore for mutual exclusion) |
 
+### Protocol
+
+```
+enqueue(x):                    dequeue():
+  empty.acquire()  ← block       full.acquire()  ← block
+                     if full                        if empty
+  mutex.acquire()                 mutex.acquire()
+  q.push(x)                      x = q.front(); q.pop()
+  mutex.release()                 mutex.release()
+  full.release()   → wake        empty.release()  → wake
+                     consumer                        producer
+```
+
+### Why Semaphore Order Matters
+
+`empty.acquire()` must come **before** `mutex.acquire()`. If reversed, a producer could hold the mutex while blocking on `empty`, preventing any consumer from acquiring the mutex to dequeue -- **deadlock**.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 115" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Design pattern</text>
+
+  <rect x="40" y="45" width="70" height="36" rx="4" fill="#D4D8E0" stroke="#8B8680"/><text x="75" y="67" text-anchor="middle" font-size="10">API</text>
+  <rect x="150" y="45" width="90" height="36" rx="4" fill="#E0D8E4" stroke="#A098A8"/><text x="195" y="67" text-anchor="middle" font-size="10">hash + list</text>
+  <path d="M110 63h36" stroke="#8B8680" stroke-width="2" marker-end="url(#arr2)"/>
+  <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#8B8680"/></marker></defs>
+  <text x="140" y="105" text-anchor="middle" font-size="11" fill="#6B6560">compose data structures for operations</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Hash map + list** *(this problem)* | O(1) avg | O(n) | LRU cache pattern |
+| Heap + hash map | O(log n) | O(n) | LFU, time-based store |
+| Trie (prefix tree) | O(m) | O(nm) | Word search, autocomplete |
+| Deque / circular buffer | O(1) | O(n) | Queue with fixed capacity |
+
+## Solution
 ```python
 from collections import deque
 from threading import Semaphore
@@ -65,78 +116,81 @@ class BoundedBlockingQueue:
         return len(self.queue)
 ```
 
-Order of operations matters: **acquire empty slot before mutating**, **release filled after append**; symmetrically for dequeue.
+### Solution Explanation
 
-## Solution Option 2: `Condition` + `deque`
+**Approach:** Hash map + list (this problem)
 
-Same logic as your snippet, with two fixes:
+**Key idea:** This is the classic **bounded producer-consumer** problem. We need to coordinate:
 
-1. **`size()` must not use `while self.cond:`** — a `Condition` is always truthy, so that loop is wrong and would not actually synchronize. Hold the condition’s lock and return `len(self.q)` (same lock as enqueue/dequeue).
-2. **`deque`** still needs `from collections import deque`.
+**How the code works:**
+1. **Producers** (`enqueue`) must block when the queue is full
+2. **Consumers** (`dequeue`) must block when the queue is empty
+3. **Mutual exclusion** on the shared queue
 
-```python
-import threading
-from collections import deque
+**Walkthrough** — input `capacity = 2`, expected output `[1,0,2]`:
 
+Cannot enqueue(3) until a dequeue makes space.
+## Comparison
 
-class BoundedBlockingQueue(object):
-    def __init__(self, capacity: int):
-        self.q = deque()
-        self.capacity = capacity
-        self.cond = threading.Condition()
+| Approach | Mechanism | C++ Version | Deadlock Risk |
+|---|---|---|---|
+| Three Semaphores | `counting_semaphore` × 3 | Python20 | Must acquire in correct order |
+| Mutex + 2 CVs | `mutex` + `condition_variable` × 2 | Python11 | None (single lock) |
 
-    def enqueue(self, element: int) -> None:
-        with self.cond:
-            while len(self.q) == self.capacity:
-                self.cond.wait()
+## Execution Trace
 
-            self.q.append(element)
-            self.cond.notify()
+```
+capacity = 2, empty=2, full=0, mutex=1
 
-    def dequeue(self) -> int:
-        with self.cond:
-            while len(self.q) == 0:
-                self.cond.wait()
+enqueue(1): empty(2→1), mutex(1→0), push 1, mutex(0→1), full(0→1)
+            queue: [1]
 
-            val = self.q.popleft()
-            self.cond.notify()
-            return val
+enqueue(0): empty(1→0), mutex(1→0), push 0, mutex(0→1), full(1→2)
+            queue: [1, 0]
 
-    def size(self) -> int:
-        with self.cond:
-            return len(self.q)
+enqueue(2): empty=0 → BLOCKS (queue full)
+
+dequeue():  full(2→1), mutex(1→0), pop 1, mutex(0→1), empty(0→1)
+            queue: [0]  → returns 1
+            → unblocks enqueue(2)
+
+enqueue(2): empty(1→0), push 2
+            queue: [0, 2]
 ```
 
-With a **single** condition for both “full” and “empty” waiters, some designs use **`notify_all()`** instead of **`notify()`** so every waiter re-checks `len(self.q)` (avoids edge cases where the wrong waiter stays asleep). LeetCode often accepts `notify()`.
+## Key Details
 
-## Option: Add a `Lock` around the deque
+**`counting_semaphore<>` vs `binary_semaphore`**: `counting_semaphore` can count higher than 1, tracking multiple available slots/items. The mutex semaphore only ever goes 0↔1, but using `counting_semaphore<>` with initial value 1 is equivalent.
 
-On LeetCode, semaphore-only solutions often pass. For extra clarity in real systems, guard `append` / `popleft` with `threading.Lock` so no queue operation runs concurrently with another (optional here if you keep critical sections minimal).
-
-## Comparison (high level)
-
-| Idea | Blocking | Storage |
-|------|----------|---------|
-| Two semaphores | `emptySlots` / `filledSlots` | deque (FIFO) |
-| One `Condition` | `wait` while full / empty | deque under same lock |
-| `queue.Queue(maxsize=…)` | built-in | Standard library (interview shortcut if allowed) |
-
-## Complexity
-
-Let `n` be capacity.
-
-- **Per successful `enqueue` / `dequeue`:** O(1) amortized for deque ops; blocking time is unbounded (depends on other thread).
-- **Extra space:** O(n) for stored elements plus O(1) semaphore state.
+**Why not use `std::mutex`?** You could -- replacing the mutex semaphore with `std::mutex` and `lock_guard` works fine. Using all semaphores keeps the pattern uniform.
 
 ## Common Mistakes
 
-- Releasing semaphores in the wrong order (deadlock or capacity violation).
-- Forgetting `from collections import deque`.
-- Writing `size()` as `while self.cond: return len(self.q)` — wrong control flow and no mutual exclusion; use **`with self.cond:`**.
-- Using `if len(self.q) == …` instead of **`while`** after `wait()` — must recheck state after waking.
-- Calling `size()` from many threads expecting a strict snapshot — without holding the same lock as `enqueue`/`dequeue`, reads can race; the condition-based `size()` above is consistent when all paths use `with self.cond`.
+- Acquiring mutex **before** the capacity semaphore (causes deadlock)
+- Forgetting to protect `size()` with the mutex (data race on concurrent access)
+- Using `binary_semaphore` for `empty`/`full` when capacity > 1
+
+## Key Takeaways
+
+- **Bounded producer-consumer** = three semaphores: `empty(capacity)`, `full(0)`, `mutex(1)`
+- The acquire order (capacity semaphore → mutex) is critical to avoid deadlock
+- This is one of the most fundamental concurrency patterns -- appears in OS courses, job interviews, and real systems (thread pools, message queues)
 
 ## Related Problems
 
-- [LC 1115: Print FooBar Alternately](/2026/03/28/medium-1115-print-foobar-alternately/)
-- [LC 1242: Web Crawler Multithreaded](https://leetcode.com/problems/web-crawler-multithreaded/)
+- [1115. Print FooBar Alternately](https://www.leetcode.com/problems/print-foobar-alternately/) -- simpler two-thread alternation
+- [1114. Print in Order](https://www.leetcode.com/problems/print-in-order/) -- sequential ordering
+- [1116. Print Zero Even Odd](https://www.leetcode.com/problems/print-zero-even-odd/) -- multi-thread coordination
+- [362. Design Hit Counter](https://www.leetcode.com/problems/design-hit-counter/) -- queue-based design
+
+## References
+
+- [LC 1188: Design Bounded Blocking Queue on LeetCode](https://www.leetcode.com/problems/design-bounded-blocking-queue/)
+- [LeetCode Discuss — LC 1188: Design Bounded Blocking Queue](https://www.leetcode.com/problems/design-bounded-blocking-queue/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/design-bounded-blocking-queue/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Data Structure Design](/posts/2025-11-24-leetcode-templates-data-structure-design/)
+
+{% endraw %}

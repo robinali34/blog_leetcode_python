@@ -6,10 +6,7 @@ categories: [leetcode, medium, graph, topological-sort, cycle-detection]
 permalink: /2025/10/20/medium-207-course-schedule/
 ---
 
-# [Medium] 207. Course Schedule
-
-## Problem Statement
-
+{% raw %}
 There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [ai, bi]` indicates that you **must** take course `bi` first if you want to take course `ai`.
 
 - For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.
@@ -42,31 +39,40 @@ To take course 1 you should have finished course 0, and to take course 0 you sho
 - `0 <= ai, bi < numCourses`
 - All the pairs `prerequisites[i]` are **unique**.
 
-## Solution Approach
+## Thinking Process
 
-This problem is asking whether we can complete all courses given their prerequisites. This translates to checking if the **directed graph** formed by courses and prerequisites has **no cycles**.
+There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [ai, bi]` indicates that you **must** take course `bi` first if you want to take course `ai`.
 
-### Key Insights:
+- For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.
 
-1. **Graph representation**: Courses are nodes, prerequisites are directed edges
-2. **Cycle detection**: If there's a cycle, we can't complete all courses
-3. **Two approaches**: 
-   - **Topological Sort (Kahn's Algorithm)**: Use indegree counting
-   - **DFS Cycle Detection**: Use three-state coloring (white/gray/black)
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
 
-### Algorithm:
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-#### **Approach 1: Topological Sort**
-1. **Build graph**: Create adjacency list and calculate indegrees
-2. **Find sources**: Start with courses having no prerequisites (indegree = 0)
-3. **Process**: Remove sources and update indegrees of neighbors
-4. **Check**: If all courses processed, no cycle exists
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
 
-#### **Approach 2: DFS Cycle Detection**
-1. **Three states**: 0=unvisited, 1=visiting, 2=visited
-2. **DFS traversal**: Visit each unvisited node
-3. **Cycle detection**: If we encounter a "visiting" node, cycle exists
-4. **State update**: Mark as visiting during DFS, visited after completion
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **BFS / DFS traversal** *(this problem)* | O(V+E) | O(V) | Connectivity, flood fill |
+| Dijkstra | O((V+E)log V) | O(V) | Non-negative edge weights |
+| Union-Find (DSU) | O(α(n)) | O(n) | Dynamic connectivity |
+| Topological sort | O(V+E) | O(V) | DAG ordering, cycle detection |
 
 ## Solution
 
@@ -103,6 +109,23 @@ class Solution:
 
         return count == numCourses
 ```
+
+### Solution Explanation
+
+**Approach:** BFS / DFS traversal (this problem)
+
+**Key idea:** There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [ai, bi]` indicates that you **must** take course `bi` first if you want to take course `ai`.
+
+**How the code works:**
+- For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
+
+**Walkthrough** — input `numCourses = 2, prerequisites = [[1,0]]`, expected output `true`:
+
+There are a total of 2 courses to take. 
+To take course 1 you should have finished course 0. So it is possible.
 
 ### **Solution 2: DFS Cycle Detection**
 
@@ -186,8 +209,6 @@ DFS Cycle Detection:
 9. No cycles found, return true
 ```
 
-## Complexity Analysis
-
 ### **Time Complexity:** O(V + E)
 - **V**: Number of courses (numCourses)
 - **E**: Number of prerequisites
@@ -201,7 +222,6 @@ DFS Cycle Detection:
 - **Queue/Stack**: O(V)
 - **State array**: O(V)
 - **Total**: O(V + E)
-
 ## Key Points
 
 1. **Graph problem**: Courses and prerequisites form a directed graph
@@ -220,54 +240,36 @@ DFS Cycle Detection:
 | **Code** | More straightforward | More elegant |
 | **Performance** | Similar | Similar |
 
-## Alternative Approaches
+## Common Mistakes
 
-### **DFS Iterative (Stack)**
-```python
-class Solution:
-    def canFinish(self, numCourses: int, prerequisites: list[list[int]]) -> bool:
-        adj = [[] for _ in range(numCourses)]
-
-        for a, b in prerequisites:
-            adj[b].append(a)
-
-        state = [0] * numCourses  # 0=unvisited, 1=visiting, 2=done
-
-        for i in range(numCourses):
-            if state[i] != 0:
-                continue
-
-            stack = [(i, 0)]  # (node, next neighbor index)
-
-            while stack:
-                node, idx = stack[-1]
-
-                if state[node] == 0:
-                    state[node] = 1  # mark visiting
-
-                if idx < len(adj[node]):
-                    neighbor = adj[node][idx]
-                    stack[-1] = (node, idx + 1)
-
-                    if state[neighbor] == 1:
-                        return False  # cycle detected
-
-                    if state[neighbor] == 0:
-                        stack.append((neighbor, 0))
-
-                else:
-                    state[node] = 2  # fully processed
-                    stack.pop()
-
-        return True
-```
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
 
 ## Related Problems
 
-- [210. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) - Return actual schedule
-- [802. Find Eventual Safe States](https://leetcode.com/problems/find-eventual-safe-states/) - Similar cycle detection
-- [329. Longest Increasing Path in a Matrix](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/) - DAG longest path
+- [210. Course Schedule II](https://www.leetcode.com/problems/course-schedule-ii/) - Return actual schedule
+- [802. Find Eventual Safe States](https://www.leetcode.com/problems/find-eventual-safe-states/) - Similar cycle detection
+- [329. Longest Increasing Path in a Matrix](https://www.leetcode.com/problems/longest-increasing-path-in-a-matrix/) - DAG longest path
 
 ## Tags
 
 `Graph`, `Topological Sort`, `Cycle Detection`, `DFS`, `Medium`
+
+## Key Takeaways
+
+- For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+
+## References
+
+- [LC 207: Course Schedule on LeetCode](https://www.leetcode.com/problems/course-schedule/)
+- [LeetCode Discuss — LC 207: Course Schedule](https://www.leetcode.com/problems/course-schedule/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/course-schedule/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Graph](/posts/2025-10-29-leetcode-templates-graph/)
+
+{% endraw %}

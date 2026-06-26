@@ -1,159 +1,176 @@
 ---
 layout: post
 title: "[Medium] 260. Single Number III"
-date: 2026-03-31 00:00:00 -0700
-categories: [leetcode, medium, array, bit-manipulation]
-tags: [leetcode, medium, xor, bit-manipulation]
+date: 2026-03-31
+categories: [leetcode, medium, bit-manipulation]
+tags: [leetcode, medium, bit-manipulation, xor]
 permalink: /2026/03/31/medium-260-single-number-iii/
 ---
 
-# [Medium] 260. Single Number III
-
-## Problem Statement
-
-Given an integer array `nums` where exactly **two** elements appear only once and the rest appear **twice**, return the two unique numbers in **any order**.
+{% raw %}
+Given an integer array `nums` where **exactly two** elements appear once and all other elements appear exactly twice, find the two elements that appear only once. Return them in any order. Your algorithm should run in linear time and constant space.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: nums = [1,2,1,3,2,5]
-Output: [3,5]  # order may vary
-# The integers with odd frequency are 3 and 5.
+Output: [3,5]
 ```
 
 **Example 2:**
 
-```python
+```
 Input: nums = [-1,0]
 Output: [-1,0]
+```
+
+**Example 3:**
+
+```
+Input: nums = [0,1]
+Output: [1,0]
 ```
 
 ## Constraints
 
 - `2 <= nums.length <= 3 * 10^4`
 - `-2^31 <= nums[i] <= 2^31 - 1`
-- Exactly two integers appear once; the others appear twice.
+- Exactly two elements appear once; all others appear twice
 
-## Clarification Questions
+## Thinking Process
 
-1. **Output order?** Any order is fine.
-2. **Can numbers be negative?** Yes; use two’s complement; `x & -x` is still valid in Python (handles signed semantics via unlimited-precision integers consistently for bit tests).
+### Step 1: XOR Everything
 
-## Analysis Process
+XOR all elements. Paired elements cancel out (`a ^ a = 0`), leaving `x = a ^ b` where `a` and `b` are the two unique numbers.
 
-XOR of the whole array: every value that appears twice cancels (`a ^ a == 0`).  
-Let the two singletons be `p` and `q`. Then:
+But `x` is the XOR of both -- how do we separate `a` and `b`?
 
-`x = p ^ q`
+### Step 2: Find a Distinguishing Bit
 
-Because `p != q`, `x != 0`. Some bit in `x` differs between `p` and `q`. Isolating the lowest set bit:
+Since `a != b`, at least one bit differs between them. In `x = a ^ b`, every `1` bit is a position where `a` and `b` differ.
 
-`diff = x & -x`
+We only need **one** such bit. The trick `x & (-x)` isolates the **lowest set bit**:
 
-every `num` either has that bit set or not, splitting the array into two groups—each group XORs to one of `{p, q}`.
-
-## Detailed walkthrough
-
-**Working example**
-
-- **Input:** `nums = [1, 2, 1, 3, 2, 5]`
-- **Output:** `[3, 5]` (either order is acceptable)
-
-**What makes the problem special**
-
-- Exactly **two** values appear **once** (call them `a` and `b`).
-- Every other value appears **twice**, so those pairs cancel under XOR.
-
-**Step 1 — XOR the entire array**
-
-XOR everything into one accumulator `x`:
-
-- Duplicate values cancel: `y ^ y == 0`.
-- After the full pass, only contributions from `a` and `b` remain:
-
-`x = a ^ b`
-
-This does **not** tell you `a` and `b` individually—it only tells you where they differ.
-
-**Step 2 — Find one bit that separates `a` from `b`**
-
-If `a != b`, then `x != 0`, so at least one bit of `x` is `1`. That bit is `0` in one number and `1` in the other.
-
-Use the standard trick:
-
-`diff = x & (-x)`
-
-`diff` is a single bit mask: the **least significant** `1`-bit of `x`. Any `1` in `x` would work in principle, but this one is cheap to compute and enough to split the two singletons.
-
-**Step 3 — Partition `nums` into two buckets**
-
-For each `num`, test `num & diff`:
-
-- **Group A:** numbers with that bit set (`num & diff != 0`).
-- **Group B:** numbers with that bit clear (`num & diff == 0`).
-
-Crucial fact: **`a` and `b` land in different buckets**, because they disagree on the bit encoded by `diff`.  
-Duplicates still stay together: both copies of the same value always share the same bit pattern, so they always go to the **same** bucket.
-
-**Step 4 — XOR inside each bucket**
-
-Run XOR independently in each bucket:
-
-- One bucket XORs down to `a`.
-- The other XORs down to `b`.
-
-Return `[a, b]` in any order.
-
-**Sanity check on the example**
-
-Pairwise cancellation leaves `3 ^ 5`:
-
-`1 ^ 2 ^ 1 ^ 3 ^ 2 ^ 5 = 3 ^ 5 = 6` (binary `110`).
-
-The lowest separating bit is `2` (`diff = 6 & (-6) = 2`).  
-Partition by `num & 2`: values `2`, `3`, `2` share that bit; `1`, `1`, `5` do not. XOR within the two buckets yields `3` and `5` respectively.
-
-## Python Solution
-
-```python
-from typing import List
-
-
-class Solution:
-    def singleNumber(self, nums: List[int]) -> List[int]:
-        x = 0
-        for num in nums:
-            x ^= num
-
-        diff = x & -x
-        a = 0
-        b = 0
-        for num in nums:
-            if num & diff:
-                a ^= num
-            else:
-                b ^= num
-        return [a, b]
+```
+x    = 0110  (a ^ b)
+-x   = 1010  (two's complement)
+x&-x = 0010  ← lowest 1-bit
 ```
 
-## Why `x & -x`?
+### Step 3: Split into Two Groups
 
-`-x` is bitwise negation plus one. `x & -x` yields the lowest set bit of `x` (or zero if `x` is zero), which is non-zero here because `p != q`.
+Use this distinguishing bit `diff` to partition all numbers into two groups:
+- Group 1: numbers with that bit **set**
+- Group 2: numbers with that bit **clear**
 
-## Complexity Analysis
+Since `a` and `b` differ at this bit, they land in **different groups**. Paired elements always land in the **same group** (they're identical). XOR within each group gives the unique element.
 
-- **Time:** O(n) — two passes
-- **Space:** O(1) extra
+### Walk-through
+
+```
+nums = [1, 2, 1, 3, 2, 5]
+
+Step 1: x = 1^2^1^3^2^5 = 3^5 = 6 (binary: 110)
+
+Step 2: diff = 6 & (-6) = 6 & ...1010 = 010 (bit 1)
+
+Step 3: Partition by bit 1:
+  bit 1 set:   2, 3, 2  → XOR = 3  (a)
+  bit 1 clear: 1, 1, 5  → XOR = 5  (b)
+
+Answer: [3, 5] ✓
+```
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Bit manipulation</text>
+
+  <text x="40" y="50" font-family="monospace" font-size="14" fill="#3A3530">1 0 1 1 0 1 0</text>
+  <text x="40" y="75" font-size="11" fill="#6B6560">XOR pairs · masks · shifts</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **XOR tricks** *(this problem)* | O(n) | O(1) | Single number, swap without temp |
+| Bit masks | O(2^n) | O(n) | Subset enumeration |
+| Brian Kernighan | O(log n) | O(1) | Count set bits |
+| Shift operations | O(n) | O(1) | Power of two, divide by 2 |
+
+## Solution
+```python
+Input: nums = [1,2,1,3,2,5]
+Output: [3,5]  # order may vary
+# The integers with odd frequency are 3 and 5.
+```
+
+### Solution Explanation
+
+**Approach:** XOR tricks (this problem)
+
+**Key idea:** ### Step 1: XOR Everything
+
+**How the code works:**
+-x   = 1010  (two's complement)
+- Group 1: numbers with that bit **set**
+- Group 2: numbers with that bit **clear**
+
+**Walkthrough** — input `nums = [1,2,1,3,2,5]`, expected output `[3,5]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Why `x & (-x)` Works
+
+In two's complement, `-x = ~x + 1`. This flips all bits and adds 1, which propagates through the trailing zeros and flips the lowest `1` bit's position. The AND with the original isolates exactly that bit:
+
+```
+x    = 1010 1100
+~x   = 0101 0011
+~x+1 = 0101 0100  (-x)
+x&-x = 0000 0100  ← lowest set bit
+```
+
+## Single Number Family
+
+| Problem | Constraint | Technique |
+|---|---|---|
+| 136 Single Number | One unique, rest appear twice | XOR all |
+| **260 Single Number III** | **Two unique, rest appear twice** | **XOR + bit partition** |
+| 137 Single Number II | One unique, rest appear three times | Bit counting mod 3 |
 
 ## Common Mistakes
 
-- Assuming `diff` must be a power-of-two *value* yourself; use `x & -x`.
-- Forgetting that both passes XOR within each bucket must recover both unknowns.
+- Trying to use a hash map (works but violates the O(1) space requirement)
+- Using any bit of `x` other than a set bit to partition (a `0` bit means `a` and `b` agree there -- useless for splitting)
+- Integer overflow: `x & (-x)` can overflow if `x = INT_MIN`; using `unsigned` or `x & (unsigned)(-x)` is safer
+
+## Key Takeaways
+
+- **"Two unique elements among pairs"** = XOR all → find distinguishing bit → partition → XOR each group
+- `x & (-x)` to isolate the lowest set bit is a fundamental bit trick
+- This extends the Single Number pattern: one pass to combine, one pass to separate
 
 ## Related Problems
 
-- [LC 136: Single Number](https://leetcode.com/problems/single-number/)
-- [LC 137: Single Number II](https://leetcode.com/problems/single-number-ii/)
-- [LC 389: Find the Difference](/2026/03/27/easy-389-find-the-difference/)
+- [136. Single Number](https://www.leetcode.com/problems/single-number/) -- one unique element (simpler)
+- [137. Single Number II](https://www.leetcode.com/problems/single-number-ii/) -- triples instead of pairs
+- [389. Find the Difference](https://www.leetcode.com/problems/find-the-difference/) -- XOR to find extra element
+- [268. Missing Number](https://www.leetcode.com/problems/missing-number/) -- XOR with indices
+
+## References
+
+- [LC 260: Single Number III on LeetCode](https://www.leetcode.com/problems/single-number-iii/)
+- [LeetCode Discuss — LC 260: Single Number III](https://www.leetcode.com/problems/single-number-iii/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/single-number-iii/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Math & Bit Manipulation](/posts/2025-11-24-leetcode-templates-math-bit-manipulation/)
+
+{% endraw %}

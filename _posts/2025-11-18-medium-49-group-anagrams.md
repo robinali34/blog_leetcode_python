@@ -7,8 +7,7 @@ permalink: /posts/2025-11-18-medium-49-group-anagrams/
 tags: [leetcode, medium, string, hash-table, anagram, counting]
 ---
 
-# [Medium] 49. Group Anagrams
-
+{% raw %}
 Given an array of strings `strs`, group **the anagrams** together. You can return the answer in **any order**.
 
 An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
@@ -39,35 +38,40 @@ Output: [["a"]]
 - `0 <= strs[i].length <= 100`
 - `strs[i]` consists of lowercase English letters.
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+1. **Character Frequency as Key**: Use character count array to create a unique key for each anagram group
 
-1. **Anagram definition**: What is an anagram? (Assumption: Words with same characters in different order - same character frequencies)
+- Strings often need frequency maps or two-pointer scans.
+- Watch index bounds and empty-string edge cases.
+- Stack helps with nested or repeated patterns.
 
-2. **Grouping rule**: How should we group anagrams? (Assumption: Group strings that are anagrams of each other together)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Two pointers</text>
 
-3. **Return format**: What should we return? (Assumption: List of groups - each group contains anagrams)
+  <rect x="30" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="66" text-anchor="middle" font-size="10">1</text>
+  <rect x="62" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="76" y="66" text-anchor="middle" font-size="10">3</text>
+  <rect x="106" y="50" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="66" text-anchor="middle" font-size="10">5</text>
+  <rect x="138" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="152" y="66" text-anchor="middle" font-size="10">7</text>
+  <rect x="170" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="184" y="66" text-anchor="middle" font-size="10">9</text>
+  <text x="44" y="42" text-anchor="middle" font-size="10" fill="#7A8EA0" font-weight="600">L</text>
+  <text x="184" y="42" text-anchor="middle" font-size="10" fill="#A08888" font-weight="600">R</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">move L/R based on comparison</text>
 
-4. **Order requirement**: Does order of groups matter? (Assumption: No - can return in any order)
+</svg>
 
-5. **Single character**: Do single characters count as anagrams? (Assumption: Yes - "a" is anagram of "a")
+## Common Approaches
 
-## Interview Deduction Process (20 minutes)
+Typical techniques for this pattern:
 
-**Step 1: Brute-Force Approach (5 minutes)**
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Two pointers on string** *(this problem)* | O(n) | O(1) | Palindrome, parsing |
+| Hash map / frequency | O(n) | O(k) | Anagram, character counts |
+| KMP / rolling hash | O(n) | O(n) | Pattern matching |
+| Stack parsing | O(n) | O(n) | Decode string, parentheses |
 
-For each string, compare it with all other strings to check if they are anagrams. To check if two strings are anagrams, sort both strings and compare, or count character frequencies. Group strings that are anagrams together. This approach has O(n² × m log m) complexity where n is the number of strings and m is the average length, which is too slow for large inputs.
-
-**Step 2: Semi-Optimized Approach (7 minutes)**
-
-Sort each string and use the sorted string as a key to group anagrams. Use a hash map where the key is the sorted string and the value is a list of original strings. This reduces comparison time but still requires sorting each string, giving O(n × m log m) time complexity. This works well but can be optimized further by avoiding sorting.
-
-**Step 3: Optimized Solution (8 minutes)**
-
-Use character frequency as the key instead of sorting. For each string, count the frequency of each character and create a key (e.g., "a2b1c3" for "aabccc"). Use this key to group anagrams in a hash map. This avoids sorting and achieves O(n × m) time complexity where m is the average string length. Alternatively, use a tuple or array of 26 integers as the key. The key insight is that anagrams have the same character frequencies, so frequency counts serve as a perfect grouping key without the overhead of sorting.
-
-## Solution: Character Count Key Approach
+## Solution
 
 **Time Complexity:** O(N * K) where N is the number of strings and K is the maximum length of a string  
 **Space Complexity:** O(N * K) for storing all strings in the hash map
@@ -108,62 +112,29 @@ class Solution:
         return rtn
 ```
 
-## How the Algorithm Works
+### Solution Explanation
 
-### Step-by-Step Example: `strs = ["eat","tea","tan","ate","nat","bat"]`
+**Approach:** Two pointers on string (this problem)
 
-```
-Step 1: Process "eat"
-  Count: [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
-  Key: "#1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0"
-  hm[key] = ["eat"]
+**Key idea:** 1. **Character Frequency as Key**: Use character count array to create a unique key for each anagram group
 
-Step 2: Process "tea"
-  Count: [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
-  Key: "#1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0" (same as "eat")
-  hm[key] = ["eat", "tea"]
-
-Step 3: Process "tan"
-  Count: [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0]
-  Key: "#1#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#1#0#0#0#0#0#0"
-  hm[key] = ["tan"]
-
-Step 4: Process "ate"
-  Count: [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
-  Key: "#1#0#0#0#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0" (same as "eat")
-  hm[key] = ["eat", "tea", "ate"]
-
-Step 5: Process "nat"
-  Count: [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0]
-  Key: "#1#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#1#0#0#0#0#0#0" (same as "tan")
-  hm[key] = ["tan", "nat"]
-
-Step 6: Process "bat"
-  Count: [1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
-  Key: "#1#1#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#0#1#0#0#0#0#0#0"
-  hm[key] = ["bat"]
-
-Result:
-  [["eat","tea","ate"], ["tan","nat"], ["bat"]]
-```
-
-### Visual Representation
-
-```
-Input:  ["eat", "tea", "tan", "ate", "nat", "bat"]
-         ↓       ↓       ↓       ↓       ↓       ↓
-Keys:   key1   key1   key2   key1   key2   key3
-         ↓       ↓       ↓       ↓       ↓       ↓
-Groups: ["eat","tea","ate"]  ["tan","nat"]  ["bat"]
-```
-
-## Key Insights
-
+**How the code works:**
 1. **Character Frequency as Key**: Use character count array to create a unique key for each anagram group
-2. **Hash Map Grouping**: Strings with identical character frequencies map to the same key
-3. **Delimiter Usage**: Using "#" delimiter ensures keys are unique (e.g., "1#2" vs "12#")
-4. **Efficient Counting**: Count array of size 26 (for lowercase letters) is space-efficient
+- Strings often need frequency maps or two-pointer scans.
+- Watch index bounds and empty-string edge cases.
+- Stack helps with nested or repeated patterns.
 
+**Walkthrough** — input `strs = ["eat","tea","tan","ate","nat","bat"]`, expected output `[["bat"],["nat","tan"],["ate","eat","tea"]]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **Character Count Key** | O(N * K) | O(N * K) | Fast, no sorting | String concatenation overhead |
+| **Sorted String Key** | O(N * K log K) | O(N * K) | Simple, readable | Slower due to sorting |
+| **Prime Number Hash** | O(N * K) | O(N * K) | Very fast key generation | Overflow risk, complex |
 ## Algorithm Breakdown
 
 ```python
@@ -181,20 +152,23 @@ def group_anagrams(strs: list[str]) -> list[list[str]]:
 
 ```
 
-## Edge Cases
+### Complexity
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **Character Count Key** | O(N * K) | O(N * K) | Fast, no sorting | String concatenation overhead |
+| **Sorted String Key** | O(N * K log K) | O(N * K) | Simple, readable | Slower due to sorting |
+| **Prime Number Hash** | O(N * K) | O(N * K) | Very fast key generation | Overflow risk, complex |
 
-1. **Empty input**: `strs = []` → return `[]`
-2. **Single empty string**: `strs = [""]` → return `[[""]]`
-3. **Single character**: `strs = ["a"]` → return `[["a"]]`
-4. **All anagrams**: `strs = ["eat","tea","ate"]` → return `[["eat","tea","ate"]]`
-5. **No anagrams**: `strs = ["abc","def","ghi"]` → return `[["abc"],["def"],["ghi"]]`
+### Why Character Count Key is Preferred
 
-## Alternative Approaches
+1. **Optimal Time Complexity**: O(N * K) without sorting overhead
+2. **Predictable Performance**: No dependency on string length for key generation
+3. **Memory Efficient**: Fixed-size count array (26 integers)
+4. **Robust**: Works for any string length without overflow concerns
 
-### Approach 2: Sorted String Key
+## Implementation Details
 
-**Time Complexity:** O(N * K log K) where K is the average string length  
-**Space Complexity:** O(N * K)
+### Character Count Array
 
 ```python
 class Solution:
@@ -215,20 +189,7 @@ class Solution:
         return rtn
 ```
 
-**Pros:**
-- Simpler implementation
-- Easier to understand
-
-**Cons:**
-- Slower due to sorting: O(K log K) per string
-- Less efficient for long strings
-
-### Approach 3: Prime Number Hash (Advanced)
-
-**Time Complexity:** O(N * K)  
-**Space Complexity:** O(N * K)
-
-Uses prime numbers to create hash keys, avoiding string concatenation overhead.
+### Key Construction
 
 ```python
 class Solution:
@@ -258,32 +219,11 @@ class Solution:
         return rtn
 ```
 
-**Pros:**
-- Fast key generation (multiplication)
-- No string concatenation overhead
+**Why use "#" delimiter?**
+- Without delimiter: "12" could mean count[0]=1, count[1]=2 OR count[0]=12
+- With delimiter: "#1#2" unambiguously means count[0]=1, count[1]=2
 
-**Cons:**
-- Risk of integer overflow for very long strings
-- More complex to implement
-
-## Complexity Analysis
-
-| Approach | Time | Space | Pros | Cons |
-|----------|------|-------|------|------|
-| **Character Count Key** | O(N * K) | O(N * K) | Fast, no sorting | String concatenation overhead |
-| **Sorted String Key** | O(N * K log K) | O(N * K) | Simple, readable | Slower due to sorting |
-| **Prime Number Hash** | O(N * K) | O(N * K) | Very fast key generation | Overflow risk, complex |
-
-### Why Character Count Key is Preferred
-
-1. **Optimal Time Complexity**: O(N * K) without sorting overhead
-2. **Predictable Performance**: No dependency on string length for key generation
-3. **Memory Efficient**: Fixed-size count array (26 integers)
-4. **Robust**: Works for any string length without overflow concerns
-
-## Implementation Details
-
-### Character Count Array
+### Python20 contains() Method
 
 ```python
 count = [0] * 26
@@ -292,25 +232,19 @@ for c in s:
 
 ```
 
-### Key Construction
-
+Alternative (Python11/14):
 ```python
 key = "".join(f"#{n}" for n in count)
 
 ```
 
-**Why use "#" delimiter?**
-- Without delimiter: "12" could mean count[0]=1, count[1]=2 OR count[0]=12
-- With delimiter: "#1#2" unambiguously means count[0]=1, count[1]=2
-
-### Dict setdefault
-
-```python
-hm.setdefault(key, []).append(s)
-
-```
-
 ## Common Mistakes
+
+1. **Empty input**: `strs = []` → return `[]`
+2. **Single empty string**: `strs = [""]` → return `[[""]]`
+3. **Single character**: `strs = ["a"]` → return `[["a"]]`
+4. **All anagrams**: `strs = ["eat","tea","ate"]` → return `[["eat","tea","ate"]]`
+5. **No anagrams**: `strs = ["abc","def","ghi"]` → return `[["abc"],["def"],["ghi"]]`
 
 1. **Forgetting to reset count array**: Must reset for each string
 2. **Wrong delimiter**: Using numbers without delimiter causes key collisions
@@ -327,10 +261,10 @@ hm.setdefault(key, []).append(s)
 
 ## Related Problems
 
-- [242. Valid Anagram](https://leetcode.com/problems/valid-anagram/) - Check if two strings are anagrams
-- [438. Find All Anagrams in a String](https://leetcode.com/problems/find-all-anagrams-in-a-string/) - Find anagram substrings
-- [2273. Find Resultant Array After Removing Anagrams](https://leetcode.com/problems/find-resultant-array-after-removing-anagrams/) - Remove anagrams from array
-- [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/) - This problem
+- [242. Valid Anagram](https://www.leetcode.com/problems/valid-anagram/) - Check if two strings are anagrams
+- [438. Find All Anagrams in a String](https://www.leetcode.com/problems/find-all-anagrams-in-a-string/) - Find anagram substrings
+- [2273. Find Resultant Array After Removing Anagrams](https://www.leetcode.com/problems/find-resultant-array-after-removing-anagrams/) - Remove anagrams from array
+- [49. Group Anagrams](https://www.leetcode.com/problems/group-anagrams/) - This problem
 
 ## Real-World Applications
 
@@ -340,7 +274,21 @@ hm.setdefault(key, []).append(s)
 4. **Search Engines**: Grouping similar search terms
 5. **Data Deduplication**: Identifying similar strings
 
----
+## Key Takeaways
 
-*This problem demonstrates the power of using character frequency as a hash key, showing how counting can be more efficient than sorting for certain string problems.*
+1. **Character Frequency as Key**: Use character count array to create a unique key for each anagram group
+2. **Hash Map Grouping**: Strings with identical character frequencies map to the same key
+3. **Delimiter Usage**: Using "#" delimiter ensures keys are unique (e.g., "1#2" vs "12#")
+4. **Efficient Counting**: Count array of size 26 (for lowercase letters) is space-efficient
 
+## References
+
+- [LC 49: Group Anagrams on LeetCode](https://www.leetcode.com/problems/group-anagrams/)
+- [LeetCode Discuss — LC 49: Group Anagrams](https://www.leetcode.com/problems/group-anagrams/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/group-anagrams/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [String Processing](/posts/2025-11-24-leetcode-templates-string-processing/)
+
+{% endraw %}

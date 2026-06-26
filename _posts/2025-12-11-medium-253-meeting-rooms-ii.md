@@ -5,8 +5,7 @@ date: 2025-12-11 00:00:00 -0800
 categories: leetcode algorithm medium cpp array sorting priority-queue two-pointers problem-solving
 ---
 
-# [Medium] 253. Meeting Rooms II
-
+{% raw %}
 Given an array of meeting time intervals `intervals` where `intervals[i] = [starti, endi]`, return the minimum number of conference rooms required.
 
 ## Examples
@@ -28,62 +27,37 @@ Output: 1
 - `1 <= intervals.length <= 10^4`
 - `0 <= starti < endi <= 10^6`
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+Given an array of meeting time intervals `intervals` where `intervals[i] = [starti, endi]`, return the minimum number of conference rooms required.
 
-1. **Meeting format**: How are meetings represented? (Assumption: [start, end] intervals - start is inclusive, end is exclusive or inclusive?)
+- Two indices move toward each other or in the same direction.
+- Works on sorted arrays or when in-place modification is required.
+- Loop invariant: all indices outside `[left, right]` are already resolved.
 
-2. **Overlap definition**: When do meetings overlap? (Assumption: If one meeting starts before another ends - need to clarify if [1,2] and [2,3] overlap)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 105" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Intervals on timeline</text>
 
-3. **Optimization goal**: What are we optimizing for? (Assumption: Minimum number of meeting rooms needed to schedule all meetings)
+  <line x1="30" y1="60" x2="250" y2="60" stroke="#D4D1CC" stroke-width="2"/>
+  <rect x="50" y="48" width="60" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <rect x="100" y="48" width="50" height="24" rx="3" fill="#E0D8E4" stroke="#A098A8"/>
+  <rect x="160" y="48" width="70" height="24" rx="3" fill="#E8D5D0" stroke="#B8A5A0"/>
+  <text x="140" y="95" text-anchor="middle" font-size="11" fill="#6B6560">sort by start → scan overlaps</text>
 
-4. **Return value**: What should we return? (Assumption: Integer - minimum number of rooms required)
+</svg>
 
-5. **Empty input**: What if there are no meetings? (Assumption: Return 0 - no rooms needed)
+## Common Approaches
 
-## Interview Deduction Process (20 minutes)
+Typical techniques for this pattern:
 
-### Step 1: Brute-Force Approach (5 minutes)
-**Initial Thought**: "I need to find minimum rooms. Let me check all possible room assignments."
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Opposite ends** *(this problem)* | O(n) | O(1) | Sorted array pair search, reversal |
+| Slow / fast pointers | O(n) | O(1) | Linked list middle, cycle detection |
+| Same-direction chase | O(n) | O(1) | Remove duplicates in-place |
+| Sliding window (variable) | O(n) | O(1) | Subarray with constraint |
 
-**Naive Solution**: Try all possible ways to assign meetings to rooms, find minimum number of rooms needed.
-
-**Complexity**: Exponential time, O(n) space
-
-**Issues**:
-- Exponential time complexity
-- Tries many invalid assignments
-- Very inefficient
-- Doesn't leverage interval properties
-
-### Step 2: Semi-Optimized Approach (7 minutes)
-**Insight**: "I can sort meetings by start time, then use greedy approach with priority queue."
-
-**Improved Solution**: Sort meetings by start time. Use min-heap to track end times of active meetings. For each meeting, if earliest end <= current start, reuse room; else need new room.
-
-**Complexity**: O(n log n) time, O(n) space
-
-**Improvements**:
-- Sorting enables chronological processing
-- Min-heap efficiently tracks room availability
-- O(n log n) time is much better
-- Handles all cases correctly
-
-### Step 3: Optimized Solution (8 minutes)
-**Final Optimization**: "Min-heap approach is optimal. Can also use chronological ordering with two pointers."
-
-**Best Solution**: Min-heap approach is optimal. Sort by start time, use min-heap for end times. Alternative: chronological ordering with start/end events, track active meetings.
-
-**Complexity**: O(n log n) time, O(n) space
-
-**Key Realizations**:
-1. Sorting is key insight
-2. Min-heap tracks room availability efficiently
-3. O(n log n) time is optimal for sorting approach
-4. Chronological ordering is alternative approach
-
-## Solution 1: Priority Queue (Min Heap)
+## Solution
 
 **Time Complexity:** O(n log n) - Sorting + heap operations  
 **Space Complexity:** O(n) - For the heap
@@ -105,6 +79,31 @@ class Solution:
 
 ```
 
+### Solution Explanation
+
+**Approach:** Opposite ends (this problem)
+
+**Key idea:** Given an array of meeting time intervals `intervals` where `intervals[i] = [starti, endi]`, return the minimum number of conference rooms required.
+
+**How the code works:**
+- Two indices move toward each other or in the same direction.
+- Works on sorted arrays or when in-place modification is required.
+- Loop invariant: all indices outside `[left, right]` are already resolved.
+
+**Walkthrough** — input `intervals = [[0,30],[5,10],[15,20]]`, expected output `2`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+
+| Operation | Priority Queue | Chronological Ordering | Bucket Sort |
+|-----------|----------------|------------------------|-------------|
+| Sorting | O(n log n) | O(n log n) | N/A |
+| Processing | O(n log n) | O(n) | O(n + k) |
+| **Overall** | **O(n log n)** | **O(n log n)** | **O(n + k)** |
+
+**Note:** For bucket sort, k = 10^6 (maximum time value), so O(n + k) is effectively O(n) when n is large, but has constant factor overhead.
+
 ### How Solution 1 Works
 
 1. **Sort intervals** by start time to process meetings chronologically
@@ -120,136 +119,6 @@ The min-heap always contains the end times of all currently active meetings. Whe
 - If the earliest ending meeting has finished, we can reuse that room
 - Otherwise, we need a new room
 - The heap size tracks the maximum number of rooms needed at any point
-
-## Solution 2: Chronological Ordering (Two Pointers)
-
-**Time Complexity:** O(n log n) - Sorting  
-**Space Complexity:** O(n) - For separate start and end arrays
-
-This approach separates start and end times, then uses two pointers to simulate the timeline and count concurrent meetings.
-
-```python
-class Solution:
-    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
-        if not intervals: return 0
-        used_rooms = 0
-        start_timings = sorted([i[0] for i in intervals])
-        end_timings = sorted([i[1] for i in intervals])
-        L = len(intervals)
-        end_pointer, start_pointer = 0, 0
-        while start_pointer < L:
-            if start_timings[start_pointer] >= end_timings[end_pointer]:
-                used_rooms -= 1
-                end_pointer += 1
-            used_rooms += 1
-            start_pointer += 1
-        return used_rooms
-
-
-```
-
-### How Solution 2 Works
-
-1. **Separate start and end times** into two arrays
-2. **Sort both arrays** independently
-3. **Use two pointers** to traverse both arrays:
-   - `startPointer`: Points to next meeting starting
-   - `endPointer`: Points to next meeting ending
-4. **Simulate timeline**:
-   - When a meeting starts (`startPointer`), increment `usedRooms`
-   - If a meeting ends before the new one starts (`start[startPointer] >= end[endPointer]`), decrement `usedRooms` and move `endPointer`
-5. **Track maximum**: The maximum value of `usedRooms` during traversal is the answer
-
-### Key Insight
-
-By processing events in chronological order, we can track how many meetings are active at any moment. When a meeting starts, we need a room. When a meeting ends, we free a room.
-
-## Solution 3: Bucket Sort (Event-Based)
-
-**Time Complexity:** O(n + k) where k is the time range (10^6) → effectively O(n)  
-**Space Complexity:** O(k) where k is the maximum time value
-
-This approach uses bucket sort to create a timeline array. For each interval, we increment at start time and decrement at end time, then compute prefix sum to find maximum concurrent meetings.
-
-```python
-class Solution:
-    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
-        if not intervals: return 0
-        MAX_TIME = 1000000
-        timeline = [0] * (MAX_TIME + 1)
-        for interval in intervals:
-            timeline[interval[0]] += 1
-            timeline[interval[1]] -= 1
-        max_rooms = 0
-        curr_rooms = 0
-        for i in range(MAX_TIME + 1):
-            curr_rooms += timeline[i]
-            max_rooms = max(max_rooms, curr_rooms)
-        return max_rooms
-
-```
-
-### How Solution 3 Works
-
-1. **Create timeline array**: Array of size `MAX_TIME + 1` (10^6 + 1) initialized to 0
-2. **Mark events**: 
-   - Increment at start time: `timeline[start]++`
-   - Decrement at end time: `timeline[end]--`
-3. **Compute prefix sum**: Traverse timeline, accumulating values to count concurrent meetings
-4. **Track maximum**: Keep track of maximum concurrent meetings during traversal
-
-### Key Insight
-
-This is similar to the "sweep line" approach:
-- Each time unit is a bucket
-- Start events increment the count
-- End events decrement the count
-- Prefix sum gives us concurrent meetings at each time point
-
-### When to Use Bucket Sort
-
-**Advantages:**
-- O(n) time complexity (no sorting needed)
-- Simple and intuitive
-- Good when time range is bounded and relatively small
-
-**Disadvantages:**
-- O(k) space where k is the time range (10^6 in this case)
-- Less efficient if time range is very large or sparse
-- Memory overhead if actual meetings are sparse in the time range
-
-### Optimization: Sparse Timeline
-
-If the time range is large but meetings are sparse, we can use a map instead:
-
-```python
-class Solution:
-    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
-        if not intervals: return 0
-        timeline = defaultdict(int)
-        for start, end in intervals:
-            timeline[start] += 1
-            timeline[end] -= 1
-        max_rooms = 0
-        curr_rooms = 0
-        for time in sorted(timeline):
-            curr_rooms += timeline[time]
-            max_rooms = max(max_rooms, curr_rooms)
-        return max_rooms
-```
-
-This uses O(n log n) time (map insertion) but O(n) space, making it better for sparse data.
-
-## Comparison of Approaches
-
-| Aspect | Priority Queue | Chronological Ordering | Bucket Sort |
-|--------|----------------|------------------------|-------------|
-| **Time Complexity** | O(n log n) | O(n log n) | O(n + k) |
-| **Space Complexity** | O(n) | O(n) | O(k) |
-| **Intuition** | Track active meetings | Simulate timeline | Event-based counting |
-| **Code Complexity** | Moderate | Simpler | Simplest |
-| **Best For** | General case | General case | Bounded, dense ranges |
-
 ## Example Walkthrough
 
 **Input:** `intervals = [[0,30],[5,10],[15,20]]`
@@ -308,8 +177,7 @@ Maximum count = 2
 Result: 2 rooms needed
 ```
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Priority Queue | Chronological Ordering | Bucket Sort |
 |-----------|----------------|------------------------|-------------|
 | Sorting | O(n log n) | O(n log n) | N/A |
@@ -318,15 +186,13 @@ Result: 2 rooms needed
 
 **Note:** For bucket sort, k = 10^6 (maximum time value), so O(n + k) is effectively O(n) when n is large, but has constant factor overhead.
 
-## Edge Cases
+## Common Mistakes
 
 1. **Empty intervals**: Return 0
 2. **Single meeting**: Return 1
 3. **No overlaps**: All meetings can use one room
 4. **All overlap**: Need n rooms for n meetings
 5. **Adjacent meetings**: `[0,5]` and `[5,10]` can share a room
-
-## Common Mistakes
 
 1. **Not sorting**: Must sort by start time first
 2. **Wrong comparison**: Using `>` instead of `>=` for end time check
@@ -349,13 +215,25 @@ Result: 2 rooms needed
 - This reduces space from O(k) to O(n) but increases time to O(n log n)
 - Best when time range is bounded and meetings are dense
 
+## Key Takeaways
+
+- Two indices move toward each other or in the same direction.
+- Works on sorted arrays or when in-place modification is required.
+- Loop invariant: all indices outside `[left, right]` are already resolved.
+
+## References
+
+- [LC 253: Meeting Rooms II on LeetCode](https://www.leetcode.com/problems/meeting-rooms-ii/)
+- [LeetCode Discuss — LC 253: Meeting Rooms II](https://www.leetcode.com/problems/meeting-rooms-ii/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/meeting-rooms-ii/editorial/) *(may require premium)*
+
 ## Related Problems
 
-- [252. Meeting Rooms](https://leetcode.com/problems/meeting-rooms/) - Check if meetings can be scheduled (no overlap)
-- [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/) - Merge overlapping intervals
-- [57. Insert Interval](https://leetcode.com/problems/insert-interval/) - Insert and merge intervals
-- [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/) - Remove minimum intervals to make non-overlapping
-- [1094. Car Pooling](https://leetcode.com/problems/car-pooling/) - Similar interval scheduling problem
+- [252. Meeting Rooms](https://www.leetcode.com/problems/meeting-rooms/) - Check if meetings can be scheduled (no overlap)
+- [56. Merge Intervals](https://www.leetcode.com/problems/merge-intervals/) - Merge overlapping intervals
+- [57. Insert Interval](https://www.leetcode.com/problems/insert-interval/) - Insert and merge intervals
+- [435. Non-overlapping Intervals](https://www.leetcode.com/problems/non-overlapping-intervals/) - Remove minimum intervals to make non-overlapping
+- [1094. Car Pooling](https://www.leetcode.com/problems/car-pooling/) - Similar interval scheduling problem
 
 ## Pattern Recognition
 
@@ -382,3 +260,4 @@ Similar problems:
 4. **Event Management**: Plan events with overlapping time slots
 5. **Network Bandwidth**: Allocate bandwidth for overlapping requests
 
+{% endraw %}

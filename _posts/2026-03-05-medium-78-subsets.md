@@ -1,33 +1,28 @@
 ---
 layout: post
 title: "[Medium] 78. Subsets"
-date: 2026-03-05 00:00:00 -0700
-categories: [leetcode, medium, backtracking, dfs]
-tags: [leetcode, medium, backtracking, dfs, recursion]
+date: 2026-03-05
+categories: [leetcode, medium, backtracking]
+tags: [leetcode, medium, backtracking, dfs, bit-manipulation]
 permalink: /2026/03/05/medium-78-subsets/
 ---
 
-# [Medium] 78. Subsets
-
-## Problem Statement
-
-Given an integer array `nums` of **unique** elements, return **all possible subsets** (the power set).
-
-The solution set must not contain duplicate subsets. You may return the subsets in any order.
+{% raw %}
+Given an integer array `nums` of **unique** elements, return all possible subsets (the power set). The solution must not contain duplicate subsets.
 
 ## Examples
 
 **Example 1:**
 
-```python
-Input:  nums = [1,2,3]
+```
+Input: nums = [1,2,3]
 Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
 ```
 
 **Example 2:**
 
-```python
-Input:  nums = [0]
+```
+Input: nums = [0]
 Output: [[],[0]]
 ```
 
@@ -35,109 +30,118 @@ Output: [[],[0]]
 
 - `1 <= nums.length <= 10`
 - `-10 <= nums[i] <= 10`
-- All the numbers of `nums` are unique.
+- All elements are **unique**
 
-## Clarification Questions
+## Common Approaches
 
-1. **Uniqueness**: Are all elements unique so we don’t need dedup logic?  
-   **Assumption**: Yes.
-2. **Order**: Can subsets and elements inside subsets be in any order?  
-   **Assumption**: Yes — any order is accepted.
-3. **Return all**: Do we need exactly \(2^n\) subsets including the empty subset?  
-   **Assumption**: Yes.
+Typical techniques for this pattern:
 
-## Interview Deduction Process (20 minutes)
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
 
-**Step 1: Brute force via bitmask (5 min)**  
-For each mask from `0` to `2^n - 1`, build a subset by checking which bits are set. This is clean and works in \(O(n \cdot 2^n)\).
+## Thinking Process
 
-**Step 2: Backtracking as a decision tree (7 min)**  
-At each index, decide whether to include the current element. This naturally generates all subsets and matches many “choose / not choose” problems.
+Every element has two choices: **include** or **exclude**. With `n` elements, there are 2^n subsets total.
 
-**Step 3: Efficient recursion with a start pointer (8 min)**  
-Build subsets incrementally:
-- Always record the current `path` as one subset.
-- For each next index `i >= start`, pick `nums[i]`, recurse to `i+1`, then undo (pop).
+### Backtracking Approach
 
-This avoids copying large intermediate structures beyond the current path.
+Use DFS with a `start` index to avoid duplicates. At each level, we first record the current path as a valid subset, then try adding each remaining element and recurse.
 
-## Solution Approach
+### Walk-Through: `nums = [1, 2, 3]`
 
-Use backtracking with:
-- `start`: the index in `nums` from which we are allowed to choose next elements.
-- `path`: the current subset under construction.
-
-Algorithm:
-
-1. Add the current `path` to the answer.
-2. Iterate `i` from `start` to end:
-   - Add `nums[i]` to `path`.
-   - Recurse with `start = i + 1`.
-   - Remove `nums[i]` (backtrack).
-
-### Key Insights
-
-1. **Every prefix is a valid subset**  
-   The moment we have a `path`, it represents one subset, so we append it before exploring extensions.
-
-2. **Start index prevents duplicates**  
-   We only move forward (`i + 1`), ensuring each element is used at most once per subset and subsets are generated once.
-
-3. **Backtracking pattern**  
-   `choose -> recurse -> unchoose` is the core template for combinatorial enumeration.
-
-## Python Solution
-
-```python
-from typing import List
-
-
-class Solution:
-    def subsets(self, nums: List[int]) -> List[List[int]]:
-        rtn: List[List[int]] = []
-
-        def backtrack(start: int, path: List[int]) -> None:
-            rtn.append(path[:])
-            for i in range(start, len(nums)):
-                path.append(nums[i])
-                backtrack(i + 1, path)
-                path.pop()
-
-        backtrack(0, [])
-        return rtn
+```
+dfs(start=0, path=[])        → record []
+├─ add 1 → dfs(start=1, path=[1])    → record [1]
+│  ├─ add 2 → dfs(start=2, path=[1,2])  → record [1,2]
+│  │  └─ add 3 → dfs(start=3, path=[1,2,3]) → record [1,2,3]
+│  └─ add 3 → dfs(start=3, path=[1,3])  → record [1,3]
+├─ add 2 → dfs(start=2, path=[2])    → record [2]
+│  └─ add 3 → dfs(start=3, path=[2,3])  → record [2,3]
+└─ add 3 → dfs(start=3, path=[3])    → record [3]
 ```
 
-## Algorithm Explanation
+The `start` parameter ensures we only pick elements after the current index, preventing duplicate subsets like `[2,1]` when `[1,2]` already exists.
 
-Think of building subsets in increasing index order:
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
 
-- `backtrack(start, path)` means: “All subsets that begin with current `path`, using only elements from indices `start..end`.”
-- We record `path` immediately because choosing nothing further is one valid subset.
-- Each loop iteration chooses one next element and explores all subsets that include it.
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
 
-This generates exactly \(2^n\) subsets.
+</svg>
 
-## Complexity Analysis
+## Approach 1: Backtracking -- O(n · 2^n)
+```python
+Input:  nums = [1,2,3]
+Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+```
 
-- **Time Complexity**: \(O(n \cdot 2^n)\)  
-  There are \(2^n\) subsets, and copying each subset costs up to \(O(n)\).
-- **Space Complexity**: \(O(n)\) recursion depth (excluding output).
+### Solution Explanation
 
-## Edge Cases
+**Approach:** Recursive DFS (this problem)
 
-- Single element input, e.g. `[0]` → `[[], [0]]`.
-- Negative numbers are fine; we only enumerate subsets.
-- Minimum size `n = 1` still includes the empty subset.
+**Key idea:** Every element has two choices: **include** or **exclude**. With `n` elements, there are 2^n subsets total.
+
+**Walkthrough** — input `nums = [1,2,3]`, expected output `[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Approach 2: Bitmask Enumeration -- O(n · 2^n)
+
+Each integer from `0` to `2^n - 1` represents a subset: bit `j` is set means include `nums[j]`.
+```python
+Input:  nums = [0]
+Output: [[],[0]]
+```
+
+**Time**: O(n · 2^n)
+**Space**: O(n) per subset (excluding output)
 
 ## Common Mistakes
 
-- Forgetting to append a copy `path[:]` (and appending `path` directly), which causes all saved subsets to mutate.
-- Off-by-one errors in the recursion call (`backtrack(i + 1, path)` is required to avoid reusing the same element).
-- Returning early inside the loop, which would cut off branches of the recursion tree.
+- Forgetting `path.pop_back()` after the recursive call (breaks backtracking)
+- Using `i` instead of `i + 1` in the recursive call (generates permutations, not subsets)
+- Not recording the path at the **start** of each call (misses the empty subset and partial subsets)
+
+## Key Takeaways
+
+- **Backtracking template**: push → recurse → pop. The `start` index prevents revisiting earlier elements
+- **Bitmask alternative**: natural for small `n` (≤ 20), iterative and easy to reason about
+- This is the foundation for LC 90 (Subsets II with duplicates) -- just add a sort + skip condition
 
 ## Related Problems
 
-- [LC 77: Combinations](https://leetcode.com/problems/combinations/) — Choose `k` elements (same backtracking template).
-- [LC 90: Subsets II](https://leetcode.com/problems/subsets-ii/) — Subsets when duplicates exist (adds sorting + skip logic).
-- [LC 46: Permutations](https://leetcode.com/problems/permutations/) — Backtracking with used markers instead of a start pointer.
+- [90. Subsets II](https://www.leetcode.com/problems/subsets-ii/) -- duplicates allowed, add skip logic
+- [46. Permutations](https://www.leetcode.com/problems/permutations/) -- order matters, use visited array
+- [77. Combinations](https://www.leetcode.com/problems/combinations/) -- fixed-size subsets
+- [39. Combination Sum](https://www.leetcode.com/problems/combination-sum/) -- subsets with target sum
 
+## References
+
+- [LC 78: Subsets on LeetCode](https://www.leetcode.com/problems/subsets/)
+- [LeetCode Discuss — LC 78: Subsets](https://www.leetcode.com/problems/subsets/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/subsets/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Backtracking](/posts/2025-11-24-leetcode-templates-backtracking/)
+
+{% endraw %}

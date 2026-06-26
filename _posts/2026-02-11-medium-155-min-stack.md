@@ -1,19 +1,14 @@
 ---
 layout: post
 title: "[Medium] 155. Min Stack"
-date: 2026-02-11 00:00:00 -0700
+date: 2026-02-11
 categories: [leetcode, medium, stack]
 tags: [leetcode, medium, stack, data-structure-design]
 permalink: /2026/02/11/medium-155-min-stack/
 ---
 
-# [Medium] 155. Min Stack
-
-## Problem Statement
-
+{% raw %}
 Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
-
-## Problem Description
 
 Implement the `MinStack` class:
 - `MinStack()` initializes the stack object.
@@ -53,24 +48,9 @@ minStack.getMin(); // return -2
 - Methods `pop`, `top`, and `getMin` will always be called on **non-empty** stacks.
 - At most `3 * 10^4` calls will be made to `push`, `pop`, `top`, and `getMin`.
 
-## Clarification Questions
+## Thinking Process
 
-1. **O(1) for getMin**: Must getMin be O(1) amortized or worst-case? (Assumption: O(1) per call.)
-2. **Pop behavior**: After pop, getMin returns the min of remaining elements? (Assumption: Yes.)
-3. **Duplicate mins**: Can we push same value multiple times? (Assumption: Yes — auxiliary structure must handle duplicates.)
-4. **Top vs getMin**: top() returns top element, getMin() returns minimum in stack? (Assumption: Yes.)
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: Naive (5 min)** — Store elements in a list. getMin() scans the list — O(n), not O(1). Need to maintain min.
-
-**Step 2: Auxiliary min stack (7 min)** — Main stack holds values. Second stack holds current minimum: on push, push min(val, minStack.top()); on pop, pop both. getMin = minStack.top(). O(1) for all operations.
-
-**Step 3: Optimizations (8 min)** — Can store (val, min_so_far) in one stack instead of two. Or two stacks as above. Handle empty stack on first push.
-
-## Solution Approach
-
-To achieve $O(1)$ for `getMin()`, we need to keep track of the minimum value at every state of the stack.
+To achieve O(1) for `getMin()`, we need to keep track of the minimum value at every state of the stack.
 
 ### Two Stacks Approach
 We can use an auxiliary stack called `minStk` to store the minimum value encountered so far.
@@ -86,12 +66,33 @@ We can use an auxiliary stack called `minStk` to store the minimum value encount
     - Return the top of `minStk`.
 
 ### Complexity
-- **Time Complexity**: $O(1)$ for all operations.
-- **Space Complexity**: $O(N)$ to store $N$ elements and their corresponding minimums.
+- **Time Complexity**: O(1) for all operations.
+- **Space Complexity**: O(N) to store N elements and their corresponding minimums.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Stack</text>
+
+  <rect x="100" y="30" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="46" text-anchor="middle" font-size="10">top</text>
+  <rect x="100" y="54" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="100" y="78" width="80" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="200" y="70" font-size="11" fill="#6B6560">push / pop</text>
+  <path d="M90 42v60" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="115" text-anchor="middle" font-size="11" fill="#6B6560">LIFO — monotonic stack scans array</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Monotonic stack** *(this problem)* | O(n) | O(n) | Next greater/smaller element |
+| Parentheses matching | O(n) | O(n) | Push open, pop on close |
+| Expression evaluation | O(n) | O(n) | Operand + operator stacks |
+| Stack simulation | O(n) | O(n) | Process in LIFO order |
 
 ## Solution
-
-{% raw %}
 ```python
 class MinStack:
 MinStack() :
@@ -114,9 +115,44 @@ list[int> stk
 list[int> minStk
 
 ```
-{% endraw %}
+
+### Solution Explanation
+
+**Approach:** Monotonic stack (this problem)
+
+**Key idea:** To achieve O(1) for `getMin()`, we need to keep track of the minimum value at every state of the stack.
+
+**How the code works:**
+- When `push(val)`:
+- Push `val` to the main stack.
+- If `minStk` is empty, push `val` to `minStk`.
+- Otherwise, push `min(val, minStk.top())` to `minStk`. This ensures that `minStk.top()` always reflects the minimum of all elements currently in the main stack.
+- When `pop()`:
+- Pop from both the main stack and `minStk`.
+
+- **Time Complexity**: O(1) for all operations.
+- **Space Complexity**: O(N) to store N elements and their corresponding minimums.
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+- **Pattern:** Monotonic stack (this problem)
+- When `push(val)`:
+- Push `val` to the main stack.
+
+## References
+
+- [LC 155: Min Stack on LeetCode](https://www.leetcode.com/problems/min-stack/)
+- [LeetCode Discuss — LC 155: Min Stack](https://www.leetcode.com/problems/min-stack/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/min-stack/editorial/) *(may require premium)*
 
 ## Template Reference
 
-- [Stack](/blog_leetcode/posts/2025-11-13-leetcode-templates-stack/)
-- [Data Structure Design](/blog_leetcode/posts/2025-11-24-leetcode-templates-data-structure-design/)
+- [Stack](/posts/2025-11-13-leetcode-templates-stack/)
+- [Data Structure Design](/posts/2025-11-24-leetcode-templates-data-structure-design/)
+
+{% endraw %}

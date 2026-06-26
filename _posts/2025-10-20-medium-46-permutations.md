@@ -6,12 +6,9 @@ categories: leetcode algorithm medium backtracking recursion
 permalink: /2025/10/20/medium-46-permutations/
 ---
 
-# [Medium] 46. Permutations
-
+{% raw %}
 **Difficulty:** Medium  
 **Category:** Backtracking, Recursion
-
-## Problem Statement
 
 Given an array `nums` of distinct integers, return **all the possible permutations**. You can return the answer in **any order**.
 
@@ -41,12 +38,12 @@ Output: [[1]]
 - `-10 <= nums[i] <= 10`
 - All the integers of `nums` are **unique**.
 
-## Approach
+## Thinking Process
 
 This is a classic **backtracking** problem that requires generating all possible permutations of a given array. There are two main approaches:
 
 1. **Backtracking with Swapping:** Generate permutations by swapping elements in-place
-2. **STL next_permutation:** Use Python STL's built-in permutation generator
+2. **STL next_permutation:** Use C++ STL's built-in permutation generator
 
 ### Algorithm 1: Backtracking with Swapping
 1. **Start from index 0** and try each element at current position
@@ -60,6 +57,28 @@ This is a classic **backtracking** problem that requires generating all possible
 2. **Use do-while loop** with `next_permutation()` to generate all permutations
 3. **Add each permutation** to result vector
 4. **Continue until** no more permutations exist
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Backtracking tree</text>
+
+  <circle cx="140" cy="30" r="12" fill="#E0D8E4" stroke="#A098A8"/><text x="140" y="34" text-anchor="middle" font-size="9">start</text>
+  <line x1="140" y1="42" x2="90" y2="65" stroke="#9A9792"/><line x1="140" y1="42" x2="190" y2="65" stroke="#9A9792"/>
+  <circle cx="90" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/><circle cx="190" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/>
+  <line x1="90" y1="82" x2="60" y2="100" stroke="#9A9792" stroke-dasharray="3"/><line x1="190" y1="82" x2="220" y2="100" stroke="#9A9792" stroke-dasharray="3"/>
+  <text x="140" y="118" text-anchor="middle" font-size="11" fill="#6B6560">choose → explore → undo (prune)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Choose / explore / unchoose** *(this problem)* | O(2^n) | O(n) | Subsets, combinations |
+| Constraint pruning | Reduced search | O(n) | Early exit on invalid partial |
+| Sort + skip duplicates | O(2^n) | O(n) | Combination sum II style |
+| Path recording | O(n!) worst | O(n) | Permutations |
 
 ## Solution
 
@@ -83,6 +102,20 @@ class Solution:
             nums[idx], nums[i] = nums[i], nums[idx]  # Backtrack
 ```
 
+### Solution Explanation
+
+**Approach:** Choose / explore / unchoose (this problem)
+
+**Key idea:** This is a classic **backtracking** problem that requires generating all possible permutations of a given array. There are two main approaches:
+
+**How the code works:**
+1. **Backtracking with Swapping:** Generate permutations by swapping elements in-place
+2. **STL next_permutation:** Use C++ STL's built-in permutation generator
+1. **Start from index 0** and try each element at current position
+2. **Swap elements** to place them at current position
+3. **Recursively generate** permutations for remaining positions
+4. **Backtrack** by swapping back to original positions
+
 ### Solution 2: STL next_permutation
 
 ```python
@@ -92,7 +125,6 @@ class Solution:
     def permute(self, nums: list[int]) -> list[list[int]]:
         return [list(p) for p in permutations(nums)]
 ```
-
 ## Explanation
 
 ### Solution 1: Backtracking with Swapping
@@ -148,8 +180,6 @@ Sorted: [1,2,3]
 7. next_permutation returns false → Stop
 ```
 
-## Complexity Analysis
-
 ### Solution 1: Backtracking with Swapping
 **Time Complexity:** O(n! × n)
 - **Permutations:** n! permutations generated
@@ -169,94 +199,6 @@ Sorted: [1,2,3]
 **Space Complexity:** O(1)
 - **No recursion:** Iterative approach
 - **No additional space** beyond input and output
-
-## Key Insights
-
-1. **Backtracking Pattern:** Classic recursive approach with state restoration
-2. **In-place Generation:** Swapping allows generating permutations without extra space
-3. **STL Efficiency:** `next_permutation()` is highly optimized
-4. **Lexicographic Order:** STL approach generates permutations in sorted order
-5. **State Management:** Proper backtracking ensures all possibilities are explored
-
-## Comparison of Approaches
-
-| Approach | Time | Space | Advantages | Disadvantages |
-|----------|------|-------|------------|---------------|
-| **Backtracking** | O(n! × n) | O(n) | Educational, flexible | Recursive overhead |
-| **STL** | O(n! × n) | O(1) | Concise, optimized | Less control over order |
-
-## Alternative Approaches
-
-### Approach 3: Backtracking with Visited Array
-```python
-class Solution:
-    def permute(self, nums: list[int]) -> list[list[int]]:
-        result = []
-        current = []
-        used = [False] * len(nums)
-
-        self.backtrack(nums, current, used, result)
-        return result
-
-    def backtrack(self, nums: list[int], current: list[int],
-                  used: list[bool], result: list[list[int]]) -> None:
-
-        if len(current) == len(nums):
-            result.append(current[:])
-            return
-
-        for i in range(len(nums)):
-            if used[i]:
-                continue
-
-            used[i] = True
-            current.append(nums[i])
-
-            self.backtrack(nums, current, used, result)
-
-            current.pop()
-            used[i] = False
-```
-
-### Approach 4: Iterative with Stack
-```python
-class Solution:
-    def permute(self, nums: list[int]) -> list[list[int]]:
-        result = []
-        stack = [[]]
-
-        while stack:
-            current = stack.pop()
-
-            if len(current) == len(nums):
-                result.append(current)
-                continue
-
-            for num in nums:
-                if num not in current:
-                    next_perm = current + [num]
-                    stack.append(next_perm)
-
-        return result
-```
-
-## When to Use Each Approach
-
-### Use Backtracking with Swapping when:
-- **Memory is limited** (O(n) space vs O(n!) for visited approach)
-- **Need to understand** the algorithm deeply
-- **Custom modifications** are required
-
-### Use STL next_permutation when:
-- **Code simplicity** is priority
-- **Lexicographic order** is desired
-- **Performance** is critical (highly optimized)
-
-### Use Visited Array when:
-- **Clarity** is more important than space
-- **Need to track** which elements are used
-- **Modifying** the original array is not allowed
-
 ## Key Concepts
 
 1. **Permutations:** All possible arrangements of elements
@@ -266,3 +208,25 @@ class Solution:
 5. **Pruning:** Avoiding invalid or duplicate states
 
 This problem is fundamental for understanding backtracking algorithms and is commonly used in interviews to test recursive thinking and state management skills.
+
+## References
+
+- [LC 46: Permutations on LeetCode](https://www.leetcode.com/problems/permutations/)
+- [LeetCode Discuss — LC 46: Permutations](https://www.leetcode.com/problems/permutations/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/permutations/editorial/) *(may require premium)*
+
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+1. **Backtracking Pattern:** Classic recursive approach with state restoration
+2. **In-place Generation:** Swapping allows generating permutations without extra space
+3. **STL Efficiency:** `next_permutation()` is highly optimized
+4. **Lexicographic Order:** STL approach generates permutations in sorted order
+5. **State Management:** Proper backtracking ensures all possibilities are explored
+
+{% endraw %}

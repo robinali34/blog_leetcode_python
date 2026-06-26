@@ -5,8 +5,7 @@ date: 2025-12-02 00:00:00 -0800
 categories: leetcode algorithm medium cpp design data-structures hash-map linked-list problem-solving
 ---
 
-# [Medium] 146. LRU Cache
-
+{% raw %}
 Design a data structure that follows the constraints of a **Least Recently Used (LRU) cache**.
 
 Implement the `LRUCache` class:
@@ -47,44 +46,51 @@ lRUCache.get(4);    // return 4
 - `0 <= value <= 10^5`
 - At most `2 * 10^5` calls will be made to `get` and `put`.
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+Design a data structure that follows the constraints of a **Least Recently Used (LRU) cache**.
 
-1. **LRU definition**: What does "Least Recently Used" mean? (Assumption: The item that hasn't been accessed for the longest time - need to track access order)
+Implement the `LRUCache` class:
 
-2. **Cache operations**: What operations should the cache support? (Assumption: get(key) - retrieve value, put(key, value) - insert/update, both operations mark item as recently used)
+- Draw pointers before rewriting links.
+- Dummy head simplifies insert/delete at the head.
+- Slow/fast pointers find middle or detect cycles in one pass.
 
-3. **Eviction policy**: When should we evict items? (Assumption: When cache is full and we need to add a new item, evict the least recently used item)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 115" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Linked list: pointer walk</text>
 
-4. **Capacity**: What is the cache capacity? (Assumption: Fixed capacity specified in constructor - cannot exceed this limit)
+  <rect x="30" y="50" width="44" height="32" rx="4" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="52" y="68" text-anchor="middle" font-size="12">1</text>
+  <path d="M74 66h16" stroke="#8B8680" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="90" y="50" width="44" height="32" rx="4" fill="#E0D8E4" stroke="#A098A8"/>
+  <text x="112" y="68" text-anchor="middle" font-size="12">2</text>
+  <path d="M134 66h16" stroke="#8B8680" stroke-width="2"/>
+  <rect x="150" y="50" width="44" height="32" rx="4" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <text x="172" y="68" text-anchor="middle" font-size="12">3</text>
+  <text x="130" y="105" text-anchor="middle" font-size="11" fill="#6B6560">slow → → fast (2x speed)</text>
+  <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#8B8680"/></marker></defs>
 
-5. **Return values**: What should get() return if key doesn't exist? (Assumption: Return -1 - key not found in cache)
+</svg>
 
-## Interview Deduction Process (20 minutes)
+## Common Approaches
 
-**Step 1: Brute-Force Approach (5 minutes)**
+Typical techniques for this pattern:
 
-Use a hash map to store key-value pairs and a list/array to track access order. For `get`, search the list to find the key, move it to the end, and return the value. For `put`, add/update the hash map and move the key to the end of the list. When capacity is exceeded, remove the first element from the list. This approach has O(n) time for `get` operations due to list searching, which doesn't meet the O(1) requirement.
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Iterative pointer walk** *(this problem)* | O(n) | O(1) | Traversal, insertion |
+| Dummy head node | O(n) | O(1) | Simplify head-edge cases |
+| Reversal (3-pointer) | O(n) | O(1) | Reverse sublist or full list |
+| Slow/fast pointers | O(n) | O(1) | Middle, cycle, merge lists |
 
-**Step 2: Semi-Optimized Approach (7 minutes)**
-
-Use a hash map and a doubly linked list: hash map stores key-to-node mappings, doubly linked list maintains access order. For `get`, use hash map to find the node in O(1), move it to the end of the list. For `put`, add/update hash map, add node to end of list, remove head if capacity exceeded. However, implementing a doubly linked list from scratch requires careful pointer management and can be error-prone.
-
-**Step 3: Optimized Solution (8 minutes)**
-
-Use hash map + `std::list`: hash map stores `key -> iterator` mappings, `std::list` maintains access order with pairs `(key, value)`. For `get`, use hash map to get iterator in O(1), use `splice` to move node to end in O(1). For `put`, if key exists, update value and move to end. If new key, add to end and remove head if capacity exceeded. This achieves O(1) for both operations using standard library containers. The key insight is that `std::list::splice` allows O(1) node movement, and hash map provides O(1) lookup, combining to achieve O(1) operations.
-
-## Solution: Hash Map + Doubly Linked List
+## Solution
 
 **Time Complexity:** O(1) for both `get` and `put`  
 **Space Complexity:** O(capacity)
 
 We use a combination of hash map and doubly linked list to achieve O(1) operations. The hash map stores key-to-iterator mappings, and the doubly linked list maintains the order of recently used items.
 
-### Solution: OrderedDict (same idea as hash map + linked order)
-
-Python’s `OrderedDict` keeps insertion order and supports `move_to_end` and `popitem(last=False)` in O(1) amortized time—equivalent to the C++ `list` + `unordered_map` + `splice` pattern.
+### Solution: Using std::list with splice
 
 ```python
 from collections import OrderedDict
@@ -111,17 +117,25 @@ class LRUCache:
             self.cache.popitem(last=False)
 ```
 
-### Key Points
+### Solution Explanation
 
-1. **`OrderedDict`**: Preserves insertion order; the oldest item is at the front (LRU) after evictions.
-2. **`move_to_end(key)`**: Marks a key as most recently used after a `get` or when updating an existing key.
-3. **`popitem(last=False)`**: Evicts the LRU entry when size exceeds `capacity`.
-4. **`get()`**: If the key exists, move it to the MRU side and return the value; otherwise `-1`.
-5. **`put()`**: Insert or update; if the cache grows past `capacity`, remove the front (LRU) item.
+**Approach:** Iterative pointer walk (this problem)
 
+**Key idea:** Design a data structure that follows the constraints of a **Least Recently Used (LRU) cache**.
+
+**How the code works:**
+- Draw pointers before rewriting links.
+- Dummy head simplifies insert/delete at the head.
+- Slow/fast pointers find middle or detect cycles in one pass.
+
+| Operation | Time | Space |
+|-----------|------|-------|
+| `get(key)` | O(1) | O(1) |
+| `put(key, value)` | O(1) | O(1) |
+| **Overall** | **O(1)** | **O(capacity)** |
 ## Thread-Safe LRU Cache
 
-Thread-safe version using a lock: `get` and `put` both mutate order, so they take the same exclusive lock. A read–write lock only helps if `get` were read-only, which it is not for an LRU.
+Thread-safe version using mutex for concurrent access.
 
 ```python
 import threading
@@ -158,13 +172,12 @@ class ThreadSafeLRUCache:
 
 ### Thread-Safe Implementation Details
 
-1. **`threading.Lock`**: One mutex protects the `OrderedDict`; every method that reads or mutates the cache holds this lock.
-2. **`get` and `put`**: Both take the same lock because LRU order changes on every successful `get` (move-to-end) and on `put`.
-3. **`size()`**: Uses the same lock so the count is not observed mid-mutation from another thread.
-4. **Note**: A read–write lock only helps if `get` were read-only; for an LRU, `get` updates order, so an exclusive lock (or the same pattern as here) is appropriate.
+1. **`shared_mutex`**: Allows multiple concurrent reads when no writes are happening
+2. **`unique_lock<shared_mutex>`**: Exclusive lock for both `get()` and `put()` since they modify the list
+3. **`shared_lock<shared_mutex>`**: Shared lock for read-only operations like `size()`
+4. **Note**: The thread-safe `put()` calls `get()` which requires careful lock management - both methods use exclusive locks
 
-## How the Algorithm Works
-
+### Solution Explanation
 ### Data Structure Design
 
 ```
@@ -209,8 +222,7 @@ put(3, 3):  get(3) returns -1, capacity full
             list: [1] <-> [3]
 ```
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time | Space |
 |-----------|------|-------|
 | `get(key)` | O(1) | O(1) |
@@ -224,23 +236,34 @@ put(3, 3):  get(3) returns -1, capacity full
 3. **Iterator storage**: Hash map stores iterators to list nodes for O(1) access
 4. **`splice()` optimization**: Moves nodes without copying, maintaining O(1) complexity
 
-## Edge Cases
+## Common Mistakes
 
 1. **Capacity = 1**: Only one item can exist
 2. **Get non-existent key**: Returns -1
 3. **Update existing key**: Moves to end, doesn't increase size
 4. **Multiple puts**: Evicts oldest when capacity exceeded
 
-## Common Mistakes
-
 1. **Not moving to end on get**: Must update access order
 2. **Wrong eviction order**: Remove from front (LRU), not back
 3. **Invalid iterator after modification**: Use `splice()` which preserves iterators
 4. **Not handling existing key in put**: Must check and update, not just insert
 
+## Key Takeaways
+
+- **Pattern:** Iterative pointer walk (this problem)
+- Draw pointers before rewriting links.
+- Dummy head simplifies insert/delete at the head.
+
+## References
+
+- [LC 146: LRU Cache on LeetCode](https://www.leetcode.com/problems/lru-cache/)
+- [LeetCode Discuss — LC 146: LRU Cache](https://www.leetcode.com/problems/lru-cache/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/lru-cache/editorial/) *(may require premium)*
+
 ## Related Problems
 
-- [460. LFU Cache](https://leetcode.com/problems/lfu-cache/) - Least Frequently Used
-- [432. All O`one Data Structure](https://leetcode.com/problems/all-oone-data-structure/)
-- [588. Design In-Memory File System](https://leetcode.com/problems/design-in-memory-file-system/)
+- [460. LFU Cache](https://www.leetcode.com/problems/lfu-cache/) - Least Frequently Used
+- [432. All O`one Data Structure](https://www.leetcode.com/problems/all-oone-data-structure/)
+- [588. Design In-Memory File System](https://www.leetcode.com/problems/design-in-memory-file-system/)
 
+{% endraw %}

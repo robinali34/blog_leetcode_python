@@ -7,8 +7,7 @@ permalink: /posts/2025-11-18-easy-509-fibonacci-number/
 tags: [leetcode, easy, dynamic-programming, recursion, math, fibonacci]
 ---
 
-# [Easy] 509. Fibonacci Number
-
+{% raw %}
 The **Fibonacci numbers**, commonly denoted `F(n)` form a sequence, called the **Fibonacci sequence**, such that each number is the sum of the two preceding ones, starting from `0` and `1`. That is,
 
 ```
@@ -45,62 +44,39 @@ Explanation: F(4) = F(3) + F(2) = 2 + 1 = 3.
 
 - `0 <= n <= 30`
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+1. **Bottom-Up DP**: Build solution from base cases upward
 
-1. **Fibonacci definition**: What is the Fibonacci sequence? (Assumption: F(0) = 0, F(1) = 1, F(n) = F(n-1) + F(n-2) for n > 1)
+- Define state: what subproblem does `dp[i]` (or `dp[i][j]`) represent?
+- Recurrence: how does the answer build from smaller indices?
+- Base cases first; optimize space if only prior row/layer is needed.
 
-2. **Base cases**: What are the base cases? (Assumption: F(0) = 0, F(1) = 1 - standard Fibonacci)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 105" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">1D DP recurrence</text>
 
-3. **Return value**: What should we return? (Assumption: Integer - F(n) - nth Fibonacci number)
+  <text x="30" y="38" font-size="10" fill="#9A9792">dp[i]</text>
+  <rect x="30" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="48" y="58" text-anchor="middle" font-size="11">0</text>
+  <rect x="66" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="84" y="58" text-anchor="middle" font-size="11">1</text>
+  <rect x="102" y="42" width="36" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="58" text-anchor="middle" font-size="11">2</text>
+  <rect x="138" y="42" width="36" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="156" y="58" text-anchor="middle" font-size="11">?</text>
+  <path d="M120 70v8M84 70v8" stroke="#C4956A" stroke-width="1.5"/>
+  <text x="120" y="95" text-anchor="middle" font-size="11" fill="#6B6560">dp[i] from smaller indices / subproblems</text>
 
-4. **Input range**: What is the range of n? (Assumption: Per constraints, 0 <= n <= 30 - small range)
+</svg>
 
-5. **Time complexity**: What time complexity is expected? (Assumption: O(n) - linear time with DP, O(2^n) naive recursion)
+## Common Approaches
 
-## Interview Deduction Process (10 minutes)
+Typical techniques for this pattern:
 
-### Step 1: Brute-Force Approach (2 minutes)
-**Initial Thought**: "I need to compute Fibonacci. Let me use recursive definition directly."
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **1D DP** *(this problem)* | O(n) | O(n) or O(1) | Linear recurrence |
+| 2D DP | O(nm) | O(nm) or O(n) | Grid or two-sequence problems |
+| State machine DP | O(n) | O(1) | Buy/sell, hold/not-hold states |
+| Memoization (top-down) | Same as DP | O(n) | Recursive + cache |
 
-**Naive Solution**: Recursive function: F(n) = F(n-1) + F(n-2) with base cases F(0)=0, F(1)=1.
-
-**Complexity**: O(2^n) time, O(n) space
-
-**Issues**:
-- Exponential time complexity
-- Recomputes same values many times
-- Very inefficient
-- Doesn't leverage memoization
-
-### Step 2: Semi-Optimized Approach (3 minutes)
-**Insight**: "I can use memoization to cache computed values."
-
-**Improved Solution**: Use recursion with memoization. Store computed Fibonacci values in hash map/array to avoid recomputation.
-
-**Complexity**: O(n) time, O(n) space
-
-**Improvements**:
-- Memoization eliminates recomputation
-- O(n) time is much better
-- Still uses recursion stack
-- Can optimize space
-
-### Step 3: Optimized Solution (5 minutes)
-**Final Optimization**: "I can use iterative DP to avoid recursion stack."
-
-**Best Solution**: Iterative DP (bottom-up). Use two variables to track F(n-1) and F(n-2), compute F(n) iteratively.
-
-**Complexity**: O(n) time, O(1) space
-
-**Key Realizations**:
-1. DP is natural approach for Fibonacci
-2. O(n) time is optimal
-3. O(1) space is optimal with iterative approach
-4. Bottom-up avoids recursion overhead
-
-## Solution: Dynamic Programming (Bottom-Up)
+## Solution
 
 **Time Complexity:** O(n) - Single pass through the array  
 **Space Complexity:** O(n) - Cache array (can be optimized to O(1))
@@ -128,52 +104,29 @@ class Solution:
         return cache[n]
 ```
 
-## How the Algorithm Works
+### Solution Explanation
 
-### Step-by-Step Example: `n = 5`
+**Approach:** 1D DP (this problem)
 
-```
-Initial: cache = [0, 0, 0, 0, 0, 0]
-         cache[0] = 0
-         cache[1] = 1
+**Key idea:** 1. **Bottom-Up DP**: Build solution from base cases upward
 
-i = 2: cache[2] = cache[1] + cache[0] = 1 + 0 = 1
-        cache = [0, 1, 1, 0, 0, 0]
-
-i = 3: cache[3] = cache[2] + cache[1] = 1 + 1 = 2
-        cache = [0, 1, 1, 2, 0, 0]
-
-i = 4: cache[4] = cache[3] + cache[2] = 2 + 1 = 3
-        cache = [0, 1, 1, 2, 3, 0]
-
-i = 5: cache[5] = cache[4] + cache[3] = 3 + 2 = 5
-        cache = [0, 1, 1, 2, 3, 5]
-
-Result: F(5) = 5
-```
-
-### Visual Representation
-
-```
-Fibonacci Sequence:
-F(0) = 0
-F(1) = 1
-F(2) = F(1) + F(0) = 1 + 0 = 1
-F(3) = F(2) + F(1) = 1 + 1 = 2
-F(4) = F(3) + F(2) = 2 + 1 = 3
-F(5) = F(4) + F(3) = 3 + 2 = 5
-
-Sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, ...
-```
-
-## Key Insights
-
+**How the code works:**
 1. **Bottom-Up DP**: Build solution from base cases upward
-2. **Memoization**: Store previously computed values to avoid recalculation
-3. **Base Cases**: F(0) = 0 and F(1) = 1 are the foundation
-4. **Recurrence Relation**: F(n) = F(n-1) + F(n-2) for n > 1
-5. **Overlapping Subproblems**: Each Fibonacci number depends on previous two
+- Define state: what subproblem does `dp[i]` (or `dp[i][j]`) represent?
+- Recurrence: how does the answer build from smaller indices?
+- Base cases first; optimize space if only prior row/layer is needed.
 
+**Walkthrough** — input `n = 2`, expected output `1`:
+
+F(2) = F(1) + F(0) = 1 + 0 = 1.
+
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **DP with Cache** | O(n) | O(n) | Simple, clear | O(n) space |
+| **Space-Optimized** | O(n) | O(1) | Optimal space | Can't access history |
+| **Recursive + Memo** | O(n) | O(n) | Intuitive | Stack overhead |
+| **Pure Recursion** | O(2^n) | O(n) | Simple | Extremely slow |
+| **Matrix Exponentiation** | O(log n) | O(1) | Very fast | Complex |
 ## Algorithm Breakdown
 
 ```python
@@ -193,21 +146,18 @@ return cache[n]
 
 ```
 
-## Edge Cases
+### Complexity
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **DP with Cache** | O(n) | O(n) | Simple, clear | O(n) space |
+| **Space-Optimized** | O(n) | O(1) | Optimal space | Can't access history |
+| **Recursive + Memo** | O(n) | O(n) | Intuitive | Stack overhead |
+| **Pure Recursion** | O(2^n) | O(n) | Simple | Extremely slow |
+| **Matrix Exponentiation** | O(log n) | O(1) | Very fast | Complex |
 
-1. **n = 0**: Return 0
-2. **n = 1**: Return 1
-3. **n = 2**: Return 1 (first non-base Fibonacci number)
-4. **n = 30**: Maximum constraint value
+## Implementation Details
 
-## Alternative Approaches
-
-### Approach 2: Space-Optimized Iterative (O(1) Space)
-
-**Time Complexity:** O(n)  
-**Space Complexity:** O(1)
-
-Only keep track of the last two values instead of the entire array:
+### Cache Initialization
 
 ```python
 class Solution:
@@ -228,18 +178,9 @@ class Solution:
         return prev1
 ```
 
-**Pros:**
-- O(1) space complexity
-- More memory efficient
-- Same time complexity
+Creates an array of size `n + 1` initialized to 0. This allows indexing from 0 to n.
 
-**Cons:**
-- Can't access previous Fibonacci numbers after computation
-
-### Approach 3: Recursive with Memoization
-
-**Time Complexity:** O(n)  
-**Space Complexity:** O(n) due to recursion stack and memoization
+### Base Case Handling
 
 ```python
 class Solution:
@@ -260,18 +201,9 @@ class Solution:
         return memo[n]
 ```
 
-**Pros:**
-- Top-down approach (more intuitive for some)
-- Natural recursive structure
+Early returns for base cases avoid unnecessary computation and array access.
 
-**Cons:**
-- O(n) space for recursion stack
-- Function call overhead
-
-### Approach 4: Pure Recursion (Not Recommended)
-
-**Time Complexity:** O(2^n) - Exponential!  
-**Space Complexity:** O(n) - Recursion stack
+### Loop Construction
 
 ```python
 class Solution:
@@ -283,110 +215,14 @@ class Solution:
         return self.fib(n - 1) + self.fib(n - 2)
 ```
 
-**Why not recommended:**
-- Extremely slow for large n
-- Recalculates same values multiple times
-- Only shown for educational purposes
-
-### Approach 5: Matrix Exponentiation (Advanced)
-
-**Time Complexity:** O(log n)  
-**Space Complexity:** O(1)
-
-Uses matrix exponentiation for logarithmic time complexity:
-
-```python
-class Solution:
-    def fib(self, n):
-        if n <= 0:
-            return 0
-        if n == 1:
-            return 1
-
-        # Matrix: [F(n+1) F(n)  ] = [1 1]^n
-        #         [F(n)   F(n-1)]   [1 0]
-
-        base = [[1, 1],
-                [1, 0]]
-
-        result = self.matrixPower(base, n)
-        return result[0][1]
-
-    def matrixPower(self, m, n):
-        if n == 1:
-            return m
-
-        half = self.matrixPower(m, n // 2)
-        result = self.matrixMultiply(half, half)
-
-        if n % 2 == 1:
-            result = self.matrixMultiply(result, m)
-
-        return result
-
-    def matrixMultiply(self, a, b):
-        return [
-            [
-                a[0][0] * b[0][0] + a[0][1] * b[1][0],
-                a[0][0] * b[0][1] + a[0][1] * b[1][1]
-            ],
-            [
-                a[1][0] * b[0][0] + a[1][1] * b[1][0],
-                a[1][0] * b[0][1] + a[1][1] * b[1][1]
-            ]
-        ]
-```
-
-**Pros:**
-- O(log n) time complexity
-- Efficient for very large n
-
-**Cons:**
-- More complex implementation
-- Overkill for small n (n ≤ 30)
-
-## Complexity Analysis
-
-| Approach | Time | Space | Pros | Cons |
-|----------|------|-------|------|------|
-| **DP with Cache** | O(n) | O(n) | Simple, clear | O(n) space |
-| **Space-Optimized** | O(n) | O(1) | Optimal space | Can't access history |
-| **Recursive + Memo** | O(n) | O(n) | Intuitive | Stack overhead |
-| **Pure Recursion** | O(2^n) | O(n) | Simple | Extremely slow |
-| **Matrix Exponentiation** | O(log n) | O(1) | Very fast | Complex |
-
-## Implementation Details
-
-### Cache Initialization
-
-```python
-list[int> cache(n + 1, 0)
-
-```
-
-Creates an array of size `n + 1` initialized to 0. This allows indexing from 0 to n.
-
-### Base Case Handling
-
-```python
-if(n <= 0) return 0
-if(n == 1) return 1
-
-```
-
-Early returns for base cases avoid unnecessary computation and array access.
-
-### Loop Construction
-
-```python
-for(i = 2 i <= n i += 1) :
-cache[i] = cache[i - 1] + cache[i - 2]
-
-```
-
 Builds Fibonacci numbers sequentially from F(2) to F(n).
 
 ## Common Mistakes
+
+1. **n = 0**: Return 0
+2. **n = 1**: Return 1
+3. **n = 2**: Return 1 (first non-base Fibonacci number)
+4. **n = 30**: Maximum constraint value
 
 1. **Off-by-one errors**: Using `i < n` instead of `i <= n`
 2. **Array bounds**: Not allocating `n + 1` elements
@@ -403,10 +239,10 @@ Builds Fibonacci numbers sequentially from F(2) to F(n).
 
 ## Related Problems
 
-- [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/) - Same recurrence relation
-- [746. Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/) - Fibonacci with costs
-- [1137. N-th Tribonacci Number](https://leetcode.com/problems/n-th-tribonacci-number/) - Three-term recurrence
-- [509. Fibonacci Number](https://leetcode.com/problems/fibonacci-number/) - This problem
+- [70. Climbing Stairs](https://www.leetcode.com/problems/climbing-stairs/) - Same recurrence relation
+- [746. Min Cost Climbing Stairs](https://www.leetcode.com/problems/min-cost-climbing-stairs/) - Fibonacci with costs
+- [1137. N-th Tribonacci Number](https://www.leetcode.com/problems/n-th-tribonacci-number/) - Three-term recurrence
+- [509. Fibonacci Number](https://www.leetcode.com/problems/fibonacci-number/) - This problem
 
 ## Real-World Applications
 
@@ -451,3 +287,22 @@ Similar problems:
 
 *This problem is a perfect introduction to dynamic programming, demonstrating how memoization can transform exponential time complexity into linear time.*
 
+## Key Takeaways
+
+1. **Bottom-Up DP**: Build solution from base cases upward
+2. **Memoization**: Store previously computed values to avoid recalculation
+3. **Base Cases**: F(0) = 0 and F(1) = 1 are the foundation
+4. **Recurrence Relation**: F(n) = F(n-1) + F(n-2) for n > 1
+5. **Overlapping Subproblems**: Each Fibonacci number depends on previous two
+
+## References
+
+- [LC 509: Fibonacci Number on LeetCode](https://www.leetcode.com/problems/fibonacci-number/)
+- [LeetCode Discuss — LC 509: Fibonacci Number](https://www.leetcode.com/problems/fibonacci-number/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/fibonacci-number/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Math & Bit Manipulation](/posts/2025-11-24-leetcode-templates-math-bit-manipulation/)
+
+{% endraw %}

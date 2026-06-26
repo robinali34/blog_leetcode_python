@@ -1,37 +1,38 @@
 ---
 layout: post
 title: "[Medium] 1353. Maximum Number of Events That Can Be Attended"
-date: 2026-04-13 00:00:00 -0700
-categories: [leetcode, medium, greedy, heap, sorting, scheduling]
+date: 2026-04-13
+categories: [leetcode, medium, greedy, heap]
+tags: [leetcode, medium, greedy, heap, sorting, scheduling]
 permalink: /2026/04/13/medium-1353-maximum-number-of-events-that-can-be-attended/
-tags: [leetcode, medium, greedy, heap, priority-queue, interval-scheduling]
 ---
 
-# [Medium] 1353. Maximum Number of Events That Can Be Attended
-
-You are given an array of `events` where `events[i] = [startDay, endDay]`, meaning you may attend that event on **any** single day in the closed interval `[startDay, endDay]`.
-
-You can attend **at most one event per day**. Return *the maximum number of events* you can attend.
+{% raw %}
+You are given an array of `events` where `events[i] = [startDay, endDay]`. You can attend an event on **any single day** in the range `[startDay, endDay]`. You can only attend **one event per day**. Return the **maximum number of events** you can attend.
 
 ## Examples
 
 **Example 1:**
+
 ```
 Input: events = [[1,2],[2,3],[3,4]]
 Output: 3
-Explanation: Attend all three on days 1, 2, and 3 (or 2, 3, 4).
+Explanation: Attend all three:
+  Day 1 → event [1,2]
+  Day 2 → event [2,3]
+  Day 3 → event [3,4]
 ```
 
 **Example 2:**
+
 ```
 Input: events = [[1,2],[2,3],[3,4],[1,2]]
 Output: 4
-```
-
-**Example 3:**
-```
-Input: events = [[1,4],[4,4],[2,2],[3,4],[1,1]]
-Output: 4
+Explanation:
+  Day 1 → event [1,2] (first)
+  Day 2 → event [1,2] (second)
+  Day 2 → can't, already used. Day 3 → event [2,3]
+  Day 4 → event [3,4]
 ```
 
 ## Constraints
@@ -40,51 +41,70 @@ Output: 4
 - `events[i].length == 2`
 - `1 <= startDay <= endDay <= 10^5`
 
-## Clarification Questions
+## Thinking Process
 
-1. **Flexibility**: Can you pick any day in `[start, end]`? (Yes — one day per event, anywhere in the window.)
-2. **Capacity**: How many events per day? (At most one.)
-3. **Goal**: Maximize count of attended events, not duration or value.
-4. **Overlaps**: Many events may overlap; you choose which to take each day.
+### Key Observations
 
-## Why This Problem Is Different
+1. **Each event is flexible** -- you don't have to attend on the start day; any day in `[start, end]` works
+2. **Greedy insight**: on any given day, attend the event that **expires soonest** (smallest end day). Delaying it risks losing it forever, while events with later deadlines are safer to postpone
+3. **Efficient simulation**: move day by day, maintain available events in a min-heap, pick the one expiring soonest
 
-### 1. Each event is flexible
+### Algorithm
 
-You do **not** have to attend on `startDay`. Any day in `[start, end]` works.
+1. **Sort** events by start day
+2. Use a **min-heap** of end days (earliest deadline on top)
+3. Iterate by day:
+   - Add all newly available events (start day ≤ current day)
+   - Remove expired events from the heap (end day < current day)
+   - Attend the event with the smallest end day (pop from heap)
+   - Advance to the next day
 
-So this is **scheduling on a time axis**: you assign each attended event to a concrete day, with at most one event per day.
+### Walk-through
 
-### 2. Greedy insight
+```
+events (sorted): [[1,2], [1,2], [2,3], [3,4]]
 
-On any day when you are free to attend something, you should attend the **available** event whose window **ends the soonest** (smallest `end` among candidates).
+Day 1: add [1,2],[1,2] → heap={2,2}
+        attend end=2 → heap={2}, rtn=1
 
-**Why?** Events with an earlier deadline are the riskiest to postpone. Long windows can usually wait; tight windows cannot. Standard exchange argument: swapping a later-deadline event for an earlier-deadline one cannot reduce the number of events you can still fit.
+Day 2: add [2,3] → heap={2,3}
+        attend end=2 → heap={3}, rtn=2
 
-### 3. Efficient simulation
+Day 3: add [3,4] → heap={3,4}
+        attend end=3 → heap={4}, rtn=3
 
-We need to:
+Day 4: attend end=4 → heap={}, rtn=4
 
-- Walk through time (or process events in start order).
-- Know which events are **already available** (started) and **still valid** (not past `end`).
-- Repeatedly pick the candidate with **minimum `end`**.
+Answer: 4 ✓
+```
 
-That leads naturally to a **min-heap (priority queue)** of end days.
+### Why Skip to the Next Event's Start?
 
-## Final Algorithm
+If the heap is empty and there are more events, we jump `day` forward to `events[i][0]` instead of incrementing one by one. This avoids iterating through idle days and keeps the algorithm efficient.
 
-1. **Sort** `events` by `start` (and by `end` as a tie-breaker if you like).
-2. Maintain a **min-heap** of **end days** for events that have started and might still be attended.
-3. Maintain a **day** pointer (or jump `day` to the next event start when the heap is empty).
-4. Each iteration:
-   - **Push** all events with `start <= day` (advance the scan index `i`).
-   - **Pop** from the heap while `heap[0] < day` (those windows closed before today).
-   - If the heap is non-empty, **attend** one event: pop the smallest `end`, increment answer, move to `day + 1`.
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 120" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Binary heap</text>
 
-Using the smallest `end` each time matches the greedy rule above.
+  <circle cx="140" cy="35" r="16" fill="#E0D8E4" stroke="#A098A8"/><text x="140" y="39" text-anchor="middle" font-size="11">1</text>
+  <circle cx="90" cy="75" r="14" fill="#D4D8E0" stroke="#8B8680"/><text x="90" y="79" text-anchor="middle" font-size="10">3</text>
+  <circle cx="190" cy="75" r="14" fill="#D4D8E0" stroke="#8B8680"/><text x="190" y="79" text-anchor="middle" font-size="10">2</text>
+  <line x1="140" y1="51" x2="90" y2="61" stroke="#9A9792"/><line x1="140" y1="51" x2="190" y2="61" stroke="#9A9792"/>
+  <text x="140" y="110" text-anchor="middle" font-size="11" fill="#6B6560">parent ≤ children (min-heap)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Min/max heap** *(this problem)* | O(n log k) | O(k) | Top-K, streaming median |
+| Two heaps | O(n log n) | O(n) | Median from data stream |
+| Heap + lazy deletion | O(n log n) | O(n) | Delayed removal |
+| Priority-driven search | O(n log n) | O(n) | Dijkstra, best-first expansion |
 
 ## Solution
-
 ```python
 import heapq
 from typing import List
@@ -113,22 +133,64 @@ class Solution:
         return rtn
 ```
 
-## Complexity
+### Solution Explanation
 
-- **Time:** `O(n log n)` for sorting plus `O(n log n)` heap work over the simulation (each event pushed/popped a constant number of times in typical analyses).
-- **Space:** `O(n)` for the heap in the worst case.
+**Approach:** Min/max heap (this problem)
 
-## Edge Cases
+**Key idea:** ### Key Observations
 
-- Empty `events` after sort: loop exits immediately; return `0`.
-- All events share the same day: heap picks by smallest `end` first; still correct.
-- Very long `endDay`: algorithm only steps `day` forward when work is done; empty heap jumps `day` to the next `start`.
+**How the code works:**
+1. **Each event is flexible** -- you don't have to attend on the start day; any day in `[start, end]` works
+2. **Greedy insight**: on any given day, attend the event that **expires soonest** (smallest end day). Delaying it risks losing it forever, while events with later deadlines are safer to postpone
+3. **Efficient simulation**: move day by day, maintain available events in a min-heap, pick the one expiring soonest
+1. **Sort** events by start day
+2. Use a **min-heap** of end days (earliest deadline on top)
+3. Iterate by day:
+
+**Walkthrough** — input `events = [[1,2],[2,3],[3,4]]`, expected output `3`:
+
+Attend all three:
+  Day 1 → event [1,2]
+  Day 2 → event [2,3]
+  Day 3 → event [3,4]
+## Key Details
+
+**Why min-heap of end days (not start days)?**
+We want to prioritize the event that expires soonest. Start days don't matter once an event is available -- only the deadline matters for the greedy choice.
+
+**Why `pq.top() < day` (not `<=`)?**
+An event with `end == day` is still valid today. We only discard events whose end day is strictly **before** the current day.
+
+**Why the `if (pq.empty()) day = events[i][0]` jump?**
+Without this, we'd increment `day` through potentially thousands of idle days. Jumping to the next event's start keeps the outer loop proportional to O(n) iterations.
+
+## Common Mistakes
+
+- Sorting by end day instead of start day (need start day ordering to add events as days progress)
+- Not removing expired events before picking (could "attend" an already-expired event)
+- Incrementing `day` one by one even when the heap is empty (TLE on large gaps)
+
+## Key Takeaways
+
+- **"Maximize events attended with earliest-deadline-first"** = sort by start + min-heap of end days
+- This is a variant of the **Earliest Deadline First (EDF)** scheduling strategy
+- The pattern of "add available → remove expired → pick best" is common in event scheduling problems
 
 ## Related Problems
 
-- [630. Course Schedule III](https://leetcode.com/problems/course-schedule-iii/) — similar “pick by deadline” greedy with a heap
-- [452. Minimum Number of Arrows to Burst Balloons](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/) — interval greedy on the line
+- [2406. Divide Intervals Into Minimum Number of Groups](https://www.leetcode.com/problems/divide-intervals-into-minimum-number-of-groups/) -- greedy + heap on intervals
+- [253. Meeting Rooms II](https://www.leetcode.com/problems/meeting-rooms-ii/) -- min-heap scheduling
+- [435. Non-overlapping Intervals](https://www.leetcode.com/problems/non-overlapping-intervals/) -- greedy interval scheduling
+- [1235. Maximum Profit in Job Scheduling](https://www.leetcode.com/problems/maximum-profit-in-job-scheduling/) -- DP interval scheduling
 
----
+## References
 
-*Flexible intervals plus one job per day make this a classic greedy scheduling pattern: always serve the task that becomes impossible soonest.*
+- [LC 1353: Maximum Number of Events That Can Be Attended on LeetCode](https://www.leetcode.com/problems/maximum-number-of-events-that-can-be-attended/)
+- [LeetCode Discuss — LC 1353: Maximum Number of Events That Can Be Attended](https://www.leetcode.com/problems/maximum-number-of-events-that-can-be-attended/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/maximum-number-of-events-that-can-be-attended/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Heap](/posts/2026-01-05-leetcode-templates-heap/)
+
+{% endraw %}

@@ -1,43 +1,34 @@
 ---
 layout: post
 title: "[Medium] 151. Reverse Words in a String"
-date: 2026-03-27 00:00:00 -0700
+date: 2026-03-27
 categories: [leetcode, medium, string, two-pointers]
-tags: [leetcode, medium, string, deque, two-pointers]
+tags: [leetcode, medium, string, two-pointers]
 permalink: /2026/03/27/medium-151-reverse-words-in-a-string/
 ---
 
-# [Medium] 151. Reverse Words in a String
-
-## Problem Statement
-
-Given an input string `s`, reverse the order of the words.
-
-A word is defined as a sequence of non-space characters. The words in `s` will be separated by at least one space.
-
-Return a string of the words in reverse order concatenated by a single space.
-
-**Note:** `s` may contain leading or trailing spaces or multiple spaces between two words.
+{% raw %}
+Given an input string `s`, reverse the order of the **words**. A word is a sequence of non-space characters. Words are separated by at least one space. Return a string with words in reverse order, joined by a single space (no leading/trailing spaces, no extra spaces between words).
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: s = "the sky is blue"
 Output: "blue is sky the"
 ```
 
 **Example 2:**
 
-```python
+```
 Input: s = "  hello world  "
 Output: "world hello"
 ```
 
 **Example 3:**
 
-```python
+```
 Input: s = "a good   example"
 Output: "example good a"
 ```
@@ -45,106 +36,112 @@ Output: "example good a"
 ## Constraints
 
 - `1 <= s.length <= 10^4`
-- `s` contains English letters (upper-case and lower-case), digits, and spaces `' '`
+- `s` contains English letters, digits, and spaces `' '`
 - There is at least one word in `s`
 
-## Clarification Questions
+## Thinking Process
 
-1. **Collapse internal spaces?** Yes — output must use exactly one space between words, no leading/trailing spaces.
-2. **Preserve case?** Yes, only word order changes.
-3. **Mutable string?** In Python, strings are immutable; “in-place” is usually simulated with a list of characters.
+### Key Challenges
 
-## Analysis Process
+1. **Leading/trailing spaces** -- must be stripped
+2. **Multiple spaces between words** -- must be collapsed to one
+3. **Reverse word order** -- not character order
 
-Scan left to right after trimming ends (or while scanning, skip duplicate spaces). Collect each word’s characters; on a space boundary after a non-empty word, push the word to the front of a structure so overall order is reversed. Finally join with a single space.
+### Approach 1: Deque (Collect Words in Reverse)
 
-The deque approach uses `deque.appendleft` so the first word ends up rightmost in the final join.
+Trim leading/trailing spaces, scan left to right building words, and push each completed word to the **front** of a deque. This naturally reverses the order.
 
-## Solution Options
+### Approach 2: Reverse Entire String + Reverse Each Word (In-Place)
 
-### Option 1: Trim + scan + `deque`
+For an O(1) extra space solution:
+1. Reverse the entire string
+2. Reverse each individual word
+3. Clean up extra spaces
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Two pointers</text>
+
+  <rect x="30" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="66" text-anchor="middle" font-size="10">1</text>
+  <rect x="62" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="76" y="66" text-anchor="middle" font-size="10">3</text>
+  <rect x="106" y="50" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="66" text-anchor="middle" font-size="10">5</text>
+  <rect x="138" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="152" y="66" text-anchor="middle" font-size="10">7</text>
+  <rect x="170" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="184" y="66" text-anchor="middle" font-size="10">9</text>
+  <text x="44" y="42" text-anchor="middle" font-size="10" fill="#7A8EA0" font-weight="600">L</text>
+  <text x="184" y="42" text-anchor="middle" font-size="10" fill="#A08888" font-weight="600">R</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">move L/R based on comparison</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Opposite ends** *(this problem)* | O(n) | O(1) | Sorted array pair search, reversal |
+| Slow / fast pointers | O(n) | O(1) | Linked list middle, cycle detection |
+| Same-direction chase | O(n) | O(1) | Remove duplicates in-place |
+| Sliding window (variable) | O(n) | O(1) | Subarray with constraint |
+
+## Solution
 ```python
-from collections import deque
-
-
-class Solution:
-    def reverseWords(self, s: str) -> str:
-        left, right = 0, len(s) - 1
-        while left <= right and s[left] == " ":
-            left += 1
-        while left <= right and s[right] == " ":
-            right -= 1
-        d, word = deque(), []
-        while left <= right:
-            if s[left] == " " and word:
-                d.appendleft("".join(word))
-                word = []
-            elif s[left] != " ":
-                word.append(s[left])
-            left += 1
-        d.appendleft("".join(word))
-        return " ".join(d)
+Input: s = "the sky is blue"
+Output: "blue is sky the"
 ```
 
-`appendleft` builds reversed order without reversing a full word list at the end.
+### Solution Explanation
 
-### Option 2: `split` + reverse + `join`
+**Approach:** Opposite ends (this problem)
 
-```python
-class Solution:
-    def reverseWords(self, s: str) -> str:
-        return " ".join(s.split()[::-1])
-```
+**Key idea:** ### Key Challenges
 
-`str.split()` with no argument splits on any run of whitespace and strips leading/trailing spaces. Concise for interviews when library use is allowed.
+**How the code works:**
+1. **Leading/trailing spaces** -- must be stripped
+2. **Multiple spaces between words** -- must be collapsed to one
+3. **Reverse word order** -- not character order
+1. Reverse the entire string
+2. Reverse each individual word
+3. Clean up extra spaces
 
-### Option 3: Manual word boundaries + `reversed`
+**Walkthrough** — input `s = "the sky is blue"`, expected output `"blue is sky the"`:
 
-Same idea as scanning, but collect words in a list then `join(reversed(...))`:
-
-```python
-class Solution:
-    def reverseWords(self, s: str) -> str:
-        words = []
-        i, n = 0, len(s)
-        while i < n:
-            while i < n and s[i] == " ":
-                i += 1
-            if i >= n:
-                break
-            j = i
-            while j < n and s[j] != " ":
-                j += 1
-            words.append(s[i:j])
-            i = j
-        return " ".join(reversed(words))
-```
-
-For a true **mutable character buffer** (reverse whole string then reverse each word), see [LC 186](https://leetcode.com/problems/reverse-words-in-a-string-ii/).
-
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Comparison
 
-| Option | Time | Extra space | Pros | Cons |
-|--------|------|-------------|------|------|
-| Deque + scan | O(n) | O(n) words | Single pass over trimmed range, clear control | More code than `split` |
-| `split` + slice | O(n) | O(n) | Short and readable | Relies on `split` behavior |
-| Manual boundaries + `reversed` | O(n) | O(n) | No `deque`; explicit trimming | Slightly more index logic |
-
-## Complexity Analysis
-
-For Option 1:
-
-- **Time:** O(n) — each index visited once; each character copied into a word and deque.
-- **Space:** O(n) for stored words and the result string.
+| Approach | Time | Extra Space | Notes |
+|---|---|---|---|
+| Deque | O(n) | O(n) | Clean, easy to understand |
+| Reverse Twice | O(n) | O(1) | In-place, interview follow-up |
 
 ## Common Mistakes
 
-- Forgetting to `appendleft` the last word after the loop (handled with a final `appendleft`).
-- Including empty strings when splitting naively on `' '` only.
-- Returning multiple spaces between words.
+- Not handling multiple consecutive spaces (outputting extra spaces between words)
+- Forgetting the last word (no trailing space to trigger word completion)
+- In the in-place approach: not compacting spaces during the write pass
+
+## Key Takeaways
+
+- **"Reverse word order"** has two classic approaches: collect-in-reverse (deque/stack) or reverse-entire-then-reverse-each-word
+- The in-place "reverse twice" technique is a common interview follow-up: "Can you do it in O(1) space?"
+- Trimming and compacting spaces is the fiddly part -- the deque approach sidesteps it by only collecting non-empty words
 
 ## Related Problems
 
-- [LC 186: Reverse Words in a String II](https://leetcode.com/problems/reverse-words-in-a-string-ii/)
-- [LC 557: Reverse Words in a String III](https://leetcode.com/problems/reverse-words-in-a-string-iii/)
+- [186. Reverse Words in a String II](https://www.leetcode.com/problems/reverse-words-in-a-string-ii/) -- in-place on char array
+- [557. Reverse Words in a String III](https://www.leetcode.com/problems/reverse-words-in-a-string-iii/) -- reverse each word (not word order)
+- [58. Length of Last Word](https://www.leetcode.com/problems/length-of-last-word/) -- word parsing with trailing spaces
+- [1768. Merge Strings Alternately](https://www.leetcode.com/problems/merge-strings-alternately/) -- string traversal
+
+## References
+
+- [LC 151: Reverse Words in a String on LeetCode](https://www.leetcode.com/problems/reverse-words-in-a-string/)
+- [LeetCode Discuss — LC 151: Reverse Words in a String](https://www.leetcode.com/problems/reverse-words-in-a-string/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/reverse-words-in-a-string/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [String Processing](/posts/2025-11-24-leetcode-templates-string-processing/)
+
+{% endraw %}

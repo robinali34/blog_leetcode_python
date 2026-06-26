@@ -6,10 +6,7 @@ categories: [leetcode, medium, dynamic-programming, dp, coin-change]
 permalink: /2025/10/20/medium-322-coin-change/
 ---
 
-# [Medium] 322. Coin Change
-
-## Problem Statement
-
+{% raw %}
 You are given an integer array `coins` representing coins of different denominations and an integer `amount` representing a total amount of money.
 
 Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return `-1`.
@@ -44,27 +41,130 @@ Output: 0
 - `1 <= coins[i] <= 2^31 - 1`
 - `0 <= amount <= 10^4`
 
-## Solution Approach
+## Solution Structure Breakdown
 
-This is a classic **Dynamic Programming** problem that asks for the minimum number of coins needed to make a given amount. Since we can use each coin unlimited times, this is an **unbounded knapsack** problem.
+### Evolution from Naive to Optimized
 
-### Key Insights:
+**Naive Approach** (Recursive):
+- **Structure**: Try all coin combinations recursively
+- **Complexity**: O(S^n) time, O(S) space (stack)
+- **Limitation**: Exponential time, recomputes subproblems
 
-1. **Optimal substructure**: The minimum coins for amount `i` can be computed from smaller amounts
-2. **Overlapping subproblems**: Same subproblems are solved multiple times
-3. **Unbounded knapsack**: Each coin can be used unlimited times
-4. **Bottom-up DP**: Build solution from smaller amounts to larger amounts
+**Semi-Optimized Approach** (Top-Down DP):
+- **Structure**: Recursive + memoization cache
+- **Complexity**: O(S × n) time, O(S) space
+- **Improvement**: Eliminates recomputation, still uses recursion
 
-### Algorithm:
+**Optimized Approach** (Bottom-Up DP):
+- **Structure**: Iterative DP building from base case
+- **Complexity**: O(S × n) time, O(S) space
+- **Enhancement**: No recursion overhead, clearer logic
 
-1. **DP array**: `dp[i]` represents minimum coins needed for amount `i`
-2. **Base case**: `dp[0] = 0` (0 coins needed for amount 0)
-3. **Transition**: For each amount `i`, try each coin and take minimum
-4. **Result**: Return `dp[amount]` if it's valid, otherwise `-1`
+### Code Structure Comparison
+
+| Approach | Pattern | Time | Space | Clarity |
+|----------|---------|------|-------|---------|
+| **Naive** | Recursive exploration | O(S^n) | O(S) | Low |
+| **Semi-Opt** | Memoized recursion | O(S×n) | O(S) | Medium |
+| **Optimized** | Bottom-up DP | O(S×n) | O(S) | High |
+
+## Thinking Process
+
+You are given an integer array `coins` representing coins of different denominations and an integer `amount` representing a total amount of money.
+
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return `-1`.
+
+- Define state: what subproblem does `dp[i]` (or `dp[i][j]`) represent?
+- Recurrence: how does the answer build from smaller indices?
+- Base cases first; optimize space if only prior row/layer is needed.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 105" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">1D DP recurrence</text>
+
+  <text x="30" y="38" font-size="10" fill="#9A9792">dp[i]</text>
+  <rect x="30" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="48" y="58" text-anchor="middle" font-size="11">0</text>
+  <rect x="66" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="84" y="58" text-anchor="middle" font-size="11">1</text>
+  <rect x="102" y="42" width="36" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="58" text-anchor="middle" font-size="11">2</text>
+  <rect x="138" y="42" width="36" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="156" y="58" text-anchor="middle" font-size="11">?</text>
+  <path d="M120 70v8M84 70v8" stroke="#C4956A" stroke-width="1.5"/>
+  <text x="120" y="95" text-anchor="middle" font-size="11" fill="#6B6560">dp[i] from smaller indices / subproblems</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **1D DP** *(this problem)* | O(n) | O(n) or O(1) | Linear recurrence |
+| 2D DP | O(nm) | O(nm) or O(n) | Grid or two-sequence problems |
+| State machine DP | O(n) | O(1) | Buy/sell, hold/not-hold states |
+| Memoization (top-down) | Same as DP | O(n) | Recursive + cache |
 
 ## Solution
 
-### **Solution: Dynamic Programming (Bottom-Up)**
+### **Solution 1: Brute-Force Recursive Approach**
+
+**Time Complexity:** O(S^n) where S = amount, n = number of coins  
+**Space Complexity:** O(S) for recursion stack
+
+Recursively explore all possible coin combinations.
+
+```python
+class Solution:
+    def coinChange(self, coins: list[int], amount: int) -> int:
+        dp = [amount + 1] * (amount + 1)
+        dp[0] = 0
+
+        for i in range(1, amount + 1):
+            for coin in coins:
+                if coin <= i:
+                    dp[i] = min(dp[i], dp[i - coin] + 1)
+
+        return -1 if dp[amount] > amount else dp[amount]
+```
+
+**Note**: This approach will timeout for large amounts due to exponential time complexity.
+
+### **Solution 2: Top-Down DP with Memoization**
+
+**Time Complexity:** O(S × n)  
+**Space Complexity:** O(S) for memoization and recursion stack
+
+Add memoization to cache results and avoid recomputation.
+
+```python
+class Solution:
+    def coinChange(self, coins: list[int], amount: int) -> int:
+        memo = [-2] * (amount + 1)  # -2 = uncomputed
+        res = self.dfs(coins, amount, memo)
+        return -1 if res == float('inf') else res
+
+    def dfs(self, coins: list[int], amount: int, memo: list[int]) -> int:
+        if amount == 0:
+            return 0
+
+        if amount < 0:
+            return float('inf')
+
+        if memo[amount] != -2:
+            return memo[amount]
+
+        minCoins = float('inf')
+
+        for coin in coins:
+            res = self.dfs(coins, amount - coin, memo)
+            if res != float('inf'):
+                minCoins = min(minCoins, res + 1)
+
+        memo[amount] = minCoins
+        return minCoins
+```
+
+**Note**: Better than brute-force but still uses recursion stack space.
+
+### **Solution 3: Dynamic Programming (Bottom-Up) - Recommended**
 
 ```python
 class Solution:
@@ -135,8 +235,7 @@ dp = [0, 1, 2, 1, 1, 2, 2]
 Result: dp[6] = 2 (coins: 3 + 3)
 ```
 
-## Complexity Analysis
-
+### Complexity
 ### **Time Complexity:** O(amount × coins.length)
 - **Outer loop**: O(amount) - iterate through all amounts
 - **Inner loop**: O(coins.length) - try each coin for each amount
@@ -154,44 +253,37 @@ Result: dp[6] = 2 (coins: 3 + 3)
 4. **Impossible detection**: Use `amount + 1` as impossible value
 5. **Efficient**: Single pass through all amounts and coins
 
-## Alternative Approaches
+## Common Mistakes
 
-### **Top-Down DP (Memoization)**
-```python
-class Solution:
-    def coinChange(self, coins: list[int], amount: int) -> int:
-        memo = [-2] * (amount + 1)  # -2 = uncomputed
-        res = self.dfs(coins, amount, memo)
-        return -1 if res == float('inf') else res
-
-    def dfs(self, coins: list[int], amount: int, memo: list[int]) -> int:
-        if amount == 0:
-            return 0
-
-        if amount < 0:
-            return float('inf')
-
-        if memo[amount] != -2:
-            return memo[amount]
-
-        minCoins = float('inf')
-
-        for coin in coins:
-            res = self.dfs(coins, amount - coin, memo)
-            if res != float('inf'):
-                minCoins = min(minCoins, res + 1)
-
-        memo[amount] = minCoins
-        return minCoins
-```
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
 
 ## Related Problems
 
-- [518. Coin Change 2](https://leetcode.com/problems/coin-change-2/) - Count number of ways
-- [279. Perfect Squares](https://leetcode.com/problems/perfect-squares/) - Similar DP approach
-- [377. Combination Sum IV](https://leetcode.com/problems/combination-sum-iv/) - Count combinations
-- [416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/) - Subset sum problem
+- [518. Coin Change 2](https://www.leetcode.com/problems/coin-change-2/) - Count number of ways
+- [279. Perfect Squares](https://www.leetcode.com/problems/perfect-squares/) - Similar DP approach
+- [377. Combination Sum IV](https://www.leetcode.com/problems/combination-sum-iv/) - Count combinations
+- [416. Partition Equal Subset Sum](https://www.leetcode.com/problems/partition-equal-subset-sum/) - Subset sum problem
 
 ## Tags
 
 `Dynamic Programming`, `DP`, `Coin Change`, `Unbounded Knapsack`, `Medium`
+
+## Key Takeaways
+
+- Define state: what subproblem does `dp[i]` (or `dp[i][j]`) represent?
+- Recurrence: how does the answer build from smaller indices?
+- Base cases first; optimize space if only prior row/layer is needed.
+
+## References
+
+- [LC 322: Coin Change on LeetCode](https://www.leetcode.com/problems/coin-change/)
+- [LeetCode Discuss — LC 322: Coin Change](https://www.leetcode.com/problems/coin-change/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/coin-change/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Dynamic Programming](/posts/2025-10-29-leetcode-templates-dp/)
+
+{% endraw %}

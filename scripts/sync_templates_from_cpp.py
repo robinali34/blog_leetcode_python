@@ -28,6 +28,8 @@ def adapt_content(text: str) -> str:
     text = text.replace("blog_leetcode_python_python", "blog_leetcode_python")
     text = text.replace("https://robinali34.github.io/blog_leetcode/", "https://robinali34.github.io/blog_leetcode_python/")
     text = text.replace("/blog_leetcode/", "/blog_leetcode_python/")
+    text = text.replace("battle‑tested C++ templates", "battle‑tested Python templates")
+    text = text.replace("copy-paste C++", "copy-paste Python")
     text = text.replace("Minimal, copy-paste C++", "Minimal, copy-paste Python")
     text = text.replace("production-ready C++ templates", "production-ready Python templates")
     text = text.replace("New to C++?", "New to Python?")
@@ -66,6 +68,9 @@ def sync_file(name: str) -> bool:
     return True
 
 
+CATEGORIES_FILE = "2025-10-29-leetcode-categories-and-templates.md"
+
+
 def main() -> None:
     names = sorted(p.name for p in CPP_POSTS.glob("*leetcode-templates*.md"))
     synced = 0
@@ -73,7 +78,10 @@ def main() -> None:
         if sync_file(name):
             synced += 1
             print(f"synced {name}")
-    print(f"\nSynced {synced} template posts")
+    if sync_file(CATEGORIES_FILE):
+        synced += 1
+        print(f"synced {CATEGORIES_FILE}")
+    print(f"\nSynced {synced} posts")
 
 
 if __name__ == "__main__":

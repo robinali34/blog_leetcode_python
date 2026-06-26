@@ -1,53 +1,56 @@
 ---
 layout: post
 title: "[Medium] 1115. Print FooBar Alternately"
-date: 2026-03-28 00:00:00 -0700
-categories: [leetcode, medium, concurrency, threading]
-tags: [leetcode, medium, threading, semaphore, condition-variable]
+date: 2026-03-28
+categories: [leetcode, medium, concurrency]
+tags: [leetcode, medium, concurrency, mutex, condition-variable, multithreading]
 permalink: /2026/03/28/medium-1115-print-foobar-alternately/
 ---
 
-# [Medium] 1115. Print FooBar Alternately
-
-## Problem Statement
-
-Two threads are given:
-
-- one calls `foo()` repeatedly
-- one calls `bar()` repeatedly
-
-The same `FooBar` instance will be passed to both threads. For a given integer `n`, each method is called `n` times. You must synchronize them so the output is `n` repetitions of `"foobar"` in order (interleaved as `foo` then `bar` each time).
+{% raw %}
+Two different threads will call `foo` and `bar` respectively. Design a mechanism so that `"foobar"` is printed `n` times by alternating between the two threads: `foo` always prints first, then `bar`, then `foo` again, and so on.
 
 ## Examples
 
-Conceptually, for `n = 2` the print order is: `foo`, `bar`, `foo`, `bar`.
+**Example 1:**
+
+```
+Input: n = 1
+Output: "foobar"
+```
+
+**Example 2:**
+
+```
+Input: n = 2
+Output: "foobarfoobar"
+```
 
 ## Constraints
 
 - `1 <= n <= 1000`
 
-## Clarification Questions
+## Thinking Process
 
-1. **Can `foo` and `bar` run on different threads?** Yes — assume concurrent calls; you must enforce ordering.
-2. **How many times does each method run?** Exactly `n` times each.
-3. **First print?** `foo` must happen before the first `bar`.
+This is a classic **producer-consumer synchronization** problem. Two threads must take strict turns:
 
-## Analysis Process
+```
+Thread A (foo): print "foo" only when it's foo's turn
+Thread B (bar): print "bar" only when it's bar's turn
+foo → bar → foo → bar → ...
+```
 
-You need a **handshake**: after each `foo`, allow one `bar`; after each `bar`, allow the next `foo`.
+### Synchronization Pattern
 
-Common patterns:
+We need:
+1. **Mutual exclusion** -- only one thread prints at a time
+2. **Ordering** -- foo always goes before bar in each round
 
-- **Two semaphores:** one “permission” for `foo`, one for `bar`; initial counts encode who starts.
-- **Condition + boolean turn:** threads wait until it is their turn, then flip turn and `notify_all()`.
+A **mutex + condition variable + boolean flag** achieves both:
+- `foo_turn = true` means it's foo's turn
+- Each thread waits until the flag matches its turn, prints, flips the flag, and notifies the other
 
-Both are standard for strict alternation.
-
-## Solution Options
-
-### Option 1: Two semaphores
-
-`foo` starts with permission (`foo_sem = 1`), `bar` blocks until `foo` releases `bar_sem`.
+### How `condition_variable::wait` Works
 
 ```python
 import threading
@@ -73,8 +76,38 @@ class FooBar:
             self.foo_sem.release()
 ```
 
-### Option 2: `threading.Condition` + turn flag
+This atomically:
+1. Checks `predicate()` -- if true, proceeds immediately
+2. If false, releases the lock and sleeps
+3. On `notify_all`, re-acquires the lock and re-checks the predicate
+4. Repeats until predicate is true
 
+The predicate prevents **spurious wakeups** -- a thread only proceeds when the condition is actually met.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
+
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
+
+## Solution
 ```python
 import threading
 from typing import Callable
@@ -105,25 +138,78 @@ class FooBar:
                 self.cv.notify_all()
 ```
 
+### Solution Explanation
+
+**Approach:** Brute force (this problem)
+
+**Key idea:** This is a classic **producer-consumer synchronization** problem. Two threads must take strict turns:
+
+**How the code works:**
+1. **Mutual exclusion** -- only one thread prints at a time
+2. **Ordering** -- foo always goes before bar in each round
+- `foo_turn = true` means it's foo's turn
+- Each thread waits until the flag matches its turn, prints, flips the flag, and notifies the other
+1. Checks `predicate()` -- if true, proceeds immediately
+2. If false, releases the lock and sleeps
+
+**Walkthrough** — input `n = 1`, expected output `"foobar"`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Comparison
 
-| Approach | Mechanism | Pros | Cons |
-|----------|------------|------|------|
-| Semaphores | explicit permits per phase | Very small code, clear “who may go” | Must get initial counts right |
-| Condition + flag | wait on shared boolean | Familiar mutex/cond pattern | Easy to get `wait` condition wrong |
+| Approach | Mechanism | Complexity | Notes |
+|---|---|---|---|
+| Mutex + CV | `mutex` + `condition_variable` + flag | More boilerplate | Works in Python11+ |
+| Binary Semaphore | `binary_semaphore` pair | Minimal, elegant | Requires Python20 |
 
-## Complexity
+## Execution Trace
 
-Per printed pair: **O(1)** synchronization work; overall **O(n)** calls each to `foo`/`bar`. Extra space is **O(1)** for semaphores/condition state.
+```
+n = 2, foo_turn = true
+
+foo thread:  wait(foo_turn=true) → passes → print "foo" → foo_turn=false → notify
+bar thread:  wait(!foo_turn=true) → passes → print "bar" → foo_turn=true  → notify
+foo thread:  wait(foo_turn=true) → passes → print "foo" → foo_turn=false → notify
+bar thread:  wait(!foo_turn=true) → passes → print "bar" → foo_turn=true  → notify
+
+Output: "foobarfoobar"
+```
+
+## Key Components
+
+| Component | Role |
+|---|---|
+| `mutex` | Ensures only one thread accesses shared state at a time |
+| `condition_variable` | Allows threads to sleep/wake efficiently (no busy-waiting) |
+| `unique_lock` | RAII wrapper that locks on construction, unlocks on destruction |
+| `foo_turn` | Boolean flag encoding whose turn it is |
+| `notify_all` | Wakes the other thread to check its condition |
 
 ## Common Mistakes
 
-- Wrong initial semaphore values (who is allowed to run first).
-- Using `if` instead of `while` around `wait()` (must recheck after wakeup).
-- Forgetting `notify_all()` (or `notify()`) after flipping state so the other thread can proceed.
-- Deadlock from acquiring the same lock twice on the same thread (not an issue with semaphores as written; with `Lock` + `Condition`, only hold `Condition`’s lock inside `with self.cv`).
+- Using `notify_one` vs `notify_all` -- both work here (only 2 threads), but `notify_all` is safer in general
+- Forgetting the predicate in `cv.wait` -- without it, spurious wakeups can cause out-of-order printing
+- Using `lock_guard` instead of `unique_lock` -- `condition_variable::wait` requires `unique_lock` because it needs to temporarily release the lock
+
+## References
+
+- [LC 1115: Print FooBar Alternately on LeetCode](https://www.leetcode.com/problems/print-foobar-alternately/)
+- [LeetCode Discuss — LC 1115: Print FooBar Alternately](https://www.leetcode.com/problems/print-foobar-alternately/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/print-foobar-alternately/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+- **"Alternate between two threads"** = mutex + condition variable + boolean flag
+- The `cv.wait(lock, predicate)` pattern is the idiomatic C++ way to handle conditional synchronization
+- This is the simplest form of the producer-consumer pattern with exactly two participants
 
 ## Related Problems
 
-- [LC 1114: Print in Order](https://leetcode.com/problems/print-in-order/)
-- [LC 1195: Fizz Buzz Multithreaded](https://leetcode.com/problems/fizz-buzz-multithreaded/)
+- [1114. Print in Order](https://www.leetcode.com/problems/print-in-order/) -- 3 threads, sequential ordering
+- [1116. Print Zero Even Odd](https://www.leetcode.com/problems/print-zero-even-odd/) -- 3 threads, alternating pattern
+- [1117. Building H2O](https://www.leetcode.com/problems/building-h2o/) -- barrier synchronization
+- [1188. Design Bounded Blocking Queue](https://www.leetcode.com/problems/design-bounded-blocking-queue/) -- producer-consumer with capacity
+
+{% endraw %}

@@ -6,10 +6,7 @@ categories: [leetcode, medium, graph, dfs, bfs, clone]
 permalink: /2025/10/20/medium-133-clone-graph/
 ---
 
-# [Medium] 133. Clone Graph
-
-## Problem Statement
-
+{% raw %}
 Given a reference of a node in a **connected undirected graph**.
 
 Return a **deep copy** (clone) of the graph.
@@ -51,25 +48,40 @@ Explanation: This an empty graph, it does not contain any nodes.
 - There are no repeated edges and no self-loops in the graph.
 - The graph is connected and undirected.
 
-## Solution Approach
+## Thinking Process
 
-This problem requires creating a **deep copy** of a graph, meaning we need to create new nodes with the same structure and relationships as the original graph.
+Given a reference of a node in a **connected undirected graph**.
 
-### Key Insights:
+Return a **deep copy** (clone) of the graph.
 
-1. **Deep copy**: Create new nodes, not just copy references
-2. **Graph traversal**: Need to visit all nodes and their neighbors
-3. **Avoid cycles**: Use visited tracking to prevent infinite loops
-4. **Node mapping**: Map original nodes to cloned nodes
-5. **Two approaches**: BFS (iterative) or DFS (recursive)
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
 
-### Algorithm:
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-1. **Create node mapping**: `dict[Node, Node]` to track cloned nodes
-2. **Traverse graph**: Visit all nodes using BFS or DFS
-3. **Clone nodes**: Create new nodes with same values
-4. **Build relationships**: Connect cloned nodes based on original relationships
-5. **Return root**: Return the cloned version of the starting node
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
 
 ## Solution
 
@@ -101,6 +113,25 @@ class Solution:
 
         return visited[node]
 ```
+
+### Solution Explanation
+
+**Approach:** Recursive DFS (this problem)
+
+**Key idea:** Given a reference of a node in a **connected undirected graph**.
+
+**How the code works:**
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
+
+**Walkthrough** — input `adjList = [[2,4],[1,3],[2,4],[1,3]]`, expected output `[[2,4],[1,3],[2,4],[1,3]]`:
+
+There are 4 nodes in the graph.
+1st node (val=1)'s neighbors are 2nd node (val=2) and 4th node (val=4).
+2nd node (val=2)'s neighbors are 1st node (val=1) and 3rd node (val=3).
+3rd node (val=3)'s neighbors are 2nd node (val=2) and 4th node (val=4).
+4th node (val=4)'s neighbors are 1st node (val=1) and 3rd node (val=3).
 
 ### **Solution 2: DFS (Recursive)**
 
@@ -165,8 +196,6 @@ BFS Process:
 Final cloned graph has same structure as original.
 ```
 
-## Complexity Analysis
-
 ### **Time Complexity:** O(V + E)
 - **V**: Number of vertices (nodes)
 - **E**: Number of edges (neighbor relationships)
@@ -178,7 +207,6 @@ Final cloned graph has same structure as original.
 - **Queue (BFS)**: O(V) - maximum nodes in queue
 - **Recursion stack (DFS)**: O(V) - maximum recursion depth
 - **Cloned graph**: O(V + E) - not counted in auxiliary space
-
 ## Key Points
 
 1. **Deep copy**: Create new nodes, not copy references
@@ -197,40 +225,36 @@ Final cloned graph has same structure as original.
 | **Stack overflow** | No risk | Risk with deep graphs |
 | **Performance** | Similar | Similar |
 
-## Alternative Approaches
+## Common Mistakes
 
-### **DFS Iterative (Stack)**
-```python
-class Solution:
-    def cloneGraph(self, node: 'Node') -> 'Node':
-        if not node:
-            return None
-
-        visited = {}
-        stk = [node]
-
-        visited[node] = Node(node.val)
-
-        while stk:
-            curr = stk.pop()
-
-            for neighbor in curr.neighbors:
-
-                if neighbor not in visited:
-                    visited[neighbor] = Node(neighbor.val)
-                    stk.append(neighbor)
-
-                visited[curr].neighbors.append(visited[neighbor])
-
-        return visited[node]
-```
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
 
 ## Related Problems
 
-- [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/) - Similar cloning concept
-- [200. Number of Islands](https://leetcode.com/problems/number-of-islands/) - Graph traversal
-- [207. Course Schedule](https://leetcode.com/problems/course-schedule/) - Graph cycle detection
+- [138. Copy List with Random Pointer](https://www.leetcode.com/problems/copy-list-with-random-pointer/) - Similar cloning concept
+- [200. Number of Islands](https://www.leetcode.com/problems/number-of-islands/) - Graph traversal
+- [207. Course Schedule](https://www.leetcode.com/problems/course-schedule/) - Graph cycle detection
 
 ## Tags
 
 `Graph`, `DFS`, `BFS`, `Clone`, `Deep Copy`, `Medium`
+
+## Key Takeaways
+
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
+
+## References
+
+- [LC 133: Clone Graph on LeetCode](https://www.leetcode.com/problems/clone-graph/)
+- [LeetCode Discuss — LC 133: Clone Graph](https://www.leetcode.com/problems/clone-graph/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/clone-graph/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Graph](/posts/2025-10-29-leetcode-templates-graph/)
+
+{% endraw %}

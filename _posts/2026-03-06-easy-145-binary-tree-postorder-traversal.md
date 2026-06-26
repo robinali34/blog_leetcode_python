@@ -1,24 +1,95 @@
 ---
 layout: post
 title: "[Easy] 145. Binary Tree Postorder Traversal"
-date: 2026-03-06 00:00:00 -0700
+date: 2026-03-06
 categories: [leetcode, easy, tree, dfs]
-tags: [leetcode, easy, tree, postorder, stack]
+tags: [leetcode, easy, tree, dfs, stack]
 permalink: /2026/03/06/easy-145-binary-tree-postorder-traversal/
 ---
 
-# [Easy] 145. Binary Tree Postorder Traversal
-
-## Problem Statement
-
-Given the `root` of a binary tree, return the **postorder traversal** of its nodes' values.
-
-Postorder: **left → right → root**.
+{% raw %}
+Given the `root` of a binary tree, return the **postorder** traversal of its nodes' values. Postorder visits: **left → right → root**.
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: root = [1,null,2,3]
+    1
+     \
+      2
+     /
+    3
+Output: [3,2,1]
+```
+
+**Example 2:**
+
+```
+Input: root = [1,2,3,4,5,null,8,null,null,6,7,null,9]
+Output: [4,6,7,5,2,9,8,3,1]
+```
+
+**Example 3:**
+
+```
+Input: root = []
+Output: []
+```
+
+## Constraints
+
+- The number of nodes is in `[0, 100]`
+- `-100 <= Node.val <= 100`
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Thinking Process
+
+Postorder visits **left → right → root**. The tricky part is the iterative version -- we must visit both children before the parent.
+
+### Iterative Trick: Modified Preorder + Reverse
+
+Preorder is **root → left → right**. If we change it to **root → right → left** (push left before right), then reverse the result, we get **left → right → root** = postorder.
+
+This avoids the complexity of tracking "has the right child been visited?"
+
+### Two-Stack / Prev-Pointer Alternative
+
+A more direct iterative approach uses a `prev` pointer to track whether we're returning from the right child, but the reverse trick is simpler to implement.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
+
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
+## Approach 1: Recursive -- O(n)
 ```python
 Input: root = [1,null,2,3]
 Output: [3,2,1]
@@ -29,175 +100,73 @@ Output: [3,2,1]
 #        3
 ```
 
-**Example 2:**
+### Solution Explanation
 
+**Approach:** Recursive DFS (this problem)
+
+**Key idea:** Postorder visits **left → right → root**. The tricky part is the iterative version -- we must visit both children before the parent.
+
+**Walkthrough** — input `root = [1,null,2,3]`, expected output `[3,2,1]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Approach 2: Iterative (Modified Preorder + Reverse) -- O(n)
+
+Do **root → right → left** traversal, then reverse the result to get **left → right → root**.
 ```python
 Input: root = []
 Output: []
 ```
 
-**Example 3:**
+**Time**: O(n)
+**Space**: O(n) for the output; O(h) for the stack
 
+## Approach 3: Iterative (Prev Pointer) -- O(n)
+
+Track the previously visited node. Only visit the current node when its right child is null or was just visited.
 ```python
 Input: root = [1]
 Output: [1]
 ```
 
-## Constraints
+**Time**: O(n)
+**Space**: O(n) for the output; O(h) for the stack
 
-- The number of nodes in the tree is in the range `[0, 100]`.
-- `-100 <= Node.val <= 100`
+## Comparison Across All Three Traversal Orders
 
-## Clarification Questions
-
-1. **Empty tree**: Return empty list when `root` is `None`?  
-   **Assumption**: Yes.
-2. **Order**: Strict left → right → root?  
-   **Assumption**: Yes — classic postorder (e.g. useful for freeing tree or postfix expressions).
-3. **Space**: Recursion stack counts toward space?  
-   **Assumption**: Yes — iterative stack avoids recursion stack.
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: Recursive definition (5 min)**  
-Postorder = postorder(left), postorder(right), then process root. Base case: `node is None` → return.
-
-**Step 2: Recursive implementation (7 min)**  
-Use a helper that recurses on left, recurses on right, then appends `node.val`. Collect results in a list (closure or passed list).
-
-**Step 3: Iterative with stack (8 min)**  
-Postorder is the reverse of “preorder but visit root then right then left.” So run a modified preorder (push left first so we pop right first), collect values, then **reverse** the list to get left → right → root. Alternatively, use one stack with a “last visited” pointer to know when we’re returning from the right subtree.
-
-## Solution Approach
-
-**Recursive:** Recurse left, recurse right, append root. Use a shared list or pass it as argument.
-
-**Iterative (reverse trick):** Do a “right-first preorder” (traverse root → right → left) using a stack: push root, then in a loop pop, append value, push left then right (so right is popped next). Reverse the collected list to get left → right → root.
-
-**Iterative (one stack, last visited):** Use a stack and a `last_visited` node. Go left to the bottom. When we pop a node, we visit it only if it has no right child or its right child was just visited; otherwise push the node back and go right. This yields true postorder without reversing.
-
-### Key Insights
-
-1. **Postorder = root last** — Process left subtree, then right subtree, then root.
-2. **Reverse of root-right-left** — Postorder (left → right → root) is the reverse of “root → right → left,” so we can reuse a preorder-style loop and reverse the result.
-3. **One-stack with last visited** — Visit a node only when we’re “returning” from its right subtree (right is None or right was last visited).
-
-## Python Solution
-
-### Recursive (DFS)
-
-```python
-from typing import List, Optional
-
-
-# Definition for a binary tree node.
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        rtn: List[int] = []
-
-        def postorder_dfs(node: Optional[TreeNode]) -> None:
-            if not node:
-                return
-            postorder_dfs(node.left)
-            postorder_dfs(node.right)
-            rtn.append(node.val)
-
-        postorder_dfs(root)
-        return rtn
-```
-
-### Iterative (reverse of root → right → left)
-
-```python
-from typing import List, Optional
-
-
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        if root is None:
-            return []
-
-        rtn: List[int] = []
-        stk: List[TreeNode] = [root]
-
-        while stk:
-            node = stk.pop()
-            rtn.append(node.val)
-            if node.left:
-                stk.append(node.left)
-            if node.right:
-                stk.append(node.right)
-
-        return rtn[::-1]  # reverse to get left → right → root
-```
-
-### Iterative (one stack, last visited)
-
-```python
-from typing import List, Optional
-
-
-class Solution:
-    def postorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        rtn: List[int] = []
-        stk: List[TreeNode] = []
-        node = root
-        last_visited: Optional[TreeNode] = None
-
-        while node or stk:
-            while node:
-                stk.append(node)
-                node = node.left
-            peek = stk[-1]
-            # Visit only if no right subtree or right subtree was just visited
-            if not peek.right or peek.right is last_visited:
-                last_visited = stk.pop()
-                rtn.append(last_visited.val)
-                node = None
-            else:
-                node = peek.right
-
-        return rtn
-```
-
-## Algorithm Explanation
-
-**Recursive:**  
-If node is null, return. Otherwise recurse on left subtree, recurse on right subtree, then append `node.val`. The closure collects values in postorder.
-
-**Iterative (reverse):**  
-We traverse in “preorder but right before left”: pop, append, push left then right. That gives root → right → left. Reversing the list gives left → right → root (postorder).
-
-**Iterative (last visited):**  
-We go left to the bottom (pushing nodes). Then we look at the top of the stack. If it has no right child or its right child was the node we just visited, we pop and visit (we’re “returning” from the right subtree). Otherwise we go to the right child. This mimics the recursive order without reversing.
-
-## Complexity Analysis
-
-- **Time Complexity**: \(O(n)\), where \(n\) is the number of nodes — each node is pushed/popped and visited once.
-- **Space Complexity**: \(O(h)\) for the stack, where \(h\) is the height (worst \(O(n)\) for a skew tree). The reverse approach uses an extra \(O(n)\) for the output list before reversing (same asymptotic as storing the result).
-
-## Edge Cases
-
-- `root is None` → return `[]`.
-- Single node → return `[root.val]`.
-- Skewed tree → stack depth \(O(n)\).
+| Order | Visit when | Iterative stack trick |
+|---|---|---|
+| **Preorder** (root→L→R) | First encounter | Push right then left |
+| **Inorder** (L→root→R) | After left subtree done | Go left, pop, visit, go right |
+| **Postorder** (L→R→root) | After both children done | Reverse of (root→R→L), or use prev pointer |
 
 ## Common Mistakes
 
-- **Recursive:** Appending before recursing (would be preorder or inorder, not postorder).
-- **Iterative (reverse):** Pushing right then left (would give root → left → right; reversing would give right → left → root, which is wrong).
-- **Last-visited:** Forgetting to set `node = None` after visiting so we don’t re-descend left; or not checking `peek.right is last_visited` and visiting before the right subtree is done.
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+- **Reverse trick** turns postorder into a simple modification of preorder -- swap push order and reverse output
+- **Prev pointer** approach is the "true" iterative postorder -- no reversal needed, but harder to get right
+- All three traversal orders share the same O(n) time and O(h) auxiliary space structure
 
 ## Related Problems
 
-- [LC 94: Binary Tree Inorder Traversal](/2026/03/06/easy-94-binary-tree-inorder-traversal/) — Inorder (left → root → right).
-- [LC 144: Binary Tree Preorder Traversal](/2026/03/06/easy-144-binary-tree-preorder-traversal/) — Preorder (root → left → right).
-- [LC 102: Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/) — BFS by level.
-- [LC 590: N-ary Tree Postorder Traversal](https://leetcode.com/problems/n-ary-tree-postorder-traversal/) — Same idea on N-ary trees.
+- [144. Binary Tree Preorder Traversal](https://www.leetcode.com/problems/binary-tree-preorder-traversal/) -- root before children
+- [94. Binary Tree Inorder Traversal](https://www.leetcode.com/problems/binary-tree-inorder-traversal/) -- root between children
+- [590. N-ary Tree Postorder Traversal](https://www.leetcode.com/problems/n-ary-tree-postorder-traversal/) -- generalized to N-ary
+
+## References
+
+- [LC 145: Binary Tree Postorder Traversal on LeetCode](https://www.leetcode.com/problems/binary-tree-postorder-traversal/)
+- [LeetCode Discuss — LC 145: Binary Tree Postorder Traversal](https://www.leetcode.com/problems/binary-tree-postorder-traversal/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/binary-tree-postorder-traversal/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+
+{% endraw %}

@@ -7,13 +7,45 @@ permalink: /posts/2025-11-24-easy-1047-remove-all-adjacent-duplicates-in-string/
 tags: [leetcode, easy, string, stack, two-pointers, in-place]
 ---
 
-# [Easy] 1047. Remove All Adjacent Duplicates In String
-
+{% raw %}
 You are given a string `s` consisting of lowercase English letters. A **duplicate removal** consists of choosing two **adjacent** and **equal** letters and removing them.
 
 We repeatedly make **duplicate removals** on `s` until we no longer can.
 
 Return *the final string after all such duplicate removals have been made*. It can be proven that the answer is **unique**.
+
+## Thinking Process
+
+1. **Stack Pattern**: This is essentially a stack problem - matching adjacent pairs
+
+- Stack matches nested or LIFO structure (parentheses, monotonic scans).
+- Push on open / larger; pop when the current element resolves pending work.
+- Monotonic stack finds next greater/smaller in O(n).
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Two pointers</text>
+
+  <rect x="30" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="66" text-anchor="middle" font-size="10">1</text>
+  <rect x="62" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="76" y="66" text-anchor="middle" font-size="10">3</text>
+  <rect x="106" y="50" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="66" text-anchor="middle" font-size="10">5</text>
+  <rect x="138" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="152" y="66" text-anchor="middle" font-size="10">7</text>
+  <rect x="170" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="184" y="66" text-anchor="middle" font-size="10">9</text>
+  <text x="44" y="42" text-anchor="middle" font-size="10" fill="#7A8EA0" font-weight="600">L</text>
+  <text x="184" y="42" text-anchor="middle" font-size="10" fill="#A08888" font-weight="600">R</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">move L/R based on comparison</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Monotonic stack** *(this problem)* | O(n) | O(n) | Next greater/smaller element |
+| Parentheses matching | O(n) | O(n) | Push open, pop on close |
+| Expression evaluation | O(n) | O(n) | Operand + operator stacks |
+| Stack simulation | O(n) | O(n) | Process in LIFO order |
 
 ## Examples
 
@@ -38,61 +70,6 @@ First, we remove "xx" to get "azzy". Then we remove "zz" to get "ay".
 - `1 <= s.length <= 10^5`
 - `s` consists of lowercase English letters.
 
-## Clarification Questions
-
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
-
-1. **Duplicate removal**: What does "adjacent duplicates" mean? (Assumption: Two identical characters next to each other - "aa" is adjacent duplicates)
-
-2. **Removal process**: How should we remove duplicates? (Assumption: Remove pairs of adjacent duplicates repeatedly until no more exist)
-
-3. **Cascading removal**: Can removal cause new duplicates? (Assumption: Yes - removing "aa" from "baa" leaves "b", removing "aa" from "aab" leaves "b")
-
-4. **Return format**: What should we return? (Assumption: Final string after all duplicate removals)
-
-5. **Empty string**: What if string becomes empty? (Assumption: Return empty string "")
-
-## Interview Deduction Process (10 minutes)
-
-### Step 1: Brute-Force Approach (2 minutes)
-**Initial Thought**: "I need to remove adjacent duplicates. Let me scan and remove pairs repeatedly."
-
-**Naive Solution**: Repeatedly scan string, remove adjacent duplicate pairs, repeat until no more duplicates.
-
-**Complexity**: O(n²) worst case, O(n) space
-
-**Issues**:
-- O(n²) time - multiple passes
-- String manipulation is expensive
-- Doesn't leverage stack structure
-- Can be optimized
-
-### Step 2: Semi-Optimized Approach (3 minutes)
-**Insight**: "I can use stack to track characters. When duplicate found, pop from stack."
-
-**Improved Solution**: Use stack. For each character, if matches stack top, pop; otherwise push. Stack naturally handles cascading removals.
-
-**Complexity**: O(n) time, O(n) space
-
-**Improvements**:
-- Stack handles cascading removals naturally
-- O(n) time - single pass
-- Clean and intuitive
-- Can optimize space
-
-### Step 3: Optimized Solution (5 minutes)
-**Final Optimization**: "Can use string as stack or two pointers to optimize space."
-
-**Best Solution**: Stack approach is optimal. Can use string as stack (modify in-place) or two pointers to simulate stack, reducing space.
-
-**Complexity**: O(n) time, O(n) space (can optimize to O(1) with two pointers)
-
-**Key Realizations**:
-1. Stack is perfect for matching/removal problems
-2. O(n) time is optimal - single pass
-3. Stack handles cascading removals elegantly
-4. Space can be optimized with two pointers
-
 ## Solution Approaches
 
 ### Approach 1: Stack-Based Solution
@@ -108,42 +85,6 @@ Use a stack (or string as stack) to track characters. When encountering a charac
 **Space Complexity:** O(1) excluding output space
 
 Use two pointers to simulate a stack in-place. `left` acts as the stack pointer, `right` iterates through the string.
-
-## Solution 1: Stack-Based (String as Stack)
-
-```python
-class Solution:
-    def removeDuplicates(self, s):
-        stk = []
-
-        for ch in s:
-            if stk and stk[-1] == ch:
-                stk.pop()
-            else:
-                stk.append(ch)
-
-        return "".join(stk)
-```
-
-## Solution 2: In-Place Two Pointers
-
-```python
-class Solution:
-    def removeDuplicates(self, s):
-        left = -1
-
-        s = list(s)
-
-        for right in range(len(s)):
-            if left >= 0 and s[right] == s[left]:
-                left -= 1
-                continue
-
-            left += 1
-            s[left] = s[right]
-
-        return "".join(s[:left + 1])
-```
 
 ## How the Algorithms Work
 
@@ -228,107 +169,9 @@ s = ['a', 'b', 'b', 'a', 'c', 'a']
 Final: s.substr(0, 2) = "ca"
 ```
 
-## Key Insights
-
-1. **Stack Pattern**: This is essentially a stack problem - matching adjacent pairs
-2. **In-Place Optimization**: Can simulate stack using two pointers to save space
-3. **Greedy Approach**: Remove duplicates as soon as we find them
-4. **No Need for Multiple Passes**: Single pass is sufficient with proper data structure
-
 ## Algorithm Breakdown
 
 ### Stack-Based Solution
-
-```python
-str stk
-for ch in s:
-    if not not stk  and  stk[-1] == ch:
-        stk.pop()  # Remove duplicate
-         else :
-        stk.append(ch)  # Add character
-return stk
-
-```
-
-**How it works:**
-1. Iterate through each character
-2. If stack is not empty and top matches current character → pop (remove duplicate)
-3. Otherwise → push current character
-4. Return final stack contents
-
-### In-Place Two Pointers Solution
-
-```python
-left = -1  # Stack pointer (points to last valid character)
-for(right = 0 right < len(s) right += 1) :
-if left >= 0  and  s[right] == s[left]:
-    left -= 1  # Pop: move stack pointer back
-    continue
-s[left += 1] = s[right]  # Push: increment and assign
-return s.substr(0, left + 1)
-
-```
-
-**How it works:**
-1. `left` acts as stack pointer (points to last valid character)
-2. `right` iterates through input string
-3. If `left >= 0` and `s[right] == s[left]` → decrement `left` (pop)
-4. Otherwise → increment `left` and assign `s[right]` (push)
-5. Return substring from 0 to `left+1`
-
-## Edge Cases
-
-1. **Empty string**: Returns empty string
-2. **All duplicates**: `"aaaa"` → `""`
-3. **No duplicates**: `"abc"` → `"abc"`
-4. **Nested duplicates**: `"abccba"` → `""`
-5. **Single character**: `"a"` → `"a"`
-
-## Complexity Analysis
-
-| Approach | Time | Space | Pros | Cons |
-|----------|------|-------|------|------|
-| **Stack (String)** | O(n) | O(n) | Simple, readable | Extra space |
-| **In-Place Two Pointers** | O(n) | O(1) | Space efficient | Slightly more complex |
-
-## Implementation Details
-
-### Stack-Based: Why String Works
-
-```python
-str stk  # Acts as stack
-stk[-1]    # Top of stack
-stk.pop() # Pop from stack
-stk.append() # Push to stack
-
-```
-
-**Why use string instead of stack<char>?**
-- Easier to return result (no need to reverse)
-- Same time complexity
-- More memory efficient for this use case
-
-### In-Place: Two Pointer Logic
-
-```python
-left = -1  # Points to last valid character (-1 means empty)
-```
-
-**Why `left = -1` initially?**
-- Represents empty stack
-- `left >= 0` check ensures stack is not empty before comparing
-- `s[++left]` increments first, then assigns (pushes to stack)
-
-**Why `continue` after decrementing?**
-- Skip assigning current character (we've already "popped" it)
-- Move to next character immediately
-
-## Alternative Approaches
-
-### Approach 3: Using STL Stack
-
-**Time Complexity:** O(n)  
-**Space Complexity:** O(n)
 
 ```python
 class Solution:
@@ -341,45 +184,97 @@ class Solution:
             else:
                 stk.append(ch)
 
-        result = ""
-
-        while stk:
-            result = stk[-1] + result
-            stk.pop()
-
-        return result
+        return "".join(stk)
 ```
 
-**Pros:**
-- Explicit stack usage
-- Clear intent
+**How it works:**
+1. Iterate through each character
+2. If stack is not empty and top matches current character → pop (remove duplicate)
+3. Otherwise → push current character
+4. Return final stack contents
 
-**Cons:**
-- Need to reverse result
-- More verbose
-
-### Approach 4: Recursive Solution
-
-**Time Complexity:** O(n²) worst case  
-**Space Complexity:** O(n) for recursion stack
+### In-Place Two Pointers Solution
 
 ```python
 class Solution:
     def removeDuplicates(self, s):
-        for i in range(len(s) - 1):
-            if s[i] == s[i + 1]:
-                return self.removeDuplicates(s[:i] + s[i + 2:])
-        return s
+        left = -1
+
+        s = list(s)
+
+        for right in range(len(s)):
+            if left >= 0 and s[right] == s[left]:
+                left -= 1
+                continue
+
+            left += 1
+            s[left] = s[right]
+
+        return "".join(s[:left + 1])
 ```
 
-**Pros:**
-- Intuitive recursive thinking
+**How it works:**
+1. `left` acts as stack pointer (points to last valid character)
+2. `right` iterates through input string
+3. If `left >= 0` and `s[right] == s[left]` → decrement `left` (pop)
+4. Otherwise → increment `left` and assign `s[right]` (push)
+5. Return substring from 0 to `left+1`
 
-**Cons:**
-- Inefficient (creates new strings)
-- Stack overflow risk for large inputs
+### Complexity
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **Stack (String)** | O(n) | O(n) | Simple, readable | Extra space |
+| **In-Place Two Pointers** | O(n) | O(1) | Space efficient | Slightly more complex |
+
+## Implementation Details
+
+### Stack-Based: Why String Works
+
+```python
+str stk
+for ch in s:
+    if not not stk  and  stk[-1] == ch:
+        stk.pop()  # Remove duplicate
+         else :
+        stk.append(ch)  # Add character
+return stk
+
+```
+
+**Why use string instead of stack<char>?**
+- Easier to return result (no need to reverse)
+- Same time complexity
+- More memory efficient for this use case
+
+### In-Place: Two Pointer Logic
+
+```python
+left = -1  # Stack pointer (points to last valid character)
+for(right = 0 right < len(s) right += 1) :
+if left >= 0  and  s[right] == s[left]:
+    left -= 1  # Pop: move stack pointer back
+    continue
+s[left += 1] = s[right]  # Push: increment and assign
+return s.substr(0, left + 1)
+
+```
+
+**Why `left = -1` initially?**
+- Represents empty stack
+- `left >= 0` check ensures stack is not empty before comparing
+- `s[++left]` increments first, then assigns (pushes to stack)
+
+**Why `continue` after decrementing?**
+- Skip assigning current character (we've already "popped" it)
+- Move to next character immediately
 
 ## Common Mistakes
+
+1. **Empty string**: Returns empty string
+2. **All duplicates**: `"aaaa"` → `""`
+3. **No duplicates**: `"abc"` → `"abc"`
+4. **Nested duplicates**: `"abccba"` → `""`
+5. **Single character**: `"a"` → `"a"`
 
 1. **Not handling empty stack**: Forgetting to check `!stk.empty()` before accessing top
 2. **Wrong comparison**: Comparing with wrong character
@@ -395,10 +290,10 @@ class Solution:
 
 ## Related Problems
 
-- [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/) - Similar stack pattern
-- [1544. Make The String Great](https://leetcode.com/problems/make-the-string-great/) - Similar duplicate removal
-- [1209. Remove All Adjacent Duplicates in String II](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/) - Extension with k duplicates
-- [1047. Remove All Adjacent Duplicates In String](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/) - This problem
+- [20. Valid Parentheses](https://www.leetcode.com/problems/valid-parentheses/) - Similar stack pattern
+- [1544. Make The String Great](https://www.leetcode.com/problems/make-the-string-great/) - Similar duplicate removal
+- [1209. Remove All Adjacent Duplicates in String II](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/) - Extension with k duplicates
+- [1047. Remove All Adjacent Duplicates In String](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string/) - This problem
 
 ## Real-World Applications
 
@@ -468,17 +363,21 @@ right=5: 'y' → left=1, s[1]='y'
 Result: s.substr(0, 2) = "ay"
 ```
 
-## Comparison: Stack vs In-Place
+## Key Takeaways
 
-| Aspect | Stack | In-Place |
-|--------|-------|----------|
-| **Readability** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **Space** | O(n) | O(1) |
-| **Time** | O(n) | O(n) |
-| **Code Length** | Shorter | Slightly longer |
-| **Best For** | Clarity | Space constraints |
+1. **Stack Pattern**: This is essentially a stack problem - matching adjacent pairs
+2. **In-Place Optimization**: Can simulate stack using two pointers to save space
+3. **Greedy Approach**: Remove duplicates as soon as we find them
+4. **No Need for Multiple Passes**: Single pass is sufficient with proper data structure
 
----
+## References
 
-*This problem is an excellent example of using a stack to solve matching problems, with an elegant in-place optimization using two pointers.*
+- [LC 1047: Remove All Adjacent Duplicates In String on LeetCode](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string/)
+- [LeetCode Discuss — LC 1047: Remove All Adjacent Duplicates In String](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string/editorial/) *(may require premium)*
 
+## Template Reference
+
+- [String Processing](/posts/2025-11-24-leetcode-templates-string-processing/)
+
+{% endraw %}

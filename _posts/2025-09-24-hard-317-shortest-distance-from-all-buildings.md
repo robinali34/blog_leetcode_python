@@ -2,66 +2,85 @@
 layout: post
 title: "[Hard] 317. Shortest Distance from All Buildings"
 date: 2025-09-24 19:00:00 -0000
-categories: python shortest-distance buildings problem-solving
+categories: leetcode algorithm bfs graph data-structures matrix shortest-path hard cpp shortest-distance buildings problem-solving
 ---
 
-# [Hard] 317. Shortest Distance from All Buildings
+{% raw %}
+<!-- Fixed Liquid syntax error -->
 
-The previous Python snippets were malformed and had indentation/logic issues.  
-This version uses the standard correct approach: **BFS from each building** and accumulate distances to empty cells.
-
-## Problem Description
+This is a graph traversal problem that requires finding the optimal location to build a new building such that the total distance to all existing buildings is minimized. The key insight is using BFS from each building to calculate distances and finding the spot with minimum total distance.
 
 Given a 2D grid where:
+- `0` represents empty land
+- `1` represents a building  
+- `2` represents an obstacle
 
-- `0` = empty land
-- `1` = building
-- `2` = obstacle
+Find the shortest distance from all buildings to a single empty land cell. Return -1 if it's impossible.
 
-Find an empty land cell such that the sum of shortest distances from this cell to **all buildings** is minimum. Return that minimum sum, or `-1` if no such cell exists.
-
-### Examples
-
-**Example 1**
-
-```text
+## Examples
+**Example 1:**
+```
 Input: grid = [[1,0,2,0,1],[0,0,0,0,0],[0,0,1,0,0]]
 Output: 7
+Explanation: The optimal location is (1,2) with total distance 7.
 ```
 
-**Example 2**
-
-```text
+**Example 2:**
+```
 Input: grid = [[1,0]]
 Output: 1
 ```
 
-**Example 3**
-
-```text
+**Example 3:**
+```
 Input: grid = [[1]]
 Output: -1
 ```
 
-### Constraints
+## Constraints
+- m == grid.length
+- n == grid[i].length
+- 1 <= m, n <= 50
+- grid[i][j] is either 0, 1, or 2
+- There will be at least one building in the grid
 
-- `m == grid.length`
-- `n == grid[i].length`
-- `1 <= m, n <= 50`
-- `grid[i][j]` is `0`, `1`, or `2`
-- At least one building exists
+## Thinking Process
 
-## Approaches
+There are three main approaches to solve this problem:
 
-### Approach 1: BFS from each empty land (brute force)
+1. **BFS from Each Empty Land**: For each empty land, BFS to all buildings
+2. **BFS from Each Building**: For each building, BFS to all empty lands and accumulate distances
+3. **Optimized BFS with Grid Modification**: Use grid values to track reachability
 
-For every `0` cell:
-- Run BFS and compute shortest distance to all buildings.
-- If it can reach all buildings, update minimum sum.
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-This is correct but expensive because we repeat BFS from many empty cells.
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
 
-#### Python
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Queue BFS** *(this problem)* | O(n) | O(n) | Shortest path in unweighted graphs |
+| Multi-source BFS | O(n) | O(n) | Start from all sources simultaneously |
+| 0-1 BFS / deque | O(n) | O(n) | Weights 0 or 1 |
+| Level-order BFS | O(n) | O(w) | Process by depth/layer |
+
+## Solution
+
+**Time Complexity:** O(m²n²) - For each empty land, BFS to all buildings  
+**Space Complexity:** O(mn) - For visited array and queue
 
 ```python
 from collections import deque
@@ -108,148 +127,65 @@ class Solution:
         return -1 if ans == float("inf") else ans
 ```
 
-**Time:** `O(E * m * n)` where `E` is #empty cells (worst `O((m*n)^2)`)  
-**Space:** `O(m * n)` for BFS visited/queue
+### Solution Explanation
 
----
+**Approach:** Queue BFS (this problem)
 
-### Approach 2: BFS from each building (recommended)
+**Key idea:** There are three main approaches to solve this problem:
 
-Instead of starting from each empty cell, start BFS from each building and accumulate:
+**How the code works:**
+1. **BFS from Each Empty Land**: For each empty land, BFS to all buildings
+2. **BFS from Each Building**: For each building, BFS to all empty lands and accumulate distances
+3. **Optimized BFS with Grid Modification**: Use grid values to track reachability
 
-- `dist_sum[r][c]`: total distance from all buildings to empty cell `(r,c)`
-- `reach_count[r][c]`: how many buildings can reach `(r,c)`
+**Walkthrough** — input `grid = [[1,0,2,0,1],[0,0,0,0,0],[0,0,1,0,0]]`, expected output `7`:
 
-At the end, valid candidate cells are those with:
-- `grid[r][c] == 0`
-- `reach_count[r][c] == building_count`
+The optimal location is (1,2) with total distance 7.
+## Step-by-Step Example
 
-Pick minimum `dist_sum`.
+Let's trace through Solution 2 with grid = `[[1,0,2,0,1],[0,0,0,0,0],[0,0,1,0,0]]`:
 
-#### Python
+**Step 1:** Count total houses = 3
 
-```python
-from collections import deque
-from typing import List
+**Step 2:** BFS from each building
+- Building at (0,0): Updates distances to all reachable empty lands
+- Building at (0,4): Updates distances to all reachable empty lands  
+- Building at (2,2): Updates distances to all reachable empty lands
 
+**Step 3:** Check each empty land
+- Only empty lands reachable by all 3 buildings are considered
+- Find minimum total distance among valid positions
 
-class Solution:
-    def shortestDistance(self, grid: List[List[int]]) -> int:
-        rows, cols = len(grid), len(grid[0])
-        dist_sum = [[0] * cols for _ in range(rows)]
-        reach_count = [[0] * cols for _ in range(rows)]
-        buildings = 0
-        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+**Result:** Position (1,2) with total distance 7
 
-        for r in range(rows):
-            for c in range(cols):
-                if grid[r][c] != 1:
-                    continue
+## Approach Comparison
 
-                buildings += 1
-                visited = [[False] * cols for _ in range(rows)]
-                visited[r][c] = True
-                q = deque([(r, c, 0)])
-
-                while q:
-                    cr, cc, d = q.popleft()
-                    for dr, dc in dirs:
-                        nr, nc = cr + dr, cc + dc
-                        if not (0 <= nr < rows and 0 <= nc < cols):
-                            continue
-                        if visited[nr][nc] or grid[nr][nc] != 0:
-                            continue
-
-                        visited[nr][nc] = True
-                        dist_sum[nr][nc] += d + 1
-                        reach_count[nr][nc] += 1
-                        q.append((nr, nc, d + 1))
-
-        ans = float("inf")
-        for r in range(rows):
-            for c in range(cols):
-                if grid[r][c] == 0 and reach_count[r][c] == buildings:
-                    ans = min(ans, dist_sum[r][c])
-        return -1 if ans == float("inf") else ans
-```
-
-**Time:** `O(B * m * n)` where `B` is #buildings (worst `O((m*n)^2)`)  
-**Space:** `O(m * n)` for `dist_sum`, `reach_count`, and BFS `visited`
-
----
-
-### Approach 3: Optimized BFS with grid-state pruning
-
-Same BFS-from-buildings idea, but avoid visiting cells that were not reachable by previous buildings.
-
-Common trick:
-- Maintain `empty_land_value` initially `0`
-- For each building BFS, only visit cells with value `empty_land_value`
-- Mark visited empty cells by decrementing grid value (e.g., `0 -> -1 -> -2 ...`)
-
-This prunes impossible cells early and improves constants.
-
-#### Python
-
-```python
-from collections import deque
-from typing import List
-
-
-class Solution:
-    def shortestDistance(self, grid: List[List[int]]) -> int:
-        rows, cols = len(grid), len(grid[0])
-        total = [[0] * cols for _ in range(rows)]
-        empty_land_value = 0
-        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-
-        min_dist = float("inf")
-
-        for r in range(rows):
-            for c in range(cols):
-                if grid[r][c] != 1:
-                    continue
-
-                min_dist = float("inf")
-                q = deque([(r, c)])
-                steps = 0
-
-                while q:
-                    steps += 1
-                    for _ in range(len(q)):
-                        cr, cc = q.popleft()
-                        for dr, dc in dirs:
-                            nr, nc = cr + dr, cc + dc
-                            if not (0 <= nr < rows and 0 <= nc < cols):
-                                continue
-                            if grid[nr][nc] != empty_land_value:
-                                continue
-
-                            grid[nr][nc] -= 1
-                            total[nr][nc] += steps
-                            min_dist = min(min_dist, total[nr][nc])
-                            q.append((nr, nc))
-
-                empty_land_value -= 1
-
-        return -1 if min_dist == float("inf") else min_dist
-```
-
-**Time:** still worst-case `O(B * m * n)`  
-**Space:** `O(m * n)` (or less auxiliary compared to approach 2)
-
-## Runtime/Space Tradeoff
-
-| Approach | Time | Space | Notes |
-|---|---:|---:|---|
-| BFS from each empty land | `O(E*m*n)` | `O(m*n)` | Easiest conceptually, often too slow |
-| BFS from each building | `O(B*m*n)` | `O(m*n)` | Clean and standard accepted approach |
-| BFS + grid-state pruning | `O(B*m*n)` | `O(m*n)` | Faster in practice due to pruning |
+| Approach | Pros | Cons |
+|----------|------|------|
+| **Solution 1** | Simple logic, easy to understand | Less efficient, modifies original grid |
+| **Solution 2** | Clean separation, tracks reachability | Uses extra space for distance tracking |
+| **Solution 3** | Most efficient, reuses grid space | Complex logic, harder to debug |
 
 ## Common Mistakes
 
-- Running BFS through buildings/obstacles (should only expand into `0` cells).
-- Not tracking how many buildings can reach each empty cell.
-- Returning min distance for a cell not reachable by all buildings.
-- Wrong BFS distance update (distance should increase per level/edge).
+- **Incorrect Distance Calculation**: Not using level-by-level BFS
+- **Reachability Issues**: Not checking if all buildings can reach empty land
+- **Grid Modification**: Modifying original grid without proper restoration
+- **Boundary Conditions**: Not handling edge cases properly
 
+---
+
+## References
+
+- [LC 317: Shortest Distance from All Buildings on LeetCode](https://www.leetcode.com/problems/shortest-distance-from-all-buildings/)
+- [LeetCode Discuss — LC 317: Shortest Distance from All Buildings](https://www.leetcode.com/problems/shortest-distance-from-all-buildings/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/shortest-distance-from-all-buildings/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **BFS Level Processing**: Process each level of BFS to calculate distances correctly
+2. **Reachability Check**: Ensure all buildings can reach the chosen empty land
+3. **Distance Accumulation**: Sum distances from all buildings to each empty land
+4. **Grid Optimization**: Use grid modification to track reachability efficiently
+
+{% endraw %}

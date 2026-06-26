@@ -1,38 +1,100 @@
 ---
 layout: post
 title: "[Medium] 2571. Minimum Operations to Reduce an Integer to 0"
-date: 2026-04-20 00:00:00 -0700
-categories: [leetcode, medium, math, greedy, bit-manipulation]
+date: 2026-04-20
+categories: [leetcode, medium, bit-manipulation]
+tags: [leetcode, medium, bit-manipulation, greedy, bfs, math]
 permalink: /2026/04/20/medium-2571-minimum-operations-to-reduce-an-integer-to-0/
-tags: [leetcode, medium, greedy, bit-manipulation, bfs, binary]
 ---
 
-# [Medium] 2571. Minimum Operations to Reduce an Integer to 0
+{% raw %}
+Given a positive integer `n`, you can add or subtract any power of 2 in one operation. Return the **minimum number of operations** to reduce `n` to `0`.
 
-You are given a positive integer `n`. In one operation you may **add or subtract** any **power of two** (`± 2^k`, `k ≥ 0`). Return the **minimum** number of operations to reach `0`.
+## Examples
 
-Constraints: `1 ≤ n ≤ 10^5`.
+**Example 1:**
 
-## Problem summary
+```
+Input: n = 39
+Output: 3
 
-A naive “only subtract `1`” mindset misses the point: sometimes **adding** creates a **carry** and clears **several trailing 1 bits** at once, so fewer operations than subtracting bit by bit.
+39 = 100111₂
+  39 + 1 = 40 (101000₂)     op 1: +2⁰
+  40 - 8 = 32 (100000₂)     op 2: -2³
+  32 - 32 = 0               op 3: -2⁵
+```
 
-## Key insight (binary)
+**Example 2:**
 
-Write `n` in binary. Each operation `± 2^k` toggles the cost landscape on the **low bits**. The optimal strategy is a **greedy bit rule**: when you see a run of `1`s, you either chip one `1` away or **round up** to eliminate a whole block (analogous to `7 → 8 → 0` in two operations instead of three subtractions of `1`).
+```
+Input: n = 54
+Output: 3
 
-## Greedy simulation (`+1` / `-1` on the integer)
+54 = 110110₂
+  54 + 2 = 56 (111000₂)     op 1: +2¹
+  56 + 8 = 64 (1000000₂)    op 2: +2³
+  64 - 64 = 0               op 3: -2⁶
+```
 
-Work on the current value `n`:
+## Constraints
 
-- If `n` is **even**, the lowest set bit is not in the ones place of the *current* decision — you can conceptually **shift right** (`n >>= 1`) to look at the next bit. (**This shift is bookkeeping, not an operation** in the problem statement.)
-- If `n` is **odd** and `n > 1`:
-  - If the two least significant bits are `11` (`(n & 3) == 3`), **add `1`** (carry: merge a block of ones).
-  - Otherwise **subtract `1`**.
-- If `n == 1`, one more operation removes it.
+- `1 <= n <= 10^5`
 
-Each **`+1` / `-1`** corresponds to one real `± 2^k` operation; the **shifts are free** in this accounting.
+## Thinking Process
 
+### Binary Perspective
+
+Every number is already a sum of powers of 2 (its binary representation). Each `1` bit could be removed by subtracting that power -- that's the naive approach, costing `popcount(n)` operations.
+
+But we can do **better** by adding a power of 2 to create carries that collapse consecutive `1`s.
+
+### When to Add vs Subtract
+
+```
+n = 7 = 111₂
+
+Naive (subtract each bit): 4 + 2 + 1 → 3 ops
+Smart: 7 + 1 = 8 (1000₂), then 8 - 8 = 0 → 2 ops
+```
+
+Adding `1` to a block of consecutive `1`s collapses them all into a single `1` at a higher position.
+
+### The Greedy Rule
+
+Scan from LSB to MSB:
+- **Bit is 0** -- shift right, nothing to do
+- **Bit is 1:**
+  - If the next bit is also `1` (i.e., `n & 3 == 3`) -- **add 1** (carry forward to collapse the block)
+  - Otherwise (isolated `1`) -- **subtract 1** (cheaper to just remove it)
+
+Each add/subtract counts as one operation. Shifting doesn't count (we're just moving to the next bit position).
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
+
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Queue BFS** *(this problem)* | O(n) | O(n) | Shortest path in unweighted graphs |
+| Multi-source BFS | O(n) | O(n) | Start from all sources simultaneously |
+| 0-1 BFS / deque | O(n) | O(n) | Weights 0 or 1 |
+| Level-order BFS | O(n) | O(w) | Process by depth/layer |
+
+## Solution
 ```python
 class Solution:
     def minOperations(self, n: int) -> int:
@@ -51,95 +113,80 @@ class Solution:
         return ops
 ```
 
-### Example: `n = 7` (`111`)
+### Solution Explanation
 
-- Add `1` → `8` (`1000`), then subtract `8` → `0`: **2** operations (not three separate `-1`s).
+**Approach:** Queue BFS (this problem)
 
-### Example: `n = 23` (`10111`)
+**Key idea:** ### Binary Perspective
 
-The minimum is **3** operations (same as LeetCode’s style of counting only real `± 2^k` steps). A line-by-line trace of the simulation above ends with `ops == 3` — do **not** count each `>>` as an operation; only the `+1` / `-1` steps increment `ops`.
+**How the code works:**
+- **Bit is 0** -- shift right, nothing to do
+- **Bit is 1:**
+- If the next bit is also `1` (i.e., `n & 3 == 3`) -- **add 1** (carry forward to collapse the block)
+- Otherwise (isolated `1`) -- **subtract 1** (cheaper to just remove it)
 
-## Alternative greedy: scan runs of `1`s (no `n += 1` loop)
+**Walkthrough** — input `n = 39`, expected output `3`:
 
-Another standard implementation walks `n` in binary from LSB to MSB, counting **consecutive `1`s** and charging operations when a `0` ends a run (or at the end). It matches the same optimal count in `O(log n)` time and `O(1)` space:
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Comparison
 
-```python
-class Solution:
-    def minOperations(self, n: int) -> int:
-        ans = cnt = 0
-        while n:
-            if n & 1:
-                cnt += 1
-            elif cnt:
-                ans += 1
-                cnt = 0 if cnt == 1 else 1
-            n >>= 1
-        if cnt == 1:
-            ans += 1
-        elif cnt > 1:
-            ans += 2
-        return ans
-```
+| Aspect | Greedy (Bit Manipulation) | BFS |
+|---|---|---|
+| Time | O(log n) | O(n log n) |
+| Space | O(1) | O(n) |
+| Correctness proof | Requires greedy argument | Guaranteed (shortest path) |
+| Interview value | Shows deep bit intuition | Shows BFS modeling skill |
+| Best for | Production / follow-up optimization | Proving correctness / verification |
 
-## BFS (shortest path on an implicit graph)
+BFS is useful as a **verification tool**: run it on small inputs to confirm the greedy produces optimal results. In interviews, mentioning BFS as a brute-force baseline before presenting the greedy shows strong problem-solving structure.
 
-Model states as integers reachable by `x ↦ x ± 2^k`. Breadth-first search from `n` to `0` gives the minimum number of edges — **always correct**, no ad‑hoc proof needed.
+## Why the Greedy is Optimal
 
-- **Nodes:** integers in a bounded range (for `n ≤ 10^5`, keeping `[0, hi]` with `hi` around `5 · 10^5` is safe so all optimal paths stay inside the bound).
-- **Edges:** from each state, try every power of two up to `hi` (about `log hi` powers).
+Consider a block of k consecutive `1`s:
 
-```python
-from collections import deque
+| Strategy | Operations |
+|---|---|
+| Subtract each bit individually | k |
+| Add 1 to collapse, then subtract the resulting bit | 2 |
 
+For k ge 3, adding is strictly better. For k = 2 (like `11₂ = 3`), both cost 2 operations:
+- Add: 3 + 1 = 4, 4 - 4 = 0 (2 ops)
+- Subtract: 3 - 1 = 2, 2 - 2 = 0 (2 ops)
 
-class Solution:
-    def minOperations(self, n: int) -> int:
-        if n == 0:
-            return 0
-        hi = 500_000
-        powers = []
-        p = 1
-        while p <= hi:
-            powers.append(p)
-            p <<= 1
+The greedy chooses to add for `k >= 2`, which is safe since it never costs more.
 
-        vis = {n}
-        q = deque([(n, 0)])
-        while q:
-            x, d = q.popleft()
-            if x == 0:
-                return d
-            for w in powers:
-                for nx in (x + w, x - w):
-                    if 0 <= nx <= hi and nx not in vis:
-                        vis.add(nx)
-                        q.append((nx, d + 1))
-        return -1
-```
+## Common Mistakes
 
-**Caveat:** This is much **slower** in practice (large visited set, branching factor `2 × #powers`). It is best for **validation**, small `n`, or when you already know the state space is tiny.
+- **Treating `n = 1` separately:** After all shifts, `n == 1` is the base case (isolated single bit). Forgetting this causes infinite loops.
+- **Using `n & 1 == 1` instead of `n & 3 == 3`:** The decision depends on whether the **next** bit is also set, not just the current bit
+- **Counting shifts as operations:** Shifting is just moving to the next bit position, not an actual add/subtract operation
+- **BFS without bounds:** Without capping the search space, BFS explodes in memory
 
-## Greedy vs BFS
+## Key Takeaways
 
-| | Greedy (bit rules) | BFS |
-| -- | ------------------ | --- |
-| **Time** | `O(log n)` | Roughly `O(V + E)` over reachable states; much larger here |
-| **Space** | `O(1)` | `O(size of visited set)` |
-| **Use** | Production / contests | Sanity check, proof by construction, tiny bounds |
+- **Think in binary** when the problem involves powers of 2
+- **Consecutive `1`s can be collapsed** by adding 1 -- this is the core greedy insight
+- Check `n & 3 == 3` (two lowest bits both set) to decide add vs subtract
+- BFS gives a provably optimal baseline; greedy gives O(log n) performance
+- The pattern "add to create carry, then subtract" appears in many bit manipulation problems
 
-## Complexity (greedy)
+## Related Problems
 
-- **Time:** `O(log n)` bit length.
-- **Space:** `O(1)`.
+- [397. Integer Replacement](https://www.leetcode.com/problems/integer-replacement/) -- similar greedy on even/odd with bit analysis
+- [191. Number of 1 Bits](https://www.leetcode.com/problems/number-of-1-bits/) -- popcount baseline
+- [1342. Number of Steps to Reduce a Number to Zero](https://www.leetcode.com/problems/number-of-steps-to-reduce-a-number-to-zero/) -- simpler version with only divide/subtract
+- [260. Single Number III](https://www.leetcode.com/problems/single-number-iii/) -- bit manipulation with XOR
 
-## Pattern
+## References
 
-**Bit manipulation + greedy “carry” decisions** — same family as several “integer replacement” / “minimum steps in binary” problems.
+- [LC 2571: Minimum Operations to Reduce an Integer to 0 on LeetCode](https://www.leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0/)
+- [LeetCode Discuss — LC 2571: Minimum Operations to Reduce an Integer to 0](https://www.leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/minimum-operations-to-reduce-an-integer-to-0/editorial/) *(may require premium)*
 
-### Edge case: `n == 3` (`11`)
+## Template Reference
 
-Greedy may suggest `+1 → 4 → 0` (two operations) or `−1 → 2 → 0` (two operations). Same optimum — either path is fine.
+- [Math & Bit Manipulation](/posts/2025-11-24-leetcode-templates-math-bit-manipulation/)
 
-## Takeaway
-
-The problem is **not** “subtract powers of two until zero” in the naive sense; it is **structuring carries** in binary. **Greedy** is the right tool; **BFS** matches the graph formulation and is useful to **cross-check** the answer.
+{% endraw %}

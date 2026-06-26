@@ -1,32 +1,29 @@
 ---
 layout: post
 title: "[Medium] 713. Subarray Product Less Than K"
-date: 2026-03-21 00:00:00 -0700
-categories: [leetcode, medium, array, sliding-window]
-tags: [leetcode, medium, array, sliding-window, two-pointers]
+date: 2026-03-21
+categories: [leetcode, medium, sliding-window, two-pointers]
+tags: [leetcode, medium, sliding-window, two-pointers, array]
 permalink: /2026/03/21/medium-713-subarray-product-less-than-k/
 ---
 
-# [Medium] 713. Subarray Product Less Than K
-
-## Problem Statement
-
-Given an array of integers `nums` and an integer `k`, return the number of **contiguous** subarrays where the **product** of all the elements in the subarray is **strictly less than** `k`.
+{% raw %}
+Given an array of positive integers `nums` and an integer `k`, return the number of contiguous subarrays where the product of all elements is **strictly less than** `k`.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: nums = [10,5,2,6], k = 100
 Output: 8
-# Subarrays with product < 100:
-# [10], [5], [2], [6], [10,5], [5,2], [2,6], [5,2,6]
+Explanation: The 8 subarrays with product < 100:
+  [10], [5], [2], [6], [10,5], [5,2], [2,6], [5,2,6]
 ```
 
 **Example 2:**
 
-```python
+```
 Input: nums = [1,2,3], k = 0
 Output: 0
 ```
@@ -37,83 +34,112 @@ Output: 0
 - `1 <= nums[i] <= 1000`
 - `0 <= k <= 10^6`
 
-## Clarification Questions
+## Thinking Process
 
-1. **Strictly less than k**: Product must be `< k`, not `<= k`?  
-   **Assumption**: Yes.
-2. **k ≤ 1**: If `k <= 1`, no positive product of positive integers can be `< k`?  
-   **Assumption**: Return `0` (handles `k == 0` and `k == 1`).
-3. **All positive**: `nums[i] >= 1` — no zeros or negatives in constraints?  
-   **Assumption**: Yes — sliding window with product division is safe.
+### Why Sliding Window?
 
-## Interview Deduction Process (20 minutes)
+All elements are **positive**, so expanding the window (adding an element) can only **increase** the product, and shrinking (removing from the left) can only **decrease** it. This monotonic property is exactly what makes a sliding window work.
 
-**Step 1: Brute force (5 min)**  
-For each `(left, right)`, compute product — O(n²) or worse. Too slow for n up to 3×10⁴.
+### Counting Trick
 
-**Step 2: Sliding window (10 min)**  
-Because all elements are **positive**, multiplying more elements only **increases** the product. For a fixed `right`, if we shrink `left` until `product < k`, every subarray ending at `right` with `left' ∈ [left, right]` has product `< k`. Count = `right - left + 1`.
+When `right` is fixed and the window `[left, right]` has product < k, how many valid subarrays **end at** `right`?
 
-**Step 3: Edge case k (5 min)**  
-If `k <= 1`, no valid subarray (for positive integers). Early return `0`.
+They are: `[left, right]`, `[left+1, right]`, ..., `[right, right]` -- that's `right - left + 1` subarrays.
 
-## Solution Approach
+By summing this for every `right`, we count all valid subarrays exactly once.
 
-**Two pointers + product:** Maintain `[left, right]` with product of that window. Expand `right`, multiply `nums[right]`. While `product >= k`, divide out `nums[left]` and increment `left`. Add `(right - left + 1)` to the answer — that is the number of valid subarrays ending at `right`.
+### Walk-through
 
-### Key Insights
+```
+nums = [10, 5, 2, 6], k = 100
 
-1. **Positivity** — Monotonicity of product allows shrinking `left` only from the left.
-2. **Count trick** — For each `right`, valid subarrays ending at `right` are exactly those starting at `left, left+1, …, right`.
-3. **k ≤ 1** — Quick reject; avoids useless loops.
+right=0: prod=10 < 100,  cnt += 1  → [10]
+right=1: prod=50 < 100,  cnt += 2  → [5], [10,5]
+right=2: prod=100 >= 100, shrink: left=1, prod=10
+          prod=10 < 100,  cnt += 2  → [2], [5,2]
+right=3: prod=60 < 100,  cnt += 3  → [6], [2,6], [5,2,6]
 
-## Python Solution
-
-### Sliding window (O(n) time, O(1) space)
-
-```python
-from typing import List
-
-
-class Solution:
-    def numSubarrayProductLessThanK(self, nums: List[int], k: int) -> int:
-        if k <= 1:
-            return 0
-        prod = 1
-        left = 0
-        cnt = 0
-        for right in range(len(nums)):
-            prod *= nums[right]
-            while prod >= k:
-                prod //= nums[left]
-                left += 1
-            cnt += right - left + 1
-        return cnt
+Total: 1 + 2 + 2 + 3 = 8 ✓
 ```
 
-## Algorithm Explanation
+### Edge Case
 
-We keep a window `[left, right]` whose product is `< k`. When we add `nums[right]`, the product may become `>= k`; we repeatedly remove `nums[left]` from the product (divide) and move `left` right until the product is again `< k` (or the window is empty in the sense that we cannot shrink further — but with `k > 1` and positive nums, we always end with a valid window length). Every subarray ending at `right` with start index in `[left, right]` has product `< k`, giving `right - left + 1` subarrays.
+If `k <= 1`, no product of positive integers can be strictly less than `k`, so return 0 immediately.
 
-## Complexity Analysis
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 115" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Sliding window</text>
 
-- **Time**: O(n) — each index enters and leaves the window at most once.
-- **Space**: O(1).
+  <rect x="20" y="45" width="32" height="32" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="36" y="63" text-anchor="middle" font-size="11">a</text>
+  <rect x="52" y="45" width="32" height="32" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="68" y="63" text-anchor="middle" font-size="11">b</text>
+  <rect x="84" y="45" width="32" height="32" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="100" y="63" text-anchor="middle" font-size="11">c</text>
+  <rect x="116" y="45" width="32" height="32" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="132" y="63" text-anchor="middle" font-size="11">d</text>
+  <rect x="148" y="45" width="32" height="32" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="164" y="63" text-anchor="middle" font-size="11">e</text>
+  <rect x="52" y="38" width="64" height="42" rx="4" fill="none" stroke="#C4956A" stroke-width="2" stroke-dasharray="4"/>
+  <text x="84" y="32" text-anchor="middle" font-size="10" fill="#C4956A" font-weight="600">window</text>
+  <text x="110" y="105" text-anchor="middle" font-size="11" fill="#6B6560">expand right, shrink left when invalid</text>
 
-## Edge Cases
+</svg>
 
-- `k <= 1` → `0`.
-- Single element `nums = [5]`, `k = 10` → `1`.
-- Large `k` — still one linear pass.
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Fixed-size window** *(this problem)* | O(n) | O(1) | Window size known upfront |
+| Variable-size window | O(n) | O(1) | Expand/shrink until valid |
+| Window + hash map | O(n) | O(k) | Track character/count frequencies |
+| Deque window max | O(n) | O(k) | Monotonic deque for max/min in window |
+
+## Solution
+```python
+Input: nums = [10,5,2,6], k = 100
+Output: 8
+# Subarrays with product < 100:
+# [10], [5], [2], [6], [10,5], [5,2], [2,6], [5,2,6]
+```
+
+### Solution Explanation
+
+**Approach:** Fixed-size window (this problem)
+
+**Key idea:** ### Why Sliding Window?
+
+**Walkthrough** — input `nums = [10,5,2,6], k = 100`, expected output `8`:
+
+The 8 subarrays with product < 100:
+  [10], [5], [2], [6], [10,5], [5,2], [2,6], [5,2,6]
+## Why `long long` for the Product?
+
+Elements can be up to 1000 and the array up to 30000 long. While the `while` loop keeps the product below `k` (≤ 10^6), a single multiplication `currProd *= nums[right]` can momentarily overflow `int` before the shrink loop fires. Using `long long` prevents this.
 
 ## Common Mistakes
 
-- **Forgetting `k <= 1`** — Without it, the `while prod >= k` loop can misbehave or overcount.
-- **Using `<= k` in problem vs code** — Problem asks strictly `< k`; loop condition is `prod >= k`.
-- **Zeros or negatives** — This solution assumes all positive; the given constraints satisfy that.
+- Forgetting the `k <= 1` early return (causes infinite shrink loop or wrong count)
+- Counting subarrays starting at `left` instead of ending at `right` (double-counting)
+- Using `int` for the running product (overflow before shrinking)
+
+## Key Takeaways
+
+- **"Count subarrays with bounded aggregate of positive values"** = sliding window
+- The counting formula `right - left + 1` per step is reusable across many sliding window counting problems
+- Positive elements guarantee monotonic product behavior, which is the precondition for the sliding window to work
 
 ## Related Problems
 
-- [LC 209: Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/) — Sliding window on sum.
-- [LC 904: Fruit Into Baskets](https://leetcode.com/problems/fruit-into-baskets/) — At most K distinct sliding window.
-- [LC 325: Maximum Size Subarray Sum Equals k](https://leetcode.com/problems/maximum-size-subarray-sum-equals-k/) — Prefix sum + map.
+- [209. Minimum Size Subarray Sum](https://www.leetcode.com/problems/minimum-size-subarray-sum/) -- sliding window on sum
+- [3. Longest Substring Without Repeating Characters](https://www.leetcode.com/problems/longest-substring-without-repeating-characters/) -- sliding window on uniqueness
+- [992. Subarrays with K Different Integers](https://www.leetcode.com/problems/subarrays-with-k-different-integers/) -- sliding window counting
+- [560. Subarray Sum Equals K](https://www.leetcode.com/problems/subarray-sum-equals-k/) -- prefix sum (not sliding window since negatives possible)
+
+## References
+
+- [LC 713: Subarray Product Less Than K on LeetCode](https://www.leetcode.com/problems/subarray-product-less-than-k/)
+- [LeetCode Discuss — LC 713: Subarray Product Less Than K](https://www.leetcode.com/problems/subarray-product-less-than-k/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/subarray-product-less-than-k/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/)
+
+{% endraw %}

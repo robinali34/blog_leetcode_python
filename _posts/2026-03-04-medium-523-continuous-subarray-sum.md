@@ -1,204 +1,163 @@
 ---
 layout: post
 title: "[Medium] 523. Continuous Subarray Sum"
-date: 2026-03-04 00:00:00 -0700
-categories: [leetcode, medium, array, prefix-sum, hash-map]
-tags: [leetcode, medium, array, prefix-sum, hash-map, math]
+date: 2026-03-04
+categories: [leetcode, medium, prefix-sum, hash]
+tags: [leetcode, medium, prefix-sum, hash, math]
 permalink: /2026/03/04/medium-523-continuous-subarray-sum/
 ---
 
-# [Medium] 523. Continuous Subarray Sum
-
-## Problem Statement
-
-Given an integer array `nums` and an integer `k`, return `True` if `nums` has a **continuous subarray** of length at least **2** whose elements sum up to a multiple of `k`, or `False` otherwise.
-
-Formally, find `i < j` such that:
-
-```text
-sum(nums[i..j]) % k == 0
-```
-
-with `(j - i + 1) >= 2`.
-
-If `k == 0`, then we are looking for a continuous subarray of length at least 2 whose sum is exactly 0.
+{% raw %}
+Given an integer array `nums` and an integer `k`, return `true` if `nums` has a **good subarray**, i.e., a contiguous subarray of length **at least 2** whose sum is a multiple of `k`.
 
 ## Examples
 
 **Example 1:**
 
-```python
-Input: nums = [23, 2, 4, 6, 7], k = 6
-Output: True
-Explanation: [2, 4] has sum 6, which is a multiple of 6.
+```
+Input: nums = [23,2,4,6,7], k = 6
+Output: true
+Explanation: [2,4] is a subarray of size 2 whose sum 6 is a multiple of 6.
 ```
 
 **Example 2:**
 
-```python
-Input: nums = [23, 2, 6, 4, 7], k = 6
-Output: True
-Explanation: [23, 2, 6, 4, 7] has sum 42, which is a multiple of 6.
+```
+Input: nums = [23,2,6,4,7], k = 6
+Output: true
+Explanation: [23,2,6,4,7] sums to 42, which is a multiple of 6.
 ```
 
 **Example 3:**
 
-```python
-Input: nums = [23, 2, 6, 4, 7], k = 13
-Output: False
+```
+Input: nums = [23,2,6,4,7], k = 13
+Output: false
 ```
 
 ## Constraints
 
 - `1 <= nums.length <= 10^5`
 - `0 <= nums[i] <= 10^9`
-- `-10^9 <= k <= 10^9`
+- `0 <= sum(nums[i]) <= 2^31 - 1`
+- `1 <= k <= 2^31 - 1`
 
-## Clarification Questions
+## Common Approaches
 
-1. **Length requirement**: Subarray must have length **at least 2**, correct?  
-   **Assumption**: Yes — single-element subarrays do not count.
-2. **k can be zero or negative**: Do we need to handle `k == 0` and negative `k`?  
-   **Assumption**: Yes — treat `k == 0` as a special case; for negative `k`, only the absolute value matters in modulo.
-3. **Empty subarray**: Are empty subarrays allowed?  
-   **Assumption**: No — we only consider non-empty continuous subarrays.
+Typical techniques for this pattern:
 
-## Interview Deduction Process (20 minutes)
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
 
-**Step 1: Brute force idea (5 min)**  
-Check all subarrays of length ≥ 2, compute sums, and check if divisible by `k`.  
-Time complexity: \(O(n^2)\) — too slow for \(n = 10^5\).
+## Thinking Process
 
-**Step 2: Prefix sums & mod (7 min)**  
-Let `prefix[i]` be the sum of the first `i` elements.  
-For subarray `nums[i..j]`:
+### Prefix Sum + Modular Arithmetic
 
-```text
-sum(nums[i..j]) = prefix[j + 1] - prefix[i]
-```
+If `prefix[i] % k == prefix[j] % k` for some `j < i`, then the subarray sum `prefix[i] - prefix[j]` is divisible by `k`.
 
-We want:
+We need the subarray to have length **at least 2**, so we need `i - j >= 2`.
 
-```text
-(prefix[j + 1] - prefix[i]) % k == 0
-⇒ prefix[j + 1] % k == prefix[i] % k
-```
+### Naive Approach
 
-So we just need to find **two prefix sums** with the **same mod** value, and the distance between their indices must be at least 2 (since subarray length ≥ 2).
+Check all pairs `(i, j)` -- O(n^2). Too slow.
 
-**Step 3: One-pass tracking (8 min)**  
-Instead of storing all prefix sums, we track:
-- A set (or map) of **previous modulo values**.
-- The modulo at each step and the previous modulo from the last position.
+### Hash Map Approach
 
-This variant (using a set and `previous_mod`) ensures:
-- We only add a modulo to the set **after** moving at least one step ahead, ensuring subarray length ≥ 2.
+Store the **earliest index** where each remainder was seen. When we see the same remainder again, check if the gap is at least 2.
 
-## Solution Approach
+Initialize with `map[0] = -1` to handle the case where a prefix sum itself is divisible by `k` (subarray starting from index 0).
 
-We maintain:
+### Hash Set Approach (with 1-Step Delay)
 
-- `running_sum` — prefix sum as we iterate.
-- `hash_set` — set of prefix-sum modulo `k` values we have seen **at least one index before the current**.
-- `previous_mod` — modulo of the prefix sum up to the previous element.
+If we only need to know *existence* (not index), we can use a set instead. But to enforce the "length >= 2" constraint, we **delay insertion by one step**: at index `i`, we insert the remainder from index `i-1`. This ensures any match found corresponds to a subarray of size ≥ 2.
 
-Algorithm:
+**Why the delay?** Without it, a remainder inserted at index `i` could match at index `i+1`, producing a subarray of size 1.
 
-1. Handle `k == 0` separately: look for two consecutive zeros, because sum must be exactly 0 and length ≥ 2.
-2. Normalize `k` as positive (e.g., `k = abs(k)`).
-3. Initialize:
-   - `hash_set = set()`
-   - `running_sum = 0`
-   - `previous_mod = 0`
-4. For each `num` in `nums`:
-   - Update `running_sum += num`.
-   - Compute `mod = running_sum % k`.
-   - If `mod` is already in `hash_set`, we have a previous prefix with same model value at least 2 indices apart → return `True`.
-   - Add `previous_mod` to the set (so next step can use it).
-   - Set `previous_mod = mod`.
-5. If we finish loop without finding such a pair, return `False`.
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
 
-### Key Insights
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
 
-1. **Equal prefix-sum mod means subarray sum is multiple of k**  
-   If `prefix[a] % k == prefix[b] % k`, then the subarray sum between them is divisible by `k`.
+</svg>
 
-2. **Length ≥ 2 via delayed insert**  
-   By adding `previous_mod` to the set only **after** processing the current element, we ensure any match corresponds to a subarray of length at least 2.
+## Approach 1: Hash Map -- O(n)
 
-3. **Special case `k == 0`**  
-   We cannot take modulo 0, so we directly look for any pair of consecutive zeros.
-
-## Python Solution
-
+Store the first occurrence index of each prefix remainder. Only update the map if the remainder hasn't been seen before (we want the earliest index to maximize subarray length).
 ```python
-from typing import List
-
-
-class Solution:
-    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
-        n = len(nums)
-
-        # Special case for k == 0: look for at least two consecutive zeros
-        if k == 0:
-            for i in range(n - 1):
-                if nums[i] == 0 and nums[i + 1] == 0:
-                    return True
-            return False
-
-        k = abs(k)
-        hash_set = set()
-        running_sum = 0
-        previous_mod = 0
-
-        for num in nums:
-            running_sum += num
-            mod = running_sum % k
-
-            if mod in hash_set:
-                return True
-
-            hash_set.add(previous_mod)
-            previous_mod = mod
-
-        return False
+Input: nums = [23, 2, 4, 6, 7], k = 6
+Output: True
+Explanation: [2, 4] has sum 6, which is a multiple of 6.
 ```
 
-## Algorithm Explanation
+### Solution Explanation
 
-- `running_sum` accumulates the total from the start.
-- `mod = running_sum % k` is the current prefix sum modulo `k`.
-- If we have seen this `mod` value before (in `hash_set`), then there exists an earlier prefix with the same modulo:
+**Approach:** Brute force (this problem)
 
-  ```text
-  prefix[i] % k == prefix[j] % k  ⇒  sum(nums[i..j-1]) is multiple of k
-  ```
+**Key idea:** ### Prefix Sum + Modular Arithmetic
 
-- The use of `previous_mod` ensures we only add the modulo from the **previous** index into the set, enforcing that the subarray length is at least 2.
+**How the code works:**
+**Why the delay?** Without it, a remainder inserted at index `i` could match at index `i+1`, producing a subarray of size 1.
 
-For `k == 0`, a subarray sum must be exactly 0. The simplest way for non-negative `nums` is to look for two consecutive zeros, which ensures a length-2 subarray with sum 0.
+**Walkthrough** — input `nums = [23,2,4,6,7], k = 6`, expected output `true`:
 
-## Complexity Analysis
+[2,4] is a subarray of size 2 whose sum 6 is a multiple of 6.
+## Approach 2: Hash Set with Delayed Insertion -- O(n)
 
-- **Time Complexity**: \(O(n)\), where \(n = \text{len}(nums)\) — single pass through the array.
-- **Space Complexity**: \(O(\min(n, |k|))\) in worst case for the set of mod values, practically \(O(n)\).
+Insert each remainder one step late, so any match guarantees a gap of at least 2.
+```python
+Input: nums = [23, 2, 6, 4, 7], k = 6
+Output: True
+Explanation: [23, 2, 6, 4, 7] has sum 42, which is a multiple of 6.
+```
 
-## Edge Cases
+**Time**: O(n)
+**Space**: O(min(n, k))
 
-- `k == 0` and no two consecutive zeros → must return `False`.
-- All numbers are multiples of `k` — many valid subarrays exist.
-- Very large `k` (larger than sum of all numbers) — only subarray sum 0 (from zeros) can work.
-- Negative `k` — `abs(k)` works because divisibility does not depend on the sign.
+**How the delay works:**
+
+| Step | `sum` | `cur` (sum%k) | Check against set | Then insert `prev` | `prev` becomes |
+|---|---|---|---|---|---|
+| init | 0 | - | - | - | 0 |
+| i=0 | nums[0] | nums[0]%k | {} | 0 | nums[0]%k |
+| i=1 | nums[0..1] | sum%k | {0} | prefix[1]%k | prefix[2]%k |
+
+At `i=1`, the set contains `{0}` (prefix[0]'s remainder), so any match means the subarray spans indices 0 to 1 -- size 2. The remainder from `i=0` isn't available until `i=2`, enforcing a minimum gap.
 
 ## Common Mistakes
 
-- Modulo by zero when `k == 0` — must handle this case specially.
-- Forgetting the **length ≥ 2** requirement (e.g., treating a single element that is multiple of `k` as valid).
-- Using a set of all `mod`s seen so far **before** enforcing distance, which can accidentally count subarrays of length 1.
-- Not normalizing negative `k`, which can lead to confusing modulo behavior.
+- **Missing `map[0] = -1` or initial `prev = 0`** -- fails when the entire prefix sum is divisible by `k` (e.g., `[1, 5]` with `k = 6`)
+- **Not enforcing length >= 2** -- inserting the current remainder immediately allows size-1 subarrays to match
+- **Updating the map when remainder already exists** -- always keep the *earliest* index to maximize the gap
+
+## Key Takeaways
+
+- **Prefix sum + remainder** is the standard technique for "subarray sum divisible by k"
+- The "at least size 2" constraint requires either index tracking (map) or delayed insertion (set)
+- Initialize with remainder 0 at a virtual index `-1` to handle subarrays starting from the beginning
 
 ## Related Problems
 
-- [LC 560: Subarray Sum Equals K](/2026/02/01/medium-560-subarray-sum-equals-k/) — Similar prefix-sum + hash-map pattern without modulo.
-- [LC 974: Subarray Sums Divisible by K](https://leetcode.com/problems/subarray-sums-divisible-by-k/) — Count number of subarrays (any length) whose sum is divisible by `k` using prefix-sum modulo and counts map.
+- [560. Subarray Sum Equals K](https://www.leetcode.com/problems/subarray-sum-equals-k/) -- prefix sum + hash map (exact sum)
+- [974. Subarray Sums Divisible by K](https://www.leetcode.com/problems/subarray-sums-divisible-by-k/) -- count subarrays with sum divisible by k
+- [525. Contiguous Array](https://www.leetcode.com/problems/contiguous-array/) -- prefix sum with 0/1 transformation
 
+## References
+
+- [LC 523: Continuous Subarray Sum on LeetCode](https://www.leetcode.com/problems/continuous-subarray-sum/)
+- [LeetCode Discuss — LC 523: Continuous Subarray Sum](https://www.leetcode.com/problems/continuous-subarray-sum/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/continuous-subarray-sum/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/)
+
+{% endraw %}

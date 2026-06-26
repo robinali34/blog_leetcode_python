@@ -1,94 +1,126 @@
 ---
 layout: post
 title: "[Medium] 2433. Find The Original Array of Prefix Xor"
-date: 2026-04-05 00:00:00 -0700
-categories: [leetcode, medium, array, bit-manipulation]
-tags: [leetcode, medium, xor, prefix]
+date: 2026-04-05
+categories: [leetcode, medium, bit-manipulation, prefix]
+tags: [leetcode, medium, bit-manipulation, xor, prefix]
 permalink: /2026/04/05/medium-2433-find-the-original-array-of-prefix-xor/
 ---
 
-# [Medium] 2433. Find The Original Array of Prefix Xor
+{% raw %}
+You are given an integer array `pref` of size `n`. Find and return the array `arr` of size `n` that satisfies:
 
-## Problem Statement
+$text{pref}[i] = text{arr}[0] oplus text{arr}[1] oplus ldots oplus text{arr}[i]
 
-You are given an integer array `pref` of size `n`. Find and return the array `arr` of size `n` such that:
-
-`pref[i] = arr[0] ^ arr[1] ^ … ^ arr[i]`
-
-for all `0 <= i < n`.
-
-It is guaranteed that the answer exists and is unique.
+It is guaranteed that a unique `arr` exists.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: pref = [5,2,0,3,1]
 Output: [5,7,2,3,2]
+Explanation:
+  pref[0] = 5             → arr[0] = 5
+  pref[1] = 5 ^ 7 = 2    → arr[1] = 7
+  pref[2] = 5 ^ 7 ^ 2 = 0 → arr[2] = 2
+  ...
 ```
 
 **Example 2:**
 
-```python
+```
 Input: pref = [13]
 Output: [13]
 ```
 
 ## Constraints
 
-- `1 <= pref.length <= 10^5`
+- `1 <= n <= 10^5`
 - `0 <= pref[i] <= 10^6`
 
-## Analysis
+## Thinking Process
 
-Prefix XOR:
+### XOR Prefix Sum Property
 
-- `pref[i] = pref[i-1] ^ arr[i]` for `i >= 1`
+Given:
 
-Since XOR is its own inverse (`x ^ x = 0`):
+text{pref}[i] = text{arr}[0] oplus text{arr}[1] oplus ldots oplus text{arr}[i]
 
-`arr[i] = pref[i] ^ pref[i-1]` for `i >= 1`, and `arr[0] = pref[0]`.
+text{pref}[i-1] = text{arr}[0] oplus text{arr}[1] oplus ldots oplus text{arr}[i-1]
 
-In-place variant: walk **backwards** and set `pref[i] ^= pref[i-1]` so `pref[i]` becomes `arr[i]`.
+XOR both sides:
 
-## Solution Option 1: New array
+text{pref}[i] oplus text{pref}[i-1] = text{arr}[i]
 
+This is the XOR analog of prefix sum difference: just as `arr[i] = prefixSum[i] - prefixSum[i-1]` for addition, we have `arr[i] = pref[i] ^ pref[i-1]` for XOR.
+
+Base case: `arr[0] = pref[0]`.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Bit manipulation</text>
+
+  <text x="40" y="50" font-family="monospace" font-size="14" fill="#3A3530">1 0 1 1 0 1 0</text>
+  <text x="40" y="75" font-size="11" fill="#6B6560">XOR pairs · masks · shifts</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **XOR tricks** *(this problem)* | O(n) | O(1) | Single number, swap without temp |
+| Bit masks | O(2^n) | O(n) | Subset enumeration |
+| Brian Kernighan | O(\log n) | O(1) | Count set bits |
+| Shift operations | O(n) | O(1)$ | Power of two, divide by 2 |
+
+## Solution
 ```python
-from typing import List
-
-
-class Solution:
-    def findArray(self, pref: List[int]) -> List[int]:
-        n = len(pref)
-        arr = [pref[0]]
-        for i in range(1, n):
-            arr.append(pref[i] ^ pref[i - 1])
-        return arr
+Input: pref = [5,2,0,3,1]
+Output: [5,7,2,3,2]
 ```
 
-## Solution Option 2: In-place on `pref`
+### Solution Explanation
 
-```python
-from typing import List
+**Approach:** XOR tricks (this problem)
 
+**Key idea:** ### XOR Prefix Sum Property
 
-class Solution:
-    def findArray(self, pref: List[int]) -> List[int]:
-        n = len(pref)
-        for i in range(n - 1, 0, -1):
-            pref[i] ^= pref[i - 1]
-        return pref
-```
+**Walkthrough** — input `pref = [5,2,0,3,1]`, expected output `[5,7,2,3,2]`:
 
-After the loop, `pref[0]` is unchanged and equals `arr[0]`; each `pref[i]` for `i > 0` has been XORed with the previous prefix value to yield `arr[i]`.
+pref[0] = 5             → arr[0] = 5
+  pref[1] = 5 ^ 7 = 2    → arr[1] = 7
+  pref[2] = 5 ^ 7 ^ 2 = 0 → arr[2] = 2
+  ...
+## Common Mistakes
 
-## Complexity
+- Processing left-to-right in-place (corrupts values needed for later computations)
+- Forgetting the base case `arr[0] = pref[0]`
 
-- **Time:** O(n)
-- **Space:** O(n) for Option 1; O(1) extra for Option 2 (modifies input)
+## Key Takeaways
+
+- **XOR prefix ↔ original array** mirrors **addition prefix sum ↔ difference array**, with XOR replacing both addition and subtraction (since `a ^ a = 0`)
+- In-place reverse pass avoids the dependency issue cleanly
+- XOR is its own inverse: `a ^ b ^ b = a` -- this self-inverse property underpins all XOR prefix problems
 
 ## Related Problems
 
-- [LC 1310: XOR Queries of a Subarray](https://leetcode.com/problems/xor-queries-of-a-subarray/)
-- [LC 1486: XOR Operation in an Array](https://leetcode.com/problems/xor-operation-in-an-array/)
+- [260. Single Number III](https://www.leetcode.com/problems/single-number-iii/) -- XOR partitioning
+- [136. Single Number](https://www.leetcode.com/problems/single-number/) -- XOR cancellation
+- [389. Find the Difference](https://www.leetcode.com/problems/find-the-difference/) -- XOR to find extra element
+- [303. Range Sum Query](https://www.leetcode.com/problems/range-sum-query-immutable/) -- addition prefix sum analog
+
+## References
+
+- [LC 2433: Find The Original Array of Prefix Xor on LeetCode](https://www.leetcode.com/problems/find-the-original-array-of-prefix-xor/)
+- [LeetCode Discuss — LC 2433: Find The Original Array of Prefix Xor](https://www.leetcode.com/problems/find-the-original-array-of-prefix-xor/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/find-the-original-array-of-prefix-xor/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Math & Bit Manipulation](/posts/2025-11-24-leetcode-templates-math-bit-manipulation/)
+
+{% endraw %}

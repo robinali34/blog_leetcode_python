@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 316. Remove Duplicate Letters"
 date: 2025-10-17 22:23:33 -0700
-categories: python stack monotonic-stack greedy problem-solving
+categories: leetcode algorithm medium cpp stack monotonic-stack greedy problem-solving
 ---
 
-# [Medium] 316. Remove Duplicate Letters
-
+{% raw %}
 Given a string `s`, remove duplicate letters so that every letter appears once and only once. You must make sure your result is the **smallest in lexicographical order** among all possible results.
 
 ## Examples
@@ -43,7 +42,39 @@ Explanation:
 - `1 <= s.length <= 10^4`
 - `s` consists of lowercase English letters only.
 
-## Solution: Monotonic Stack with Greedy Approach
+## Thinking Process
+
+1. **Lexicographically smallest:** Always prefer smaller characters
+1. **Maintains order:** Characters in lexicographical order
+
+- Stack matches nested or LIFO structure (parentheses, monotonic scans).
+- Push on open / larger; pop when the current element resolves pending work.
+- Monotonic stack finds next greater/smaller in O(n).
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Stack</text>
+
+  <rect x="100" y="30" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="46" text-anchor="middle" font-size="10">top</text>
+  <rect x="100" y="54" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="100" y="78" width="80" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="200" y="70" font-size="11" fill="#6B6560">push / pop</text>
+  <path d="M90 42v60" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="115" text-anchor="middle" font-size="11" fill="#6B6560">LIFO — monotonic stack scans array</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Monotonic stack** *(this problem)* | O(n) | O(n) | Next greater/smaller element |
+| Parentheses matching | O(n) | O(n) | Push open, pop on close |
+| Expression evaluation | O(n) | O(n) | Operand + operator stacks |
+| Stack simulation | O(n) | O(n) | Process in LIFO order |
+
+## Solution
 
 **Time Complexity:** O(n) where n is the length of string  
 **Space Complexity:** O(1) since we use at most 26 characters
@@ -79,8 +110,7 @@ class Solution:
         return "".join(stack)
 ```
 
-## How the Algorithm Works
-
+### Solution Explanation
 **Key Insight:** Use a monotonic stack to maintain lexicographically smallest result while ensuring each character appears exactly once.
 
 **Steps:**
@@ -144,8 +174,7 @@ for c in s:
 4. **Add current character** to stack
 5. **Mark as visited**
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time Complexity | Space Complexity |
 |-----------|----------------|------------------|
 | Count frequency | O(n) | O(1) |
@@ -155,27 +184,6 @@ for c in s:
 | **Total** | **O(n)** | **O(1)** |
 
 Where n is the length of the string.
-
-## Edge Cases
-
-1. **Single character:** `s = "a"` → `"a"`
-2. **All same characters:** `s = "aaaa"` → `"a"`
-3. **Already sorted:** `s = "abc"` → `"abc"`
-4. **Reverse sorted:** `s = "cba"` → `"abc"`
-
-## Key Insights
-
-### Greedy Strategy:
-1. **Lexicographically smallest:** Always prefer smaller characters
-2. **One occurrence:** Each character appears exactly once
-3. **Future availability:** Consider if character will appear again
-4. **Stack property:** Maintains order and allows efficient removal
-
-### Monotonic Stack:
-1. **Maintains order:** Characters in lexicographical order
-2. **Efficient removal:** Can remove multiple characters at once
-3. **Future consideration:** Checks if characters will appear again
-4. **Optimal result:** Ensures smallest lexicographical order
 
 ## Detailed Example Walkthrough
 
@@ -198,73 +206,12 @@ Where n is the length of the string.
 
 **Final result:** `"abc"`
 
-## Alternative Approaches
-
-### Approach 1: Recursive with Backtracking
-```python
-class Solution:
-    def removeDuplicateLetters(self, s: str) -> str:
-        if not s:
-            return ""
-
-        # count frequency
-        count = [0] * 26
-        for c in s:
-            count[ord(c) - ord('a')] += 1
-
-        pos = 0
-
-        for i, c in enumerate(s):
-            if c < s[pos]:
-                pos = i
-
-            count[ord(c) - ord('a')] -= 1
-
-            # check if all remaining letters still exist
-            if count[ord(c) - ord('a')] == 0:
-                break
-
-        first = s[pos]
-        remaining = s[pos + 1:].replace(first, "")
-
-        return first + self.removeDuplicateLetters(remaining)
-```
-
-**Time Complexity:** O(n^2)  
-**Space Complexity:** O(n)
-
-### Approach 2: Set-based Approach
-```python
-class Solution:
-    def removeDuplicateLetters(self, s: str) -> str:
-        count = [0] * 26
-        for c in s:
-            count[ord(c) - ord('a')] += 1
-
-        stack = []
-        in_stack = [False] * 26
-
-        for c in s:
-            idx = ord(c) - ord('a')
-            count[idx] -= 1
-
-            if in_stack[idx]:
-                continue
-
-            while stack and stack[-1] > c and count[ord(stack[-1]) - ord('a')] > 0:
-                in_stack[ord(stack[-1]) - ord('a')] = False
-                stack.pop()
-
-            stack.append(c)
-            in_stack[idx] = True
-
-        return "".join(stack)
-```
-
-**Time Complexity:** O(n log n)  
-**Space Complexity:** O(1)
-
 ## Common Mistakes
+
+1. **Single character:** `s = "a"` → `"a"`
+2. **All same characters:** `s = "aaaa"` → `"a"`
+3. **Already sorted:** `s = "abc"` → `"abc"`
+4. **Reverse sorted:** `s = "cba"` → `"abc"`
 
 1. **Wrong removal condition:** Not checking if character will appear again
 2. **Missing visited check:** Processing same character multiple times
@@ -273,10 +220,10 @@ class Solution:
 
 ## Related Problems
 
-- [402. Remove K Digits](https://leetcode.com/problems/remove-k-digits/)
-- [321. Create Maximum Number](https://leetcode.com/problems/create-maximum-number/)
-- [1081. Smallest Subsequence of Distinct Characters](https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/)
-- [316. Remove Duplicate Letters](https://leetcode.com/problems/remove-duplicate-letters/)
+- [402. Remove K Digits](https://www.leetcode.com/problems/remove-k-digits/)
+- [321. Create Maximum Number](https://www.leetcode.com/problems/create-maximum-number/)
+- [1081. Smallest Subsequence of Distinct Characters](https://www.leetcode.com/problems/smallest-subsequence-of-distinct-characters/)
+- [316. Remove Duplicate Letters](https://www.leetcode.com/problems/remove-duplicate-letters/)
 
 ## Why This Solution Works
 
@@ -297,3 +244,25 @@ class Solution:
 2. **Optimality:** Produces lexicographically smallest result
 3. **Efficiency:** O(n) time complexity
 4. **Simplicity:** Easy to understand and implement
+
+## References
+
+- [LC 316: Remove Duplicate Letters on LeetCode](https://www.leetcode.com/problems/remove-duplicate-letters/)
+- [LeetCode Discuss — LC 316: Remove Duplicate Letters](https://www.leetcode.com/problems/remove-duplicate-letters/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/remove-duplicate-letters/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### Greedy Strategy:
+1. **Lexicographically smallest:** Always prefer smaller characters
+2. **One occurrence:** Each character appears exactly once
+3. **Future availability:** Consider if character will appear again
+4. **Stack property:** Maintains order and allows efficient removal
+
+### Monotonic Stack:
+1. **Maintains order:** Characters in lexicographical order
+2. **Efficient removal:** Can remove multiple characters at once
+3. **Future consideration:** Checks if characters will appear again
+4. **Optimal result:** Ensures smallest lexicographical order
+
+{% endraw %}

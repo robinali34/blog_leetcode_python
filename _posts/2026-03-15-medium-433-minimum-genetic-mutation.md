@@ -1,162 +1,157 @@
 ---
 layout: post
 title: "[Medium] 433. Minimum Genetic Mutation"
-date: 2026-03-15 00:00:00 -0700
-categories: [leetcode, medium, graph, bfs]
-tags: [leetcode, medium, bfs, shortest-path, string]
+date: 2026-03-15
+categories: [leetcode, medium, bfs, string]
+tags: [leetcode, medium, bfs, string, shortest-path]
 permalink: /2026/03/15/medium-433-minimum-genetic-mutation/
 ---
 
-# [Medium] 433. Minimum Genetic Mutation
-
-## Problem Statement
-
-A gene string is represented by an 8-character string consisting only of `'A'`, `'C'`, `'G'`, and `'T'`.
-
-You are given a **start gene** string `startGene`, an **end gene** string `endGene`, and a list of valid gene strings `bank`.
-
-You may mutate the gene from one string to another **by changing exactly one character at a time**. Each intermediate gene string **must be in `bank`**.
-
-Return the **minimum number of mutations** needed to change `startGene` to `endGene`. If it is impossible, return `-1`.
+{% raw %}
+A gene string is represented by an 8-character string of `'A'`, `'C'`, `'G'`, and `'T'`. Given `startGene`, `endGene`, and a `bank` of valid gene strings, return the **minimum number of mutations** needed to mutate from `startGene` to `endGene`. Each mutation changes exactly one character and the result must be in the bank. Return `-1` if no such mutation sequence exists.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: startGene = "AACCGGTT", endGene = "AACCGGTA", bank = ["AACCGGTA"]
 Output: 1
 ```
 
 **Example 2:**
 
-```python
-Input: startGene = "AACCGGTT", endGene = "AAACGGTA", bank = ["AACCGGTA","AACCGCTA","AAACGGTA"]
+```
+Input: startGene = "AACCGGTT", endGene = "AAACGGTA",
+       bank = ["AACCGGTA","AACCGCTA","AAACGGTA"]
 Output: 2
-# One shortest sequence:
-# AACCGGTT → AACCGGTA → AAACGGTA
 ```
 
 **Example 3:**
 
-```python
-Input: startGene = "AAAAACCC", endGene = "AACCCCCC", bank = ["AAAACCCC","AAACCCCC","AACCCCCC"]
+```
+Input: startGene = "AAAAACCC", endGene = "AACCCCCC",
+       bank = ["AAAACCCC","AAACCCCC","AACCCCCC"]
 Output: 3
 ```
 
 ## Constraints
 
-- `startGene.length == 8`
-- `endGene.length == 8`
-- `1 <= bank.length <= 10^4`
+- `startGene.length == endGene.length == 8`
+- `startGene` and `endGene` consist of `'A'`, `'C'`, `'G'`, `'T'`
+- `0 <= bank.length <= 10`
 - `bank[i].length == 8`
-- `startGene`, `endGene`, and `bank[i]` consist only of `'A'`, `'C'`, `'G'`, `'T'`
+- All strings in `bank` are unique
 
-## Clarification Questions
+## Thinking Process
 
-1. **Single-character mutation**: Each step must change **exactly one** position?  
-   **Assumption**: Yes — Hamming distance between consecutive genes must be 1.
-2. **Validity**: Every intermediate gene must belong to `bank`?  
-   **Assumption**: Yes, and we can only traverse through genes in `bank`.
-3. **Reusing genes**: Can we revisit the same gene multiple times?  
-   **Assumption**: We could, but it’s never helpful for shortest path, so we will mark visited genes and avoid revisiting.
+### Why BFS?
 
-## Abstraction
+Each gene string is a **node**. Two nodes are connected if they differ by exactly one character **and** the target is in the bank. We need the **minimum number of steps** from start to end -- classic BFS shortest path on an unweighted graph.
 
-Model this as a **shortest path** problem in an unweighted graph:
+This is structurally identical to [LC 127 Word Ladder](https://www.leetcode.com/problems/word-ladder/), just with a 4-letter alphabet (`ACGT`) and fixed length 8.
 
-- Each valid gene string is a **node** (including `startGene` if not in `bank`).  
-- There is an **edge** between two genes if they differ by exactly one character.  
-- We want the **minimum number of edges** from `startGene` to `endGene`.
+### Algorithm
 
-This is a classic BFS-on-strings problem, similar to Word Ladder but with a fixed 4-letter alphabet and fixed length 8.
+1. Put the bank into a set for O(1) lookup
+2. Early exit if `endGene` is not in the bank
+3. BFS level by level: for each gene, try all single-character mutations (`A`, `C`, `G`, `T`)
+4. If a mutation is in the bank, enqueue it and **remove it from the bank set** (acts as visited)
+5. When we dequeue `endGene`, return the current step count
 
-## Baseline (Naive) — Why it’s suboptimal
+### Walk-through
 
-Naive idea:
+```
+startGene = "AACCGGTT", endGene = "AAACGGTA"
+bank = {"AACCGGTA", "AACCGCTA", "AAACGGTA"}
 
-- From current gene, scan all strings in `bank` and check if they differ by one character, then recurse/DFS.
+Step 0: queue = ["AACCGGTT"]
+  Try all mutations of "AACCGGTT"
+  "AACCGGTA" ∈ bank → enqueue, remove from bank
 
-This can:
+Step 1: queue = ["AACCGGTA"]
+  Try all mutations of "AACCGGTA"
+  "AAACGGTA" ∈ bank → enqueue, remove from bank
 
-- Revisit many genes, causing exponential blowup.  
-- Not guarantee we find the **shortest** path first (DFS explores deep before shallow).
-
-## Optimized Approach — BFS over gene space
-
-Since each mutation step has **equal cost 1**, **BFS** from `startGene` to `endGene` guarantees the minimum number of mutations.
-
-Strategy:
-
-1. Put all `bank` genes into a set for O(1) membership.\n2. If `endGene` is not in `bank`, return `-1` (cannot end at an invalid gene).\n3. BFS from `startGene`, level by level, treating each mutation as an edge.\n4. For a gene `curr`, generate all possible one-character mutations by trying the 4 bases `'A','C','G','T'` at each position. When a mutation is in `bank_set`, push it to the queue and remove it from the set (mark visited).\n5. When we pop `endGene`, return the current `steps` count.
-
-### Complexity
-
-- Let `L = 8` (fixed gene length), `N = len(bank)`.  
-- For each gene we process, we generate `L * 4 = 32` potential neighbors and check membership in a set.  
-- In the worst case we process each bank gene at most once.  
-- **Time**: O(N * L * 4) ≈ O(N).  
-- **Space**: O(N) for the bank set and BFS queue.
-
-### Key Insights
-
-1. **BFS for shortest path** — All edges cost 1 mutation; BFS finds the minimum steps.  
-2. **Generate neighbors by position + base** — Instead of precomputing full adjacency, generate possible mutations on the fly.  
-3. **Use a set for bank / visited** — O(1) checks for valid, unvisited genes.
-
-## Python Solution (BFS)
-
-```python
-from collections import deque
-from typing import List
-
-
-class Solution:
-    def minMutation(self, startGene: str, endGene: str, bank: List[str]) -> int:
-        bank_set = set(bank)
-        if endGene not in bank_set:
-            return -1
-
-        q = deque([startGene])
-        steps = 0
-        genes = ["A", "C", "G", "T"]
-
-        while q:
-            for _ in range(len(q)):
-                curr = q.popleft()
-                if curr == endGene:
-                    return steps
-                for i in range(len(curr)):
-                    for g in genes:
-                        mutation = curr[:i] + g + curr[i + 1 :]
-                        if mutation in bank_set:
-                            q.append(mutation)
-                            bank_set.remove(mutation)
-            steps += 1
-        return -1
+Step 2: queue = ["AAACGGTA"]
+  Dequeue "AAACGGTA" == endGene → return 2
 ```
 
-## Algorithm Explanation
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-We treat each gene as a node in a graph, with edges between genes differing by one character. We start BFS from `startGene` with `steps = 0`. For each level:
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
 
-- Pop all genes at the current distance.  
-- If any equals `endGene`, return `steps`.  
-- For each gene, try mutating each position with each of the 4 characters; if the resulting gene is in `bank_set`, we add it to the queue and remove it from `bank_set` to mark it visited.
+</svg>
 
-After exhausting the queue without seeing `endGene`, we return `-1` (no valid mutation sequence).
+## Common Approaches
 
-## Complexity Analysis
+Typical techniques for this pattern:
 
-- **Time**: O(N * L * 4) where `N = len(bank)` and `L = 8`; effectively O(N).  
-- **Space**: O(N) for `bank_set` and the BFS queue.
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Queue BFS** *(this problem)* | O(n) | O(n) | Shortest path in unweighted graphs |
+| Multi-source BFS | O(n) | O(n) | Start from all sources simultaneously |
+| 0-1 BFS / deque | O(n) | O(n) | Weights 0 or 1 |
+| Level-order BFS | O(n) | O(w) | Process by depth/layer |
 
-## Edge Cases
+## Solution
+```python
+Input: startGene = "AACCGGTT", endGene = "AACCGGTA", bank = ["AACCGGTA"]
+Output: 1
+```
 
-- `endGene` not in `bank` → immediately return `-1`.  
-- `startGene == endGene` → if you want to be strict, return 0 (though LeetCode usually ensures `startGene` ≠ `endGene`).  
-- Duplicate genes in `bank` are handled by the set.\n\n## Common Mistakes\n\n- **Not checking `endGene` in bank first** — Then you may do unnecessary work or incorrectly return a non-negative value.  
-- **Revisiting genes** — Without marking visited (removing from set), BFS can cycle and blow up in time.  
-- **Precomputing all edges** — You can, but generating neighbors on the fly is simpler and efficient enough.\n\n## Related Problems\n\n- [LC 127: Word Ladder](https://leetcode.com/problems/word-ladder/) — Similar BFS over string space for shortest transformation sequence.  
-- [LC 1091: Shortest Path in Binary Matrix](/2026/03/11/medium-1091-shortest-path-in-binary-matrix/) — BFS for shortest path in a grid.  
-- [LC 752: Open the Lock](/2025/10/20-medium-752-open-the-lock/) — BFS over state space with digits.\n*** End Patch"}``` завершается ошибкой because ApplyPatch expects just patch, not JSON. I already provided correctly: good. Let's wait.}-->
+### Solution Explanation
+
+**Approach:** Queue BFS (this problem)
+
+**Key idea:** ### Why BFS?
+
+**How the code works:**
+1. Put the bank into a set for O(1) lookup
+2. Early exit if `endGene` is not in the bank
+3. BFS level by level: for each gene, try all single-character mutations (`A`, `C`, `G`, `T`)
+4. If a mutation is in the bank, enqueue it and **remove it from the bank set** (acts as visited)
+5. When we dequeue `endGene`, return the current step count
+
+**Walkthrough** — input `startGene = "AACCGGTT", endGene = "AACCGGTA", bank = ["AACCGGTA"]`, expected output `1`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Common Mistakes
+
+- Forgetting the early exit when `endGene` is not in the bank
+- Using a separate visited set but forgetting to mark `startGene` as visited
+- Not restoring `curr[j] = org` after trying all mutations at position `j`
+
+## Key Takeaways
+
+- **"Minimum transformations with single-step changes"** = BFS shortest path
+- Erasing from the bank set doubles as visited tracking -- a clean pattern for word/gene ladder problems
+- Structurally identical to LC 127 Word Ladder
+
+## Related Problems
+
+- [127. Word Ladder](https://www.leetcode.com/problems/word-ladder/) -- same pattern, 26-letter alphabet
+- [841. Keys and Rooms](https://www.leetcode.com/problems/keys-and-rooms/) -- BFS reachability
+- [1091. Shortest Path in Binary Matrix](https://www.leetcode.com/problems/shortest-path-in-binary-matrix/) -- BFS shortest path on grid
+
+## References
+
+- [LC 433: Minimum Genetic Mutation on LeetCode](https://www.leetcode.com/problems/minimum-genetic-mutation/)
+- [LeetCode Discuss — LC 433: Minimum Genetic Mutation](https://www.leetcode.com/problems/minimum-genetic-mutation/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/minimum-genetic-mutation/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [BFS](/posts/2025-11-24-leetcode-templates-bfs/)
+
+{% endraw %}

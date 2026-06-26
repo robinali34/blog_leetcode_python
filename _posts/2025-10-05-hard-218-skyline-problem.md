@@ -2,11 +2,10 @@
 layout: post
 title: "[Hard] 218. The Skyline Problem"
 date: 2025-10-05 00:00:00 -0000
-categories: python sweep-line priority-queue data-structures union-find problem-solving
+categories: leetcode algorithm hard cpp sweep-line priority-queue data-structures union-find problem-solving
 ---
 
-# [Hard] 218. The Skyline Problem
-
+{% raw %}
 A city's skyline is the outer contour of the silhouette formed by all the buildings in that city when viewed from a distance. Given the locations and heights of all the buildings, return the skyline formed by these buildings collectively.
 
 The geometric information of each building is given in the array `buildings` where `buildings[i] = [lefti, righti, heighti]`:
@@ -45,7 +44,7 @@ Output: [[0,3],[5,0]]
 - `1 <= heighti <= 2^31 - 1`
 - `buildings` is sorted by `lefti` in non-decreasing order.
 
-## Approach
+## Thinking Process
 
 This is a classic sweep line algorithm problem. The key insight is to process all building edges (start and end points) in sorted order and maintain the current maximum height at each position.
 
@@ -57,7 +56,30 @@ There are several approaches to solve this problem:
 4. **Sweep Line with Two Priority Queues**: Separate queues for active and past heights
 5. **Union Find Optimization**: Use Union Find to optimize the coordinate compression approach
 
-## Solution 1: Coordinate Compression + Brute Force
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
+
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
+
+## Solution
 
 ```python
 class Solution:
@@ -91,206 +113,23 @@ class Solution:
         return result
 ```
 
-**Time Complexity:** O(n²) - For each building, we update all positions it covers
-**Space Complexity:** O(n) - Edge set and height array
+### Solution Explanation
 
-### How it works:
-1. **Collect all unique x-coordinates** (building edges)
-2. **Create mapping** from coordinate to index
-3. **For each building**, update heights in the range [left, right)
-4. **Generate skyline** by checking height changes
+**Approach:** Brute force (this problem)
 
-## Solution 2: Sweep Line with Map
+**Key idea:** This is a classic sweep line algorithm problem. The key insight is to process all building edges (start and end points) in sorted order and maintain the current maximum height at each position.
 
-```python
-class Solution:
-    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-        pairs = []
+**How the code works:**
+1. **Coordinate Compression + Brute Force**: Compress coordinates and update heights for each building
+2. **Sweep Line with Map**: Use events and maintain height counts
+3. **Sweep Line with Priority Queue**: Use priority queue to track active buildings
+4. **Sweep Line with Two Priority Queues**: Separate queues for active and past heights
+5. **Union Find Optimization**: Use Union Find to optimize the coordinate compression approach
 
-        # build events
-        for b in buildings:
-            left, right, height = b
-            pairs.append((left, -height))   # entering
-            pairs.append((right, height))   # leaving
+**Walkthrough** — input `buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]`, expected output `[[2,10],[3,15],[7,12],[12,0],[15,10],[20,8],[24,0]]`:
 
-        pairs.sort()
-
-        height_map = SortedDict({0: 1})
-        result = []
-        prev = 0
-
-        for x, h in pairs:
-            if h < 0:
-                h = -h
-                height_map[h] = height_map.get(h, 0) + 1
-            else:
-                height_map[h] = height_map.get(h, 0) - 1
-                if height_map[h] == 0:
-                    del height_map[h]
-
-            current = height_map.peekitem(-1)[0]
-
-            if current != prev:
-                result.append([x, current])
-                prev = current
-
-        return result
-```
-
-**Time Complexity:** O(n log n) - Sorting + map operations
-**Space Complexity:** O(n) - Map and pairs vector
-
-### How it works:
-1. **Create events**: Start events with negative height, end events with positive height
-2. **Sort events** by x-coordinate, then by height (negative heights first)
-3. **Process events**: Add/remove heights from map
-4. **Track maximum height** and add skyline points when it changes
-
-## Solution 3: Sweep Line with Priority Queue
-
-```python
-import heapq
-
-class Solution:
-    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-        # (x, start/end, height)
-        events = []
-
-        for l, r, h in buildings:
-            events.append((l, -h, r))  # start
-            events.append((r, 0, 0))   # end marker
-
-        events.sort()
-
-        result = []
-        live = [(0, float('inf'))]  # ( -height, right )
-        prev_height = 0
-
-        for x, neg_h, r in events:
-
-            # start of building
-            if neg_h != 0:
-                heapq.heappush(live, (neg_h, r))
-
-            # remove expired buildings
-            while live and live[0][1] <= x:
-                heapq.heappop(live)
-
-            current_height = -live[0][0]
-
-            if current_height != prev_height:
-                result.append([x, current_height])
-                prev_height = current_height
-
-        return result
-```
-
-**Time Complexity:** O(n log n) - Sorting + priority queue operations
-**Space Complexity:** O(n) - Priority queue and edges vector
-
-### How it works:
-1. **Create edge events** with building indices
-2. **Sort edges** by x-coordinate
-3. **Process events**: Add buildings to priority queue when they start
-4. **Remove expired buildings** from priority queue
-5. **Track maximum height** from active buildings
-
-## Solution 4: Sweep Line with Two Priority Queues
-
-```python
-import heapq
-
-class Solution:
-    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-        events = []
-
-        for l, r, h in buildings:
-            events.append((l, -h, r))  # start event
-            events.append((r, 0, 0))   # end event
-
-        events.sort()
-
-        result = []
-        live = [(0, float('inf'))]  # (-height, right)
-        prev = 0
-
-        for x, neg_h, r in events:
-
-            if neg_h != 0:
-                heapq.heappush(live, (neg_h, r))
-
-            # remove expired buildings
-            while live[0][1] <= x:
-                heapq.heappop(live)
-
-            curr = -live[0][0]
-
-            if curr != prev:
-                result.append([x, curr])
-                prev = curr
-
-        return result
-```
-<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
-grep
-
-**Time Complexity:** O(n log n) - Sorting + priority queue operations
-**Space Complexity:** O(n) - Two priority queues
-
-### How it works:
-1. **Create events**: Start with positive height, end with negative height
-2. **Sort events** by x-coordinate, then by height (descending)
-3. **Use two priority queues**: One for active heights, one for past heights
-4. **Remove matching heights** from both queues
-5. **Track maximum active height**
-
-## Solution 5: Union Find Optimization
-
-```python
-import heapq
-
-class Solution:
-    def getSkyline(self, buildings: list[list[int]]) -> list[list[int]]:
-        events = []
-
-        for l, r, h in buildings:
-            events.append((l, -h, r))  # start
-            events.append((r, 0, 0))   # end
-
-        events.sort()
-
-        result = []
-        live = [(0, float('inf'))]
-        prev = 0
-
-        for x, neg_h, r in events:
-
-            if neg_h != 0:
-                heapq.heappush(live, (neg_h, r))
-
-            while live[0][1] <= x:
-                heapq.heappop(live)
-
-            curr = -live[0][0]
-
-            if curr != prev:
-                result.append([x, curr])
-                prev = curr
-
-        return result
-```
-<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
-read_file
-
-**Time Complexity:** O(n²) in worst case, but optimized with Union Find
-**Space Complexity:** O(n) - Union Find and height arrays
-
-### How it works:
-1. **Sort buildings** by height (descending)
-2. **Process buildings** in height order
-3. **Use Union Find** to skip already processed positions
-4. **Update heights** only for unprocessed positions
-
+Figure A shows the buildings of the input.
+Figure B shows the skyline formed by those buildings. The red points in figure B represent the key points in the output list.
 ## Step-by-Step Example (Solution 2)
 
 Let's trace through `buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]`:
@@ -351,21 +190,29 @@ Let's trace through `buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,
 4. **Edge cases** - Handle empty buildings, single building scenarios
 5. **Coordinate precision** - Handle large coordinate values
 
-## Edge Cases
-
 1. **Single building**: `[[1,2,3]]` → `[[1,3],[2,0]]`
 2. **Overlapping buildings**: Same height buildings
 3. **Adjacent buildings**: Buildings touching at edges
 4. **Large coordinates**: Integer overflow considerations
 5. **Empty input**: Return empty skyline
 
+## Key Takeaways
+
+- **Pattern:** Brute force (this problem)
+
+## References
+
+- [LC 218: The Skyline Problem on LeetCode](https://www.leetcode.com/problems/skyline-problem/)
+- [LeetCode Discuss — LC 218: The Skyline Problem](https://www.leetcode.com/problems/skyline-problem/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/skyline-problem/editorial/) *(may require premium)*
+
 ## Related Problems
 
-- [253. Meeting Rooms II](https://leetcode.com/problems/meeting-rooms-ii/)
-- [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)
-- [57. Insert Interval](https://leetcode.com/problems/insert-interval/)
-- [715. Range Module](https://leetcode.com/problems/range-module/)
-- [850. Rectangle Area II](https://leetcode.com/problems/rectangle-area-ii/)
+- [253. Meeting Rooms II](https://www.leetcode.com/problems/meeting-rooms-ii/)
+- [56. Merge Intervals](https://www.leetcode.com/problems/merge-intervals/)
+- [57. Insert Interval](https://www.leetcode.com/problems/insert-interval/)
+- [715. Range Module](https://www.leetcode.com/problems/range-module/)
+- [850. Rectangle Area II](https://www.leetcode.com/problems/rectangle-area-ii/)
 
 ## Conclusion
 
@@ -379,3 +226,5 @@ The Skyline Problem is a classic sweep line algorithm that tests understanding o
 **Recommended Solution**: Solution 2 (Sweep Line with Map) offers the best balance of efficiency, clarity, and correctness for most scenarios.
 
 The key insight is recognizing that skyline changes only occur at building edges, and we need to efficiently track the maximum height at each position while processing events in order.
+
+{% endraw %}

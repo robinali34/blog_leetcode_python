@@ -7,13 +7,45 @@ permalink: /posts/2025-11-24-medium-1209-remove-all-adjacent-duplicates-in-strin
 tags: [leetcode, medium, string, stack, two-pointers, in-place]
 ---
 
-# [Medium] 1209. Remove All Adjacent Duplicates in String II
-
+{% raw %}
 You are given a string `s` and an integer `k`, a `k` **duplicate removal** consists of choosing `k` adjacent and equal letters from `s` and removing them, causing the left and the right side of the deleted substring to concatenate together.
 
 We repeatedly make `k` duplicate removals on `s` until we no longer can.
 
 Return *the final string after all such duplicate removals have been made*. It is guaranteed that the answer is **unique**.
+
+## Thinking Process
+
+1. **Count Tracking**: Need to track consecutive character counts, not just characters
+
+- Stack matches nested or LIFO structure (parentheses, monotonic scans).
+- Push on open / larger; pop when the current element resolves pending work.
+- Monotonic stack finds next greater/smaller in O(n).
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Two pointers</text>
+
+  <rect x="30" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="66" text-anchor="middle" font-size="10">1</text>
+  <rect x="62" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="76" y="66" text-anchor="middle" font-size="10">3</text>
+  <rect x="106" y="50" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="66" text-anchor="middle" font-size="10">5</text>
+  <rect x="138" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="152" y="66" text-anchor="middle" font-size="10">7</text>
+  <rect x="170" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="184" y="66" text-anchor="middle" font-size="10">9</text>
+  <text x="44" y="42" text-anchor="middle" font-size="10" fill="#7A8EA0" font-weight="600">L</text>
+  <text x="184" y="42" text-anchor="middle" font-size="10" fill="#A08888" font-weight="600">R</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">move L/R based on comparison</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Monotonic stack** *(this problem)* | O(n) | O(n) | Next greater/smaller element |
+| Parentheses matching | O(n) | O(n) | Push open, pop on close |
+| Expression evaluation | O(n) | O(n) | Operand + operator stacks |
+| Stack simulation | O(n) | O(n) | Process in LIFO order |
 
 ## Examples
 
@@ -50,37 +82,9 @@ Finally delete "ii", get "ps"
 - `2 <= k <= 10^4`
 - `s` only contains lowercase English letters.
 
-## Clarification Questions
-
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
-
-1. **Duplicate removal**: What does "k adjacent duplicates" mean? (Assumption: Remove k consecutive identical characters - e.g., "aaa" with k=3 removes all three)
-
-2. **Removal process**: How should we remove duplicates? (Assumption: Remove k consecutive duplicates repeatedly until no more exist)
-
-3. **Cascading removal**: Can removal cause new duplicates? (Assumption: Yes - removing duplicates can create new k-length duplicates)
-
-4. **Return format**: What should we return? (Assumption: Final string after all duplicate removals)
-
-5. **K value**: What is the range of k? (Assumption: Per constraints, 2 <= k <= 10^4 - k is at least 2)
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: Brute-Force Approach (5 minutes)**
-
-Repeatedly scan the string for k consecutive identical characters and remove them. Continue until no more removals are possible. This approach may require multiple passes, and in worst case, each pass takes O(n) time, potentially requiring O(n/k) passes, giving O(n²/k) overall complexity, which is inefficient.
-
-**Step 2: Semi-Optimized Approach (7 minutes)**
-
-Use a stack to track characters and their counts. For each character, if it matches the top of stack, increment count. If count reaches k, pop k elements. Otherwise, push the character with count 1. This handles removals more efficiently but still requires processing the string character by character.
-
-**Step 3: Optimized Solution (8 minutes)**
-
-Use a stack storing pairs of (character, count). For each character, if stack is empty or top character differs, push (char, 1). If top character matches, increment count. If count reaches k, pop from stack. After processing all characters, reconstruct the string from the stack. This achieves O(n) time with O(n) space, which is optimal. The key insight is that a stack naturally handles the "last k characters" property, and by tracking counts, we can efficiently remove k consecutive duplicates in a single pass.
-
 ## Solution Approaches
 
-This problem extends [LC 1047](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/) to handle `k` consecutive duplicates instead of pairs. We need to track character **counts**, not just characters.
+This problem extends [LC 1047](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string/) to handle `k` consecutive duplicates instead of pairs. We need to track character **counts**, not just characters.
 
 ### Approach 1: Vector of Pairs (Recommended)
 
@@ -102,62 +106,6 @@ Use two pointers with a stack to track counts, modifying string in-place.
 **Space Complexity:** O(n)
 
 Uses stack for counts but `s.erase()` which is inefficient.
-
-## Solution 1: Vector of Pairs (Recommended)
-
-```python
-class Solution:
-    def removeDuplicates(self, s: str, k: int) -> str:
-        stack: list[list] = []  # [char, count]
-        for ch in s:
-            if stack and stack[-1][0] == ch:
-                stack[-1][1] += 1
-                if stack[-1][1] == k:
-                    stack.pop()
-            else:
-                stack.append([ch, 1])
-        return "".join(c * n for c, n in stack)
-
-```
-
-## Solution 2: In-Place Two Pointers with Stack
-
-```python
-class Solution:
-    def removeDuplicates(self, s: str, k: int) -> str:
-        # Same stack pattern as Solution 1; in-place two-pointer in Python is awkward.
-        stack: list[list] = []
-        for ch in s:
-            if stack and stack[-1][0] == ch:
-                stack[-1][1] += 1
-                if stack[-1][1] == k:
-                    stack.pop()
-            else:
-                stack.append([ch, 1])
-        return "".join(c * n for c, n in stack)
-
-```
-
-## Solution 3: Stack with String Erase (Not Recommended)
-
-```python
-def remove_duplicates_erase_style(s: str, k: int) -> str:
-    """Illustrative only: repeated scans; O(n^2) worst case — not recommended."""
-    t = list(s)
-    changed = True
-    while changed:
-        changed = False
-        i = 0
-        while i <= len(t) - k:
-            if all(t[i] == t[i + j] for j in range(k)):
-                del t[i : i + k]
-                changed = True
-                i = max(0, i - k + 1)
-            else:
-                i += 1
-    return "".join(t)
-
-```
 
 ## How the Algorithms Work
 
@@ -275,16 +223,91 @@ Actually, I think there might be an off-by-one issue. Let me document what the c
 - In worst case, this leads to O(n²) time complexity
 - Not recommended for large inputs
 
-## Key Insights
-
-1. **Count Tracking**: Need to track consecutive character counts, not just characters
-2. **Cascading Removals**: Removing k characters may create new k-length sequences
-3. **Stack Pattern**: Similar to LC 1047, but with counts
-4. **In-Place Optimization**: Solution 2 modifies string in-place to save space
-
 ## Algorithm Breakdown
 
 ### Solution 1: Vector of Pairs
+
+```python
+class Solution:
+    def removeDuplicates(self, s: str, k: int) -> str:
+        stack: list[list] = []  # [char, count]
+        for ch in s:
+            if stack and stack[-1][0] == ch:
+                stack[-1][1] += 1
+                if stack[-1][1] == k:
+                    stack.pop()
+            else:
+                stack.append([ch, 1])
+        return "".join(c * n for c, n in stack)
+
+```
+
+**Key Points:**
+- `counts.back().second` is the last character in current result
+- When same character → increment count
+- When count == k → remove the sequence
+- Popping may cause adjacent characters to merge (handled automatically)
+
+### Solution 2: In-Place Two Pointers
+
+```python
+class Solution:
+    def removeDuplicates(self, s: str, k: int) -> str:
+        # Same stack pattern as Solution 1; in-place two-pointer in Python is awkward.
+        stack: list[list] = []
+        for ch in s:
+            if stack and stack[-1][0] == ch:
+                stack[-1][1] += 1
+                if stack[-1][1] == k:
+                    stack.pop()
+            else:
+                stack.append([ch, 1])
+        return "".join(c * n for c, n in stack)
+
+```
+
+**Key Points:**
+- `left` simulates result string in-place
+- Stack tracks counts for consecutive sequences
+- When count == k → move `left` back by `k` (removes k characters)
+- Next iteration overwrites removed characters
+
+### Complexity
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **Vector of Pairs** | O(n) | O(n) | Simple, reliable | Extra space for vector |
+| **In-Place Two Pointers** | O(n) | O(n) stack, O(1) string | Space efficient | More complex logic |
+| **String Erase** | O(n²) | O(n) | Simple | Very slow |
+
+## Implementation Details
+
+### Why Vector of Pairs Works
+
+```python
+def remove_duplicates_erase_style(s: str, k: int) -> str:
+    """Illustrative only: repeated scans; O(n^2) worst case — not recommended."""
+    t = list(s)
+    changed = True
+    while changed:
+        changed = False
+        i = 0
+        while i <= len(t) - k:
+            if all(t[i] == t[i + j] for j in range(k)):
+                del t[i : i + k]
+                changed = True
+                i = max(0, i - k + 1)
+            else:
+                i += 1
+    return "".join(t)
+
+```
+
+**This handles:**
+- Empty counts (first character)
+- New character sequence (different from last)
+- After popping, next character might match previous (handled by `counts.back().second`)
+
+### Why In-Place Needs Careful Indexing
 
 ```python
 counts: list[list] = []
@@ -299,79 +322,18 @@ result = "".join(c * n for c, n in counts)
 
 ```
 
-**Key Points:**
-- `counts.back().second` is the last character in current result
-- When same character → increment count
-- When count == k → remove the sequence
-- Popping may cause adjacent characters to merge (handled automatically)
-
-### Solution 2: In-Place Two Pointers
-
-```python
-def build_from_stack(s: str, k: int) -> str:
-    stack: list[list] = []
-    for ch in s:
-        if stack and stack[-1][0] == ch:
-            stack[-1][1] += 1
-            if stack[-1][1] == k:
-                stack.pop()
-        else:
-            stack.append([ch, 1])
-    return "".join(c * n for c, n in stack)
-
-```
-
-**Key Points:**
-- `left` simulates result string in-place
-- Stack tracks counts for consecutive sequences
-- When count == k → move `left` back by `k` (removes k characters)
-- Next iteration overwrites removed characters
-
-## Edge Cases
-
-1. **k = string length**: All characters removed if all same
-2. **No duplicates**: Original string returned
-3. **All duplicates**: Empty string returned
-4. **Cascading removals**: Removing one sequence creates another
-5. **k = 2**: Same as LC 1047
-
-## Complexity Analysis
-
-| Approach | Time | Space | Pros | Cons |
-|----------|------|-------|------|------|
-| **Vector of Pairs** | O(n) | O(n) | Simple, reliable | Extra space for vector |
-| **In-Place Two Pointers** | O(n) | O(n) stack, O(1) string | Space efficient | More complex logic |
-| **String Erase** | O(n²) | O(n) | Simple | Very slow |
-
-## Implementation Details
-
-### Why Vector of Pairs Works
-
-```python
-if not counts or ch != counts[-1][0]:
-    counts.append([ch, 1])
-
-```
-
-**This handles:**
-- Empty counts (first character)
-- New character sequence (different from last)
-- After popping, next character might match previous (handled by `counts.back().second`)
-
-### Why In-Place Needs Careful Indexing
-
-```python
-left -= k  # Move back k positions
-
-
-```
-
 **Important:**
 - `left` has already been incremented in for loop
 - Moving back by `k` effectively removes last `k` characters
 - Next iteration will overwrite at `left` position
 
 ## Common Mistakes
+
+1. **k = string length**: All characters removed if all same
+2. **No duplicates**: Original string returned
+3. **All duplicates**: Empty string returned
+4. **Cascading removals**: Removing one sequence creates another
+5. **k = 2**: Same as LC 1047
 
 1. **Not tracking counts**: Trying to use character-only stack (like LC 1047)
 2. **Off-by-one errors**: Wrong index calculations in Solution 2
@@ -387,9 +349,9 @@ left -= k  # Move back k positions
 
 ## Related Problems
 
-- [1047. Remove All Adjacent Duplicates In String](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/) - k=2 version
-- [1544. Make The String Great](https://leetcode.com/problems/make-the-string-great/) - Similar pattern
-- [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/) - Stack matching pattern
+- [1047. Remove All Adjacent Duplicates In String](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string/) - k=2 version
+- [1544. Make The String Great](https://www.leetcode.com/problems/make-the-string-great/) - Similar pattern
+- [20. Valid Parentheses](https://www.leetcode.com/problems/valid-parentheses/) - Stack matching pattern
 
 ## Real-World Applications
 
@@ -416,3 +378,22 @@ Similar problems:
 ---
 
 *This problem extends the stack-based duplicate removal pattern to handle k consecutive duplicates, requiring careful count tracking and handling of cascading removals.*
+
+## Key Takeaways
+
+1. **Count Tracking**: Need to track consecutive character counts, not just characters
+2. **Cascading Removals**: Removing k characters may create new k-length sequences
+3. **Stack Pattern**: Similar to LC 1047, but with counts
+4. **In-Place Optimization**: Solution 2 modifies string in-place to save space
+
+## References
+
+- [LC 1209: Remove All Adjacent Duplicates in String II on LeetCode](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/)
+- [LeetCode Discuss — LC 1209: Remove All Adjacent Duplicates in String II](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [String Processing](/posts/2025-11-24-leetcode-templates-string-processing/)
+
+{% endraw %}

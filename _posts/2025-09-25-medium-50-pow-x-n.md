@@ -1,11 +1,10 @@
 ---
 layout: post
 title: "[Medium] 50. Pow(x, n)"
-categories: python pow problem-solving
+categories: leetcode algorithm math data-structures recursion bit-manipulation medium cpp pow problem-solving
 ---
 
-# [Medium] 50. Pow(x, n)
-
+{% raw %}
 Implement pow(x, n), which calculates x raised to the power n (i.e., x^n).
 
 ## Examples
@@ -37,7 +36,7 @@ Explanation: 2^-2 = 1/2^2 = 1/4 = 0.25
 - Either x is not zero or n > 0.
 - -10^4 <= x^n <= 10^4
 
-## Approach
+## Thinking Process
 
 There are two main approaches to implement exponentiation efficiently:
 
@@ -46,7 +45,26 @@ There are two main approaches to implement exponentiation efficiently:
 
 Both approaches achieve O(log n) time complexity by reducing the problem size by half in each step.
 
-## Solution 1: Recursive Approach
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Bit manipulation</text>
+
+  <text x="40" y="50" font-family="monospace" font-size="14" fill="#3A3530">1 0 1 1 0 1 0</text>
+  <text x="40" y="75" font-size="11" fill="#6B6560">XOR pairs · masks · shifts</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **XOR tricks** *(this problem)* | O(n) | O(1) | Single number, swap without temp |
+| Bit masks | O(2^n) | O(n) | Subset enumeration |
+| Brian Kernighan | O(log n) | O(1) | Count set bits |
+| Shift operations | O(n) | O(1) | Power of two, divide by 2 |
+
+## Solution
 
 ```python
 class Solution:
@@ -64,55 +82,21 @@ class Solution:
         return half * half if n % 2 == 0 else half * half * x
 ```
 
-**Time Complexity:** O(log n) - Each recursive call reduces n by half
-**Space Complexity:** O(log n) - Recursion stack depth
+### Solution Explanation
 
-## Solution 2: Iterative Approach
+**Approach:** XOR tricks (this problem)
 
-```python
-class Solution:
-    def myPow(self, x: float, n: int) -> float:
-        if n == 0:
-            return 1.0
-        if n < 0:
-            n = -n
-            x = 1 / x
-        result = 1.0
-        while n:
-            if n & 1:
-                result *= x
-            x *= x
-            n //= 2
-        return result
-```
+**Key idea:** There are two main approaches to implement exponentiation efficiently:
 
-**Time Complexity:** O(log n) - Each iteration processes one bit of n
-**Space Complexity:** O(1) - Only using constant extra space
+**How the code works:**
+1. **Recursive Approach**: Use divide-and-conquer with recursion
+2. **Iterative Approach**: Use bit manipulation and iterative computation
 
-## Step-by-Step Example (Solution 1)
+**Walkthrough** — input `x = 2.00000, n = 10`, expected output `1024.00000`:
 
-For x = 2, n = 10:
-
-1. **myPower(2, 10)**: n = 10 (even)
-   - half = myPower(2, 5) = 32
-   - return 32 * 32 = 1024
-
-2. **myPower(2, 5)**: n = 5 (odd)
-   - half = myPower(2, 2) = 4
-   - return 4 * 4 * 2 = 32
-
-3. **myPower(2, 2)**: n = 2 (even)
-   - half = myPower(2, 1) = 2
-   - return 2 * 2 = 4
-
-4. **myPower(2, 1)**: n = 1 (odd)
-   - half = myPower(2, 0) = 1
-   - return 1 * 1 * 2 = 2
-
-5. **myPower(2, 0)**: return 1.0 (base case)
-
-Final result: 1024
-
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Step-by-Step Example (Solution 2)
 
 For x = 2, n = 10:
@@ -124,26 +108,12 @@ For x = 2, n = 10:
 5. **n = 1 (odd)**: rtn = 1024, x = 65536, n = 0
 6. **n = 0**: return 1024
 
-## Key Insights
-
-1. **Divide and Conquer**: x^n = (x^(n/2))^2 for even n, x^n = (x^(n/2))^2 * x for odd n
-2. **Negative Exponents**: x^(-n) = 1/x^n
-3. **Integer Overflow**: Use `long long` to handle n = -2^31 case
-4. **Bit Manipulation**: Iterative approach uses binary representation of n
-
-## Solution Comparison
-
-- **Recursive**: More intuitive, but uses O(log n) stack space
-- **Iterative**: More efficient in space, uses bit manipulation concepts
-
 ## Common Mistakes
 
 1. **Integer overflow** when n = -2^31 (can't negate directly)
 2. **Not handling negative exponents** properly
 3. **Naive O(n) approach** instead of O(log n)
 4. **Precision issues** with floating point arithmetic
-
-## Edge Cases
 
 - n = 0: return 1.0
 - n = 1: return x
@@ -153,6 +123,21 @@ For x = 2, n = 10:
 
 ## Related Problems
 
-- [69. Sqrt(x)](https://leetcode.com/problems/sqrtx/)
-- [367. Valid Perfect Square](https://leetcode.com/problems/valid-perfect-square/)
-- [372. Super Pow](https://leetcode.com/problems/super-pow/)
+- [69. Sqrt(x)](https://www.leetcode.com/problems/sqrtx/)
+- [367. Valid Perfect Square](https://www.leetcode.com/problems/valid-perfect-square/)
+- [372. Super Pow](https://www.leetcode.com/problems/super-pow/)
+
+## References
+
+- [LC 50: Pow(x, n) on LeetCode](https://www.leetcode.com/problems/pow-x-n/)
+- [LeetCode Discuss — LC 50: Pow(x, n)](https://www.leetcode.com/problems/pow-x-n/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/pow-x-n/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Divide and Conquer**: x^n = (x^(n/2))^2 for even n, x^n = (x^(n/2))^2 * x for odd n
+2. **Negative Exponents**: x^(-n) = 1/x^n
+3. **Integer Overflow**: Use `long long` to handle n = -2^31 case
+4. **Bit Manipulation**: Iterative approach uses binary representation of n
+
+{% endraw %}

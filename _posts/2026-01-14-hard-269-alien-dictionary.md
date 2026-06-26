@@ -7,10 +7,7 @@ permalink: /2026/01/14/hard-269-alien-dictionary/
 tags: [leetcode, hard, graph, topological-sort, string, bfs, kahn]
 ---
 
-# [Hard] 269. Alien Dictionary
-
-## Problem Statement
-
+{% raw %}
 There is a new alien language that uses the English alphabet. However, the order among the letters is unknown to you.
 
 You are given a list of strings `words` from the alien language's dictionary, where the strings are **sorted lexicographically** by the rules of this new language.
@@ -44,85 +41,38 @@ Explanation: The order is invalid, so return "".
 - `1 <= words[i].length <= 100`
 - `words[i]` consists of only lowercase English letters.
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+1. **Graph Construction**: Compare adjacent words to extract ordering constraints
 
-1. **Ordering inference**: How do we infer character order from words? (Assumption: Compare adjacent words - first differing character gives ordering constraint)
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
 
-2. **Invalid ordering**: What makes an ordering invalid? (Assumption: If there's a cycle in the ordering constraints - circular dependency)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-3. **Missing characters**: What if some characters don't appear in any word? (Assumption: Need to clarify - typically all characters appear, but should confirm)
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
 
-4. **Prefix handling**: How should we handle words where one is prefix of another? (Assumption: If word1 is prefix of word2, word1 should come first - but this might indicate invalid input)
+</svg>
 
-5. **Return format**: What should we return if ordering is invalid? (Assumption: Return empty string "" - no valid ordering exists)
+## Common Approaches
 
-## Interview Deduction Process (30 minutes)
+Typical techniques for this pattern:
 
-### Step 1: Brute-Force Approach (8 minutes)
-**Initial Thought**: "I need to find character ordering. Let me try all possible orderings and check if they're valid."
-
-**Naive Solution**: Generate all possible character orderings (permutations), check if each satisfies the word order constraints.
-
-**Complexity**: O(26! × n × m) time, O(26) space
-
-**Issues**:
-- Factorial time complexity - completely infeasible
-- Checks many invalid orderings
-- Very inefficient
-- Doesn't leverage graph structure
-
-### Step 2: Semi-Optimized Approach (10 minutes)
-**Insight**: "This is a topological sort problem. Build a graph from word comparisons, then do topological sort."
-
-**Improved Solution**: Build directed graph: compare adjacent words to find first differing characters, add edge. Then perform topological sort using DFS or Kahn's algorithm.
-
-**Complexity**: O(n × m + V + E) time where V = unique chars, E = edges, O(V + E) space
-
-**Improvements**:
-- Graph-based approach is correct
-- Topological sort finds valid ordering
-- Much more efficient than brute-force
-- Handles cycles (invalid ordering) naturally
-
-### Step 3: Optimized Solution (12 minutes)
-**Final Optimization**: "Topological sort with cycle detection. Use Kahn's algorithm or DFS with cycle detection."
-
-**Best Solution**: Build graph from word comparisons. Use Kahn's algorithm (BFS-based) or DFS with cycle detection for topological sort. Return empty string if cycle detected or result size < V.
-
-**Complexity**: O(n × m + V + E) time, O(V + E) space
-
-**Key Realizations**:
-1. This is a topological sort problem
-2. Graph building from word comparisons is key
-3. Cycle detection indicates invalid ordering
-4. Kahn's algorithm or DFS both work well
-
-## Solution Approach
-
-This problem requires finding the lexicographic order of characters in an alien language. The key insight is that the sorted word list gives us **ordering constraints** between characters, which we can model as a **directed graph** and solve using **topological sort**.
-
-### Key Insights:
-
-1. **Graph Construction**: Compare adjacent words to find character ordering relationships
-2. **Edge Creation**: If `words[i][j] != words[i+1][j]`, then `words[i][j]` comes before `words[i+1][j]`
-3. **Invalid Order Detection**: If `words[i]` is a prefix of `words[i+1]` and `words[i].size() > words[i+1].size()`, order is invalid
-4. **Topological Sort**: Use BFS (Kahn's algorithm) to find valid ordering
-5. **Cycle Detection**: If not all nodes are processed, there's a cycle (invalid order)
-
-### Algorithm:
-
-1. **Build Graph**: 
-   - Initialize adjacency list for all characters
-   - Compare adjacent words to find ordering relationships
-   - Create edges: `adj[w1[j]] → w2[j]` when first differing character found
-2. **Calculate Indegrees**: Count incoming edges for each character
-3. **Topological Sort (BFS)**:
-   - Start with characters having `indegree = 0`
-   - Process each character, reduce indegrees of neighbors
-   - Add to result when indegree becomes 0
-4. **Validation**: If result size equals number of unique characters, return result; otherwise return `""`
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Queue BFS** *(this problem)* | O(n) | O(n) | Shortest path in unweighted graphs |
+| Multi-source BFS | O(n) | O(n) | Start from all sources simultaneously |
+| 0-1 BFS / deque | O(n) | O(n) | Weights 0 or 1 |
+| Level-order BFS | O(n) | O(w) | Process by depth/layer |
 
 ## Solution
 
@@ -172,6 +122,24 @@ class Solution:
 
         return "".join(result)
 ```
+
+### Solution Explanation
+
+**Approach:** Queue BFS (this problem)
+
+**Key idea:** 1. **Graph Construction**: Compare adjacent words to extract ordering constraints
+
+**How the code works:**
+1. **Graph Construction**: Compare adjacent words to extract ordering constraints
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
+
+**Walkthrough** — input `words = ["wrt","wrf","er","ett","rftt"]`, expected output `"wertf"`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 
 ### **Algorithm Explanation:**
 
@@ -320,16 +288,7 @@ Result: "wertf" ✓
   - Adjacency list: O(C + E)
   - Indegree array: O(C)
   - Queue: O(C)
-
-## Key Insights
-
-1. **Graph Construction**: Compare adjacent words to extract ordering constraints
-2. **First Difference Rule**: Only the first differing character gives ordering information
-3. **Invalid Prefix**: Longer word cannot come before shorter word with same prefix
-4. **Topological Sort**: Use BFS (Kahn's algorithm) to find valid ordering
-5. **Cycle Detection**: If not all nodes processed, cycle exists (invalid order)
-
-## Edge Cases
+## Common Mistakes
 
 1. **Single word**: `words = ["abc"]` → return "abc" (any order)
 2. **Invalid prefix**: `words = ["abc", "ab"]` → return "" (invalid)
@@ -337,95 +296,35 @@ Result: "wertf" ✓
 4. **No constraints**: `words = ["a", "b"]` → return "ab" or "ba" (both valid)
 5. **All same prefix**: `words = ["ab", "ac", "ad"]` → extract ordering from first difference
 
-## Common Mistakes
-
 1. **Not checking invalid prefix**: Forgetting to check if longer word comes before shorter
 2. **Duplicate edges**: Not checking if edge already exists before adding
 3. **Missing characters**: Not initializing all characters in adjacency list
 4. **Wrong indegree calculation**: Incrementing indegree for wrong character
 5. **Not validating result**: Not checking if all characters were processed
 
-## Alternative Approaches
-
-### **Approach 2: DFS Topological Sort**
-
-```python
-from collections import defaultdict
-
-class Solution:
-    def alienOrder(self, words):
-        # graph + state
-        adj = defaultdict(set)
-        state = {}  # 0=unvisited, 1=visiting, 2=visited
-
-        # initialize all characters
-        for word in words:
-            for c in word:
-                adj[c]
-                state[c] = 0
-
-        # build graph
-        for i in range(len(words) - 1):
-            w1, w2 = words[i], words[i + 1]
-            minLen = min(len(w1), len(w2))
-            found = False
-
-            for j in range(minLen):
-                if w1[j] != w2[j]:
-                    if w2[j] not in adj[w1[j]]:
-                        adj[w1[j]].add(w2[j])
-                    found = True
-                    break
-
-            # invalid prefix case
-            if not found and len(w1) > len(w2):
-                return ""
-
-        result = []
-        visiting = set()
-
-        # DFS function
-        def hasCycle(c):
-            if state[c] == 1:
-                return True   # cycle
-            if state[c] == 2:
-                return False  # already done
-
-            state[c] = 1  # visiting
-
-            for nei in adj[c]:
-                if hasCycle(nei):
-                    return True
-
-            state[c] = 2  # visited
-            result.append(c)
-            return False
-
-        # run DFS
-        for c in adj:
-            if state[c] == 0:
-                if hasCycle(c):
-                    return ""
-
-        return "".join(result[::-1])
-
-```
-
-**Time Complexity:** O(C + E)  
-**Space Complexity:** O(C + E)
-
-**Comparison:**
-- **BFS (Kahn's)**: More intuitive, easier to understand
-- **DFS**: More compact code, but requires reversing result
-
 ## Related Problems
 
-- [LC 207: Course Schedule](https://leetcode.com/problems/course-schedule/) - Topological sort to detect cycles
-- [LC 210: Course Schedule II](https://leetcode.com/problems/course-schedule-ii/) - Topological sort to find ordering
-- [LC 269: Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) - This problem
-- [LC 444: Sequence Reconstruction](https://leetcode.com/problems/sequence-reconstruction/) - Verify unique topological order
+- [LC 207: Course Schedule](https://www.leetcode.com/problems/course-schedule/) - Topological sort to detect cycles
+- [LC 210: Course Schedule II](https://www.leetcode.com/problems/course-schedule-ii/) - Topological sort to find ordering
+- [LC 269: Alien Dictionary](https://www.leetcode.com/problems/alien-dictionary/) - This problem
+- [LC 444: Sequence Reconstruction](https://www.leetcode.com/problems/sequence-reconstruction/) - Verify unique topological order
 
----
+## Key Takeaways
 
-*This problem demonstrates **Topological Sort** for finding valid ordering that satisfies all constraints. The key is modeling character ordering relationships as a directed graph and using BFS (Kahn's algorithm) to find a valid topological ordering.*
+1. **Graph Construction**: Compare adjacent words to extract ordering constraints
+2. **First Difference Rule**: Only the first differing character gives ordering information
+3. **Invalid Prefix**: Longer word cannot come before shorter word with same prefix
+4. **Topological Sort**: Use BFS (Kahn's algorithm) to find valid ordering
+5. **Cycle Detection**: If not all nodes processed, cycle exists (invalid order)
 
+## References
+
+- [LC 269: Alien Dictionary on LeetCode](https://www.leetcode.com/problems/alien-dictionary/)
+- [LeetCode Discuss — LC 269: Alien Dictionary](https://www.leetcode.com/problems/alien-dictionary/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/alien-dictionary/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Graph](/posts/2025-10-29-leetcode-templates-graph/)
+
+{% endraw %}

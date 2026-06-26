@@ -7,8 +7,7 @@ permalink: /posts/2025-11-24-medium-528-random-pick-with-weight/
 tags: [leetcode, medium, design, binary-search, prefix-sum, weighted-random]
 ---
 
-# [Medium] 528. Random Pick with Weight
-
+{% raw %}
 You are given a **0-indexed** array of positive integers `w` where `w[i]` describes the **weight** of the `i`th index.
 
 You need to implement the function `pickIndex()`, which **randomly** picks an index in the range `[0, w.length - 1]` (inclusive) and returns it. The **probability** of picking an index `i` is `w[i] / sum(w)`.
@@ -53,62 +52,41 @@ solution.pickIndex(); // return 0. The probability of returning 0 is 1/4 = 0.25.
 - `1 <= w[i] <= 10^5`
 - `pickIndex` will be called at most `10^4` times.
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+1. **Prefix Sum Creates Ranges**: Each index gets a range proportional to its weight
 
-1. **Weight definition**: What does "weight" mean? (Assumption: Probability weight - higher weight means higher probability of being picked)
+- The search space must shrink monotonically each step.
+- Decide which half still satisfies the predicate, discard the other.
+- Use `mid = left + (right - left) / 2` to avoid overflow.
 
-2. **Pick operation**: What should pickIndex() return? (Assumption: Random index based on weights - index i has probability w[i] / sum(w))
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 130" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Binary search: shrink [lo … hi]</text>
 
-3. **Weight values**: Can weights be zero or negative? (Assumption: Per constraints, weights are positive integers - no zero or negative)
+  <rect x="40" y="40" width="48" height="32" rx="4" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="64" y="58" text-anchor="middle" font-size="12" fill="#3A3530">lo</text>
+  <rect x="108" y="40" width="48" height="32" rx="4" fill="#E0D8E4" stroke="#A098A8"/>
+  <text x="132" y="58" text-anchor="middle" font-size="12" fill="#3A3530">mid</text>
+  <rect x="196" y="40" width="48" height="32" rx="4" fill="#E8D5D0" stroke="#B8A5A0"/>
+  <text x="220" y="58" text-anchor="middle" font-size="12" fill="#3A3530">hi</text>
+  <rect x="60" y="90" width="160" height="28" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="140" y="108" text-anchor="middle" font-size="11" fill="#6B6560">discard half each step → O(log n)</text>
+  <path d="M132 72v12M220 72v12" stroke="#9A9792" stroke-width="1.5" marker-end="url(#a)"/>
 
-4. **Return value**: What should we return? (Assumption: Integer index from 0 to n-1, randomly selected based on weights)
+</svg>
 
-5. **Randomness**: Should picks be independent? (Assumption: Yes - each call to pickIndex() is independent random selection)
+## Common Approaches
 
-## Interview Deduction Process (20 minutes)
+Typical techniques for this pattern:
 
-### Step 1: Brute-Force Approach (5 minutes)
-**Initial Thought**: "I need to pick index with probability proportional to weight. Let me expand array."
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Standard binary search** *(this problem)* | O(log n) | O(1) | Sorted array, `left <= right` |
+| Lower / upper bound | O(log n) | O(1) | First/last position, insert index |
+| Binary search on rotated array | O(log n) | O(1) | Identify sorted half, discard other |
+| Binary search on answer | O(n log M) | O(1) | Monotonic predicate over search space |
 
-**Naive Solution**: Expand array: for weight w[i], add index i to array w[i] times. Randomly pick from expanded array.
-
-**Complexity**: O(sum(weights)) space, O(1) pickIndex() time
-
-**Issues**:
-- O(sum(weights)) space - very inefficient
-- Doesn't scale for large weights
-- Wastes memory
-- Can be optimized
-
-### Step 2: Semi-Optimized Approach (7 minutes)
-**Insight**: "I can use prefix sum to represent cumulative weights, then binary search."
-
-**Improved Solution**: Build prefix sum array. Generate random number in [0, total_weight). Binary search to find which range it falls into.
-
-**Complexity**: O(n) space, O(log n) pickIndex() time
-
-**Improvements**:
-- Prefix sum enables efficient range lookup
-- O(n) space instead of O(sum(weights))
-- O(log n) pickIndex() is efficient
-- Scales well
-
-### Step 3: Optimized Solution (8 minutes)
-**Final Optimization**: "Prefix sum + binary search is optimal. Can optimize binary search implementation."
-
-**Best Solution**: Prefix sum + binary search is optimal. Build prefix sum in constructor. pickIndex() generates random number, binary searches prefix sum to find index.
-
-**Complexity**: O(n) space, O(log n) pickIndex() time
-
-**Key Realizations**:
-1. Prefix sum is key technique for weighted random
-2. Binary search enables O(log n) lookup
-3. O(n) space is optimal
-4. O(log n) pickIndex() is optimal
-
-## Solution: Prefix Sum + Binary Search
+## Solution
 
 **Time Complexity:** 
 - Constructor: O(n) - Build prefix sum array
@@ -142,6 +120,24 @@ class Solution:
 
 ```
 
+### Solution Explanation
+
+**Approach:** Standard binary search (this problem)
+
+**Key idea:** 1. **Prefix Sum Creates Ranges**: Each index gets a range proportional to its weight
+
+**How the code works:**
+1. **Prefix Sum Creates Ranges**: Each index gets a range proportional to its weight
+- The search space must shrink monotonically each step.
+- Decide which half still satisfies the predicate, discard the other.
+- Use `mid = left + (right - left) / 2` to avoid overflow.
+
+| Approach | Constructor | pickIndex | Space | Pros | Cons |
+|----------|-------------|-----------|-------|------|------|
+| **Linear Search** | O(n) | O(n) | O(n) | Simple | Slow for many calls |
+| **Binary Search (lower_bound)** | O(n) | O(log n) | O(n) | Fast, clean | Requires STL |
+| **Custom Binary Search** | O(n) | O(log n) | O(n) | Fast, explicit | More code |
+
 ### Solution 2: Binary Search (Optimized)
 
 ```python
@@ -163,8 +159,6 @@ class Solution:
         return bisect.bisect_left(self.prefix, target)
 
 ```
-
-## How the Algorithm Works
 
 ### Step-by-Step Example: `w = [1, 3, 2]`
 
@@ -223,14 +217,6 @@ Random value 0.0-6.0 maps to:
   [1.0, 4.0) → Index 1 (weight 3)
   [4.0, 6.0) → Index 2 (weight 2)
 ```
-
-## Key Insights
-
-1. **Prefix Sum Creates Ranges**: Each index gets a range proportional to its weight
-2. **Random Target**: Generate random number in [0, totalSum) range
-3. **Binary Search**: Find first prefix sum >= target (O(log n))
-4. **Linear Search**: Simpler but slower (O(n))
-5. **Probability Proportional**: Larger weights get larger ranges
 
 ## Algorithm Breakdown
 
@@ -292,19 +278,16 @@ def pickIndex(self) -> int:
 - Returns iterator, subtract `begin()` to get index
 - O(log n) instead of O(n)
 
-## Edge Cases
+### Complexity
+| Approach | Constructor | pickIndex | Space | Pros | Cons |
+|----------|-------------|-----------|-------|------|------|
+| **Linear Search** | O(n) | O(n) | O(n) | Simple | Slow for many calls |
+| **Binary Search (lower_bound)** | O(n) | O(log n) | O(n) | Fast, clean | Requires STL |
+| **Custom Binary Search** | O(n) | O(log n) | O(n) | Fast, explicit | More code |
 
-1. **Single weight**: `w = [1]` → always return 0
-2. **Equal weights**: `w = [1,1,1]` → equal probability for all
-3. **Very large weight**: `w = [1, 1000000]` → index 1 almost always picked
-4. **Single large weight**: `w = [100]` → always return 0
+## Implementation Details
 
-## Alternative Approaches
-
-### Approach 2: Integer Random (More Precise)
-
-**Time Complexity:** O(log n) per pickIndex  
-**Space Complexity:** O(n)
+### Prefix Sum Construction
 
 ```python
 import bisect
@@ -326,17 +309,12 @@ class Solution:
 
 ```
 
-**Pros:**
-- Uses integer arithmetic (more precise)
-- `+1` ensures range [1, totalSum] for proper distribution
+**Why this works:**
+- First element: `n + 0 = n`
+- Subsequent: `n + previous_sum = cumulative_sum`
+- Creates ranges: `[0, prefixSum[0]), [prefixSum[0], prefixSum[1]), ...`
 
-**Cons:**
-- Slightly different random distribution
-
-### Approach 3: Custom Binary Search
-
-**Time Complexity:** O(log n) per pickIndex  
-**Space Complexity:** O(n)
+### Random Number Generation
 
 ```python
 import random
@@ -364,24 +342,12 @@ class Solution:
 
 ```
 
-**Pros:**
-- Explicit binary search implementation
-- No STL dependency
+**Why float?**
+- `rand() / RAND_MAX` gives uniform distribution in [0, 1)
+- Multiplying by total sum scales to [0, totalSum)
+- Float provides fine-grained selection
 
-**Cons:**
-- More verbose than `lower_bound`
-
-## Complexity Analysis
-
-| Approach | Constructor | pickIndex | Space | Pros | Cons |
-|----------|-------------|-----------|-------|------|------|
-| **Linear Search** | O(n) | O(n) | O(n) | Simple | Slow for many calls |
-| **Binary Search (lower_bound)** | O(n) | O(log n) | O(n) | Fast, clean | Requires STL |
-| **Custom Binary Search** | O(n) | O(log n) | O(n) | Fast, explicit | More code |
-
-## Implementation Details
-
-### Prefix Sum Construction
+### lower_bound Usage
 
 ```python
 s = 0
@@ -392,41 +358,17 @@ for n in w:
 
 ```
 
-**Why this works:**
-- First element: `n + 0 = n`
-- Subsequent: `n + previous_sum = cumulative_sum`
-- Creates ranges: `[0, prefixSum[0]), [prefixSum[0], prefixSum[1]), ...`
-
-### Random Number Generation
-
-```python
-import random
-
-total = self.prefix[-1]
-target = random.random() * total  # uniform in [0, total)
-
-```
-
-**Why float?**
-- `rand() / RAND_MAX` gives uniform distribution in [0, 1)
-- Multiplying by total sum scales to [0, totalSum)
-- Float provides fine-grained selection
-
-### lower_bound Usage
-
-```python
-import bisect
-
-idx = bisect.bisect_left(self.prefix, target)
-
-```
-
 **What it does:**
 - Returns iterator to first element >= target
 - If all elements < target, returns `end()`
 - Subtract `begin()` to get index
 
 ## Common Mistakes
+
+1. **Single weight**: `w = [1]` → always return 0
+2. **Equal weights**: `w = [1,1,1]` → equal probability for all
+3. **Very large weight**: `w = [1, 1000000]` → index 1 almost always picked
+4. **Single large weight**: `w = [100]` → always return 0
 
 1. **Wrong random range**: Using `rand() % totalSum` instead of scaling properly
 2. **Off-by-one errors**: Not handling edge cases correctly
@@ -443,10 +385,10 @@ idx = bisect.bisect_left(self.prefix, target)
 
 ## Related Problems
 
-- [497. Random Point in Non-overlapping Rectangles](https://leetcode.com/problems/random-point-in-non-overlapping-rectangles/) - Similar weighted selection
-- [710. Random Pick with Blacklist](https://leetcode.com/problems/random-pick-with-blacklist/) - Random with exclusions
-- [380. Insert Delete GetRandom O(1)](https://leetcode.com/problems/insert-delete-getrandom-o1/) - Random from set
-- [398. Random Pick Index](https://leetcode.com/problems/random-pick-index/) - Random index of target value
+- [497. Random Point in Non-overlapping Rectangles](https://www.leetcode.com/problems/random-point-in-non-overlapping-rectangles/) - Similar weighted selection
+- [710. Random Pick with Blacklist](https://www.leetcode.com/problems/random-pick-with-blacklist/) - Random with exclusions
+- [380. Insert Delete GetRandom O(1)](https://www.leetcode.com/problems/insert-delete-getrandom-o1/) - Random from set
+- [398. Random Pick Index](https://www.leetcode.com/problems/random-pick-index/) - Random index of target value
 
 ## Real-World Applications
 
@@ -494,8 +436,8 @@ For weights `w = [w₀, w₁, ..., wₙ₋₁]`:
 ```python
 import random
 
-random.seed()  # optional
-target = random.randint(1, self.prefix[-1])
+total = self.prefix[-1]
+target = random.random() * total  # uniform in [0, total)
 
 ```
 
@@ -511,22 +453,8 @@ target = random.randint(1, self.prefix[-1])
 
 ```python
 import bisect
-import random
 
-
-class Solution:
-    def __init__(self, w: list[int]):
-        self.prefix: list[int] = []
-        s = 0
-        for x in w:
-            s += x
-            self.prefix.append(s)
-        self._rng = random.Random()
-
-    def pickIndex(self) -> int:
-        total = self.prefix[-1]
-        target = self._rng.random() * total
-        return bisect.bisect_left(self.prefix, target)
+idx = bisect.bisect_left(self.prefix, target)
 
 ```
 
@@ -543,4 +471,22 @@ class Solution:
 
 *This problem is an excellent example of combining prefix sums with binary search to achieve efficient weighted random selection, a common pattern in system design and algorithms.*
 
+## Key Takeaways
 
+1. **Prefix Sum Creates Ranges**: Each index gets a range proportional to its weight
+2. **Random Target**: Generate random number in [0, totalSum) range
+3. **Binary Search**: Find first prefix sum >= target (O(log n))
+4. **Linear Search**: Simpler but slower (O(n))
+5. **Probability Proportional**: Larger weights get larger ranges
+
+## References
+
+- [LC 528: Random Pick with Weight on LeetCode](https://www.leetcode.com/problems/random-pick-with-weight/)
+- [LeetCode Discuss — LC 528: Random Pick with Weight](https://www.leetcode.com/problems/random-pick-with-weight/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/random-pick-with-weight/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Data Structure Design](/posts/2025-11-24-leetcode-templates-data-structure-design/)
+
+{% endraw %}

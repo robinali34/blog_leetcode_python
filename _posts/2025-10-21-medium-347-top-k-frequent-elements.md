@@ -1,24 +1,20 @@
 ---
 layout: post
-title: "[Medium] LC 347: Top K Frequent Elements"
+title: "[Medium] 347. Top K Frequent Elements"
 date: 2025-10-21 16:00:00 -0700
 categories: leetcode medium array hash-table heap
 permalink: /posts/2025-10-21-medium-347-top-k-frequent-elements/
 tags: [leetcode, medium, array, hash-table, heap, bucket-sort, quickselect]
 ---
 
-# [Medium] LC 347: Top K Frequent Elements
-
+{% raw %}
 **Difficulty:** Medium  
 **Category:** Array, Hash Table, Heap, Bucket Sort, Quickselect  
 **Companies:** Amazon, Google, Facebook, Microsoft, Apple
 
-## Problem Statement
-
 Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. You may return the answer in **any order**.
 
-### Examples
-
+## Examples
 **Example 1:**
 ```
 Input: nums = [1,1,1,2,2,3], k = 2
@@ -31,8 +27,7 @@ Input: nums = [1], k = 1
 Output: [1]
 ```
 
-### Constraints
-
+## Constraints
 - `1 <= nums.length <= 10^5`
 - `-10^4 <= nums[i] <= 10^4`
 - `k` is in the range `[1, the number of unique elements in the array]`
@@ -78,144 +73,23 @@ class Solution:
         return result
 ```
 
-### Approach 2: Quickselect
+### Solution Explanation
 
-**Algorithm:**
-1. Count frequency of each element
-2. Create array of unique elements
-3. Use quickselect to find k-th largest frequency
-4. Return elements with frequencies >= k-th largest
+**Approach:** Min/max heap (this problem)
 
-**Time Complexity:** O(n) average, O(n²) worst case  
-**Space Complexity:** O(n)
+**Key idea:** 1. **Bucket Sort Advantage**: Most efficient with O(n) time complexity
 
-```python
-import random
+**How the code works:**
+1. **Bucket Sort Advantage**: Most efficient with O(n) time complexity
+- Heap gives fast access to min/max without full sorting.
+- Size-k heap handles Top-K in O(n log k).
+- Lazy deletion when elements leave the heap before removal.
 
-class Solution:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        count_map = {}
+**Walkthrough** — input `nums = [1,1,1,2,2,3], k = 2`, expected output `[1,2]`:
 
-        # Step 1: build frequency map
-        for n in nums:
-            count_map[n] = count_map.get(n, 0) + 1
-
-        unique = list(count_map.keys())
-        n = len(unique)
-
-        # Step 2: quickselect
-        self.quickselect(unique, count_map, 0, n - 1, n - k)
-
-        # Step 3: return top k
-        return unique[n - k:]
-
-    def partition(self, arr, count_map, left, right, pivot_index):
-        pivot_freq = count_map[arr[pivot_index]]
-
-        # move pivot to end
-        arr[pivot_index], arr[right] = arr[right], arr[pivot_index]
-
-        store = left
-
-        for i in range(left, right):
-            if count_map[arr[i]] < pivot_freq:
-                arr[store], arr[i] = arr[i], arr[store]
-                store += 1
-
-        # move pivot to correct place
-        arr[store], arr[right] = arr[right], arr[store]
-        return store
-
-    def quickselect(self, arr, count_map, left, right, k_smallest):
-        if left >= right:
-            return
-
-        pivot_index = left + random.randint(0, right - left)
-        pivot_index = self.partition(arr, count_map, left, right, pivot_index)
-
-        if k_smallest == pivot_index:
-            return
-        elif k_smallest < pivot_index:
-            self.quickselect(arr, count_map, left, pivot_index - 1, k_smallest)
-        else:
-            self.quickselect(arr, count_map, pivot_index + 1, right, k_smallest)
-```
-
-### Approach 3: Min Heap
-
-**Algorithm:**
-1. Count frequency of each element
-2. Use min heap of size k to maintain top k frequent elements
-3. For each element, if heap size < k, add it
-4. If heap size = k and current element has higher frequency than minimum in heap, replace it
-
-**Time Complexity:** O(n log k)  
-**Space Complexity:** O(n)
-
-```python
-import heapq
-
-class Solution:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        freq = {}
-
-        # Step 1: build frequency map
-        for num in nums:
-            freq[num] = freq.get(num, 0) + 1
-
-        # Step 2: maintain min heap of size k
-        minHeap = []
-
-        for num, count in freq.items():
-            if len(minHeap) < k:
-                heapq.heappush(minHeap, (count, num))
-            elif count > minHeap[0][0]:
-                heapq.heappop(minHeap)
-                heapq.heappush(minHeap, (count, num))
-
-        # Step 3: extract result
-        result = []
-        while minHeap:
-            result.append(heapq.heappop(minHeap)[1])
-
-        return result
-```
-
-### Approach 4: Max Heap
-
-**Algorithm:**
-1. Count frequency of each element
-2. Use max heap to store all elements with their frequencies
-3. Extract top k elements from heap
-
-**Time Complexity:** O(n log n)  
-**Space Complexity:** O(n)
-
-```python
-import heapq
-
-class Solution:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        freq = {}
-
-        # Step 1: build frequency map
-        for num in nums:
-            freq[num] = freq.get(num, 0) + 1
-
-        # Step 2: build max heap using negative counts
-        maxHeap = []
-        for num, count in freq.items():
-            heapq.heappush(maxHeap, (-count, num))
-
-        # Step 3: extract top k
-        result = []
-        for _ in range(k):
-            result.append(heapq.heappop(maxHeap)[1])
-
-        return result
-```
-
-## Complexity Analysis
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 
 | Approach | Time Complexity | Space Complexity | Best When |
 |----------|-----------------|------------------|-----------|
@@ -223,14 +97,6 @@ class Solution:
 | Quickselect | O(n) avg, O(n²) worst | O(n) | Large datasets, k ≈ n |
 | Min Heap | O(n log k) | O(n) | k << n, memory efficient |
 | Max Heap | O(n log n) | O(n) | Simple implementation |
-
-## Key Insights
-
-1. **Bucket Sort Advantage**: Most efficient with O(n) time complexity
-2. **Frequency Range**: Maximum frequency is at most n (array length)
-3. **Heap Trade-offs**: Min heap better when k is small, max heap simpler but less efficient
-4. **Quickselect Optimization**: Good average case but worst case can be O(n²)
-
 ## Algorithm Comparison
 
 ### Bucket Sort vs Heap Approaches
@@ -258,9 +124,9 @@ class Solution:
 
 ## Related Problems
 
-- [LC 215: Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
-- [LC 973: K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
-- [LC 692: Top K Frequent Words](https://leetcode.com/problems/top-k-frequent-words/)
+- [LC 215: Kth Largest Element in an Array](https://www.leetcode.com/problems/kth-largest-element-in-an-array/)
+- [LC 973: K Closest Points to Origin](https://www.leetcode.com/problems/k-closest-points-to-origin/)
+- [LC 692: Top K Frequent Words](https://www.leetcode.com/problems/top-k-frequent-words/)
 
 ## Implementation Notes
 
@@ -269,6 +135,57 @@ class Solution:
 3. **Heap**: Use `priority_queue` with custom comparator for min/max heap
 4. **Hash Map**: `unordered_map` for O(1) frequency counting
 
----
+## Common Mistakes
 
-*This problem demonstrates the importance of choosing the right algorithm based on constraints and requirements. Bucket sort provides optimal O(n) solution for this specific problem.*
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+1. **Bucket Sort Advantage**: Most efficient with O(n) time complexity
+2. **Frequency Range**: Maximum frequency is at most n (array length)
+3. **Heap Trade-offs**: Min heap better when k is small, max heap simpler but less efficient
+4. **Quickselect Optimization**: Good average case but worst case can be O(n²)
+
+## References
+
+- [LC 347: Top K Frequent Elements on LeetCode](https://www.leetcode.com/problems/top-k-frequent-elements/)
+- [LeetCode Discuss — LC 347: Top K Frequent Elements](https://www.leetcode.com/problems/top-k-frequent-elements/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/top-k-frequent-elements/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Array & Matrix](/posts/2025-11-24-leetcode-templates-array-matrix/)
+
+## Thinking Process
+
+1. **Bucket Sort Advantage**: Most efficient with O(n) time complexity
+
+- Heap gives fast access to min/max without full sorting.
+- Size-k heap handles Top-K in O(n log k).
+- Lazy deletion when elements leave the heap before removal.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 120" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Binary heap</text>
+
+  <circle cx="140" cy="35" r="16" fill="#E0D8E4" stroke="#A098A8"/><text x="140" y="39" text-anchor="middle" font-size="11">1</text>
+  <circle cx="90" cy="75" r="14" fill="#D4D8E0" stroke="#8B8680"/><text x="90" y="79" text-anchor="middle" font-size="10">3</text>
+  <circle cx="190" cy="75" r="14" fill="#D4D8E0" stroke="#8B8680"/><text x="190" y="79" text-anchor="middle" font-size="10">2</text>
+  <line x1="140" y1="51" x2="90" y2="61" stroke="#9A9792"/><line x1="140" y1="51" x2="190" y2="61" stroke="#9A9792"/>
+  <text x="140" y="110" text-anchor="middle" font-size="11" fill="#6B6560">parent ≤ children (min-heap)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Min/max heap** *(this problem)* | O(n log k) | O(k) | Top-K, streaming median |
+| Two heaps | O(n log n) | O(n) | Median from data stream |
+| Heap + lazy deletion | O(n log n) | O(n) | Delayed removal |
+| Priority-driven search | O(n log n) | O(n) | Dijkstra, best-first expansion |
+
+{% endraw %}

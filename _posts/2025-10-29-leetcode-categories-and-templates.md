@@ -6,16 +6,17 @@ categories: leetcode algorithm problem-solving templates
 permalink: /posts/2025-10-29-leetcode-categories-and-templates/
 tags: [leetcode, templates, patterns, dp, graph, sliding-window, two-pointers, binary-search]
 ---
-
-{% raw %}
 # LeetCode Categories and Solution Templates
 
 A quick reference to the most common LeetCode categories and battle‑tested Python templates to speed up implementation.
 
-> This guide is now split into category posts:
+> This guide is split into category posts (minimal, copy-paste Python):
+> - **Data Structures & Core Algorithms:** [Binary search bounds, prefix/diff, monotonic stack/queue, heap, DSU, Trie, segment tree, Fenwick, sparse table](/posts/2025-10-29-leetcode-templates-data-structures/)
 > - Arrays & Strings: [/posts/2025-10-29-leetcode-templates-arrays-strings/](/posts/2025-10-29-leetcode-templates-arrays-strings/)
-> - Data Structures: [/posts/2025-10-29-leetcode-templates-data-structures/](/posts/2025-10-29-leetcode-templates-data-structures/)
+> - Stack: [/posts/2025-11-13-leetcode-templates-stack/](/posts/2025-11-13-leetcode-templates-stack/)
+> - Calculator: [/posts/2025-11-13-leetcode-templates-calculator/](/posts/2025-11-13-leetcode-templates-calculator/)
 > - Graph: [/posts/2025-10-29-leetcode-templates-graph/](/posts/2025-10-29-leetcode-templates-graph/)
+> - Backtracking: [/posts/2025-11-24-leetcode-templates-backtracking/](/posts/2025-11-24-leetcode-templates-backtracking/)
 > - Trees: [/posts/2025-10-29-leetcode-templates-trees/](/posts/2025-10-29-leetcode-templates-trees/)
 > - Dynamic Programming: [/posts/2025-10-29-leetcode-templates-dp/](/posts/2025-10-29-leetcode-templates-dp/)
 > - Math & Geometry: [/posts/2025-10-29-leetcode-templates-math-geometry/](/posts/2025-10-29-leetcode-templates-math-geometry/)
@@ -46,6 +47,14 @@ A quick reference to the most common LeetCode categories and battle‑tested Pyt
   - [0-1 BFS](#0-1-bfs-edge-weights-0-or-1) – 0/1 weighted graphs
   - [Tarjan SCC](#tarjan-scc-strongly-connected-components) – strongly connected comps
   - [Bridges & Articulation](#bridges-and-articulation-points-tarjan) – critical edges/nodes
+- [DFS / Backtracking](#dfs--backtracking) – systematic exploration with pruning
+  - [Permutations](#permutations-all-arrangements) – all arrangements with/without duplicates
+  - [Combinations](#combinations-choose-k-from-n) – choose k from n elements
+  - [Subsets](#subsets-all-subsets) – power set generation
+  - [Combination Sum](#combination-sum-unboundedreuse-elements) – sum to target with reuse
+  - [Grid Backtracking](#grid-backtracking-word-search-path-finding) – 2D grid exploration
+  - [Constraint Satisfaction](#constraint-satisfaction-n-queens-sudoku) – N-Queens, Sudoku
+  - [Palindrome Partitioning](#palindrome-partitioning) – partition into palindromes
 - [Trees](#trees) – hierarchical structures
   - [Traversals](#tree-traversals-iterative) – inorder/level-order
   - [LCA](#lca-binary-lifting) – ancestor queries
@@ -96,12 +105,11 @@ def solve(self, s: str) -> int:
     return best
 ```
 
-Examples: 3 Longest Substring Without Repeating Characters; 713 Subarray Product Less Than K (positive product, shrink while ≥ k); 76 Minimum Window Substring; 424 Longest Repeating Character Replacement.
+Examples: 3 Longest Substring Without Repeating Characters; 76 Minimum Window Substring; 424 Longest Repeating Character Replacement.
 
 | ID | Title | Link |
 |---|---|---|
 | 3 | Longest Substring Without Repeating Characters | https://leetcode.com/problems/longest-substring-without-repeating-characters/ |
-| 713 | Subarray Product Less Than K | https://leetcode.com/problems/subarray-product-less-than-k/ |
 | 76 | Minimum Window Substring | https://leetcode.com/problems/minimum-window-substring/ |
 | 424 | Longest Repeating Character Replacement | https://leetcode.com/problems/longest-repeating-character-replacement/ |
 
@@ -245,7 +253,7 @@ Examples: 739 Daily Temperatures; 84 Largest Rectangle in Histogram; 239 Sliding
 
 ## BFS / Shortest Path (unweighted)
 
-# Grid BFS template (4-direction)
+// Grid BFS template (4-direction)
 ```python
 from collections import deque
 
@@ -282,6 +290,12 @@ def bfsGrid(self, g: list[str], s: tuple[int, int], t: tuple[int, int]) -> int:
 
 ## DFS / Backtracking
 
+Backtracking is a systematic way to explore all possible solutions by building candidates incrementally and abandoning ("backtracking") partial candidates that cannot lead to valid solutions.
+
+### Permutations (All Arrangements)
+
+Generate all permutations of distinct elements.
+
 ```python
 # Subsets
 def dfs(self, i: int, nums: list[int], cur: list[int], out: list[list[int]]) -> None:
@@ -298,18 +312,6 @@ def dfs(self, i: int, nums: list[int], cur: list[int], out: list[list[int]]) -> 
     cur.pop()
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 78 | Subsets | https://leetcode.com/problems/subsets/ |
-| 46 | Permutations | https://leetcode.com/problems/permutations/ |
-| 39 | Combination Sum | https://leetcode.com/problems/combination-sum/ |
-| 77 | Combinations | https://leetcode.com/problems/combinations/ |
-
-## Trees
-
-## Tree Traversals (iterative)
-
-# Inorder (iterative)
 ```python
 def inorder(self, root: TreeNode) -> list[int]:
     ans = []
@@ -328,7 +330,15 @@ def inorder(self, root: TreeNode) -> list[int]:
     return ans
 ```
 
-# Level-order (BFS)
+| ID | Title | Link |
+|---|---|---|
+| 46 | Permutations | https://leetcode.com/problems/permutations/ |
+| 47 | Permutations II | https://leetcode.com/problems/permutations-ii/ |
+
+### Combinations (Choose k from n)
+
+Generate all combinations of k elements from n elements.
+
 ```python
 from collections import deque
 
@@ -358,7 +368,13 @@ def levelOrder(self, root: TreeNode) -> list[list[int]]:
     return res
 ```
 
-## LCA (Binary Lifting)
+| ID | Title | Link |
+|---|---|---|
+| 77 | Combinations | https://leetcode.com/problems/combinations/ |
+
+### Subsets (All Subsets)
+
+Generate all subsets (power set) of an array.
 
 ```python
 K = 17  # adjust for n (e.g., 17 for n<=1e5)
@@ -407,13 +423,6 @@ class LCA:
 
         return self.up[a][0]
 ```
-
-| ID | Title | Link |
-|---|---|---|
-| 236 | Lowest Common Ancestor of a Binary Tree | https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/ |
-| 235 | Lowest Common Ancestor of a BST | https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/ |
-
-## HLD (Heavy-Light Decomposition) skeleton
 
 ```python
 # Heavy-Light Decomposition for path queries on a tree
@@ -537,9 +546,12 @@ def queryPath(a: int, b: int, seg: SegTree, hld: HLD) -> int:
 
 | ID | Title | Link |
 |---|---|---|
-| — | (Rare in LC; use for path queries if needed) | — |
+| 78 | Subsets | https://leetcode.com/problems/subsets/ |
+| 90 | Subsets II | https://leetcode.com/problems/subsets-ii/ |
 
-## Union-Find (Disjoint Set Union)
+### Combination Sum (Unbounded/Reuse Elements)
+
+Find all combinations that sum to target, elements can be reused.
 
 ```python
 class DSU:
@@ -570,14 +582,6 @@ class DSU:
         return True
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 684 | Redundant Connection | https://leetcode.com/problems/redundant-connection/ |
-| 721 | Accounts Merge | https://leetcode.com/problems/accounts-merge/ |
-| 1319 | Number of Operations to Make Network Connected | https://leetcode.com/problems/number-of-operations-to-make-network-connected/ |
-
-## Heap / K-way Merge
-
 ```python
 import heapq
 
@@ -603,10 +607,13 @@ def mergeK(lists: list[list[int]]) -> list[int]:
 
 | ID | Title | Link |
 |---|---|---|
-| 23 | Merge k Sorted Lists | https://leetcode.com/problems/merge-k-sorted-lists/ |
-| 295 | Find Median from Data Stream | https://leetcode.com/problems/find-median-from-data-stream/ |
+| 39 | Combination Sum | https://leetcode.com/problems/combination-sum/ |
+| 40 | Combination Sum II | https://leetcode.com/problems/combination-sum-ii/ |
+| 216 | Combination Sum III | https://leetcode.com/problems/combination-sum-iii/ |
 
-## Topological Sort (Kahn / DFS)
+### Grid Backtracking (Word Search, Path Finding)
+
+Backtrack on 2D grid with constraints.
 
 ```python
 from collections import deque
@@ -642,11 +649,12 @@ def topoKahn(n: int, g: list[list[int]]) -> list[int]:
 
 | ID | Title | Link |
 |---|---|---|
-| 207 | Course Schedule | https://leetcode.com/problems/course-schedule/ |
-| 210 | Course Schedule II | https://leetcode.com/problems/course-schedule-ii/ |
-| 269 | Alien Dictionary | https://leetcode.com/problems/alien-dictionary/ |
+| 79 | Word Search | https://leetcode.com/problems/word-search/ |
+| 212 | Word Search II | https://leetcode.com/problems/word-search-ii/ |
 
-## Dijkstra (Shortest Path with Weights ≥ 0)
+### Constraint Satisfaction (N-Queens, Sudoku)
+
+Backtracking with complex constraints.
 
 ```python
 import heapq
@@ -669,6 +677,350 @@ def dijkstra(n: int, g: list[list[tuple[int, int]]], s: int) -> list[int]:
                 dist[v] = d + w
                 heapq.heappush(pq, (dist[v], v))
 
+    return dist
+```
+
+| ID | Title | Link |
+|---|---|---|
+| 51 | N-Queens | https://leetcode.com/problems/n-queens/ |
+| 52 | N-Queens II | https://leetcode.com/problems/n-queens-ii/ |
+| 37 | Sudoku Solver | https://leetcode.com/problems/sudoku-solver/ |
+
+### Palindrome Partitioning
+
+Partition string into palindromic substrings.
+
+```python
+# Tarjan's algorithm: O(N+M) to label each node with SCC id
+class TarjanSCC:
+    def __init__(self, n: int):
+        self.n = n
+        self.timer = 0
+        self.compCnt = 0
+        self.g = [[] for _ in range(n)]
+        self.tin = [-1] * n
+        self.low = [0] * n
+        self.comp = [-1] * n
+        self.st = []
+        self.in_stack = [False] * n
+
+    def addEdge(self, u: int, v: int) -> None:
+        self.g[u].append(v)
+
+    def dfs(self, u: int) -> None:
+        self.tin[u] = self.low[u] = self.timer
+        self.timer += 1
+
+        self.st.append(u)
+        self.in_stack[u] = True
+
+        for v in self.g[u]:
+            if self.tin[v] == -1:
+                self.dfs(v)
+                self.low[u] = min(self.low[u], self.low[v])
+
+            elif self.in_stack[v]:
+                self.low[u] = min(self.low[u], self.tin[v])
+
+        if self.low[u] == self.tin[u]:
+            while True:
+                v = self.st.pop()
+                self.in_stack[v] = False
+                self.comp[v] = self.compCnt
+
+                if v == u:
+                    break
+
+            self.compCnt += 1
+
+    def run(self) -> int:
+        for i in range(self.n):
+            if self.tin[i] == -1:
+                self.dfs(i)
+
+        return self.compCnt
+```
+
+| ID | Title | Link |
+|---|---|---|
+| 131 | Palindrome Partitioning | https://leetcode.com/problems/palindrome-partitioning/ |
+| 132 | Palindrome Partitioning II | https://leetcode.com/problems/palindrome-partitioning-ii/ |
+
+### General Backtracking Template
+
+```python
+# Interval scheduling: select max non-overlapping
+def schedule(self, iv: list[tuple[int, int]]) -> int:
+    iv.sort(key=lambda x: x[1])
+
+    cnt = 0
+    end = -10**9
+
+    for s, e in iv:
+        if s >= end:
+            cnt += 1
+            end = e
+
+    return cnt
+```
+
+**Key Points:**
+- **Base Case**: When solution is complete, add to results
+- **Pruning**: Skip invalid candidates early
+- **Make Move**: Add candidate to current solution
+- **Recurse**: Explore further with updated state
+- **Backtrack**: Remove candidate to try next option
+
+## Trees
+
+## Tree Traversals (iterative)
+
+// Inorder (iterative)
+```python
+from collections import deque
+from typing import Optional
+
+
+def inorder(root: Optional["TreeNode"]) -> list[int]:
+    ans = []
+    st = []
+    cur = root
+    while cur or st:
+        while cur:
+            st.append(cur)
+            cur = cur.left
+        cur = st.pop()
+        ans.append(cur.val)
+        cur = cur.right
+    return ans
+```
+
+// Level-order (BFS)
+```python
+def level_order(root: Optional["TreeNode"]) -> list[list[int]]:
+    if not root:
+        return []
+    res = []
+    q = deque([root])
+    while q:
+        sz = len(q)
+        level = []
+        for _ in range(sz):
+            u = q.popleft()
+            level.append(u.val)
+            if u.left:
+                q.append(u.left)
+            if u.right:
+                q.append(u.right)
+        res.append(level)
+    return res
+```
+
+## LCA (Binary Lifting)
+
+```python
+def build_lca(g: list[list[int]], root: int = 0):
+    n = len(g)
+    LOG = (n - 1).bit_length()
+    up = [[-1] * LOG for _ in range(n)]
+    depth = [0] * n
+
+    def dfs(u: int, p: int) -> None:
+        up[u][0] = p
+        for k in range(1, LOG):
+            prev = up[u][k - 1]
+            up[u][k] = -1 if prev == -1 else up[prev][k - 1]
+        for v in g[u]:
+            if v == p:
+                continue
+            depth[v] = depth[u] + 1
+            dfs(v, u)
+
+    dfs(root, -1)
+
+    def lift(u: int, d: int) -> int:
+        for k in range(LOG):
+            if (d >> k) & 1:
+                u = up[u][k]
+                if u == -1:
+                    break
+        return u
+
+    def lca(a: int, b: int) -> int:
+        if depth[a] < depth[b]:
+            a, b = b, a
+        a = lift(a, depth[a] - depth[b])
+        if a == b:
+            return a
+        for k in range(LOG - 1, -1, -1):
+            if up[a][k] != up[b][k]:
+                a = up[a][k]
+                b = up[b][k]
+        return up[a][0]
+
+    return lca, depth, up
+```
+
+| ID | Title | Link |
+|---|---|---|
+| 236 | Lowest Common Ancestor of a Binary Tree | https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/ |
+| 235 | Lowest Common Ancestor of a BST | https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/ |
+
+## HLD (Heavy-Light Decomposition) skeleton
+
+```python
+def hld_build(g: list[list[int]], root: int = 0):
+    n = len(g)
+    parent = [-1] * n
+    depth = [0] * n
+    size = [0] * n
+    heavy = [-1] * n
+    head = [0] * n
+    pos = [0] * n
+    cur = 0
+
+    def dfs1(u: int, p: int) -> int:
+        parent[u] = p
+        size[u] = 1
+        best = 0
+        for v in g[u]:
+            if v == p:
+                continue
+            depth[v] = depth[u] + 1
+            s = dfs1(v, u)
+            size[u] += s
+            if s > best:
+                best = s
+                heavy[u] = v
+        return size[u]
+
+    def dfs2(u: int, h: int) -> None:
+        nonlocal cur
+        head[u] = h
+        pos[u] = cur
+        cur += 1
+        if heavy[u] != -1:
+            dfs2(heavy[u], h)
+        for v in g[u]:
+            if v != parent[u] and v != heavy[u]:
+                dfs2(v, v)
+
+    dfs1(root, -1)
+    dfs2(root, root)
+    return parent, depth, size, heavy, head, pos
+```
+
+| ID | Title | Link |
+|---|---|---|
+| — | (Rare in LC; use for path queries if needed) | — |
+
+## Union-Find (Disjoint Set Union)
+
+```python
+class DSU:
+    def __init__(self, n: int):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+
+    def find(self, x: int) -> int:
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, a: int, b: int) -> bool:
+        ra, rb = self.find(a), self.find(b)
+        if ra == rb:
+            return False
+        if self.rank[ra] < self.rank[rb]:
+            ra, rb = rb, ra
+        self.parent[rb] = ra
+        if self.rank[ra] == self.rank[rb]:
+            self.rank[ra] += 1
+        return True
+```
+
+| ID | Title | Link |
+|---|---|---|
+| 684 | Redundant Connection | https://leetcode.com/problems/redundant-connection/ |
+| 721 | Accounts Merge | https://leetcode.com/problems/accounts-merge/ |
+| 1319 | Number of Operations to Make Network Connected | https://leetcode.com/problems/number-of-operations-to-make-network-connected/ |
+
+## Heap / K-way Merge
+
+```python
+import heapq
+from typing import List
+
+
+def merge_k_sorted_lists(lists: List[List[int]]) -> List[int]:
+    heap = []
+    for i, lst in enumerate(lists):
+        if lst:
+            heapq.heappush(heap, (lst[0], i, 0))
+    out: List[int] = []
+    while heap:
+        v, li, ei = heapq.heappop(heap)
+        out.append(v)
+        ni = ei + 1
+        if ni < len(lists[li]):
+            heapq.heappush(heap, (lists[li][ni], li, ni))
+    return out
+```
+
+| ID | Title | Link |
+|---|---|---|
+| 23 | Merge k Sorted Lists | https://leetcode.com/problems/merge-k-sorted-lists/ |
+| 295 | Find Median from Data Stream | https://leetcode.com/problems/find-median-from-data-stream/ |
+
+## Topological Sort (Kahn / DFS)
+
+```python
+from collections import deque
+
+
+def topo_kahn(n: int, g: list[list[int]]) -> list[int]:
+    indeg = [0] * n
+    for u in range(n):
+        for v in g[u]:
+            indeg[v] += 1
+    q = deque(i for i in range(n) if indeg[i] == 0)
+    order = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in g[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+    return order if len(order) == n else []
+```
+
+| ID | Title | Link |
+|---|---|---|
+| 207 | Course Schedule | https://leetcode.com/problems/course-schedule/ |
+| 210 | Course Schedule II | https://leetcode.com/problems/course-schedule-ii/ |
+| 269 | Alien Dictionary | https://leetcode.com/problems/alien-dictionary/ |
+
+## Dijkstra (Shortest Path with Weights ≥ 0)
+
+```python
+import heapq
+
+
+def dijkstra(n: int, g: list[list[tuple[int, int]]], s: int) -> list[int]:
+    INF = 10**18
+    dist = [INF] * n
+    dist[s] = 0
+    pq = [(0, s)]
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d != dist[u]:
+            continue
+        for v, w in g[u]:
+            nd = d + w
+            if nd < dist[v]:
+                dist[v] = nd
+                heapq.heappush(pq, (nd, v))
     return dist
 ```
 
@@ -780,54 +1132,46 @@ def dijkstra(n: int, g: list[list[tuple[int, int]]], s: int) -> list[int]:
 ## Tarjan SCC (Strongly Connected Components)
 
 ```python
-# Tarjan's algorithm: O(N+M) to label each node with SCC id
-class TarjanSCC:
+class Tarjan:
     def __init__(self, n: int):
         self.n = n
         self.timer = 0
-        self.compCnt = 0
         self.g = [[] for _ in range(n)]
         self.tin = [-1] * n
         self.low = [0] * n
         self.comp = [-1] * n
-        self.st = []
+        self.st: list[int] = []
         self.in_stack = [False] * n
+        self.ncomp = 0
 
-    def addEdge(self, u: int, v: int) -> None:
+    def add(self, u: int, v: int) -> None:
         self.g[u].append(v)
 
     def dfs(self, u: int) -> None:
         self.tin[u] = self.low[u] = self.timer
         self.timer += 1
-
         self.st.append(u)
         self.in_stack[u] = True
-
         for v in self.g[u]:
             if self.tin[v] == -1:
                 self.dfs(v)
                 self.low[u] = min(self.low[u], self.low[v])
-
             elif self.in_stack[v]:
                 self.low[u] = min(self.low[u], self.tin[v])
-
         if self.low[u] == self.tin[u]:
             while True:
                 v = self.st.pop()
                 self.in_stack[v] = False
-                self.comp[v] = self.compCnt
-
+                self.comp[v] = self.ncomp
                 if v == u:
                     break
-
-            self.compCnt += 1
+            self.ncomp += 1
 
     def run(self) -> int:
         for i in range(self.n):
             if self.tin[i] == -1:
                 self.dfs(i)
-
-        return self.compCnt
+        return self.ncomp
 ```
 
 | ID | Title | Link |
@@ -851,22 +1195,13 @@ class TarjanSCC:
 | 621 | Task Scheduler | https://leetcode.com/problems/task-scheduler/ |
 
 ```python
-# Interval scheduling: select max non-overlapping
-def schedule(self, iv: list[tuple[int, int]]) -> int:
-    iv.sort(key=lambda x: x[1])
-
+def max_non_overlapping(intervals: list[tuple[int, int]]) -> int:
+    intervals.sort(key=lambda x: x[1])
     cnt = 0
-    end = -10**9
-
-    for s, e in iv:
+    end = float("-inf")
+    for s, e in intervals:
         if s >= end:
             cnt += 1
             end = e
-
     return cnt
 ```
-{% endraw %}
-
-## Recent solution posts (2026)
-
-For **curated links by theme** (sliding window, trees, XOR, scheduling, and more), see the [LeetCode Questions List]({{ site.baseurl }}/leetcode-questions-list/) section *Problems by Category* → *Spring 2026 highlights*, and the [LeetCode Templates]({{ site.baseurl }}/leetcode-templates/) page *Recent posts by category*.

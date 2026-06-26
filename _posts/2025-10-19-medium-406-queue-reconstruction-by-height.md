@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 406. Queue Reconstruction by Height"
 date: 2025-10-19 11:16:19 -0700
-categories: python greedy sorting list problem-solving
+categories: leetcode algorithm medium cpp greedy sorting list problem-solving
 ---
 
-# [Medium] 406. Queue Reconstruction by Height
-
+{% raw %}
 You are given an array of people, `people`, which are the attributes of some people in a queue (not necessarily in order). Each `people[i] = [hi, ki]` represents the `ith` person of height `hi` with exactly `ki` other people who have a height greater than or equal to `hi` in front of them.
 
 Write an algorithm to reconstruct the queue.
@@ -46,7 +45,38 @@ Person 5 has height 6 with no one taller or equal in front of them.
 - `0 <= ki < people.length`
 - It is guaranteed that the queue can be reconstructed.
 
-## Solution: Greedy Sorting with List Insertion
+## Thinking Process
+
+1. **Tallest first:** Process tallest people first
+1. **Tallest people:** Can be placed anywhere without affecting others
+
+- Greedy works when local optimal choices lead to global optimum.
+- Often sort first to make the greedy choice obvious.
+- Prove or sanity-check: would swapping two choices ever help?
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 100" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Greedy choice</text>
+
+  <line x1="30" y1="55" x2="250" y2="55" stroke="#D4D1CC" stroke-width="2"/>
+  <rect x="60" y="43" width="40" height="22" rx="3" fill="#A8B5A2" stroke="#6B8B6B"/>
+  <rect x="130" y="43" width="55" height="22" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <rect x="200" y="43" width="35" height="22" rx="3" fill="#E8D5D0" stroke="#B8A5A0"/>
+  <text x="140" y="90" text-anchor="middle" font-size="11" fill="#6B6560">pick locally best after sorting</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Sort + greedy** *(this problem)* | O(n log n) | O(1) | Interval scheduling, assignment |
+| Local greedy choice | O(n) | O(1) | Jump game, gas station |
+| Greedy + heap | O(n log n) | O(n) | Merge streams, room allocation |
+| Exchange argument | O(n) | O(1) | Prove greedy choice is safe |
+
+## Solution
 
 **Time Complexity:** O(n²) where n is the number of people  
 **Space Complexity:** O(n) for the result list
@@ -67,8 +97,7 @@ class Solution:
         return result
 ```
 
-## How the Algorithm Works
-
+### Solution Explanation
 **Key Insight:** Sort people by height (descending) and k-value (ascending), then insert each person at the k-th position.
 
 **Steps:**
@@ -131,8 +160,7 @@ for person in people:
 3. **Insert person** at that position
 4. **Repeat** for all people
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time Complexity | Space Complexity |
 |-----------|----------------|------------------|
 | Sorting | O(n log n) | O(1) |
@@ -140,27 +168,6 @@ for person in people:
 | **Total** | **O(n²)** | **O(n)** |
 
 Where n is the number of people.
-
-## Edge Cases
-
-1. **Single person:** `people = [[5,0]]` → `[[5,0]]`
-2. **All same height:** `people = [[5,0],[5,1],[5,2]]` → `[[5,0],[5,1],[5,2]]`
-3. **All k=0:** `people = [[7,0],[6,0],[5,0]]` → `[[5,0],[6,0],[7,0]]`
-4. **Maximum k:** `people = [[1,2]]` → `[[1,2]]`
-
-## Key Insights
-
-### Greedy Strategy:
-1. **Tallest first:** Process tallest people first
-2. **K-value ordering:** For same height, process by k-value
-3. **Insertion order:** Insert at k-th position
-4. **Optimal result:** Always produces correct reconstruction
-
-### Why This Works:
-1. **Tallest people:** Can be placed anywhere without affecting others
-2. **K-value constraint:** Each person needs exactly k taller people in front
-3. **Insertion order:** Maintains the constraint for all people
-4. **List efficiency:** O(1) insertion at arbitrary positions
 
 ## Detailed Example Walkthrough
 
@@ -185,52 +192,12 @@ Sorted:   [[6,0],[5,0],[4,0],[3,2],[2,2],[1,4]]
 
 **Final result:** `[[4,0],[5,0],[2,2],[3,2],[1,4],[6,0]]`
 
-## Alternative Approaches
-
-### Approach 1: List with Insertion
-```python
-class Solution:
-    def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
-        people.sort(key=lambda x: (-x[0], x[1]))
-
-        result = []
-
-        for person in people:
-            result.insert(person[1], person)
-
-        return result
-```
-
-**Time Complexity:** O(n²)  
-**Space Complexity:** O(n)
-
-### Approach 2: Priority Queue
-```python
-import heapq
-
-class Solution:
-    def reconstructQueue(self, people: list[list[int]]) -> list[list[int]]:
-        pq = []
-
-        # build heap
-        for h, k in people:
-            heapq.heappush(pq, (-h, k))
-
-        result = []
-
-        # process heap AFTER building it
-        while pq:
-            neg_h, k = heapq.heappop(pq)
-            h = -neg_h
-            result.insert(k, [h, k])
-
-        return result
-```
-
-**Time Complexity:** O(n²)  
-**Space Complexity:** O(n)
-
 ## Common Mistakes
+
+1. **Single person:** `people = [[5,0]]` → `[[5,0]]`
+2. **All same height:** `people = [[5,0],[5,1],[5,2]]` → `[[5,0],[5,1],[5,2]]`
+3. **All k=0:** `people = [[7,0],[6,0],[5,0]]` → `[[5,0],[6,0],[7,0]]`
+4. **Maximum k:** `people = [[1,2]]` → `[[1,2]]`
 
 1. **Wrong sorting order:** Not sorting by height descending first
 2. **Incorrect k-value handling:** Not considering k-value for same height
@@ -239,10 +206,10 @@ class Solution:
 
 ## Related Problems
 
-- [135. Candy](https://leetcode.com/problems/candy/)
-- [455. Assign Cookies](https://leetcode.com/problems/assign-cookies/)
-- [621. Task Scheduler](https://leetcode.com/problems/task-scheduler/)
-- [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)
+- [135. Candy](https://www.leetcode.com/problems/candy/)
+- [455. Assign Cookies](https://www.leetcode.com/problems/assign-cookies/)
+- [621. Task Scheduler](https://www.leetcode.com/problems/task-scheduler/)
+- [435. Non-overlapping Intervals](https://www.leetcode.com/problems/non-overlapping-intervals/)
 
 ## Why This Solution Works
 
@@ -263,3 +230,25 @@ class Solution:
 2. **Optimality:** Produces correct queue order
 3. **Efficiency:** O(n²) time complexity
 4. **Simplicity:** Easy to understand and implement
+
+## References
+
+- [LC 406: Queue Reconstruction by Height on LeetCode](https://www.leetcode.com/problems/queue-reconstruction-by-height/)
+- [LeetCode Discuss — LC 406: Queue Reconstruction by Height](https://www.leetcode.com/problems/queue-reconstruction-by-height/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/queue-reconstruction-by-height/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### Greedy Strategy:
+1. **Tallest first:** Process tallest people first
+2. **K-value ordering:** For same height, process by k-value
+3. **Insertion order:** Insert at k-th position
+4. **Optimal result:** Always produces correct reconstruction
+
+### Why This Works:
+1. **Tallest people:** Can be placed anywhere without affecting others
+2. **K-value constraint:** Each person needs exactly k taller people in front
+3. **Insertion order:** Maintains the constraint for all people
+4. **List efficiency:** O(1) insertion at arbitrary positions
+
+{% endraw %}

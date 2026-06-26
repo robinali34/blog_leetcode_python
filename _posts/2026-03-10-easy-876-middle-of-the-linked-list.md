@@ -1,122 +1,130 @@
 ---
 layout: post
 title: "[Easy] 876. Middle of the Linked List"
-date: 2026-03-10 00:00:00 -0700
+date: 2026-03-10
 categories: [leetcode, easy, linked-list, two-pointers]
-tags: [leetcode, easy, linked-list, fast-slow]
+tags: [leetcode, easy, linked-list, two-pointers, slow-fast]
 permalink: /2026/03/10/easy-876-middle-of-the-linked-list/
 ---
 
-# [Easy] 876. Middle of the Linked List
-
-## Problem Statement
-
-Given the `head` of a singly linked list, return the **middle node** of the linked list.
-
-If there are **two middle nodes** (even length), return the **second** middle node.
+{% raw %}
+Given the `head` of a singly linked list, return the **middle** node. If there are two middle nodes, return the **second** middle node.
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: head = [1,2,3,4,5]
+Output: [3,4,5]
+Explanation: The middle node is 3.
+```
+
+**Example 2:**
+
+```
+Input: head = [1,2,3,4,5,6]
+Output: [4,5,6]
+Explanation: Two middle nodes (3 and 4), return the second one.
+```
+
+## Constraints
+
+- The number of nodes is in `[1, 100]`
+- `1 <= Node.val <= 100`
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Iterative pointer walk** *(this problem)* | O(n) | O(1) | Traversal, insertion |
+| Dummy head node | O(n) | O(1) | Simplify head-edge cases |
+| Reversal (3-pointer) | O(n) | O(1) | Reverse sublist or full list |
+| Slow/fast pointers | O(n) | O(1) | Middle, cycle, merge lists |
+
+## Thinking Process
+
+### Slow & Fast Pointer
+
+Move `slow` one step and `fast` two steps at a time. When `fast` reaches the end, `slow` is at the middle.
+
+**Why it works:** `fast` travels at 2x speed. When `fast` has covered the full list, `slow` has covered exactly half.
+
+### Odd vs Even Length
+
+```
+Odd (5 nodes):   1 → 2 → 3 → 4 → 5
+                          ↑ slow stops here (fast at 5, fast->next is null)
+
+Even (6 nodes):  1 → 2 → 3 → 4 → 5 → 6
+                              ↑ slow stops here (fast at null)
+```
+
+For even-length lists, this naturally returns the **second** middle node, matching the problem requirement.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 115" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Linked list: pointer walk</text>
+
+  <rect x="30" y="50" width="44" height="32" rx="4" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="52" y="68" text-anchor="middle" font-size="12">1</text>
+  <path d="M74 66h16" stroke="#8B8680" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="90" y="50" width="44" height="32" rx="4" fill="#E0D8E4" stroke="#A098A8"/>
+  <text x="112" y="68" text-anchor="middle" font-size="12">2</text>
+  <path d="M134 66h16" stroke="#8B8680" stroke-width="2"/>
+  <rect x="150" y="50" width="44" height="32" rx="4" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <text x="172" y="68" text-anchor="middle" font-size="12">3</text>
+  <text x="130" y="105" text-anchor="middle" font-size="11" fill="#6B6560">slow → → fast (2x speed)</text>
+  <defs><marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#8B8680"/></marker></defs>
+
+</svg>
+
+## Approach: Slow & Fast Pointer -- O(n)
 ```python
 Input: head = [1,2,3,4,5]
 Output: [3,4,5]
 # Middle node is 3 (odd length).
 ```
 
-**Example 2:**
+### Solution Explanation
 
-```python
-Input: head = [1,2,3,4,5,6]
-Output: [4,5,6]
-# Two middles: 3 and 4; return the second one (4).
-```
+**Approach:** Iterative pointer walk (this problem)
 
-## Constraints
+**Key idea:** ### Slow & Fast Pointer
 
-- The number of nodes in the list is in the range `[1, 100]`.
-- `1 <= Node.val <= 100`
+**How the code works:**
+**Why it works:** `fast` travels at 2x speed. When `fast` has covered the full list, `slow` has covered exactly half.
 
-## Clarification Questions
+**Walkthrough** — input `head = [1,2,3,4,5]`, expected output `[3,4,5]`:
 
-1. **Two middles**: For even length, return the second of the two middle nodes?  
-   **Assumption**: Yes — e.g. for 6 nodes, return the 4th (index 3).
-2. **Single node**: Return that node.  
-   **Assumption**: Yes.
-3. **Modify list**: Should we leave the list unchanged?  
-   **Assumption**: Yes — just return a pointer to the middle node.
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: Naive (5 min)**  
-Count nodes in one pass, then traverse to the (n // 2)-th node (0-based). Two passes, O(n) time, O(1) space.
-
-**Step 2: Fast and slow (10 min)**  
-Use two pointers: `slow` and `fast` both start at `head`. Each step: `fast = fast.next.next`, `slow = slow.next`. Stop when `fast` is `None` or `fast.next` is `None`. Then `slow` is at the middle. One pass, O(1) space. For even length, stopping when `fast` is at the last node (fast.next is None) leaves `slow` at the second middle — which matches the problem.
-
-**Step 3: Loop condition (5 min)**  
-`while fast and fast.next:` ensures we don’t dereference None. After the loop, return `slow`.
-
-## Solution Approach
-
-**Fast and slow pointers:** Move `slow` one step and `fast` two steps at a time. When `fast` reaches the end (`fast` is None or `fast.next` is None), `slow` is at the middle. This yields the first middle for odd length and the second middle for even length (standard formulation).
-
-**Alternatives:** (1) Count length then traverse to index `n // 2`. (2) Store nodes in an array and return `arr[len(arr)//2]` — O(n) space.
-
-### Key Insights
-
-1. **One pass** — Fast/slow avoids counting length first; when fast has moved 2x, slow has moved x, so slow is at the middle when fast is at the end.
-2. **Stopping condition** — `while fast and fast.next` keeps fast from going past the last node; when we stop, slow is correct for both odd and even (second middle for even).
-3. **O(1) space** — No array, no recursion; just two pointers.
-
-## Python Solution
-
-### Fast and slow pointers (O(n) time, O(1) space)
-
-```python
-from typing import Optional
-
-
-# Definition for singly-linked list.
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-
-class Solution:
-    def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        slow = fast = head
-        while fast and fast.next:
-            fast = fast.next.next
-            slow = slow.next
-        return slow
-```
-
-## Algorithm Explanation
-
-We maintain `slow` and `fast` starting at `head`. In each iteration, `fast` advances two steps and `slow` one step. The loop runs while `fast` and `fast.next` are not None (so we never call `next` on None). When the loop ends, `fast` is either None (odd length: fast moved past the last node) or at the last node (even length: fast.next is None). In both cases, `slow` is at the desired middle: for odd length at the unique middle, for even length at the second of the two middle nodes. Return `slow`.
-
-## Complexity Analysis
-
-- **Time**: O(n) — one pass; slow traverses about n/2 nodes.
-- **Space**: O(1) — two pointers only.
-
-## Edge Cases
-
-- **Single node** — fast is head, fast.next is None; we don’t enter the loop; return head. Correct.
-- **Two nodes** — One step: fast = head.next.next = None; slow = head.next. We return the second node (second middle). Correct.
-- **Odd length** — slow ends at the unique middle. Correct.
-
+The middle node is 3.
 ## Common Mistakes
 
-- **Wrong loop condition** — Using only `while fast:` can lead to fast being at the last node and then fast = fast.next.next assigning None (ok) but we might have advanced slow one extra time if we’re not careful. The standard `while fast and fast.next` is safe and gives the “second middle” for even length.
-- **Starting slow at head.next** — Some variants start fast one step ahead; then the “middle” might be the first middle for even length. Stick to both at head with the standard loop for the problem’s definition.
+- Checking only `fast->next` without checking `fast` first (null dereference on even-length lists)
+- Returning the first middle for even-length lists (this problem wants the second)
+
+## Key Takeaways
+
+- **Slow/fast pointer** is the fundamental linked list technique -- finding the middle in one pass without knowing the length
+- The loop condition `while (fast && fast->next)` handles both odd and even lengths
+- This is a building block for more complex problems: merge sort on linked lists needs the middle, and cycle detection uses the same two-pointer idea
 
 ## Related Problems
 
-- [LC 234: Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/) — Find middle then reverse second half.
-- [LC 141: Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/) — Fast/slow to detect cycle.
-- [LC 19: Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/) — Two pointers / one pass from end.
-- [LC 206: Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/) — Classic linked list.
+- [141. Linked List Cycle](https://www.leetcode.com/problems/linked-list-cycle/) -- same slow/fast technique for cycle detection
+- [142. Linked List Cycle II](https://www.leetcode.com/problems/linked-list-cycle-ii/) -- find cycle start
+- [148. Sort List](https://www.leetcode.com/problems/sort-list/) -- merge sort uses middle finding as a subroutine
+- [234. Palindrome Linked List](https://www.leetcode.com/problems/palindrome-linked-list/) -- find middle, reverse second half, compare
+
+## References
+
+- [LC 876: Middle of the Linked List on LeetCode](https://www.leetcode.com/problems/middle-of-the-linked-list/)
+- [LeetCode Discuss — LC 876: Middle of the Linked List](https://www.leetcode.com/problems/middle-of-the-linked-list/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/middle-of-the-linked-list/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Linked List](/posts/2025-11-24-leetcode-templates-linked-list/)
+
+{% endraw %}

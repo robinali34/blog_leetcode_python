@@ -1,37 +1,28 @@
 ---
 layout: post
 title: "[Medium] 309. Best Time to Buy and Sell Stock with Cooldown"
-date: 2026-03-20 00:00:00 -0700
-categories: [leetcode, medium, dp, stock]
-tags: [leetcode, medium, dynamic-programming, cooldown]
+date: 2026-03-20
+categories: [leetcode, medium, dp]
+tags: [leetcode, medium, dp, state-machine, stock]
 permalink: /2026/03/20/medium-309-best-time-to-buy-and-sell-stock-with-cooldown/
 ---
 
-# [Medium] 309. Best Time to Buy and Sell Stock with Cooldown
-
-## Problem Statement
-
-You are given an array `prices` where `prices[i]` is the price of a stock on the `ith` day.
-
-Find the **maximum profit** you can achieve with the following rules:
-
-- You may complete as many transactions as you like (buy one stock, then sell it).
-- After you sell your stock, you cannot buy stock on the **next day** (cooldown one day).
-- You may not hold multiple stocks at the same time (must sell before buying again).
+{% raw %}
+You are given an array `prices` where `prices[i]` is the price of a stock on day `i`. Find the maximum profit with as many transactions as you like, subject to: after you sell, you must **cooldown for one day** before buying again.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: prices = [1,2,3,0,2]
 Output: 3
-# Transactions: buy(1) -> sell(2), cooldown, buy(0) -> sell(2)
+Explanation: buy→sell→cooldown→buy→sell = (2-1) + (2-0) = 3
 ```
 
 **Example 2:**
 
-```python
+```
 Input: prices = [1]
 Output: 0
 ```
@@ -41,124 +32,148 @@ Output: 0
 - `1 <= prices.length <= 5000`
 - `0 <= prices[i] <= 1000`
 
-## Clarification Questions
+## Thinking Process
 
-1. **Cooldown definition**: After selling on day `i`, buying is not allowed on day `i+1`?  
-   **Assumption**: Yes.
-2. **Multiple transactions**: You can buy/sell multiple times as long as cooldown and “one stock at a time” are respected.  
-   **Assumption**: Yes.
+### State Machine DP
 
-## Interview Deduction Process (20 minutes)
+On any day we're in exactly one of three states:
 
-**Step 1: State view (5 min)**  
-On each day, your situation is one of:
-
-- `hold`: you currently hold a stock.
-- `sold`: you sold today (so tomorrow is cooldown).
-- `rest`: you do not hold a stock and you are free to buy today.
-
-We want the maximum profit over time respecting transitions.
-
-**Step 2: Naive baseline (5 min)**  
-Try all sequences of buy/sell days (backtracking). This branches heavily and is exponential.
-
-**Step 3: Bottleneck**  
-The same “day, best profit with certain state” gets recomputed for many choices.
-
-**Step 4: Optimization with DP (10 min)**  
-Use DP with constant states updated day-by-day.
-
-## Solution Approach
-
-This is a classic DP-by-state-machine:
-
-Let:
-
-- `hold`: max profit after day `i` if we are holding a stock.
-- `sold`: max profit after day `i` if we just sold (entering cooldown tomorrow).
-- `rest`: max profit after day `i` if we are resting (not holding, not selling today).
-
-Transitions (from day `i-1` to day `i`):
-
-- `hold = max(prev_hold, prev_rest - prices[i])`
-  - keep holding, or
-  - buy today from a rested state
-- `sold = prev_hold + prices[i]`
-  - sell today if we were holding yesterday
-- `rest = max(prev_rest, prev_sold)`
-  - stay at rest, or
-  - cooldown ends (move from sold to rest)
-
-Answer is `max(sold, rest)` (cannot end holding a stock for realized profit).
-
-## Key Insights
-
-1. **Cool-down is captured by state** — after `sold`, the next day cannot buy because transitions only allow buy from `rest`.
-2. **Only 3 states** — keeps DP compact and O(1) space.
-3. **Day-by-day update** — each day depends only on previous day states.
-
-## Python Solution
-
-### DP with (hold, sold, rest)
-
-```python
-from typing import List
-
-
-class Solution:
-    def maxProfit(self, prices: List[int]) -> int:
-        if not prices:
-            return 0
-
-        # Initial day (day 0):
-        # - hold: buy on day 0 => -prices[0]
-        # - sold: impossible on day 0 => 0
-        # - rest: do nothing => 0
-        hold = -prices[0]
-        sold = 0
-        rest = 0
-
-        for i in range(1, len(prices)):
-            prev_hold, prev_sold, prev_rest = hold, sold, rest
-
-            hold = max(prev_hold, prev_rest - prices[i])
-            sold = prev_hold + prices[i]
-            rest = max(prev_rest, prev_sold)
-
-        return max(sold, rest)
+```
+        buy
+  ┌──────────────┐
+  ▼              │
+hold ──sell──► rest ──idle──► sold
+  │                            │
+  └────────keep────────────────┘
+              idle
 ```
 
-### Alternative DP phrasing (explicit arrays)
+- **hold**: we own a stock (either bought today or carried from yesterday)
+- **rest**: we just sold (cooldown -- cannot buy tomorrow)
+- **sold**: we don't own a stock and are free to buy (either stayed idle or finished cooldown)
 
-You can also write:
+### Transitions
 
-- `dp_hold[i]`, `dp_sold[i]`, `dp_rest[i]`
+$text{hold}[i] = max(text{hold}[i-1],\ text{sold}[i-1] - text{prices}[i])
 
-but it uses O(n) space; the optimized solution above is equivalent.
+Keep holding, or buy today (only from `sold` state, not from `rest`).
 
-## Algorithm Explanation
+text{rest}[i] = text{hold}[i-1] + text{prices}[i]
 
-We iterate through days, updating the maximum profit for each state. The cooldown constraint is enforced by only allowing buy transitions from `rest` (not from `sold`).
+Sell today (transition from `hold` to `rest`).
 
-## Complexity Analysis
+text{sold}[i] = max(text{sold}[i-1],\ text{rest}[i-1])
 
-- **Time**: O(n)
-- **Space**: O(1)
+Stay idle, or cooldown finished (transition from `rest` to `sold`).
 
-## Edge Cases
+### Base Case
 
-- `len(prices) == 1` → profit is 0.
-- Monotonically decreasing prices → never profitable → 0.
-- Prices with frequent spikes → DP captures the best tradeoff around cooldown days.
+Day 0: `hold = -prices[0]`, `sold = 0`, `rest = 0`
+
+### Answer
+
+\max(\text{sold}, \text{rest}) -- we either have no stock and are free, or we just sold. We never want to end in `hold`.
+
+### Walk-through
+
+```
+prices = [1, 2, 3, 0, 2]
+
+Day 0: hold=-1, sold=0, rest=0
+Day 1: hold=max(-1, 0-2)=-1, sold=max(0, 0)=0, rest=-1+2=1
+Day 2: hold=max(-1, 0-3)=-1, sold=max(0, 1)=1, rest=-1+3=2
+Day 3: hold=max(-1, 1-0)=1,  sold=max(1, 2)=2, rest=-1+0=-1
+Day 4: hold=max(1, 2-2)=1,   sold=max(2, -1)=2, rest=1+2=3
+
+Answer: max(sold=2, rest=3) = 3 ✓
+```
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 105" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">1D DP recurrence</text>
+
+  <text x="30" y="38" font-size="10" fill="#9A9792">dp[i]</text>
+  <rect x="30" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="48" y="58" text-anchor="middle" font-size="11">0</text>
+  <rect x="66" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="84" y="58" text-anchor="middle" font-size="11">1</text>
+  <rect x="102" y="42" width="36" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="58" text-anchor="middle" font-size="11">2</text>
+  <rect x="138" y="42" width="36" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="156" y="58" text-anchor="middle" font-size="11">?</text>
+  <path d="M120 70v8M84 70v8" stroke="#C4956A" stroke-width="1.5"/>
+  <text x="120" y="95" text-anchor="middle" font-size="11" fill="#6B6560">dp[i] from smaller indices / subproblems</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **1D DP** *(this problem)* | O(n) | O(n) or O(1) | Linear recurrence |
+| 2D DP | O(nm) | O(nm) or O(n) | Grid or two-sequence problems |
+| State machine DP | O(n) | O(1) | Buy/sell, hold/not-hold states |
+| Memoization (top-down) | Same as DP | O(n) | Recursive + cache |
+
+## Solution
+```python
+Input: prices = [1,2,3,0,2]
+Output: 3
+# Transactions: buy(1) -> sell(2), cooldown, buy(0) -> sell(2)
+```
+
+### Solution Explanation
+
+**Approach:** 1D DP (this problem)
+
+**Key idea:** ### State Machine DP
+
+**How the code works:**
+- **hold**: we own a stock (either bought today or carried from yesterday)
+- **rest**: we just sold (cooldown -- cannot buy tomorrow)
+- **sold**: we don't own a stock and are free to buy (either stayed idle or finished cooldown)
+
+**Walkthrough** — input `prices = [1,2,3,0,2]`, expected output `3`:
+
+buy→sell→cooldown→buy→sell = (2-1) + (2-0) = 3
+## Why Save `pre_` Values?
+
+All three states depend on the **previous day's** values. If we update `hold` first, it would corrupt the computation of `rest` (which needs the old `hold`). Saving previous values ensures all transitions use day i-1 consistently.
 
 ## Common Mistakes
 
-- Buying immediately after selling: make sure the transition to `hold` uses `rest`, not `sold`.
-- Returning `hold` as the answer: realized profit must be from `sold` or `rest`.
+- Allowing buy from `rest` state (violates the cooldown constraint)
+- Forgetting to return `max(sold, rest)` -- selling on the last day (`rest`) can be optimal
+- Not saving previous-day values before updating (order-dependent bug)
+
+## Key Takeaways
+
+- **Stock problems with constraints** map cleanly to state machine DP
+- Three states (`hold`, `sold`, `rest`) capture the cooldown rule naturally
+- Space optimization from O(n) array to O(1) variables is straightforward since each state only depends on the previous day
+
+## Stock Problem Family
+
+| Problem | Constraint | States |
+|---|---|---|
+| 121 Best Time to Buy and Sell Stock | 1 transaction | `hold`, `sold` |
+| 122 Best Time II | Unlimited | `hold`, `sold` |
+| 123 Best Time III | At most 2 | `hold1`, `sold1`, `hold2`, `sold2` |
+| 188 Best Time IV | At most k | `hold[j]`, `sold[j]` for j \in [1,k]$ |
+| **309 With Cooldown** | **Unlimited + cooldown** | **`hold`, `sold`, `rest`** |
+| 714 With Transaction Fee | Unlimited + fee | `hold`, `sold` |
 
 ## Related Problems
 
-- [LC 121: Best Time to Buy and Sell Stock](/2026/03/20/medium-121-best-time-to-buy-and-sell-stock/)
-- [LC 122: Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/)
-- [LC 123: Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/)
+- [122. Best Time to Buy and Sell Stock II](https://www.leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/) -- no cooldown version
+- [714. Best Time to Buy and Sell Stock with Transaction Fee](https://www.leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/) -- fee instead of cooldown
+- [188. Best Time to Buy and Sell Stock IV](https://www.leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/) -- at most k transactions
 
+## References
+
+- [LC 309: Best Time to Buy and Sell Stock with Cooldown on LeetCode](https://www.leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+- [LeetCode Discuss — LC 309: Best Time to Buy and Sell Stock with Cooldown](https://www.leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [DP](/posts/2025-10-29-leetcode-templates-dp/)
+
+{% endraw %}

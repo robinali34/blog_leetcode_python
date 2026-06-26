@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 1865. Finding Pairs With a Certain Sum"
 date: 2025-10-19 17:38:17 -0700
-categories: python hash-map data-structure problem-solving
+categories: leetcode algorithm medium cpp hash-map data-structure problem-solving
 ---
 
-# [Medium] 1865. Finding Pairs With a Certain Sum
-
+{% raw %}
 You are given two integer arrays `nums1` and `nums2`. You are tasked to implement a data structure that supports the following operations:
 
 1. **`FindSumPairs(int[] nums1, int[] nums2)`** - Initializes the `FindSumPairs` object with two integer arrays.
@@ -56,7 +55,39 @@ findSumPairs.count(2);  // return 1. Pair (0,0)
 - `1 <= tot <= 10^9`
 - At most `1000` calls will be made to `add` and `count` each.
 
-## Solution: Hash Map with Count Tracking
+## Thinking Process
+
+1. **Count tracking:** Use hash map to track frequency of nums2 values
+1. **Complement approach:** For each nums1 value, find complement in nums2
+
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
+
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
+
+## Solution
 
 **Time Complexity:** 
 - Constructor: O(n) where n is length of nums2
@@ -101,8 +132,7 @@ class FindSumPairs:
         return cnt
 ```
 
-## How the Algorithm Works
-
+### Solution Explanation
 **Key Insight:** Use a hash map to track the count of each value in nums2, then for each count operation, iterate through nums1 and check if the complement exists in nums2.
 
 **Steps:**
@@ -211,8 +241,7 @@ def count(self, tot: int) -> int:
 3. **Check existence:** If complement exists, add its count
 4. **Return total:** Sum of all valid pairs
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time Complexity | Space Complexity |
 |-----------|----------------|------------------|
 | Constructor | O(n) | O(n) |
@@ -221,27 +250,6 @@ def count(self, tot: int) -> int:
 | **Total** | **O(n + m)** | **O(n)** |
 
 Where n is the length of nums2 and m is the length of nums1.
-
-## Edge Cases
-
-1. **Single elements:** `nums1 = [1]`, `nums2 = [1]` → `count(2) = 1`
-2. **No pairs:** `nums1 = [1]`, `nums2 = [2]` → `count(1) = 0`
-3. **Multiple same values:** `nums1 = [1,1]`, `nums2 = [1,1]` → `count(2) = 4`
-4. **Large values:** Handle large integers correctly
-
-## Key Insights
-
-### Hash Map Optimization:
-1. **Count tracking:** Use hash map to track frequency of nums2 values
-2. **Fast lookup:** O(1) lookup for complement checking
-3. **Efficient updates:** O(1) update when nums2 values change
-4. **Memory trade-off:** Use extra space for faster operations
-
-### Pair Counting:
-1. **Complement approach:** For each nums1 value, find complement in nums2
-2. **Count multiplication:** Multiply by frequency of complement
-3. **Complete coverage:** Check all possible pairs
-4. **Efficient calculation:** Avoid nested loops
 
 ## Detailed Example Walkthrough
 
@@ -280,68 +288,12 @@ For each nums1 value:
 Total count = 2 + 0 = 2
 ```
 
-## Alternative Approaches
-
-### Approach 1: Brute Force
-```python
-class FindSumPairs:
-    def __init__(self, nums1: list[int], nums2: list[int]):
-        self.nums1 = nums1
-        self.nums2 = nums2
-
-    def add(self, index: int, val: int) -> None:
-        self.nums2[index] += val
-
-    def count(self, tot: int) -> int:
-        cnt = 0
-
-        for num1 in self.nums1:
-            for num2 in self.nums2:
-                if num1 + num2 == tot:
-                    cnt += 1
-
-        return cnt
-```
-
-**Time Complexity:** O(m × n) for count operation  
-**Space Complexity:** O(1)
-
-### Approach 2: Two Hash Maps
-```python
-from collections import Counter
-
-class FindSumPairs:
-    def __init__(self, nums1: list[int], nums2: list[int]):
-        self.nums1 = nums1
-        self.nums2 = nums2
-        self.cnts2 = Counter(nums2)
-
-    def add(self, index: int, val: int) -> None:
-        old_val = self.nums2[index]
-
-        self.cnts2[old_val] -= 1
-        if self.cnts2[old_val] == 0:
-            del self.cnts2[old_val]
-
-        self.nums2[index] += val
-        new_val = self.nums2[index]
-
-        self.cnts2[new_val] += 1
-
-    def count(self, tot: int) -> int:
-        cnt = 0
-
-        for num in self.nums1:
-            cnt += self.cnts2.get(tot - num, 0)
-
-        return cnt
-
-```
-
-**Time Complexity:** O(k) for count operation where k is unique values in nums1  
-**Space Complexity:** O(m + n)
-
 ## Common Mistakes
+
+1. **Single elements:** `nums1 = [1]`, `nums2 = [1]` → `count(2) = 1`
+2. **No pairs:** `nums1 = [1]`, `nums2 = [2]` → `count(1) = 0`
+3. **Multiple same values:** `nums1 = [1,1]`, `nums2 = [1,1]` → `count(2) = 4`
+4. **Large values:** Handle large integers correctly
 
 1. **Wrong count update:** Not properly updating count map in add operation
 2. **Missing edge cases:** Not handling empty arrays or single elements
@@ -350,10 +302,10 @@ class FindSumPairs:
 
 ## Related Problems
 
-- [1. Two Sum](https://leetcode.com/problems/two-sum/)
-- [167. Two Sum II - Input Array Is Sorted](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
-- [170. Two Sum III - Data structure design](https://leetcode.com/problems/two-sum-iii-data-structure-design/)
-- [653. Two Sum IV - Input is a BST](https://leetcode.com/problems/two-sum-iv-input-is-a-bst/)
+- [1. Two Sum](https://www.leetcode.com/problems/two-sum/)
+- [167. Two Sum II - Input Array Is Sorted](https://www.leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
+- [170. Two Sum III - Data structure design](https://www.leetcode.com/problems/two-sum-iii-data-structure-design/)
+- [653. Two Sum IV - Input is a BST](https://www.leetcode.com/problems/two-sum-iv-input-is-a-bst/)
 
 ## Why This Solution Works
 
@@ -374,3 +326,25 @@ class FindSumPairs:
 2. **Efficiency:** O(1) add, O(m) count operations
 3. **Scalability:** Handles large arrays efficiently
 4. **Simplicity:** Easy to understand and implement
+
+## References
+
+- [LC 1865: Finding Pairs With a Certain Sum on LeetCode](https://www.leetcode.com/problems/finding-pairs-with-a-certain-sum/)
+- [LeetCode Discuss — LC 1865: Finding Pairs With a Certain Sum](https://www.leetcode.com/problems/finding-pairs-with-a-certain-sum/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/finding-pairs-with-a-certain-sum/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### Hash Map Optimization:
+1. **Count tracking:** Use hash map to track frequency of nums2 values
+2. **Fast lookup:** O(1) lookup for complement checking
+3. **Efficient updates:** O(1) update when nums2 values change
+4. **Memory trade-off:** Use extra space for faster operations
+
+### Pair Counting:
+1. **Complement approach:** For each nums1 value, find complement in nums2
+2. **Count multiplication:** Multiply by frequency of complement
+3. **Complete coverage:** Check all possible pairs
+4. **Efficient calculation:** Avoid nested loops
+
+{% endraw %}

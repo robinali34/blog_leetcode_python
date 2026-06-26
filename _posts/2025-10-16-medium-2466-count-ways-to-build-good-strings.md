@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 2466. Count Ways To Build Good Strings"
 date: 2025-10-16 20:01:57 -0700
-categories: python dynamic-programming dp problem-solving
+categories: leetcode algorithm medium cpp dynamic-programming dp problem-solving
 ---
 
-# [Medium] 2466. Count Ways To Build Good Strings
-
+{% raw %}
 Given the integers `zero`, `one`, `low`, and `high`, we can construct a string by starting with an empty string, and then at each step perform either of the following:
 
 - Append the character `'0'` `zero` times.
@@ -42,7 +41,39 @@ Explanation: The good strings are "00", "11", "000", "110", and "011".
 - `1 <= low <= high <= 10^5`
 - `1 <= zero, one <= high`
 
-## Solution 1: Bottom-Up Dynamic Programming
+## Thinking Process
+
+1. **DP State:** `dp[i]` = number of ways to build string of length `i`
+
+- Define state: what subproblem does `dp[i]` (or `dp[i][j]`) represent?
+- Recurrence: how does the answer build from smaller indices?
+- Base cases first; optimize space if only prior row/layer is needed.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 105" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">1D DP recurrence</text>
+
+  <text x="30" y="38" font-size="10" fill="#9A9792">dp[i]</text>
+  <rect x="30" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="48" y="58" text-anchor="middle" font-size="11">0</text>
+  <rect x="66" y="42" width="36" height="28" rx="3" fill="#D4D8E0" stroke="#8B8680"/><text x="84" y="58" text-anchor="middle" font-size="11">1</text>
+  <rect x="102" y="42" width="36" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="58" text-anchor="middle" font-size="11">2</text>
+  <rect x="138" y="42" width="36" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="156" y="58" text-anchor="middle" font-size="11">?</text>
+  <path d="M120 70v8M84 70v8" stroke="#C4956A" stroke-width="1.5"/>
+  <text x="120" y="95" text-anchor="middle" font-size="11" fill="#6B6560">dp[i] from smaller indices / subproblems</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **1D DP** *(this problem)* | O(n) | O(n) or O(1) | Linear recurrence |
+| 2D DP | O(nm) | O(nm) or O(n) | Grid or two-sequence problems |
+| State machine DP | O(n) | O(1) | Buy/sell, hold/not-hold states |
+| Memoization (top-down) | Same as DP | O(n) | Recursive + cache |
+
+## Solution
 
 **Time Complexity:** O(high)  
 **Space Complexity:** O(high)
@@ -70,12 +101,31 @@ class Solution:
         return result
 ```
 
-## Solution 2: Top-Down Dynamic Programming (Memoization)
+### Solution Explanation
 
-**Time Complexity:** O(high)  
-**Space Complexity:** O(high)
+**Approach:** 1D DP (this problem)
 
-Use top-down DP with memoization to calculate the number of ways recursively.
+**Key idea:** 1. **DP State:** `dp[i]` = number of ways to build string of length `i`
+
+**How the code works:**
+1. **DP State:** `dp[i]` = number of ways to build string of length `i`
+- Define state: what subproblem does `dp[i]` (or `dp[i][j]`) represent?
+- Recurrence: how does the answer build from smaller indices?
+- Base cases first; optimize space if only prior row/layer is needed.
+
+**Walkthrough** — input `low = 3, high = 3, zero = 1, one = 1`, expected output `8`:
+
+One possible valid good string is "011".
+It can be constructed as follows: "" -> "0" -> "01" -> "011". 
+All binary strings from "000" to "111" are good strings in this example.
+
+| Approach | Time Complexity | Space Complexity |
+|----------|----------------|------------------|
+| Bottom-Up DP | O(high) | O(high) |
+| Top-Down DP | O(high) | O(high) |
+## Algorithm Breakdown
+
+### Solution 1: Bottom-Up DP
 
 ```python
 class Solution:
@@ -110,48 +160,13 @@ class Solution:
         return result
 ```
 
-## How the Algorithm Works
+**Process:**
+1. Initialize DP array with size `high + 1`
+2. Set base case: `dp[0] = 1`
+3. For each length `i`, add ways from `i - zero` and `i - one`
+4. Sum all valid lengths from `low` to `high`
 
-### Key Insight: Dynamic Programming
-
-The problem can be solved using dynamic programming where `dp[i]` represents the number of ways to build a string of length `i`.
-
-**Recurrence Relation:**
-- `dp[i] = dp[i - zero] + dp[i - one]` (if both are valid)
-- Base case: `dp[0] = 1` (empty string)
-
-### Step-by-Step Example: `low = 2, high = 3, zero = 1, one = 2`
-
-**Bottom-Up Approach:**
-
-| Length | Ways to Build | Explanation |
-|--------|---------------|-------------|
-| 0 | 1 | Empty string (base case) |
-| 1 | 1 | "0" (from length 0 + zero=1) |
-| 2 | 2 | "00" (from length 1 + zero=1), "1" (from length 0 + one=2) |
-| 3 | 3 | "000" (from length 2 + zero=1), "01" (from length 1 + one=2) |
-
-**DP Table:**
-```
-dp = [1, 1, 2, 3]
-```
-
-**Answer:** Sum from length 2 to 3 = `dp[2] + dp[3] = 2 + 3 = 5`
-
-### Visual Representation
-
-```
-Length 0: "" (1 way)
-Length 1: "0" (1 way)
-Length 2: "00", "1" (2 ways)
-Length 3: "000", "01", "10" (3 ways)
-
-Good strings (length 2-3): "00", "1", "000", "01", "10" = 5 ways
-```
-
-## Algorithm Breakdown
-
-### Solution 1: Bottom-Up DP
+### Solution 2: Top-Down DP (Memoization)
 
 ```python
 MOD = 10**9 + 7
@@ -168,62 +183,23 @@ for i in range(1, high + 1):
 ```
 
 **Process:**
-1. Initialize DP array with size `high + 1`
-2. Set base case: `dp[0] = 1`
-3. For each length `i`, add ways from `i - zero` and `i - one`
-4. Sum all valid lengths from `low` to `high`
-
-### Solution 2: Top-Down DP (Memoization)
-
-```python
-class Solution:
-    def dfs(self, dp: list[int], zero: int, one: int, end: int, MOD: int) -> int:
-        if end == 0:
-            return 1
-
-        if dp[end] != -1:
-            return dp[end]
-
-        cnt = 0
-
-        if end >= zero:
-            cnt = (cnt + self.dfs(dp, zero, one, end - zero, MOD)) % MOD
-
-        if end >= one:
-            cnt = (cnt + self.dfs(dp, zero, one, end - one, MOD)) % MOD
-
-        dp[end] = cnt
-        return cnt
-```
-
-**Process:**
 1. Initialize DP array with `-1` (unvisited)
 2. Set base case: `dp[0] = 1`
 3. For each length, recursively calculate using memoization
 4. Sum all valid lengths from `low` to `high`
 
-## Complexity Analysis
-
+### Complexity
 | Approach | Time Complexity | Space Complexity |
 |----------|----------------|------------------|
 | Bottom-Up DP | O(high) | O(high) |
 | Top-Down DP | O(high) | O(high) |
 
-## Edge Cases
+## Common Mistakes
 
 1. **Single length range:** `low = high = 1` → Check if `zero = 1` or `one = 1`
 2. **Large values:** `high = 10^5` → Use modulo arithmetic
 3. **Equal zero and one:** `zero = one = 1` → Standard binary strings
 4. **Different zero and one:** `zero = 1, one = 2` → Mixed length increments
-
-## Key Insights
-
-1. **DP State:** `dp[i]` = number of ways to build string of length `i`
-2. **Recurrence:** Add ways from previous valid lengths
-3. **Base Case:** Empty string has 1 way
-4. **Modulo:** Handle large numbers with `10^9 + 7`
-
-## Common Mistakes
 
 1. **Missing base case:** Forgetting `dp[0] = 1`
 2. **Wrong recurrence:** Not checking bounds `i - zero >= 0`
@@ -278,64 +254,12 @@ dfs(1, 2, 3):
 Sum = dp[2] + dp[3] = 2 + 3 = 5
 ```
 
-## Alternative Approaches
-
-### Approach 1: Brute Force (DFS)
-```python
-class Solution:
-    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
-        MOD = 10**9 + 7
-        memo = {}
-
-        def dfs(length: int) -> int:
-            if length > high:
-                return 0
-
-            if length in memo:
-                return memo[length]
-
-            count = 1 if low <= length <= high else 0
-
-            count = (count + dfs(length + zero)) % MOD
-            count = (count + dfs(length + one)) % MOD
-
-            memo[length] = count
-            return count
-
-        return dfs(0)
-```
-
-**Time Complexity:** O(2^high)  
-**Space Complexity:** O(high)
-
-### Approach 2: Mathematical Formula
-```python
-class Solution:
-    def countGoodStrings(self, low: int, high: int, zero: int, one: int) -> int:
-        MOD = 10**9 + 7
-
-        dp = [0] * (high + 1)
-        dp[0] = 1
-
-        for i in range(1, high + 1):
-            if i >= zero:
-                dp[i] = (dp[i] + dp[i - zero]) % MOD
-            if i >= one:
-                dp[i] = (dp[i] + dp[i - one]) % MOD
-
-        result = 0
-        for i in range(low, high + 1):
-            result = (result + dp[i]) % MOD
-
-        return result
-```
-
 ## Related Problems
 
-- [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
-- [322. Coin Change](https://leetcode.com/problems/coin-change/)
-- [377. Combination Sum IV](https://leetcode.com/problems/combination-sum-iv/)
-- [139. Word Break](https://leetcode.com/problems/word-break/)
+- [70. Climbing Stairs](https://www.leetcode.com/problems/climbing-stairs/)
+- [322. Coin Change](https://www.leetcode.com/problems/coin-change/)
+- [377. Combination Sum IV](https://www.leetcode.com/problems/combination-sum-iv/)
+- [139. Word Break](https://www.leetcode.com/problems/word-break/)
 
 ## Why These Solutions are Optimal
 
@@ -344,3 +268,18 @@ class Solution:
 3. **Mathematical Insight:** Converts problem to counting paths
 4. **Modulo Handling:** Properly handles large numbers
 5. **Two Approaches:** Both bottom-up and top-down are valid
+
+## References
+
+- [LC 2466: Count Ways To Build Good Strings on LeetCode](https://www.leetcode.com/problems/count-ways-to-build-good-strings/)
+- [LeetCode Discuss — LC 2466: Count Ways To Build Good Strings](https://www.leetcode.com/problems/count-ways-to-build-good-strings/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/count-ways-to-build-good-strings/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **DP State:** `dp[i]` = number of ways to build string of length `i`
+2. **Recurrence:** Add ways from previous valid lengths
+3. **Base Case:** Empty string has 1 way
+4. **Modulo:** Handle large numbers with `10^9 + 7`
+
+{% endraw %}

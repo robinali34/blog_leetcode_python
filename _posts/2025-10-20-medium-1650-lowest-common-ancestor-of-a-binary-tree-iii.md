@@ -6,12 +6,9 @@ categories: leetcode algorithm medium tree binary-tree lca
 permalink: /2025/10/20/medium-1650-lowest-common-ancestor-of-a-binary-tree-iii/
 ---
 
-# [Medium] 1650. Lowest Common Ancestor of a Binary Tree III
-
+{% raw %}
 **Difficulty:** Medium  
 **Category:** Tree, Binary Tree, LCA
-
-## Problem Statement
 
 Given two nodes of a binary tree `p` and `q`, return their **lowest common ancestor (LCA)**.
 
@@ -47,7 +44,7 @@ Output: 1
 - `p != q`
 - `p` and `q` will exist in the tree.
 
-## Approach
+## Thinking Process
 
 This is a variation of the **Lowest Common Ancestor (LCA)** problem where each node has a reference to its parent. The key insight is to use the **two-pointer technique** similar to finding the intersection of two linked lists.
 
@@ -60,6 +57,38 @@ This is a variation of the **Lowest Common Ancestor (LCA)** problem where each n
 
 ### Key Insight:
 This approach ensures both pointers travel the same total distance, making them meet at the LCA.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
+
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| Recursive DFS | O(n) | O(h) | Depth, path sum, subtree queries |
+| BFS level-order | O(n) | O(w) | Level traversal, zigzag |
+| Inorder on BST | O(n) | O(h) | Sorted order, successor |
+| **Divide & conquer on tree** *(this problem)* | O(n) | O(h) | Diameter, max path |
 
 ## Solution
 
@@ -75,6 +104,11 @@ class Solution:
         return a
 ```
 
+### Solution Explanation
+
+This is a variation of the **Lowest Common Ancestor (LCA)** problem where each node has a reference to its parent. The key insight is to use the **two-pointer technique** similar to finding the intersection of two linked lists.
+
+See **Complexity** below for time and space analysis.
 ## Explanation
 
 ### Step-by-Step Process:
@@ -119,88 +153,13 @@ If `p = G` and `q = F`:
 - **Pointer b:** F → B → Root → G → C → A → Root (6 steps)
 - **Meet at Root:** LCA = Root
 
-## Complexity Analysis
-
+### Complexity
 **Time Complexity:** O(h) where h is the height of the tree
 - In worst case, both nodes are at maximum depth
 - Each pointer travels at most 2h steps (h up + h down)
 
 **Space Complexity:** O(1)
 - Only using two pointers, no additional data structures
-
-## Key Insights
-
-1. **Two-Pointer Technique:** Similar to finding linked list intersection
-2. **Distance Equalization:** Both pointers travel same total distance
-3. **Parent Pointer Utilization:** Leverages the parent reference efficiently
-4. **No Extra Space:** Constant space solution
-5. **Elegant Logic:** Simple but powerful algorithm
-
-## Alternative Approaches
-
-### Approach 1: Path Collection
-```python
-def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
-    path = set()
-    # Collect path from p to root
-    curr = p
-    while curr:
-        path.add(curr)
-        curr = curr.parent
-        # Find first common node in path from q to root
-        curr = q
-        while curr:
-            if curr in path:
-                return curr
-                curr = curr.parent
-                return None
-```
-
-### Approach 2: Depth Calculation
-```python
-class Solution:
-
-    def getDepth(self, node: 'Node') -> int:
-        depth = 0
-        while node:
-            depth += 1
-            node = node.parent
-        return depth
-
-    def lowestCommonAncestor(self, p: 'Node', q: 'Node') -> 'Node':
-        depthP = self.getDepth(p)
-        depthQ = self.getDepth(q)
-
-        # Step 1: bring both to same depth
-        while depthP > depthQ:
-            p = p.parent
-            depthP -= 1
-
-        while depthQ > depthP:
-            q = q.parent
-            depthQ -= 1
-
-        # Step 2: move upward together
-        while p != q:
-            p = p.parent
-            q = q.parent
-
-        return p
-```
-
-## Comparison of Approaches
-
-| Approach | Time | Space | Elegance |
-|----------|------|-------|----------|
-| **Two-Pointer** | O(h) | O(1) | ⭐⭐⭐⭐⭐ |
-| **Path Collection** | O(h) | O(h) | ⭐⭐⭐ |
-| **Depth Calculation** | O(h) | O(1) | ⭐⭐⭐⭐ |
-
-**The two-pointer approach is optimal** because:
-- **Constant Space:** No additional data structures
-- **Elegant Logic:** Simple and intuitive
-- **Efficient:** Single pass through the tree
-- **Clean Code:** Minimal implementation
 
 ## Key Concepts
 
@@ -211,3 +170,25 @@ class Solution:
 5. **Tree Traversal:** Upward traversal using parent pointers
 
 This problem demonstrates the power of the two-pointer technique and shows how mathematical insights can lead to elegant solutions in tree problems.
+
+## References
+
+- [LC 1650: Lowest Common Ancestor of a Binary Tree III on LeetCode](https://www.leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/)
+- [LeetCode Discuss — LC 1650: Lowest Common Ancestor of a Binary Tree III](https://www.leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree-iii/editorial/) *(may require premium)*
+
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+1. **Two-Pointer Technique:** Similar to finding linked list intersection
+2. **Distance Equalization:** Both pointers travel same total distance
+3. **Parent Pointer Utilization:** Leverages the parent reference efficiently
+4. **No Extra Space:** Constant space solution
+5. **Elegant Logic:** Simple but powerful algorithm
+
+{% endraw %}

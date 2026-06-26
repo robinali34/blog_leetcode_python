@@ -1,19 +1,16 @@
 ---
 layout: post
-title: "[Medium] LC 545: Boundary of Binary Tree"
+title: "[Medium] 545. Boundary of Binary Tree"
 date: 2025-10-21 16:30:00 -0700
 categories: leetcode medium tree dfs
 permalink: /posts/2025-10-21-medium-545-boundary-of-binary-tree/
 tags: [leetcode, medium, tree, dfs, binary-tree, boundary-traversal]
 ---
 
-# [Medium] LC 545: Boundary of Binary Tree
-
+{% raw %}
 **Difficulty:** Medium  
 **Category:** Tree, DFS, Binary Tree  
 **Companies:** Amazon, Google, Facebook, Microsoft
-
-## Problem Statement
 
 Given a binary tree, return the values of its boundary in **anti-clockwise direction** starting from root. Boundary includes left boundary, leaves, and right boundary in order without duplicate nodes.
 
@@ -27,8 +24,7 @@ Given a binary tree, return the values of its boundary in **anti-clockwise direc
 
 **Leaf nodes** are nodes that don't have any children.
 
-### Examples
-
+## Examples
 **Example 1:**
 ```
 Input: root = [1,null,2,3,4]
@@ -51,12 +47,22 @@ Explanation:
 - The anti-clockwise boundary is [1,2,4,7,8,9,10,6,3].
 ```
 
-### Constraints
-
+## Constraints
 - The number of nodes in the tree is in the range `[0, 10^4]`
 - `-1000 <= Node.val <= 1000`
 
-## Solution Approach
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Thinking Process
 
 ### Key Insight
 
@@ -184,6 +190,27 @@ class Solution:
         self.getLeaves(node.right, res)
 ```
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
+
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
 ## Detailed Algorithm Breakdown
 
 ### 1. Left Boundary Traversal
@@ -210,8 +237,7 @@ class Solution:
 3. **Root is Leaf**: Only add root once
 4. **No Left/Right Subtree**: Handle gracefully in boundary functions
 
-## Complexity Analysis
-
+### Complexity
 | Aspect | Complexity | Explanation |
 |--------|------------|-------------|
 | Time | O(n) | Visit each node exactly once |
@@ -230,11 +256,17 @@ class Solution:
 - How would you handle duplicate values in the tree?
 - What if we need to find the boundary of a general tree (not binary)?
 
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
 ## Related Problems
 
-- [LC 199: Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/)
-- [LC 257: Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths/)
-- [LC 113: Path Sum II](https://leetcode.com/problems/path-sum-ii/)
+- [LC 199: Binary Tree Right Side View](https://www.leetcode.com/problems/binary-tree-right-side-view/)
+- [LC 257: Binary Tree Paths](https://www.leetcode.com/problems/binary-tree-paths/)
+- [LC 113: Path Sum II](https://www.leetcode.com/problems/path-sum-ii/)
 
 ## Implementation Notes
 
@@ -243,6 +275,20 @@ class Solution:
 3. **Order Preservation**: Maintain anti-clockwise order throughout
 4. **Memory Efficiency**: O(h) space complexity for balanced trees
 
----
+## Key Takeaways
 
-*This problem demonstrates tree traversal techniques and the importance of understanding boundary conditions in tree problems.*
+- Algorithm:**
+- Time Complexity:** O(n)
+- Space Complexity:** O(h) where h is height of tree
+
+## References
+
+- [LC 545: Boundary of Binary Tree on LeetCode](https://www.leetcode.com/problems/boundary-of-binary-tree/)
+- [LeetCode Discuss — LC 545: Boundary of Binary Tree](https://www.leetcode.com/problems/boundary-of-binary-tree/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/boundary-of-binary-tree/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+
+{% endraw %}

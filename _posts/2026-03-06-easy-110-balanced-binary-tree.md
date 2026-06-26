@@ -1,24 +1,102 @@
 ---
 layout: post
 title: "[Easy] 110. Balanced Binary Tree"
-date: 2026-03-06 00:00:00 -0700
+date: 2026-03-06
 categories: [leetcode, easy, tree, dfs]
-tags: [leetcode, easy, tree, height, balance]
+tags: [leetcode, easy, tree, dfs, recursion]
 permalink: /2026/03/06/easy-110-balanced-binary-tree/
 ---
 
-# [Easy] 110. Balanced Binary Tree
-
-## Problem Statement
-
-Given a binary tree, determine if it is **height-balanced**.
-
-A height-balanced binary tree is one in which the **left and right subtrees of every node** differ in height by no more than 1.
+{% raw %}
+Given a binary tree, determine if it is **height-balanced**. A height-balanced binary tree is one in which the depth of the two subtrees of every node never differs by more than one.
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: root = [3,9,20,null,null,15,7]
+      3
+     / \
+    9  20
+      /  \
+     15   7
+Output: true
+```
+
+**Example 2:**
+
+```
+Input: root = [1,2,2,3,3,null,null,4,4]
+        1
+       / \
+      2   2
+     / \
+    3   3
+   / \
+  4   4
+Output: false
+```
+
+**Example 3:**
+
+```
+Input: root = []
+Output: true
+```
+
+## Constraints
+
+- The number of nodes is in `[0, 5000]`
+- `-10^4 <= Node.val <= 10^4`
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Thinking Process
+
+### Naive: Top-Down -- O(n^2)
+
+For each node, compute the height of left and right subtrees separately, check the difference, then recurse on children. This recomputes heights repeatedly -- O(n) per node, O(n^2) total.
+
+### Optimal: Bottom-Up with Early Termination -- O(n)
+
+Compute height bottom-up and **return -1 as a sentinel** the moment an imbalance is detected. This way:
+- Each node is visited exactly once
+- An imbalance anywhere propagates up immediately, short-circuiting the rest of the tree
+
+The key insight is combining two tasks into one recursive function: **compute height** and **detect imbalance**, using `-1` as the "not balanced" signal.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
+
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
+## Approach: Bottom-Up DFS -- O(n)
 ```python
 Input: root = [3,9,20,null,null,15,7]
 Output: True
@@ -30,154 +108,51 @@ Output: True
 # Heights at root: left=1, right=2 → diff=1 ✓
 ```
 
-**Example 2:**
+### Solution Explanation
 
-```python
-Input: root = [1,2,2,3,3,null,null,4,4]
-Output: False
-# Tree:       1
-#            / \
-#           2   2
-#          / \
-#         3   3
-#        / \
-#       4   4
-# At node 2: left height 2, right height 1 → diff=1 ✓
-# At node 3: left height 1, right height 0 → diff=1 ✓
-# At node 1: left height 3, right height 1 → diff=2 ✗
-```
+**Approach:** Recursive DFS (this problem)
 
-**Example 3:**
+**Key idea:** ### Naive: Top-Down -- O(n^2)
 
-```python
-Input: root = []
-Output: True
-```
+**How the code works:**
+- Each node is visited exactly once
+- An imbalance anywhere propagates up immediately, short-circuiting the rest of the tree
 
-## Constraints
+**Walkthrough** — input `root = [3,9,20,null,null,15,7]`, expected output `true`:
 
-- The number of nodes in the tree is in the range `[0, 5000]`.
-- `-10^4 <= Node.val <= 10^4`
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Why -1 Works as a Sentinel
 
-## Clarification Questions
-
-1. **Empty tree**: Is an empty tree considered balanced?  
-   **Assumption**: Yes — return `True`.
-2. **Definition**: Must **every** node satisfy the balance condition, or only the root?  
-   **Assumption**: Every node — the condition applies to all subtrees.
-3. **Height**: Is height the number of edges or the number of nodes on the longest path?  
-   **Assumption**: Typically “edges” (leaf has height 0). Empty tree height is often -1 or 0; we use 0 for empty so a single node has height 1 for “number of nodes” style, or we use -1 for empty so single node has height 0. LeetCode-style: empty = 0 height (single node = 1) or -1 for empty (single node = 0). The important part is that we compare left and right consistently; the code below uses “node count” style (empty → 0, leaf → 1).
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: Definition (5 min)**  
-Balance at a node: `|height(left) - height(right)| <= 1`, and both left and right subtrees must be balanced. Base case: `node is None` → balanced, height 0 (or -1 depending on convention).
-
-**Step 2: Naive approach (5 min)**  
-At each node, compute left height, right height, check balance, and recurse to check left and right are balanced. Computing height is O(n) per node → O(n²) total for a skew tree.
-
-**Step 3: Optimal approach (10 min)**  
-Single DFS that returns both “height” and “is balanced.” If we use a sentinel (e.g. -1) for “imbalanced,” we can return one value: height if balanced, -1 if not. Then `abs(left_h - right_h) <= 1` and both non-negative for current node to be balanced. One pass → O(n).
-
-## Solution Approach
-
-**Naive (O(n²)):** For each node, compute height of left and right (separate recursive calls), check `|left_h - right_h| <= 1`, and recursively check that left and right subtrees are balanced. Recomputes heights repeatedly.
-
-**Optimal (O(n)):** One DFS helper that returns the height of the subtree, or a sentinel (e.g. -1) if the subtree is not balanced. If either child returns -1 or `abs(left_h - right_h) > 1`, return -1; otherwise return `1 + max(left_h, right_h)`. Final result: tree is balanced iff the helper returns a non-negative value.
-
-### Key Insights
-
-1. **Every node** — Balance must hold at the root and at every internal node; checking only the root is wrong.
-2. **Height once** — Avoid computing height separately for each node; combine “compute height” and “check balance” in one DFS.
-3. **Sentinel** — Using -1 (or any invalid height) to mean “imbalanced” lets us use a single return value and propagate failure up.
-
-## Python Solution
-
-### Naive (O(n²)) — check balance at each node, height computed separately
-
-```python
-from typing import Optional
-
-
-# Definition for a binary tree node.
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-
-class Solution:
-    def isBalanced(self, root: Optional[TreeNode]) -> bool:
-        if root is None:
-            return True
-
-        def height(node: Optional[TreeNode]) -> int:
-            if node is None:
-                return 0
-            return 1 + max(height(node.left), height(node.right))
-
-        left_h = height(root.left)
-        right_h = height(root.right)
-        if abs(left_h - right_h) > 1:
-            return False
-        return self.isBalanced(root.left) and self.isBalanced(root.right)
-```
-
-### Optimal (O(n)) — single DFS, height with -1 sentinel for imbalanced
-
-```python
-from typing import Optional
-
-
-class Solution:
-    def isBalanced(self, root: Optional[TreeNode]) -> bool:
-        def height_if_balanced(node: Optional[TreeNode]) -> int:
-            if node is None:
-                return 0
-            left_h = height_if_balanced(node.left)
-            right_h = height_if_balanced(node.right)
-            if left_h == -1 or right_h == -1 or abs(left_h - right_h) > 1:
-                return -1
-            return 1 + max(left_h, right_h)
-
-        return height_if_balanced(root) != -1
-```
-
-## Algorithm Explanation
-
-**Naive:**  
-Base: empty tree is balanced. Otherwise compute left and right heights (each call visits the whole subtree), check `|left_h - right_h| <= 1`, and recursively ensure both left and right are balanced. Same height computation is repeated for nodes in deeper calls.
-
-**Optimal:**  
-Helper returns the height of the subtree if it is balanced, and -1 if it is not. Base: `None` → 0. Recurse on left and right. If either returns -1 or `abs(left_h - right_h) > 1`, return -1. Otherwise return `1 + max(left_h, right_h)`. The tree is balanced iff the final return is not -1.
-
-## Complexity Analysis
-
-- **Naive**
-  - **Time**: O(n²) in the worst case (e.g. skewed tree): at each node we compute height of its subtree, and heights are computed repeatedly for overlapping subtrees.
-  - **Space**: O(h) for recursion stack, h = height.
-
-- **Optimal**
-  - **Time**: O(n) — each node is visited once.
-  - **Space**: O(h) for recursion stack.
-
-## Edge Cases
-
-- `root is None` → return `True`.
-- Single node → balanced (left and right heights 0).
-- Only one child at root → check |1 - 0| = 1 → balanced.
-- Deep imbalance in a subtree → -1 propagates to root.
+Normal heights are always ≥ 0, so `-1` is an impossible height value. Once any subtree returns `-1`, every ancestor immediately returns `-1` without doing further work. This is the **early termination** that makes it O(n).
 
 ## Common Mistakes
 
-- **Checking only the root** — You must ensure every node’s left and right heights differ by at most 1; a tree can be unbalanced at an internal node even if the root looks fine.
-- **O(n²) when O(n) is possible** — Computing height in a separate pass per node leads to repeated work; combine height and balance in one DFS.
-- **Wrong height convention** — Be consistent (e.g. empty = 0, then height = 1 + max(left, right)); the inequality `abs(left - right) <= 1` is what matters.
+- Computing height and checking balance in separate passes (top-down O(n^2))
+- Forgetting to check `leftHeight == -1` **before** computing `rightHeight` (misses early termination)
+- Confusing "balanced" with "perfect" or "complete" -- balanced only requires height difference ≤ 1 at every node
+
+## Key Takeaways
+
+- **Sentinel return value** (-1) to encode both height and validity in a single function is a clean pattern
+- **Bottom-up > top-down** when you can avoid redundant computation
+- This pattern generalizes: any tree property that depends on subtree properties can use bottom-up DFS with early exit
 
 ## Related Problems
 
-- [LC 104: Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/) — Height of tree.
-- [LC 543: Diameter of Binary Tree](/2026/03/06/easy-543-diameter-of-binary-tree/) — Similar “return depth, update global max” DFS.
-- [LC 124: Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/) — DFS returning a value and using a global/side result.
-- [LC 114: Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/) — Tree manipulation.
+- [104. Maximum Depth of Binary Tree](https://www.leetcode.com/problems/maximum-depth-of-binary-tree/) -- height computation (base case for this problem)
+- [543. Diameter of Binary Tree](https://www.leetcode.com/problems/diameter-of-binary-tree/) -- same bottom-up pattern, track max path
+- [124. Binary Tree Maximum Path Sum](https://www.leetcode.com/problems/binary-tree-maximum-path-sum/) -- bottom-up with global max
+
+## References
+
+- [LC 110: Balanced Binary Tree on LeetCode](https://www.leetcode.com/problems/balanced-binary-tree/)
+- [LeetCode Discuss — LC 110: Balanced Binary Tree](https://www.leetcode.com/problems/balanced-binary-tree/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/balanced-binary-tree/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+
+{% endraw %}

@@ -7,8 +7,7 @@ permalink: /posts/2025-11-24-easy-938-range-sum-of-bst/
 tags: [leetcode, easy, tree, bst, dfs, recursion]
 ---
 
-# [Easy] 938. Range Sum of BST
-
+{% raw %}
 Given the `root` node of a binary search tree and two integers `low` and `high`, return *the sum of values of all nodes with a value in the **inclusive** range `[low, high]`*.
 
 ## Examples
@@ -34,35 +33,47 @@ Explanation: Nodes 6, 7, and 10 are in the range [6, 10]. 6 + 7 + 10 = 23.
 - `1 <= low <= high <= 10^5`
 - All `Node.val` are **unique**.
 
-## Clarification Questions
+## Thinking Process
 
-Before diving into the solution, here are 5 important clarifications and assumptions to discuss during an interview:
+1. **BST Property**: Use BST ordering to skip entire subtrees
 
-1. **Range definition**: What is the range? (Assumption: [low, high] - inclusive on both ends, sum all node values in this range)
+- Trees have no cycles — recursion is natural.
+- Combine results from left and right subtrees at each node.
+- Base case is usually `null`; height drives stack space.
 
-2. **BST properties**: What are BST properties? (Assumption: Left subtree < root < right subtree - can use this to prune)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
 
-3. **Return value**: What should we return? (Assumption: Integer - sum of all node values in range [low, high])
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
 
-4. **Range boundaries**: Are boundaries inclusive? (Assumption: Yes - nodes with value equal to low or high are included)
+</svg>
 
-5. **Empty tree**: What if tree is empty? (Assumption: Return 0 - no nodes to sum)
+## Common Approaches
 
-## Interview Deduction Process (10 minutes)
+Typical techniques for this pattern:
 
-**Step 1: Brute-Force Approach (2 minutes)**
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
 
-Traverse the entire BST (inorder, preorder, or postorder) and sum all node values that fall within the range [low, high]. This approach visits all nodes regardless of BST properties, giving O(n) time complexity. It works but doesn't leverage BST properties to prune unnecessary branches.
-
-**Step 2: Semi-Optimized Approach (3 minutes)**
-
-Use BST properties: if node value < low, skip left subtree (all values will be < low). If node value > high, skip right subtree (all values will be > high). Only traverse subtrees that might contain values in range. This reduces the search space but still requires visiting nodes in the valid range.
-
-**Step 3: Optimized Solution (5 minutes)**
-
-Use recursive DFS with BST pruning. For each node, if node value < low, only search right subtree. If node value > high, only search left subtree. Otherwise, add node value to sum and search both subtrees. This achieves O(h + k) time where h is height and k is number of nodes in range. In balanced BST, this is O(log n + k), which is optimal. The key insight is that BST properties allow us to prune entire subtrees that cannot contain values in the target range, significantly reducing the search space.
-
-## Solution: Recursive DFS with BST Pruning
+## Solution
 
 **Time Complexity:** O(n) worst case, but often better due to pruning  
 **Space Complexity:** O(h) where h is the height of the tree (recursion stack)
@@ -93,82 +104,27 @@ class Solution:
         return root.val + self.rangeSumBST(root.left, low, high) + self.rangeSumBST(root.right, low, high)
 ```
 
-## How the Algorithm Works
+### Solution Explanation
 
-### Key Insight: BST Property Pruning
+**Approach:** Recursive DFS (this problem)
 
-**BST Property:** For any node:
-- All nodes in left subtree have values < node.val
-- All nodes in right subtree have values > node.val
+**Key idea:** 1. **BST Property**: Use BST ordering to skip entire subtrees
 
-**Pruning Logic:**
-- If `root->val > high`: All values in right subtree are > high, skip right subtree
-- If `root->val < low`: All values in left subtree are < low, skip left subtree
-- Otherwise: Include current node and search both subtrees
-
-### Step-by-Step Example: `root = [10,5,15,3,7,null,18], low = 7, high = 15`
-
-```
-Tree Structure:
-        10
-       /  \
-      5    15
-     / \     \
-    3   7     18
-
-Traversal:
-1. root=10, val=10
-   - 10 is in [7,15] → include 10
-   - Search left subtree (5)
-   - Search right subtree (15)
-   Sum = 10 + ...
-
-2. root=5, val=5
-   - 5 < 7 (low) → skip left subtree (3)
-   - Search right subtree (7)
-   Sum = 10 + ...
-
-3. root=7, val=7
-   - 7 is in [7,15] → include 7
-   - Search left subtree (null)
-   - Search right subtree (null)
-   Sum = 10 + 7 + ...
-
-4. root=15, val=15
-   - 15 is in [7,15] → include 15
-   - Search left subtree (null)
-   - Search right subtree (18)
-   Sum = 10 + 7 + 15 + ...
-
-5. root=18, val=18
-   - 18 > 15 (high) → skip right subtree
-   - Search left subtree (null)
-   Sum = 10 + 7 + 15
-
-Final: 10 + 7 + 15 = 32
-```
-
-**Visual Representation:**
-```
-        10 ✓ (in range)
-       /  \
-      5 ✗  15 ✓ (in range)
-     / \     \
-    3 ✗ 7 ✓  18 ✗
-          (in range)
-
-Nodes visited: 10, 5, 7, 15, 18
-Nodes included: 10, 7, 15
-Sum = 32
-```
-
-## Key Insights
-
+**How the code works:**
 1. **BST Property**: Use BST ordering to skip entire subtrees
-2. **Pruning Optimization**: Don't traverse subtrees that can't contain valid values
-3. **Inclusive Range**: Include nodes where `low <= val <= high`
-4. **Recursive Structure**: Natural fit for tree traversal
+- Trees have no cycles — recursion is natural.
+- Combine results from left and right subtrees at each node.
+- Base case is usually `null`; height drives stack space.
 
+**Walkthrough** — input `root = [10,5,15,3,7,null,18], low = 7, high = 15`, expected output `32`:
+
+Nodes 7, 10, and 15 are in the range [7, 15]. 7 + 10 + 15 = 32.
+
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **Recursive with Pruning** | O(n) worst, often better | O(h) | Simple, efficient | Recursion overhead |
+| **Iterative with Stack** | O(n) worst, often better | O(h) | No recursion | More code |
+| **Inorder (No Pruning)** | O(n) | O(h) | Simple | Less efficient |
 ## Algorithm Breakdown
 
 ### Base Case
@@ -205,20 +161,29 @@ return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, lo
 - Include its value
 - Search both subtrees (they might contain valid values)
 
-## Edge Cases
+### Complexity
+| Approach | Time | Space | Pros | Cons |
+|----------|------|-------|------|------|
+| **Recursive with Pruning** | O(n) worst, often better | O(h) | Simple, efficient | Recursion overhead |
+| **Iterative with Stack** | O(n) worst, often better | O(h) | No recursion | More code |
+| **Inorder (No Pruning)** | O(n) | O(h) | Simple | Less efficient |
 
-1. **Single node**: Tree with one node
-2. **All nodes in range**: Entire tree contributes to sum
-3. **No nodes in range**: Return 0
-4. **Range at boundaries**: low or high equals node values
-5. **Skewed tree**: Left-skewed or right-skewed BST
+## Implementation Details
 
-## Alternative Approaches
+### Why Pruning Works
 
-### Approach 2: Iterative DFS with Stack
+**BST Property:**
+```
+For node with value v:
+- Left subtree: all values < v
+- Right subtree: all values > v
+```
 
-**Time Complexity:** O(n) worst case  
-**Space Complexity:** O(h)
+**Pruning Logic:**
+- `v > high` → Right subtree values > v > high → Skip right
+- `v < low` → Left subtree values < v < low → Skip left
+
+### Recursive Call Structure
 
 ```python
 class Solution:
@@ -249,72 +214,6 @@ class Solution:
         return total
 ```
 
-**Pros:**
-- Avoids recursion stack overflow
-- More control over traversal
-
-**Cons:**
-- More verbose
-- Still O(h) space for stack
-
-### Approach 3: Inorder Traversal (No Pruning)
-
-**Time Complexity:** O(n)  
-**Space Complexity:** O(h)
-
-```python
-class Solution:
-    def rangeSumBST(self, root, low, high):
-        if root == None:
-            return 0
-
-        total = 0
-
-        if root.val >= low and root.val <= high:
-            total += root.val
-
-        total += self.rangeSumBST(root.left, low, high)
-        total += self.rangeSumBST(root.right, low, high)
-
-        return total
-```
-
-**Pros:**
-- Simple, straightforward
-
-**Cons:**
-- No pruning optimization
-- Visits all nodes even if outside range
-
-## Complexity Analysis
-
-| Approach | Time | Space | Pros | Cons |
-|----------|------|-------|------|------|
-| **Recursive with Pruning** | O(n) worst, often better | O(h) | Simple, efficient | Recursion overhead |
-| **Iterative with Stack** | O(n) worst, often better | O(h) | No recursion | More code |
-| **Inorder (No Pruning)** | O(n) | O(h) | Simple | Less efficient |
-
-## Implementation Details
-
-### Why Pruning Works
-
-**BST Property:**
-```
-For node with value v:
-- Left subtree: all values < v
-- Right subtree: all values > v
-```
-
-**Pruning Logic:**
-- `v > high` → Right subtree values > v > high → Skip right
-- `v < low` → Left subtree values < v < low → Skip left
-
-### Recursive Call Structure
-
-```python
-return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
-```
-
 **Breakdown:**
 1. `root->val`: Current node's value (if in range)
 2. `rangeSumBST(root->left, ...)`: Sum from left subtree
@@ -322,6 +221,12 @@ return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, lo
 4. Add all three together
 
 ## Common Mistakes
+
+1. **Single node**: Tree with one node
+2. **All nodes in range**: Entire tree contributes to sum
+3. **No nodes in range**: Return 0
+4. **Range at boundaries**: low or high equals node values
+5. **Skewed tree**: Left-skewed or right-skewed BST
 
 1. **Forgetting BST property**: Not pruning subtrees
 2. **Wrong comparison**: Using `>=` or `<=` incorrectly
@@ -337,10 +242,10 @@ return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, lo
 
 ## Related Problems
 
-- [700. Search in a Binary Search Tree](https://leetcode.com/problems/search-in-a-binary-search-tree/) - Similar BST traversal
-- [701. Insert into a Binary Search Tree](https://leetcode.com/problems/insert-into-a-binary-search-tree/) - BST modification
-- [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) - BST traversal with counting
-- [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/) - BST property validation
+- [700. Search in a Binary Search Tree](https://www.leetcode.com/problems/search-in-a-binary-search-tree/) - Similar BST traversal
+- [701. Insert into a Binary Search Tree](https://www.leetcode.com/problems/insert-into-a-binary-search-tree/) - BST modification
+- [230. Kth Smallest Element in a BST](https://www.leetcode.com/problems/kth-smallest-element-in-a-bst/) - BST traversal with counting
+- [98. Validate Binary Search Tree](https://www.leetcode.com/problems/validate-binary-search-tree/) - BST property validation
 
 ## Real-World Applications
 
@@ -432,7 +337,21 @@ Final: 10 + 7 + 6 = 23
 - If `root->val < low`, entire left subtree is < low
 - We can skip entire subtrees without checking individual nodes
 
----
+## Key Takeaways
 
-*This problem demonstrates how to leverage BST properties for efficient range queries, using pruning to avoid unnecessary traversals.*
+1. **BST Property**: Use BST ordering to skip entire subtrees
+2. **Pruning Optimization**: Don't traverse subtrees that can't contain valid values
+3. **Inclusive Range**: Include nodes where `low <= val <= high`
+4. **Recursive Structure**: Natural fit for tree traversal
 
+## References
+
+- [LC 938: Range Sum of BST on LeetCode](https://www.leetcode.com/problems/range-sum-of-bst/)
+- [LeetCode Discuss — LC 938: Range Sum of BST](https://www.leetcode.com/problems/range-sum-of-bst/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/range-sum-of-bst/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+
+{% endraw %}

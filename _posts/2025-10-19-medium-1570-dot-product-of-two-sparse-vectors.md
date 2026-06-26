@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 1570. Dot Product of Two Sparse Vectors"
 date: 2025-10-19 20:05:38 -0700
-categories: python hash-map data-structure optimization problem-solving
+categories: leetcode algorithm medium cpp hash-map data-structure optimization problem-solving
 ---
 
-# [Medium] 1570. Dot Product of Two Sparse Vectors
-
+{% raw %}
 Given two sparse vectors, compute their dot product.
 
 Implement class `SparseVector`:
@@ -48,7 +47,39 @@ v1.dotProduct(v2) = 0*1 + 1*0 + 0*0 + 0*0 + 2*3 + 0*0 + 0*4 = 6
 - `1 <= n <= 10^5`
 - `0 <= nums1[i], nums2[i] <= 100`
 
-## Solution: Hash Map with Optimization
+## Thinking Process
+
+1. **Space efficiency:** Store only non-zero elements
+1. **Smaller iteration:** Always iterate through smaller hash map
+
+- Identify the pattern from constraints (sorted? graph? optimal substructure?).
+- Write brute force first mentally, then optimize the bottleneck.
+- Verify edge cases: empty input, single element, duplicates.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
+
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
+
+## Solution
 
 **Time Complexity:** 
 - Constructor: O(n) where n is the length of the vector
@@ -86,8 +117,7 @@ class SparseVector:
 # ans = v1.dotProduct(v2)
 ```
 
-## How the Algorithm Works
-
+### Solution Explanation
 **Key Insight:** Store only non-zero elements in a hash map, then optimize dot product by iterating through the smaller hash map.
 
 **Steps:**
@@ -165,8 +195,7 @@ def dotProduct(self, vec: 'SparseVector') -> int:
 3. **Calculate product:** If match found, multiply values and add to result
 4. **Return sum:** Total dot product of matching elements
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time Complexity | Space Complexity |
 |-----------|----------------|------------------|
 | Constructor | O(n) | O(k) |
@@ -174,27 +203,6 @@ def dotProduct(self, vec: 'SparseVector') -> int:
 | **Total** | **O(n + min(k1, k2))** | **O(k1 + k2)** |
 
 Where n is the length of the vector, k1 and k2 are the number of non-zero elements in each vector.
-
-## Edge Cases
-
-1. **All zeros:** `nums1 = [0,0,0]`, `nums2 = [0,0,0]` → `0`
-2. **Single non-zero:** `nums1 = [1,0,0]`, `nums2 = [0,0,1]` → `0`
-3. **No matches:** `nums1 = [1,0,0]`, `nums2 = [0,1,0]` → `0`
-4. **Perfect match:** `nums1 = [1,2,3]`, `nums2 = [1,2,3]` → `14`
-
-## Key Insights
-
-### Hash Map Optimization:
-1. **Space efficiency:** Store only non-zero elements
-2. **Fast lookup:** O(1) access to non-zero elements
-3. **Index preservation:** Maintain original indices for dot product
-4. **Memory trade-off:** Use extra space for faster operations
-
-### Dot Product Optimization:
-1. **Smaller iteration:** Always iterate through smaller hash map
-2. **Match checking:** Check if index exists in larger hash map
-3. **Product calculation:** Multiply matching values
-4. **Efficient computation:** Avoid unnecessary iterations
 
 ## Detailed Example Walkthrough
 
@@ -224,59 +232,12 @@ For each element in smaller:
 Result = 6
 ```
 
-## Alternative Approaches
-
-### Approach 1: Brute Force
-```python
-class SparseVector:
-    def __init__(self, nums: list[int]):
-        self.nums = nums
-
-    def dotProduct(self, vec: 'SparseVector') -> int:
-        result = 0
-
-        for i in range(len(self.nums)):
-            result += self.nums[i] * vec.nums[i]
-
-        return result
-```
-
-**Time Complexity:** O(n) for dotProduct  
-**Space Complexity:** O(n)
-
-### Approach 2: List of Pairs
-```python
-class SparseVector:
-    def __init__(self, nums: list[int]):
-        self.nonZeros = []
-        for i, num in enumerate(nums):
-            if num != 0:
-                self.nonZeros.append((i, num))
-
-    def dotProduct(self, vec: 'SparseVector') -> int:
-        result = 0
-        i, j = 0, 0
-
-        while i < len(self.nonZeros) and j < len(vec.nonZeros):
-            idx1, val1 = self.nonZeros[i]
-            idx2, val2 = vec.nonZeros[j]
-
-            if idx1 == idx2:
-                result += val1 * val2
-                i += 1
-                j += 1
-            elif idx1 < idx2:
-                i += 1
-            else:
-                j += 1
-
-        return result
-```
-
-**Time Complexity:** O(k1 + k2) for dotProduct  
-**Space Complexity:** O(k1 + k2)
-
 ## Common Mistakes
+
+1. **All zeros:** `nums1 = [0,0,0]`, `nums2 = [0,0,0]` → `0`
+2. **Single non-zero:** `nums1 = [1,0,0]`, `nums2 = [0,0,1]` → `0`
+3. **No matches:** `nums1 = [1,0,0]`, `nums2 = [0,1,0]` → `0`
+4. **Perfect match:** `nums1 = [1,2,3]`, `nums2 = [1,2,3]` → `14`
 
 1. **Not optimizing iteration:** Always iterate through smaller hash map
 2. **Missing zero check:** Not checking if index exists in larger map
@@ -285,10 +246,10 @@ class SparseVector:
 
 ## Related Problems
 
-- [311. Sparse Matrix Multiplication](https://leetcode.com/problems/sparse-matrix-multiplication/)
-- [1428. Leftmost Column with at Least a One](https://leetcode.com/problems/leftmost-column-with-at-least-a-one/)
-- [1588. Sum of All Odd Length Subarrays](https://leetcode.com/problems/sum-of-all-odd-length-subarrays/)
-- [1641. Count Sorted Vowel Strings](https://leetcode.com/problems/count-sorted-vowel-strings/)
+- [311. Sparse Matrix Multiplication](https://www.leetcode.com/problems/sparse-matrix-multiplication/)
+- [1428. Leftmost Column with at Least a One](https://www.leetcode.com/problems/leftmost-column-with-at-least-a-one/)
+- [1588. Sum of All Odd Length Subarrays](https://www.leetcode.com/problems/sum-of-all-odd-length-subarrays/)
+- [1641. Count Sorted Vowel Strings](https://www.leetcode.com/problems/count-sorted-vowel-strings/)
 
 ## Why This Solution Works
 
@@ -309,3 +270,25 @@ class SparseVector:
 2. **Efficiency:** O(min(k1, k2)) dot product complexity
 3. **Space optimization:** Only stores non-zero elements
 4. **Simplicity:** Easy to understand and implement
+
+## References
+
+- [LC 1570: Dot Product of Two Sparse Vectors on LeetCode](https://www.leetcode.com/problems/dot-product-of-two-sparse-vectors/)
+- [LeetCode Discuss — LC 1570: Dot Product of Two Sparse Vectors](https://www.leetcode.com/problems/dot-product-of-two-sparse-vectors/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/dot-product-of-two-sparse-vectors/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### Hash Map Optimization:
+1. **Space efficiency:** Store only non-zero elements
+2. **Fast lookup:** O(1) access to non-zero elements
+3. **Index preservation:** Maintain original indices for dot product
+4. **Memory trade-off:** Use extra space for faster operations
+
+### Dot Product Optimization:
+1. **Smaller iteration:** Always iterate through smaller hash map
+2. **Match checking:** Check if index exists in larger hash map
+3. **Product calculation:** Multiply matching values
+4. **Efficient computation:** Avoid unnecessary iterations
+
+{% endraw %}

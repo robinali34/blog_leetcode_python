@@ -1,16 +1,13 @@
 ---
 layout: post
 title: "[Medium] 36. Valid Sudoku"
-date: 2026-02-14 00:00:00 -0700
+date: 2026-02-14
 categories: [leetcode, medium, math, bit-manipulation]
 tags: [leetcode, medium, bitmask, grid, hash]
 permalink: /2026/02/14/medium-36-valid-sudoku/
 ---
 
-# [Medium] 36. Valid Sudoku
-
-## Problem Statement
-
+{% raw %}
 Determine if a `9 x 9` Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
 
 1. Each **row** must contain the digits `1-9` without repetition.
@@ -51,23 +48,7 @@ Explanation: Two 8's in the top-left 3x3 sub-box.
 - `board[i].length == 9`
 - `board[i][j]` is a digit `1-9` or `'.'`
 
-## Clarification Questions
-
-1. **Validate only**: We are not solving, only checking validity? (Assumption: Yes.)
-2. **Empty cells**: '.' ignored for duplicate check? (Assumption: Yes.)
-3. **Board size**: Always 9×9? (Assumption: Yes.)
-4. **Sub-boxes**: Nine 3×3 boxes as in standard Sudoku? (Assumption: Yes.)
-5. **Partial fill**: Some cells can be empty? (Assumption: Yes.)
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: Three passes (5 min)** — Check 9 rows, then 9 columns, then 9 sub-boxes for duplicate digits. Use a set per group. O(1) since 81 cells.
-
-**Step 2: Single pass with 27 sets (7 min)** — For each cell (i, j) with digit d, check row i, col j, and box (i//3, j//3). If d already in any of those sets, return false; else add d to all three. O(1).
-
-**Step 3: Bitmask (8 min)** — Same logic but use one int per row/col/box: set bit (d-1). Check with (mask >> (d-1)) & 1; set with mask |= (1 << (d-1)). Clean and fast.
-
-## Solution Approach
+## Thinking Process
 
 **Fixed size 9x9** -- maximum 81 cells, so time complexity is essentially constant. This problem is not about performance; it's about **clean constraint modeling**.
 
@@ -110,6 +91,14 @@ The 9 sub-boxes are indexed as:
 
 Common wrong formula: `(i % 3) * 3 + (j % 3)` -- this gives position *within* a box, not the box index.
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Bit manipulation</text>
+
+  <text x="40" y="50" font-family="monospace" font-size="14" fill="#3A3530">1 0 1 1 0 1 0</text>
+  <text x="40" y="75" font-size="11" fill="#6B6560">XOR pairs · masks · shifts</text>
+
+</svg>
+
 ## Approach
 
 Single pass over all 81 cells. For each filled cell:
@@ -118,12 +107,21 @@ Single pass over all 81 cells. For each filled cell:
 3. Check if `mask` already exists in `row[i]`, `col[j]`, or `box[boxIndex]`
 4. If yes, return `false`. Otherwise, set the bit.
 
-**Time Complexity**: $O(81)$ = $O(1)$
-**Space Complexity**: $O(1)$ (27 integers)
+**Time Complexity**: O(81) = O(1)
+**Space Complexity**: O(1) (27 integers)
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **XOR tricks** *(this problem)* | O(n) | O(1) | Single number, swap without temp |
+| Bit masks | O(2^n) | O(n) | Subset enumeration |
+| Brian Kernighan | O(log n) | O(1) | Count set bits |
+| Shift operations | O(n) | O(1) | Power of two, divide by 2 |
 
 ## Solution
-
-{% raw %}
 ```python
 class Solution:
     def isValidSudoku(self, board):
@@ -151,8 +149,10 @@ class Solution:
         return True
 
 ```
-{% endraw %}
 
+### Solution Explanation
+
+**Fixed size 9x9** -- maximum 81 cells, so time complexity is essentially constant. This problem is not about performance; it's about **clean constraint modeling**.
 ## Common Mistakes
 
 - Using `unordered_set` inside loops -- slower and messier than bitmask
@@ -165,12 +165,20 @@ This problem tests:
 - **Constraint modeling** -- 27 groups validated in one pass
 - **Bitmask usage** -- one integer per constraint group
 - **Grid indexing mapping** -- the `(i/3)*3 + (j/3)` trick
-- **Clean $O(1)$ structure design** -- no containers, just arrays
+- **Clean O(1) structure design** -- no containers, just arrays
 
 ## Related Problems
 
-- [37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/) -- backtracking extension
+- [37. Sudoku Solver](https://www.leetcode.com/problems/sudoku-solver/) -- backtracking extension
+
+## References
+
+- [LC 36: Valid Sudoku on LeetCode](https://www.leetcode.com/problems/valid-sudoku/)
+- [LeetCode Discuss — LC 36: Valid Sudoku](https://www.leetcode.com/problems/valid-sudoku/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/valid-sudoku/editorial/) *(may require premium)*
 
 ## Template Reference
 
-- [Math & Bit Manipulation](/blog_leetcode/posts/2025-11-24-leetcode-templates-math-bit-manipulation/)
+- [Math & Bit Manipulation](/posts/2025-11-24-leetcode-templates-math-bit-manipulation/)
+
+{% endraw %}

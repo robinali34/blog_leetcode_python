@@ -1,24 +1,107 @@
 ---
 layout: post
 title: "[Easy] 543. Diameter of Binary Tree"
-date: 2026-03-06 00:00:00 -0700
+date: 2026-03-06
 categories: [leetcode, easy, tree, dfs]
-tags: [leetcode, easy, tree, diameter, height]
+tags: [leetcode, easy, tree, dfs, recursion]
 permalink: /2026/03/06/easy-543-diameter-of-binary-tree/
 ---
 
-# [Easy] 543. Diameter of Binary Tree
-
-## Problem Statement
-
-Given the `root` of a binary tree, return the **length of the diameter** of the tree.
-
-The **diameter** is the longest path between any two nodes, measured by the **number of edges**. This path may or may not pass through the root.
+{% raw %}
+Given the `root` of a binary tree, return the length of the **diameter** of the tree. The diameter is the length of the longest path between any two nodes (measured in number of **edges**). This path may or may not pass through the root.
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: root = [1,2,3,4,5]
+      1
+     / \
+    2   3
+   / \
+  4   5
+Output: 3
+Explanation: The longest path is [4,2,1,3] or [5,2,1,3], both length 3.
+```
+
+**Example 2:**
+
+```
+Input: root = [1,2]
+Output: 1
+```
+
+## Constraints
+
+- The number of nodes is in `[1, 10^4]`
+- `-100 <= Node.val <= 100`
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Thinking Process
+
+### Key Observation
+
+The diameter passing through a node = **left depth + right depth + 2** (counting edges). The overall diameter is the maximum of this across all nodes.
+
+### Why Bottom-Up?
+
+We need the depth of every subtree. Computing depth top-down would recompute subtrees repeatedly (O(n^2)). Instead, compute depth bottom-up and update a global maximum at each node -- same pattern as [LC 110 Balanced Binary Tree](/2026/03/06/easy-110-balanced-binary-tree/).
+
+### Edge Count vs Node Count
+
+Returning `-1` for a null node means a leaf has depth `0`, and the path through a node with left depth `L` and right depth `R` has `L + R + 2` edges. This correctly counts edges rather than nodes.
+
+### Walk-Through
+
+```
+      1
+     / \
+    2   3
+   / \
+  4   5
+
+Node 4: left=-1, right=-1 → diameter candidate = -1+-1+2 = 0, return 0
+Node 5: left=-1, right=-1 → diameter candidate = 0, return 0
+Node 2: left=0,  right=0  → diameter candidate = 0+0+2 = 2, return 1
+Node 3: left=-1, right=-1 → diameter candidate = 0, return 0
+Node 1: left=1,  right=0  → diameter candidate = 1+0+2 = 3, return 2
+
+Max diameter = 3 ✓
+```
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
+
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
+## Approach: Bottom-Up DFS -- O(n)
 ```python
 Input: root = [1,2,3,4,5]
 Output: 3
@@ -30,110 +113,41 @@ Output: 3
 # Longest path: 4 → 2 → 1 → 3 (or 5 → 2 → 1 → 3), 3 edges.
 ```
 
-**Example 2:**
+### Solution Explanation
 
-```python
-Input: root = [1,2]
-Output: 1
-# Tree:  1
-#       /
-#      2
-# One edge between 1 and 2.
-```
+**Approach:** Recursive DFS (this problem)
 
-## Constraints
+**Key idea:** ### Key Observation
 
-- The number of nodes in the tree is in the range `[1, 10^4]`.
-- `-100 <= Node.val <= 100`
+**Walkthrough** — input `root = [1,2,3,4,5]`, expected output `3`:
 
-## Clarification Questions
-
-1. **Empty tree**: Constraints say at least 1 node; no need to handle `root is None` for the problem, but we can return 0 for clarity.
-2. **Length**: Diameter = number of **edges** on the longest path (not number of nodes).  
-   **Assumption**: Yes.
-3. **Path**: Path can be anywhere in the tree, not necessarily through the root.  
-   **Assumption**: Yes — we must consider the best path through every node.
-
-## Interview Deduction Process (20 minutes)
-
-**Step 1: What is the diameter at a node? (5 min)**  
-The longest path **through** a node is the longest path down its left subtree plus the longest path down its right subtree (in edges). So we need the “depth” of left and right (max edges from that child to a leaf), then candidate diameter = left_depth + right_depth (with the right depth convention).
-
-**Step 2: Depth convention (5 min)**  
-Define depth of a node = max number of edges from this node to a leaf. Empty: 0. Then depth(node) = 1 + max(depth(left), depth(right)). The path through node uses (depth(left)) edges on the left and (depth(right)) on the right, so diameter through node = depth(left) + depth(right). So we can use depth(None)=0 and depth = 1 + max(L,R); candidate = L + R.
-
-**Step 3: Single DFS (10 min)**  
-Recurse to get left and right depths. Update a global (or nonlocal) max with L + R. Return depth = 1 + max(L, R). O(n) time, O(h) space.
-
-## Solution Approach
-
-**DFS with depth return:** For each node, the diameter passing through it equals the sum of the maximum depths of its left and right subtrees (each “depth” = max edges to a leaf, with `None` → 0). So we run a DFS that returns this depth, and at each node we compute candidate diameter = left_depth + right_depth and update the answer. Return value for the parent is 1 + max(left_depth, right_depth).
-
-### Key Insights
-
-1. **Path through each node** — The longest path through a node is determined by the longest path down left + longest path down right (in edges).
-2. **Depth once** — Return “depth” (max edges to a leaf) from the DFS so the parent can use it; no need to recompute.
-3. **Global / nonlocal max** — The best path might not go through the root, so we update the maximum at every node and return only the depth for the recursion.
-
-## Python Solution
-
-### DFS (O(n) — single pass)
-
-```python
-from typing import Optional
-
-
-# Definition for a binary tree node.
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-
-class Solution:
-    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
-        best = 0
-
-        def depth(node: Optional[TreeNode]) -> int:
-            nonlocal best
-            if node is None:
-                return 0
-            left_d = depth(node.left)
-            right_d = depth(node.right)
-            best = max(best, left_d + right_d)
-            return 1 + max(left_d, right_d)
-
-        depth(root)
-        return best
-```
-
-## Algorithm Explanation
-
-We define **depth** of a node as the maximum number of edges from that node to a leaf. Base case: `None` → 0. Recursive: depth = 1 + max(depth(left), depth(right)).
-
-At each node, the longest path that **goes through** that node has length left_d + right_d (edges on the left chain plus edges on the right chain). We update a global maximum with this value. The return value is the depth so the parent can compute its own candidate diameter. The final answer is the maximum over all nodes.
-
-## Complexity Analysis
-
-- **Time**: O(n) — each node is visited once.
-- **Space**: O(h) for the recursion stack, where h is the height of the tree (O(n) worst case for a skewed tree).
-
-## Edge Cases
-
-- Single node → depth 0, candidate 0; diameter = 0.
-- Only one child (e.g. `[1,2]`) → left_d=1, right_d=0, candidate=1; diameter = 1.
-- Diameter not through root — the DFS naturally considers every node, so the global max is correct.
-
+The longest path is [4,2,1,3] or [5,2,1,3], both length 3.
 ## Common Mistakes
 
-- **Only checking through root** — The max path might be entirely in one subtree; we must consider the candidate at every node.
-- **Counting nodes instead of edges** — The problem asks for the number of edges; using “depth” as edges (depth(None)=0, depth = 1+max(L,R)) keeps candidate = L+R as the edge count.
-- **Forgetting to update the max** — We must do `best = max(best, left_d + right_d)` at every node.
+- Returning `0` for null instead of `-1` (off-by-one: counts nodes instead of edges)
+- Forgetting the diameter may not pass through the root -- must track the global max across all nodes
+- Returning the diameter from the recursive function instead of the single-side depth (the function returns depth, but updates diameter as a side effect)
+
+## Key Takeaways
+
+- **Bottom-up DFS with global max** is a recurring tree pattern: compute a per-node value bottom-up, update a global answer at each node
+- Same structure as LC 110 (sentinel) and LC 124 (max path sum) -- learn one, get all three
+- The `return -1` for null trick cleanly handles edge counting
 
 ## Related Problems
 
-- [LC 110: Balanced Binary Tree](/2026/03/06/easy-110-balanced-binary-tree/) — Also uses “return depth, combine left/right” DFS.
-- [LC 124: Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/) — Similar “path through node” with a different aggregate (sum).
-- [LC 687: Longest Univalue Path](https://leetcode.com/problems/longest-univalue-path/) — Longest path where all values are equal; same “through node” idea.
-- [LC 104: Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/) — Depth definition used here.
+- [110. Balanced Binary Tree](https://www.leetcode.com/problems/balanced-binary-tree/) -- bottom-up height with sentinel
+- [124. Binary Tree Maximum Path Sum](https://www.leetcode.com/problems/binary-tree-maximum-path-sum/) -- same pattern with values instead of edges
+- [687. Longest Univalue Path](https://www.leetcode.com/problems/longest-univalue-path/) -- diameter variant with value constraint
+
+## References
+
+- [LC 543: Diameter of Binary Tree on LeetCode](https://www.leetcode.com/problems/diameter-of-binary-tree/)
+- [LeetCode Discuss — LC 543: Diameter of Binary Tree](https://www.leetcode.com/problems/diameter-of-binary-tree/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/diameter-of-binary-tree/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+
+{% endraw %}

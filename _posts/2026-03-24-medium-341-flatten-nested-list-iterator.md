@@ -1,169 +1,173 @@
 ---
 layout: post
 title: "[Medium] 341. Flatten Nested List Iterator"
-date: 2026-03-24 00:00:00 -0700
-categories: [leetcode, medium, stack, iterator, design]
-tags: [leetcode, medium, stack, iterator, nested-list]
+date: 2026-03-24
+categories: [leetcode, medium, design, stack, iterator]
+tags: [leetcode, medium, design, stack, iterator]
 permalink: /2026/03/24/medium-341-flatten-nested-list-iterator/
 ---
 
-# [Medium] 341. Flatten Nested List Iterator
+{% raw %}
+You are given a nested list of integers `nestedList`. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it.
 
-## Problem Statement
-
-You are given a nested list of integers `nestedList`. Each element is either:
-
-- a single integer, or
-- a nested list of integers
-
-Implement an iterator with the following methods:
-
-- `next()`: returns the next integer in the flattened order
-- `hasNext()`: returns `True` if there is at least one more integer to return
-
-The flattened order is the left-to-right order of integers when fully expanded.
+Implement `NestedIterator`:
+- `NestedIterator(vector<NestedInteger> &nestedList)` -- initializes the iterator
+- `int next()` -- returns the next integer in the flattened list
+- `bool hasNext()` -- returns `true` if there are still integers to iterate
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: nestedList = [[1,1],2,[1,1]]
+Output: [1,1,2,1,1]
+Explanation: Flattening gives [1,1,2,1,1].
+```
+
+**Example 2:**
+
+```
+Input: nestedList = [1,[4,[6]]]
+Output: [1,4,6]
+```
+
+## Constraints
+
+- `1 <= nestedList.length <= 500`
+- Values are in the range `[-10^6, 10^6]`
+- At most `10^5` calls to `next` and `hasNext`
+
+## Thinking Process
+
+### The Problem with Pre-flattening
+
+We could recursively flatten the entire list in the constructor and iterate over the result. That works, but uses O(n) extra space upfront and doesn't take advantage of **lazy evaluation** -- we might not need all elements.
+
+### Stack-Based Lazy Approach
+
+Use a stack to simulate the recursive flattening on demand:
+
+1. **Constructor**: push elements onto the stack **in reverse order** (so the first element is on top)
+2. **`hasNext`**: peek at the top -- if it's a list, expand it (pop, push children in reverse). Repeat until the top is an integer or the stack is empty
+3. **`next`**: the top is guaranteed to be an integer (since `hasNext` was called first) -- pop and return it
+
+### Why Push in Reverse?
+
+A stack is LIFO. To process elements left-to-right, we push them right-to-left:
+
+```
+nestedList = [A, B, C]
+Push: C, B, A  →  stack top = A  ✓
+```
+
+### Walk-through
+
+```
+Input: [[1,1], 2, [1,1]]
+
+Constructor: push [1,1], 2, [1,1] in reverse
+  stack: [1,1] | 2 | [1,1]  (top → [1,1])
+
+hasNext(): top = [1,1] → list, expand: push 1, 1
+  stack: [1,1] | 2 | 1 | 1  (top → 1, integer ✓)
+next(): return 1
+
+hasNext(): top = 1 (integer ✓)
+next(): return 1
+
+hasNext(): top = 2 (integer ✓)
+next(): return 2
+
+hasNext(): top = [1,1] → list, expand: push 1, 1
+  stack: 1 | 1  (top → 1 ✓)
+next(): return 1
+
+hasNext(): top = 1 (integer ✓)
+next(): return 1
+
+hasNext(): stack empty → false
+```
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Stack</text>
+
+  <rect x="100" y="30" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="46" text-anchor="middle" font-size="10">top</text>
+  <rect x="100" y="54" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="100" y="78" width="80" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="200" y="70" font-size="11" fill="#6B6560">push / pop</text>
+  <path d="M90 42v60" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="115" text-anchor="middle" font-size="11" fill="#6B6560">LIFO — monotonic stack scans array</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Monotonic stack** *(this problem)* | O(n) | O(n) | Next greater/smaller element |
+| Parentheses matching | O(n) | O(n) | Push open, pop on close |
+| Expression evaluation | O(n) | O(n) | Operand + operator stacks |
+| Stack simulation | O(n) | O(n) | Process in LIFO order |
+
+## Solution
 ```python
 Input: nestedList = [[1,1],2,[1,1]]
 Output: [1,1,2,1,1]
 ```
 
-**Example 2:**
+### Solution Explanation
 
-```python
-Input: nestedList = [[],[3],[]]
-Output: [3]
-```
+**Approach:** Monotonic stack (this problem)
 
-## Constraints
+**Key idea:** ### The Problem with Pre-flattening
 
-- The nested list is valid and consists of `NestedInteger` objects.
-- `next()` is called only when `hasNext()` returns `True`.
+**How the code works:**
+1. **Constructor**: push elements onto the stack **in reverse order** (so the first element is on top)
+2. **`hasNext`**: peek at the top -- if it's a list, expand it (pop, push children in reverse). Repeat until the top is an integer or the stack is empty
+3. **`next`**: the top is guaranteed to be an integer (since `hasNext` was called first) -- pop and return it
 
-## Clarification Questions
+**Walkthrough** — input `nestedList = [[1,1],2,[1,1]]`, expected output `[1,1,2,1,1]`:
 
-1. **How are integers vs lists distinguished?**  
-   Use `NestedInteger.isInteger()`; if `True` then `getInteger()` returns the value.
-2. **How do we expand a nested list?**  
-   Use `NestedInteger.getList()` to get its children.
-3. **Can `hasNext()` be called multiple times before `next()`?**  
-   Yes; the iterator must not “skip” elements.
-4. **Do we need to flatten eagerly?**  
-   Not required; in fact, lazy evaluation is the typical solution.
+Flattening gives [1,1,2,1,1].
+## Key Details
 
-## Analysis Process
+**Why does `hasNext` do the flattening, not `next`?**
+The iterator contract requires `hasNext` to correctly report whether more elements exist. If the top of the stack is a nested list (possibly empty), `hasNext` must drill down to find the next actual integer -- or determine there are none.
 
-### 1) Naive approach (eager flatten)
+**What about empty nested lists like `[[], [1]]`?**
+The `while` loop in `hasNext` handles this: `[]` gets popped and expanded to nothing, then the loop continues to process `[1]`.
 
-Flatten the entire nested structure into a plain list of integers in `__init__`, then iterate by index.
+## Common Mistakes
 
-This is simple but uses extra space proportional to the total number of integers.
+- Pushing elements in forward order (reverses the iteration order)
+- Flattening in `next` instead of `hasNext` (breaks the contract when checking for empty nested lists)
+- Not handling deeply nested empty lists like `[[[[]]]]`
 
-### 2) Lazy approach
+## Key Takeaways
 
-We avoid expanding everything up front.
-
-Maintain a stack of `NestedInteger` objects that represents what’s left to process.  
-
-In `hasNext()`:
-
-- Look at the top.
-- If it’s an integer, `hasNext()` can return `True`.
-- Otherwise it’s a list: pop it and push its children back onto the stack (in reverse so left-to-right order is preserved).
-
-Each nested list node gets expanded at most once, giving **amortized** efficiency.
-
-## Solution Options
-
-### Option 1: Lazy Stack (Amortized O(1) per operation)
-
-This is your solution: expand only when needed inside `hasNext()`.
-
-```python
-# """
-# This is the interface that allows for creating nested lists.
-# You should not implement it, or speculate about its implementation
-# """
-# class NestedInteger:
-#     def isInteger(self) -> bool:
-#         return True if this NestedInteger holds a single integer
-#     def getInteger(self) -> int:
-#         return the single integer if it holds an integer
-#     def getList(self) -> [NestedInteger]:
-#         return the nested list if it holds a list
-
-class NestedIterator:
-    def __init__(self, nestedList: [NestedInteger]):
-        self.stk = nestedList[::-1]
-    
-    def next(self) -> int:
-        return self.stk.pop().getInteger()
-    
-    def hasNext(self) -> bool:
-        while self.stk:
-            top = self.stk[-1]
-            if top.isInteger():
-                return True
-            self.stk.pop()
-            self.stk.extend(top.getList()[::-1])
-        return False
-```
-
-Key idea: pushing `top.getList()[::-1]` keeps the leftmost child on top of the stack.
-
-### Option 2: Eager Flatten + Index Pointer
-
-Precompute all integers in `__init__` with DFS, store them in an array, then iterate with a pointer.
-
-```python
-# class NestedInteger: ...
-
-class NestedIterator:
-    def __init__(self, nestedList: [NestedInteger]):
-        self.data = []
-        self._flatten(nestedList)
-        self.i = 0
-    
-    def _flatten(self, nestedList: [NestedInteger]) -> None:
-        for x in nestedList:
-            if x.isInteger():
-                self.data.append(x.getInteger())
-            else:
-                self._flatten(x.getList())
-
-    def next(self) -> int:
-        v = self.data[self.i]
-        self.i += 1
-        return v
-    
-    def hasNext(self) -> bool:
-        return self.i < len(self.data)
-```
-
-### Option 3: Stack-Based DFS Iterator Simulation (Same as Option 1, but phrased iteratively)
-
-Option 1 already represents the standard iterative DFS simulation.  
-So in interviews, it’s usually enough to present Option 1 and optionally mention Option 2 as a space trade-off.
-
-## Comparison
-
-| Option | Evaluation | `hasNext()` / `next()` | Extra Space | Notes |
-|---|---|---|---|---|
-| Lazy Stack | On-demand expansion | amortized O(1) | O(nested depth) to O(total nodes) worst-case | Best balance for iterator problems |
-| Eager Flatten | Fully flatten in `__init__` | O(1) | O(#integers) | Simpler but uses more memory |
-
-## Complexity Analysis
-
-For Option 1 (lazy stack):
-
-- **Time:** amortized `O(total nested items)` across all calls (each node/list is expanded once)
-- **Space:** up to `O(total nested items)` in the worst case, typically closer to nesting depth
+- **"Flatten a recursive structure lazily"** = stack-based iterator
+- Push in reverse order to maintain left-to-right traversal with a LIFO stack
+- Doing the expansion in `hasNext` rather than `next` correctly handles empty nested lists and satisfies the iterator contract
 
 ## Related Problems
 
-- [LC 385: Mini Parser](https://leetcode.com/problems/mini-parser/)
-- [LC 78: Subsets](https://leetcode.com/problems/subsets/)
+- [385. Mini Parser](https://www.leetcode.com/problems/mini-parser/) -- building nested structures
+- [339. Nested List Weight Sum](https://www.leetcode.com/problems/nested-list-weight-sum/) -- DFS on nested lists
+- [173. Binary Search Tree Iterator](https://www.leetcode.com/problems/binary-search-tree-iterator/) -- stack-based tree iterator
+- [281. Zigzag Iterator](https://www.leetcode.com/problems/zigzag-iterator/) -- iterator design
+
+## References
+
+- [LC 341: Flatten Nested List Iterator on LeetCode](https://www.leetcode.com/problems/flatten-nested-list-iterator/)
+- [LeetCode Discuss — LC 341: Flatten Nested List Iterator](https://www.leetcode.com/problems/flatten-nested-list-iterator/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/flatten-nested-list-iterator/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Data Structure Design](/posts/2025-11-24-leetcode-templates-data-structure-design/)
+- [Stack](/posts/2025-11-13-leetcode-templates-stack/)
+
+{% endraw %}

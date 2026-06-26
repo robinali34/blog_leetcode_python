@@ -1,124 +1,125 @@
 ---
 layout: post
 title: "[Medium] 73. Set Matrix Zeroes"
-date: 2026-04-02 00:00:00 -0700
-categories: [leetcode, medium, array, matrix]
-tags: [leetcode, medium, matrix, in-place]
+date: 2026-04-02
+categories: [leetcode, medium, matrix, array]
+tags: [leetcode, medium, matrix, array, in-place]
 permalink: /2026/04/02/medium-73-set-matrix-zeroes/
 ---
 
-# [Medium] 73. Set Matrix Zeroes
-
-## Problem Statement
-
-Given an `m x n` integer matrix, if an element is `0`, set its entire row and column to `0`.
-
-You must do it **in-place**.
+{% raw %}
+Given an `m x n` integer matrix, if an element is `0`, set its **entire row and column** to `0`. You must do it **in place**.
 
 ## Examples
 
 **Example 1:**
 
-```python
-Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
+```
+Input:  [[1,1,1],[1,0,1],[1,1,1]]
 Output: [[1,0,1],[0,0,0],[1,0,1]]
 ```
 
 **Example 2:**
 
-```python
-Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+```
+Input:  [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
 Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
 ```
 
 ## Constraints
 
-- `m == matrix.length`
-- `n == matrix[0].length`
+- `m == matrix.length`, `n == matrix[0].length`
 - `1 <= m, n <= 200`
 - `-2^31 <= matrix[i][j] <= 2^31 - 1`
+- **Follow-up**: Can you solve it with O(1) extra space?
 
-## Clarification Questions
+## Thinking Process
 
-1. **Must we preserve original non-zero values outside zeroed rows/cols?** Yes.
-2. **Extra space allowed?** Follow-up usually asks for **O(1)** extra space; O(m + n) is fine for the first solution.
+The naive approach (modify while scanning) corrupts the matrix -- new zeros trigger more zeros than intended. We need to **record which rows and columns to zero out first**, then apply.
 
-## Solution Option 1: O(m + n) space with row/col sets
+Three levels of space usage:
+1. **O(m + n)**: Use separate sets/arrays for row and column markers
+2. **O(1)**: Use the matrix's own first row and first column as markers
 
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Grid traversal</text>
+
+  <rect x="50" y="40" width="28" height="28" fill="#D4D8E0" stroke="#8B8680"/><rect x="78" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="106" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="40" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="50" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="78" y="68" width="28" height="28" fill="#E0D8E4" stroke="#A098A8"/>
+  <rect x="106" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/><rect x="134" y="68" width="28" height="28" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <text x="110" y="115" text-anchor="middle" font-size="11" fill="#6B6560">BFS/DFS flood from each cell</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| Row/column traversal | O(nm) | O(1) | Simulation, spiral |
+| BFS/DFS on grid | O(nm) | O(nm) | Islands, shortest path |
+| **Matrix as graph** *(this problem)* | O(nm) | O(nm) | 4/8-directional neighbors |
+| Transpose / rotate | O(nm) | O(1) | In-place rotation tricks |
+
+## Solution
+
+Scan for zeros, record their rows and columns, then zero out.
 ```python
-from typing import List
-
-
-class Solution:
-    def setZeroes(self, matrix: List[List[int]]) -> None:
-        R = len(matrix)
-        C = len(matrix[0])
-        rows, cols = set(), set()
-        for i in range(R):
-            for j in range(C):
-                if matrix[i][j] == 0:
-                    rows.add(i)
-                    cols.add(j)
-        for i in range(R):
-            for j in range(C):
-                if i in rows or j in cols:
-                    matrix[i][j] = 0
+Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
+Output: [[1,0,1],[0,0,0],[1,0,1]]
 ```
 
-Two passes: first collect which rows/columns must become zero; second, rewrite accordingly.
+### Solution Explanation
 
-## Solution Option 2: O(1) extra space using first row/col as markers
+**Approach:** Matrix as graph (this problem)
 
-Idea:
+**Key idea:** The naive approach (modify while scanning) corrupts the matrix -- new zeros trigger more zeros than intended. We need to **record which rows and columns to zero out first**, then apply.
 
-- Use `matrix[0][j]` as a marker that column `j` must be zeroed.
-- Use `matrix[i][0]` as a marker that row `i` must be zeroed.
-- Track separately whether the **first column** should become all zero (`is_col`).
+**How the code works:**
+1. **O(m + n)**: Use separate sets/arrays for row and column markers
+2. **O(1)**: Use the matrix's own first row and first column as markers
 
-```python
-from typing import List
+**Walkthrough** — input `[[1,1,1],[1,0,1],[1,1,1]]`, expected output `[[1,0,1],[0,0,0],[1,0,1]]`:
 
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Comparison
 
-class Solution:
-    def setZeroes(self, matrix: List[List[int]]) -> None:
-        is_col = False
-        R = len(matrix)
-        C = len(matrix[0])
-
-        for i in range(R):
-            if matrix[i][0] == 0:
-                is_col = True
-            for j in range(1, C):
-                if matrix[i][j] == 0:
-                    matrix[0][j] = 0
-                    matrix[i][0] = 0
-
-        for i in range(1, R):
-            for j in range(1, C):
-                if matrix[i][0] == 0 or matrix[0][j] == 0:
-                    matrix[i][j] = 0
-
-        if matrix[0][0] == 0:
-            for j in range(C):
-                matrix[0][j] = 0
-
-        if is_col:
-            for i in range(R):
-                matrix[i][0] = 0
-```
-
-## Complexity
-
-For both options:
-
-- **Time:** O(m·n)
-- **Space:** Option 1 — O(m + n); Option 2 — O(1) extra
+| Approach | Time | Space | Notes |
+|---|---|---|---|
+| Hash Sets | O(m · n) | O(m + n) | Simple and clear |
+| In-Place Markers | O(m · n) | O(1) | Uses matrix itself; interview follow-up |
 
 ## Common Mistakes
 
-- Zeroing a row/column immediately when you see a zero (this can create new zeros that incorrectly propagate).
-- Forgetting to handle the first row/first column separately when using them as markers.
+- Zeroing out row 0 / column 0 before processing the interior (destroys marker data)
+- Modifying the matrix during the scan pass (new zeros cascade incorrectly)
+- Forgetting to separately handle row 0 and column 0 (they overlap at `matrix[0][0]`)
+
+## Key Takeaways
+
+- **"Mark then apply"** is the core pattern -- never modify and read from the same data simultaneously
+- Using the matrix's own borders as storage is a classic O(1) space trick
+- The order of operations is critical: scan → mark → apply interior → apply borders
 
 ## Related Problems
 
-- [LC 289: Game of Life](https://leetcode.com/problems/game-of-life/)
+- [289. Game of Life](https://www.leetcode.com/problems/game-of-life/) -- in-place matrix update with encoding trick
+- [48. Rotate Image](https://www.leetcode.com/problems/rotate-image/) -- in-place matrix manipulation
+- [54. Spiral Matrix](https://www.leetcode.com/problems/spiral-matrix/) -- matrix traversal
+- [59. Spiral Matrix II](https://www.leetcode.com/problems/spiral-matrix-ii/) -- matrix filling
+
+## References
+
+- [LC 73: Set Matrix Zeroes on LeetCode](https://www.leetcode.com/problems/set-matrix-zeroes/)
+- [LeetCode Discuss — LC 73: Set Matrix Zeroes](https://www.leetcode.com/problems/set-matrix-zeroes/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/set-matrix-zeroes/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Array & Matrix](/posts/2025-11-24-leetcode-templates-array-matrix/)
+
+{% endraw %}

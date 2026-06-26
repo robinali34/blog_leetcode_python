@@ -7,6 +7,7 @@ permalink: /posts/2025-10-29-leetcode-templates-dp/
 tags: [leetcode, templates, dp]
 ---
 
+{% raw %}
 Dynamic Programming is the most common pattern in LeetCode Medium/Hard problems. If you only learn one advanced technique, make it DP.
 
 > **New to DP?** The core idea is simple: **break a big problem into smaller overlapping subproblems, solve each once, and reuse the results.** That's it. Everything else is details.
@@ -138,13 +139,10 @@ Every DP problem follows the same four steps. Before writing any code, answer th
 **When to use:** The problem involves a sequence (array, string) and asks for a maximum/minimum value or count. Each element either contributes to the answer or doesn't.
 
 ### The Pattern
-
-{% raw %}
 ```
 dp[i] = best answer considering elements 0..i
 dp[i] depends on dp[i-1], dp[i-2], ... (look back at previous states)
 ```
-{% endraw %}
 
 ### Example: House Robber (LC 198)
 
@@ -201,8 +199,6 @@ dp[i] depends on dp[i-1], dp[i-2], ... (look back at previous states)
   <text x="200" y="152" font-size="12" fill="#5A5752" font-family="monospace">dp[i] = max(dp[i-1], dp[i-2] + nums[i])</text>
   <text x="200" y="170" font-size="10" fill="#9A9792">          skip i       rob i</text>
 </svg>
-
-{% raw %}
 ```python
 def knap01(wt: list[int], val: list[int], W: int) -> int:
     dp = [0] * (W + 1)
@@ -211,15 +207,12 @@ def knap01(wt: list[int], val: list[int], W: int) -> int:
             dp[w] = max(dp[w], dp[w - wt[i]] + val[i])
     return dp[W]
 ```
-{% endraw %}
 
 ### Template: 0/1 Knapsack
 
 > "Given items with weights and values, maximize total value without exceeding capacity W."
 
 The key insight: iterate items in the outer loop, **capacity in reverse** in the inner loop (to avoid using the same item twice).
-
-{% raw %}
 ```python
 def unique_paths_with_obstacles(g: list[list[int]]) -> int:
     m, n = len(g), len(g[0])
@@ -238,7 +231,6 @@ def unique_paths_with_obstacles(g: list[list[int]]) -> int:
                 dp[i][j] += dp[i][j - 1]
     return dp[m - 1][n - 1]
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -261,13 +253,10 @@ def unique_paths_with_obstacles(g: list[list[int]]) -> int:
 **When to use:** The problem involves a 2D grid/matrix and asks about paths, areas, or values computed from neighboring cells.
 
 ### The Pattern
-
-{% raw %}
 ```
 dp[i][j] = answer for subproblem ending at cell (i, j)
 dp[i][j] depends on dp[i-1][j] (above), dp[i][j-1] (left), dp[i-1][j-1] (diagonal)
 ```
-{% endraw %}
 
 ### Example: Unique Paths with Obstacles (LC 63)
 
@@ -336,8 +325,6 @@ dp[i][j] depends on dp[i-1][j] (above), dp[i][j-1] (left), dp[i-1][j-1] (diagona
   <text x="30" y="280" font-size="10" fill="#9A9792">                    ↑ from above   ↑ from left</text>
   <text x="30" y="300" font-size="10" fill="#9A9792">First row and column: dp = 1 (only one path to reach each edge cell)</text>
 </svg>
-
-{% raw %}
 ```python
 def length_of_lis(nums: list[int]) -> int:
     n = len(nums)
@@ -348,7 +335,6 @@ def length_of_lis(nums: list[int]) -> int:
                 dp[i] = max(dp[i], dp[j] + 1)
     return max(dp)
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -427,9 +413,7 @@ def length_of_lis(nums: list[int]) -> int:
   <text x="360" y="235" font-size="10" fill="#9A9792">Tails array length = LIS length (but NOT the LIS)</text>
 </svg>
 
-### Template: $O(n^2)$ DP
-
-{% raw %}
+### Template: O(n^2) DP
 ```python
 import bisect
 
@@ -444,11 +428,8 @@ def length_of_lis(nums: list[int]) -> int:
             tails[i] = x
     return len(tails)
 ```
-{% endraw %}
 
-### Template: $O(n \log n)$ with Binary Search (Patience Sort)
-
-{% raw %}
+### Template: O(n log n) with Binary Search (Patience Sort)
 ```python
 def find_number_of_lis(nums: list[int]) -> int:
     n = len(nums)
@@ -465,11 +446,8 @@ def find_number_of_lis(nums: list[int]) -> int:
     max_len = max(length)
     return sum(c for l, c in zip(length, count) if l == max_len)
 ```
-{% endraw %}
 
 ### Template: Count Number of LIS (LC 673)
-
-{% raw %}
 ```python
 def interval_dp(arr: list[int]) -> int:
     n = len(arr)
@@ -483,7 +461,6 @@ def interval_dp(arr: list[int]) -> int:
                 dp[i][j] = max(dp[i][j], dp[i][k] + dp[k + 1][j])
     return dp[0][n - 1]
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -497,18 +474,13 @@ def interval_dp(arr: list[int]) -> int:
 **When to use:** The problem asks you to merge, split, or process contiguous ranges, and the optimal solution for a range depends on how you split it.
 
 **The pattern:** Solve small intervals first, then build up to the full range by trying every possible split point.
-
-{% raw %}
 ```
 dp[i][j] = best answer for the subarray from index i to j
 For each split point k in [i, j):
     dp[i][j] = best(dp[i][k] + dp[k+1][j] + merge_cost)
 ```
-{% endraw %}
 
 ### Template
-
-{% raw %}
 ```python
 def max_coins(nums: list[int]) -> int:
     arr = [1] + nums + [1]
@@ -524,13 +496,10 @@ def max_coins(nums: list[int]) -> int:
                 )
     return dp[1][n]
 ```
-{% endraw %}
 
 ### Example: Burst Balloons (LC 312)
 
 Think of it as: "which balloon do I burst **last** in the range `[i, j]`?"
-
-{% raw %}
 ```python
 def max_profit(prices: list[int]) -> int:
     hold, cash = -prices[0], 0
@@ -539,7 +508,6 @@ def max_profit(prices: list[int]) -> int:
         cash = max(cash, hold + p)
     return cash
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -619,8 +587,6 @@ Instead of one DP array, maintain **multiple arrays** -- one for each state. At 
 </svg>
 
 ### Template: Basic Buy/Sell (unlimited transactions)
-
-{% raw %}
 ```python
 def max_profit_cooldown(prices: list[int]) -> int:
     rest = 0
@@ -634,11 +600,8 @@ def max_profit_cooldown(prices: list[int]) -> int:
         )
     return int(max(rest, sold))
 ```
-{% endraw %}
 
 ### Template: With Cooldown (3 states)
-
-{% raw %}
 ```python
 def rob(root) -> int:
     def dfs(node):
@@ -652,7 +615,6 @@ def rob(root) -> int:
 
     return max(dfs(root))
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -709,8 +671,6 @@ def rob(root) -> int:
 </svg>
 
 ### Template: Tree DP (House Robber III, LC 337)
-
-{% raw %}
 ```python
 def max_path_sum(root) -> int:
     best = float("-inf")
@@ -727,13 +687,10 @@ def max_path_sum(root) -> int:
     dfs(root)
     return best
 ```
-{% endraw %}
 
 ### Template: Max Path Sum (LC 124)
 
 Each node contributes its value + best single path from one child. But the answer can also be a path through the node connecting both children.
-
-{% raw %}
 ```python
 def split_array(nums: list[int], m: int) -> int:
     def can_split(limit: int) -> bool:
@@ -755,7 +712,6 @@ def split_array(nums: list[int], m: int) -> int:
             lo = mid + 1
     return lo
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -765,15 +721,13 @@ def split_array(nums: list[int], m: int) -> int:
 
 ## DP with Binary Search
 
-**When to use:** A pure DP solution is $O(n^2)$ or worse, and binary search can help find the optimal transition in $O(\log n)$, bringing total time down.
+**When to use:** A pure DP solution is O(n^2) or worse, and binary search can help find the optimal transition in O(log n), bringing total time down.
 
 ### Template: Binary Search on Answer (LC 410)
 
 > "Split array into `m` subarrays to minimize the largest subarray sum."
 
 The insight: binary search on the answer (the maximum sum), and use a greedy check.
-
-{% raw %}
 ```python
 from functools import lru_cache
 
@@ -796,7 +750,6 @@ def count_without_adjacent_equal_digits(N: int) -> int:
 
     return dfs(0, -1, True, False)
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -815,8 +768,6 @@ def count_without_adjacent_equal_digits(N: int) -> int:
 - Any property-specific state (previous digit, digit sum, etc.)
 
 ### Template
-
-{% raw %}
 ```python
 def tsp_min_cycle_cost(w: list[list[int]]) -> int:
     n = len(w)
@@ -835,7 +786,6 @@ def tsp_min_cycle_cost(w: list[list[int]]) -> int:
     full = (1 << n) - 1
     return min(dp[full][u] + w[u][0] for u in range(n))
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -845,13 +795,11 @@ def tsp_min_cycle_cost(w: list[list[int]]) -> int:
 
 ## Bitmask DP (TSP / subsets)
 
-**When to use:** The problem has a small set of items ($n \le 20$) and you need to track which items have been used. Each bit in a bitmask represents "used" (1) or "not used" (0).
+**When to use:** The problem has a small set of items (n le 20) and you need to track which items have been used. Each bit in a bitmask represents "used" (1) or "not used" (0).
 
-**The key constraint:** $n \le 20$ (otherwise $2^n$ states explode). If you see $n \le 15\text{-}20$ in the constraints, think bitmask.
+**The key constraint:** n le 20 (otherwise 2^n states explode). If you see n le 15text{-}20 in the constraints, think bitmask.
 
 ### Template: Traveling Salesman (TSP)
-
-{% raw %}
 ```python
 def tsp(w: list[list[int]]) -> int:
     n = len(w)
@@ -871,7 +819,6 @@ def tsp(w: list[list[int]]) -> int:
                 dp[nxt][v] = min(dp[nxt][v], dp[mask][u] + w[u][v])
     return min(dp[-1])
 ```
-{% endraw %}
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
@@ -887,14 +834,14 @@ def tsp(w: list[list[int]]) -> int:
 
 | Type | Signal in Problem | Time | Space |
 |---|---|---|---|
-| **1D Linear** | Sequence, "rob/skip", coin change | $O(n)$ or $O(n \times W)$ | $O(n)$ or $O(W)$ |
-| **2D Grid** | Matrix, paths, grid traversal | $O(m \times n)$ | $O(m \times n)$ |
-| **LIS** | Longest increasing/decreasing subsequence | $O(n^2)$ or $O(n \log n)$ | $O(n)$ |
-| **State Machine** | Buy/sell, hold/not hold, cooldown | $O(n \times k)$ | $O(n \times k)$ |
-| **Interval** | Merge/split ranges, balloons, palindromes | $O(n^3)$ | $O(n^2)$ |
-| **Tree** | DP on subtrees, tree paths | $O(n)$ | $O(n)$ |
-| **Digit** | "Count numbers in [1, N] with property" | $O(\text{digits} \times \text{states})$ | Same |
-| **Bitmask** | Small n ($\le 20$), subset selection | $O(2^n \times n)$ | $O(2^n \times n)$ |
+| **1D Linear** | Sequence, "rob/skip", coin change | O(n) or O(n × W) | O(n) or O(W) |
+| **2D Grid** | Matrix, paths, grid traversal | O(m × n) | O(m × n) |
+| **LIS** | Longest increasing/decreasing subsequence | O(n^2) or O(n log n) | O(n) |
+| **State Machine** | Buy/sell, hold/not hold, cooldown | O(n × k) | O(n × k) |
+| **Interval** | Merge/split ranges, balloons, palindromes | O(n^3) | O(n^2) |
+| **Tree** | DP on subtrees, tree paths | O(n) | O(n) |
+| **Digit** | "Count numbers in [1, N] with property" | O(text{digits} × text{states}) | Same |
+| **Bitmask** | Small n (le 20), subset selection | O(2^n × n) | O(2^n × n) |
 
 ## More Templates
 
@@ -903,3 +850,4 @@ def tsp(w: list[list[int]]) -> int:
 - **DFS + Memoization (grid DP):** [DFS](/posts/2025-11-24-leetcode-templates-dfs/)
 - **Beginner's Guide:** [LeetCode Beginner's Guide](/2026/06/25/leetcode-beginners-guide/)
 - **Master index:** [Categories & Templates](/posts/2025-10-29-leetcode-categories-and-templates/)
+{% endraw %}

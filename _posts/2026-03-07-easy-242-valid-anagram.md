@@ -1,75 +1,111 @@
 ---
 layout: post
 title: "[Easy] 242. Valid Anagram"
-date: 2026-03-07 00:00:00 -0700
-categories: [leetcode, easy, string, hash-table]
-tags: [leetcode, easy, string, anagram, counting]
+date: 2026-03-07
+categories: [leetcode, easy, string, hash]
+tags: [leetcode, easy, string, hash, sorting]
 permalink: /2026/03/07/easy-242-valid-anagram/
 ---
 
-# [Easy] 242. Valid Anagram
-
-## Problem Statement
-
-Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.
-
-An **anagram** is a word or phrase formed by rearranging the letters of another, using all the original letters exactly once.
+{% raw %}
+Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise. An anagram uses the exact same characters with the exact same frequencies.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: s = "anagram", t = "nagaram"
-Output: True
+Output: true
 ```
 
 **Example 2:**
 
-```python
+```
 Input: s = "rat", t = "car"
-Output: False
+Output: false
 ```
 
 ## Constraints
 
 - `1 <= s.length, t.length <= 5 * 10^4`
-- `s` and `t` consist of lowercase English letters.
+- `s` and `t` consist of lowercase English letters
 
-## Clarification Questions
+**Follow-up:** What if the inputs contain Unicode characters?
 
-1. **Unicode vs lowercase**: Are we only given lowercase English letters?  
-   **Assumption**: Yes per constraints — we can use a fixed-size array of size 26.
-2. **Different lengths**: If `len(s) != len(t)`, return `False` immediately.  
-   **Assumption**: Yes.
+## Common Approaches
 
-## Interview Deduction Process (20 minutes)
+Typical techniques for this pattern:
 
-**Step 1: Definition (3 min)**  
-Anagram means same multiset of characters: same count for each character. Different length → false.
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Two pointers on string** *(this problem)* | O(n) | O(1) | Palindrome, parsing |
+| Hash map / frequency | O(n) | O(k) | Anagram, character counts |
+| KMP / rolling hash | O(n) | O(n) | Pattern matching |
+| Stack parsing | O(n) | O(n) | Decode string, parentheses |
 
-**Step 2: Count and compare (10 min)**  
-Count frequency of each character in `s` (e.g. array or `Counter`). For `t`, decrement counts (or a second count). If any count goes negative, or lengths differ, return false. Alternatively: count `s`, then iterate `t` and decrement; at the end all counts should be 0.
+## Thinking Process
 
-**Step 3: Alternative — sort (5 min)**  
-Sort both strings and compare — O(n log n) time, O(n) or O(1) space depending on whether sort is in-place for the type.
+Two strings are anagrams if and only if they have the same character frequencies. Three ways to check this:
 
-## Solution Approach
+1. **Frequency array** -- since only 26 lowercase letters, use a fixed-size array. Increment for `s`, decrement for `t`. If all counts are zero, it's an anagram.
+2. **Hash map** -- generalizes to Unicode. Same logic but with a map instead of an array.
+3. **Sorting** -- sort both strings and compare. Simplest but slowest.
 
-**Counting:** If `len(s) != len(t)`, return `False`. Use a single array of 26 integers (or a dict) to count characters in `s` (increment), then in `t` (decrement). If any count goes negative, return `False`. If we finish without negative, return `True`. Alternatively: count both and compare the two frequency maps.
+The key trick: increment and decrement in the **same** array. If everything cancels to zero, the frequencies match.
 
-**Sort:** Sort `s` and `t` and return `s == t`. O(n log n), simple but slower than linear.
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Two pointers</text>
 
-### Key Insights
+  <rect x="30" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="66" text-anchor="middle" font-size="10">1</text>
+  <rect x="62" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="76" y="66" text-anchor="middle" font-size="10">3</text>
+  <rect x="106" y="50" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="66" text-anchor="middle" font-size="10">5</text>
+  <rect x="138" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="152" y="66" text-anchor="middle" font-size="10">7</text>
+  <rect x="170" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="184" y="66" text-anchor="middle" font-size="10">9</text>
+  <text x="44" y="42" text-anchor="middle" font-size="10" fill="#7A8EA0" font-weight="600">L</text>
+  <text x="184" y="42" text-anchor="middle" font-size="10" fill="#A08888" font-weight="600">R</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">move L/R based on comparison</text>
 
-1. **Same length** — Quick check: anagrams must have the same length.
-2. **One array** — Increment for `s`, decrement for `t`; no need for two maps. If any bucket is negative, `t` has a character not in `s` or with higher count.
-3. **O(1) extra space** for the counter when we use a fixed 26-sized array (assuming lowercase letters).
+</svg>
 
-## Python Solution
+## Approach 1: Frequency Array -- O(n) time, O(1) space
 
-### Counting (O(n) time, O(1) space for 26 letters)
+The expected optimal solution. Since characters are lowercase letters, a 26-element array suffices.
+```python
+Input: s = "anagram", t = "nagaram"
+Output: True
+```
 
+### Solution Explanation
+
+**Approach:** Two pointers on string (this problem)
+
+**Key idea:** Two strings are anagrams if and only if they have the same character frequencies. Three ways to check this:
+
+**How the code works:**
+1. **Frequency array** -- since only 26 lowercase letters, use a fixed-size array. Increment for `s`, decrement for `t`. If all counts are zero, it's an anagram.
+2. **Hash map** -- generalizes to Unicode. Same logic but with a map instead of an array.
+3. **Sorting** -- sort both strings and compare. Simplest but slowest.
+
+**Walkthrough** — input `s = "anagram", t = "nagaram"`, expected output `true`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Approach 2: Hash Map -- O(n) time, O(n) space
+
+Generalizes to Unicode characters. Use a map instead of a fixed array.
+```python
+Input: s = "rat", t = "car"
+Output: False
+```
+
+**Time**: O(n)
+**Space**: O(n) -- up to n distinct characters
+
+## Approach 3: Sorting -- O(n log n)
+
+Sort both strings and compare directly. Simplest to write but slowest.
 ```python
 from collections import Counter
 
@@ -90,41 +126,44 @@ class Solution:
         return True
 ```
 
-### Using Counter (O(n) time, O(1) space for 26 letters)
+**Time**: O(n log n)
+**Space**: O(1) (ignoring sort internals)
 
-```python
-from collections import Counter
+## Comparison
 
-
-class Solution:
-    def isAnagram(self, s: str, t: str) -> bool:
-        return len(s) == len(t) and Counter(s) == Counter(t)
-```
-
-## Algorithm Explanation
-
-**Counting:** Build a frequency array for `s`. For each character in `t`, decrement the corresponding count. If any count becomes negative, `t` has more of that character than `s`, so they are not anagrams. Same length plus no negative counts implies the counts match.
-
-**Counter:** `Counter(s) == Counter(t)` compares multisets; combined with the length check we get the same result.
-
-## Complexity Analysis
-
-- **Time**: O(n), where n is the length of the strings (we assume equal length after the check).
-- **Space**: O(1) for the 26-element array; O(1) for Counter with a bounded alphabet.
-
-## Edge Cases
-
-- Different lengths → `False`.
-- Empty strings → same length, equal counts → `True`.
-- Single character, same → `True`; different → `False`.
+| Approach | Time | Space | Unicode? |
+|---|---|---|---|
+| Frequency Array | O(n) | O(1) | No (26 letters only) |
+| Hash Map | O(n) | O(n) | Yes |
+| Sorting | O(n log n) | O(1) | Yes |
 
 ## Common Mistakes
 
-- **Forgetting length check** — Different-length strings cannot be anagrams; check first to avoid wrong logic.
-- **Using two maps and comparing** — One array with increment/decrement is simpler and avoids extra comparison step.
+- Forgetting the length check -- different-length strings can never be anagrams
+- Using two separate arrays/maps instead of one (works but wastes space)
+- Not handling the follow-up: frequency array only works for fixed alphabets
+
+## Key Takeaways
+
+- **Frequency counting** is the core technique for anagram/permutation problems
+- The `++` / `--` in one array trick is reusable: same pattern appears in sliding window permutation checks
+- For small fixed alphabets, arrays beat hash maps in both speed and simplicity
 
 ## Related Problems
 
-- [LC 383: Ransom Note](/2026/03/07/easy-383-ransom-note/) — Similar character counting; magazine must cover note.
-- [LC 49: Group Anagrams](https://leetcode.com/problems/group-anagrams/) — Group strings by anagram equivalence.
-- [LC 387: First Unique Character in a String](https://leetcode.com/problems/first-unique-character-in-a-string/) — Counting then scan.
+- [49. Group Anagrams](https://www.leetcode.com/problems/group-anagrams/) -- group strings by sorted canonical form
+- [438. Find All Anagrams in a String](https://www.leetcode.com/problems/find-all-anagrams-in-a-string/) -- sliding window + frequency count
+- [567. Permutation in String](https://www.leetcode.com/problems/permutation-in-string/) -- same sliding window pattern
+
+## References
+
+- [LC 242: Valid Anagram on LeetCode](https://www.leetcode.com/problems/valid-anagram/)
+- [LeetCode Discuss — LC 242: Valid Anagram](https://www.leetcode.com/problems/valid-anagram/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/valid-anagram/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [String Processing](/posts/2025-11-24-leetcode-templates-string-processing/)
+- [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/)
+
+{% endraw %}

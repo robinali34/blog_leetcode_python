@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 417. Pacific Atlantic Water Flow"
 date: 2025-10-19 11:43:11 -0700
-categories: python dfs bfs graph problem-solving
+categories: leetcode algorithm medium cpp dfs bfs graph problem-solving
 ---
 
-# [Medium] 417. Pacific Atlantic Water Flow
-
+{% raw %}
 There is an `m x n` rectangular island that borders both the **Pacific Ocean** and the **Atlantic Ocean**. The Pacific Ocean touches the island's left and top edges, and the Atlantic Ocean touches the island's right and bottom edges.
 
 The island is partitioned into a grid of square cells. You are given an `m x n` integer matrix `heights` where `heights[r][c]` represents the **height above sea level** of the cell at coordinate `(r, c)`.
@@ -45,7 +44,41 @@ Explanation: All cells can flow to both Pacific and Atlantic oceans.
 - `1 <= m, n <= 200`
 - `0 <= heights[i][j] <= 10^5`
 
-## Solution: DFS from Ocean Boundaries
+## Thinking Process
+
+1. **Instead of checking** if each cell can reach oceans
+1. **Visited tracking:** Prevents infinite loops
+
+- Model entities as nodes and relationships as edges.
+- Pick traversal (BFS/DFS) or shortest-path (Dijkstra) based on weights.
+- Union-Find helps when connectivity updates are frequent.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
+
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Solution
 
 **Time Complexity:** O(m × n) where m and n are dimensions of the grid  
 **Space Complexity:** O(m × n) for visited arrays and recursion stack
@@ -102,8 +135,7 @@ class Solution:
             self.dfs(heights, visited, newRow, newCol, dirs)
 ```
 
-## How the Algorithm Works
-
+### Solution Explanation
 **Key Insight:** Instead of checking if each cell can reach both oceans, start from ocean boundaries and find all reachable cells.
 
 **Steps:**
@@ -215,8 +247,7 @@ for(j = n - 1 j >= 0 j -= 1) dfs(heights, atlantic, m - 1, j)
 3. **DFS from each boundary** to find reachable cells
 4. **Mark visited cells** in respective arrays
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time Complexity | Space Complexity |
 |-----------|----------------|------------------|
 | Pacific DFS | O(m × n) | O(m × n) |
@@ -225,27 +256,6 @@ for(j = n - 1 j >= 0 j -= 1) dfs(heights, atlantic, m - 1, j)
 | **Total** | **O(m × n)** | **O(m × n)** |
 
 Where m and n are the dimensions of the grid.
-
-## Edge Cases
-
-1. **Single cell:** `heights = [[5]]` → `[[0,0]]`
-2. **All same height:** `heights = [[1,1],[1,1]]` → `[[0,0],[0,1],[1,0],[1,1]]`
-3. **Increasing heights:** `heights = [[1,2],[3,4]]` → `[[0,0],[0,1],[1,0],[1,1]]`
-4. **Decreasing heights:** `heights = [[4,3],[2,1]]` → `[[0,0],[0,1],[1,0],[1,1]]`
-
-## Key Insights
-
-### Reverse Thinking:
-1. **Instead of checking** if each cell can reach oceans
-2. **Start from ocean boundaries** and find reachable cells
-3. **Much more efficient** than checking each cell individually
-4. **O(m × n) complexity** instead of O(m² × n²)
-
-### DFS Properties:
-1. **Visited tracking:** Prevents infinite loops
-2. **Boundary checking:** Ensures valid coordinates
-3. **Height constraint:** Water flows downhill or level
-4. **Recursive exploration:** Finds all reachable cells
 
 ## Detailed Example Walkthrough
 
@@ -280,151 +290,12 @@ Where m and n are the dimensions of the grid.
 
 **Final result:** `[[0,0],[0,1],[1,0],[1,1]]`
 
-## Alternative Approaches
-
-### Approach 1: BFS from Boundaries
-```python
-from collections import deque
-
-class Solution:
-    def bfs(self, heights, visited, q):
-        m, n = len(heights), len(heights[0])
-        dirs = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-
-        while q:
-            row, col = q.popleft()
-
-            for dr, dc in dirs:
-                newRow, newCol = row + dr, col + dc
-
-                if newRow < 0 or newRow >= m or newCol < 0 or newCol >= n:
-                    continue
-
-                if visited[newRow][newCol]:
-                    continue
-
-                if heights[newRow][newCol] < heights[row][col]:
-                    continue
-
-                visited[newRow][newCol] = True
-                q.append((newRow, newCol))
-
-    def pacificAtlantic(self, heights: list[list[int]]) -> list[list[int]]:
-        if not heights:
-            return []
-
-        m, n = len(heights), len(heights[0])
-
-        pacific = [[False] * n for _ in range(m)]
-        atlantic = [[False] * n for _ in range(m)]
-
-        pacificQ = deque()
-        atlanticQ = deque()
-
-        # Pacific (top row + left col)
-        for i in range(m):
-            pacificQ.append((i, 0))
-            pacific[i][0] = True
-        for j in range(n):
-            pacificQ.append((0, j))
-            pacific[0][j] = True
-
-        # Atlantic (bottom row + right col)
-        for i in range(m):
-            atlanticQ.append((i, n - 1))
-            atlantic[i][n - 1] = True
-        for j in range(n):
-            atlanticQ.append((m - 1, j))
-            atlantic[m - 1][j] = True
-
-        self.bfs(heights, pacific, pacificQ)
-        self.bfs(heights, atlantic, atlanticQ)
-
-        result = []
-        for i in range(m):
-            for j in range(n):
-                if pacific[i][j] and atlantic[i][j]:
-                    result.append([i, j])
-
-        return result
-```
-
-**Time Complexity:** O(m × n)  
-**Space Complexity:** O(m × n)
-
-### Approach 2: Union-Find
-```python
-class Solution:
-    def find(self, x, parent):
-        if parent[x] != x:
-            parent[x] = self.find(parent[x], parent)
-        return parent[x]
-
-    def unite(self, x, y, parent, rank):
-        px = self.find(x, parent)
-        py = self.find(y, parent)
-
-        if px == py:
-            return
-
-        if rank[px] < rank[py]:
-            parent[px] = py
-        elif rank[px] > rank[py]:
-            parent[py] = px
-        else:
-            parent[py] = px
-            rank[px] += 1
-
-    def pacificAtlantic(self, heights: list[list[int]]) -> list[list[int]]:
-        if not heights:
-            return []
-
-        m, n = len(heights), len(heights[0])
-
-        PAC = m * n
-        ATL = m * n + 1
-
-        parent = list(range(m * n + 2))
-        rank = [0] * (m * n + 2)
-
-        def idx(i, j):
-            return i * n + j
-
-        for i in range(m):
-            for j in range(n):
-                curr = idx(i, j)
-
-                # connect to Pacific
-                if i == 0 or j == 0:
-                    self.unite(curr, PAC, parent, rank)
-
-                # connect to Atlantic
-                if i == m - 1 or j == n - 1:
-                    self.unite(curr, ATL, parent, rank)
-
-                # union with neighbors (only valid flow direction)
-                if i > 0 and heights[i][j] >= heights[i - 1][j]:
-                    self.unite(curr, idx(i - 1, j), parent, rank)
-
-                if j > 0 and heights[i][j] >= heights[i][j - 1]:
-                    self.unite(curr, idx(i, j - 1), parent, rank)
-
-        result = []
-
-        for i in range(m):
-            for j in range(n):
-                curr = idx(i, j)
-                if (self.find(curr, parent) == self.find(PAC, parent) and
-                    self.find(curr, parent) == self.find(ATL, parent)):
-                    result.append([i, j])
-
-        return result
-```
-
-**Time Complexity:** O(m × n × α(m × n))  
-**Space Complexity:** O(m × n)
-
 ## Common Mistakes
+
+1. **Single cell:** `heights = [[5]]` → `[[0,0]]`
+2. **All same height:** `heights = [[1,1],[1,1]]` → `[[0,0],[0,1],[1,0],[1,1]]`
+3. **Increasing heights:** `heights = [[1,2],[3,4]]` → `[[0,0],[0,1],[1,0],[1,1]]`
+4. **Decreasing heights:** `heights = [[4,3],[2,1]]` → `[[0,0],[0,1],[1,0],[1,1]]`
 
 1. **Wrong direction:** Starting from each cell instead of ocean boundaries
 2. **Missing boundary cells:** Not including all boundary cells in DFS
@@ -433,10 +304,10 @@ class Solution:
 
 ## Related Problems
 
-- [200. Number of Islands](https://leetcode.com/problems/number-of-islands/)
-- [130. Surrounded Regions](https://leetcode.com/problems/surrounded-regions/)
-- [695. Max Area of Island](https://leetcode.com/problems/max-area-of-island/)
-- [1020. Number of Enclaves](https://leetcode.com/problems/number-of-enclaves/)
+- [200. Number of Islands](https://www.leetcode.com/problems/number-of-islands/)
+- [130. Surrounded Regions](https://www.leetcode.com/problems/surrounded-regions/)
+- [695. Max Area of Island](https://www.leetcode.com/problems/max-area-of-island/)
+- [1020. Number of Enclaves](https://www.leetcode.com/problems/number-of-enclaves/)
 
 ## Why This Solution Works
 
@@ -457,3 +328,25 @@ class Solution:
 2. **Optimality:** Produces correct ocean reachability
 3. **Efficiency:** O(m × n) time complexity
 4. **Simplicity:** Easy to understand and implement
+
+## References
+
+- [LC 417: Pacific Atlantic Water Flow on LeetCode](https://www.leetcode.com/problems/pacific-atlantic-water-flow/)
+- [LeetCode Discuss — LC 417: Pacific Atlantic Water Flow](https://www.leetcode.com/problems/pacific-atlantic-water-flow/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/pacific-atlantic-water-flow/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### Reverse Thinking:
+1. **Instead of checking** if each cell can reach oceans
+2. **Start from ocean boundaries** and find reachable cells
+3. **Much more efficient** than checking each cell individually
+4. **O(m × n) complexity** instead of O(m² × n²)
+
+### DFS Properties:
+1. **Visited tracking:** Prevents infinite loops
+2. **Boundary checking:** Ensures valid coordinates
+3. **Height constraint:** Water flows downhill or level
+4. **Recursive exploration:** Finds all reachable cells
+
+{% endraw %}

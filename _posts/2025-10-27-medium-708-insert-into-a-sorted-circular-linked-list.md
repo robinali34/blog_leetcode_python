@@ -1,26 +1,22 @@
 ---
 layout: post
-title: "[Medium] LC 708: Insert into a Sorted Circular Linked List"
+title: "[Medium] 708. Insert into a Sorted Circular Linked List"
 date: 2025-10-27 21:06:00 -0700
 categories: leetcode medium linked-list circular
 permalink: /posts/2025-10-27-medium-708-insert-into-a-sorted-circular-linked-list/
 tags: [leetcode, medium, linked-list, circular, insertion, two-pointers]
 ---
 
-# [Medium] LC 708: Insert into a Sorted Circular Linked List
-
+{% raw %}
 **Difficulty:** Medium  
 **Category:** Linked List, Circular List  
 **Companies:** Amazon, Facebook, Google, Microsoft
-
-## Problem Statement
 
 Given a circular linked list, represented by a Node class, insert a new value into the list while maintaining the circular and sorted order of the list.
 
 The list is circular, so the last node points back to the first node. The list is sorted in ascending order.
 
-### Examples
-
+## Examples
 **Example 1:**
 ```
 Input: head = [3,4,1], insertVal = 2
@@ -42,8 +38,7 @@ Output: [1,0]
 Explanation: Insert 0 between 1 (tail) and 1 (head), wrapping around.
 ```
 
-### Constraints
-
+## Constraints
 - The number of nodes in the list is in the range `[0, 5 * 10^4]`
 - `-10^6 <= Node.val, insertVal <= 10^6`
 - List is sorted in ascending order
@@ -107,16 +102,25 @@ class Solution:
         return head
 ```
 
-### Approach 2: Two-Pass with Preprocessing
+### Solution Explanation
 
-**Algorithm:**
-1. First pass: Find the node with maximum value
-2. Second pass: Search from max node's next to find insertion point
-3. Handle all same values case
+**Approach:** Iterative pointer walk (this problem)
 
-**Time Complexity:** O(n)  
-**Space Complexity:** O(1)
+**Key idea:** Difficulty:** Medium
 
+**How the code works:**
+**Difficulty:** Medium
+**Category:** Linked List, Circular List
+- Draw pointers before rewriting links.
+- Dummy head simplifies insert/delete at the head.
+- Slow/fast pointers find middle or detect cycles in one pass.
+
+**Walkthrough** — input `head = [3,4,1], insertVal = 2`, expected output `[3,4,1,2]`:
+
+Insert 2 between 1 and 3, maintaining the circular sorted order.
+## Implementation Details
+
+### Empty List Handling
 ```python
 class Solution:
     def insert(self, head: 'Node', insertVal: int) -> 'Node':
@@ -150,10 +154,7 @@ class Solution:
         return head
 ```
 
-### Approach 3: Simplified Logic
-
-**Algorithm:** Streamlined version that handles all cases more elegantly.
-
+### Normal Insertion Case
 ```python
 class Solution:
     def insert(self, head: 'Node', insertVal: int) -> 'Node':
@@ -190,55 +191,12 @@ class Solution:
         return head
 ```
 
-## Algorithm Analysis
-
-### Key Insights
-
-1. **Circular List Boundary**: The "wrap" happens when `curr->val > curr->next->val`
-2. **Insertion Point Detection**: Need to check both normal range and wrap-around cases
-3. **Edge Cases**: Empty list, single node, all same values
-4. **Traversal Guard**: Use `do-while` to ensure at least one iteration
-
-### Understanding the Wrap-Around Logic
-
-```
-Sorted circular list: [3, 4, 1] → 1 points to 3
-
-When curr = 4, curr->next = 1:
-  - We're at the wrap point (largest → smallest)
-  - insertVal = 2: insertVal >= 4? No, insertVal <= 1? No → continue
-  - insertVal = 5: insertVal >= 4? Yes → insert here
-  - insertVal = 0: insertVal <= 1? Yes → insert here
-```
-
-## Implementation Details
-
-### Empty List Handling
+### Wrap-Around Insertion Case
 ```python
 if not head:
     new_node = Node(insertVal)
     new_node.next = new_node  # Self-referencing
     return new_node
-```
-
-### Normal Insertion Case
-```python
-# Insert between curr and curr.next
-if curr.val <= insertVal <= curr.next.val:
-    new_node = Node(insertVal, curr.next)
-    curr.next = new_node
-    return head
-```
-
-### Wrap-Around Insertion Case
-```python
-# At the wrap point (largest → smallest)
-if curr.next.val < curr.val:
-    # Insert if value is larger than max OR smaller than min
-    if insertVal >= curr.val or insertVal <= curr.next.val:
-        new_node = Node(insertVal, curr.next)
-        curr.next = new_node
-        return head
 ```
 
 ## Edge Cases
@@ -257,12 +215,18 @@ if curr.next.val < curr.val:
 - What if you need to insert multiple values at once?
 - How would you delete a value from a circular list?
 
+## Common Mistakes
+
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
 ## Related Problems
 
-- [LC 23: Swap Nodes in Pairs](https://leetcode.com/problems/swap-nodes-in-pairs/) - Linked list manipulation
-- [LC 25: Reverse Nodes in k-Group](https://leetcode.com/problems/reverse-nodes-in-k-group/) - Linked list reversal
-- [LC 141: Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/) - Detect cycle in linked list
-- [LC 708: Insert into Sorted Circular List](https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list/) *(This problem)*
+- [LC 23: Swap Nodes in Pairs](https://www.leetcode.com/problems/swap-nodes-in-pairs/) - Linked list manipulation
+- [LC 25: Reverse Nodes in k-Group](https://www.leetcode.com/problems/reverse-nodes-in-k-group/) - Linked list reversal
+- [LC 141: Linked List Cycle](https://www.leetcode.com/problems/linked-list-cycle/) - Detect cycle in linked list
+- [LC 708: Insert into Sorted Circular List](https://www.leetcode.com/problems/insert-into-a-sorted-circular-linked-list/) *(This problem)*
 
 ## Optimization Techniques
 
@@ -278,7 +242,55 @@ if curr.next.val < curr.val:
 3. **Performance**: Optimal O(n) time complexity
 4. **Memory**: O(1) space complexity
 
----
+## Key Takeaways
 
-*This problem demonstrates sophisticated circular list manipulation and requires careful handling of wrap-around cases and edge conditions.*
+- **Pattern:** Iterative pointer walk (this problem)
+- Difficulty:** Medium
+- Category:** Linked List, Circular List
 
+## References
+
+- [LC 708: Insert into a Sorted Circular Linked List on LeetCode](https://www.leetcode.com/problems/insert-into-a-sorted-circular-linked-list/)
+- [LeetCode Discuss — LC 708: Insert into a Sorted Circular Linked List](https://www.leetcode.com/problems/insert-into-a-sorted-circular-linked-list/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/insert-into-a-sorted-circular-linked-list/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Linked List](/posts/2025-11-24-leetcode-templates-linked-list/)
+
+## Thinking Process
+
+**Difficulty:** Medium
+
+**Category:** Linked List, Circular List
+
+- Draw pointers before rewriting links.
+- Dummy head simplifies insert/delete at the head.
+- Slow/fast pointers find middle or detect cycles in one pass.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Two pointers</text>
+
+  <rect x="30" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="66" text-anchor="middle" font-size="10">1</text>
+  <rect x="62" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="76" y="66" text-anchor="middle" font-size="10">3</text>
+  <rect x="106" y="50" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="120" y="66" text-anchor="middle" font-size="10">5</text>
+  <rect x="138" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="152" y="66" text-anchor="middle" font-size="10">7</text>
+  <rect x="170" y="50" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="184" y="66" text-anchor="middle" font-size="10">9</text>
+  <text x="44" y="42" text-anchor="middle" font-size="10" fill="#7A8EA0" font-weight="600">L</text>
+  <text x="184" y="42" text-anchor="middle" font-size="10" fill="#A08888" font-weight="600">R</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">move L/R based on comparison</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Iterative pointer walk** *(this problem)* | O(n) | O(1) | Traversal, insertion |
+| Dummy head node | O(n) | O(1) | Simplify head-edge cases |
+| Reversal (3-pointer) | O(n) | O(1) | Reverse sublist or full list |
+| Slow/fast pointers | O(n) | O(1) | Middle, cycle, merge lists |
+
+{% endraw %}

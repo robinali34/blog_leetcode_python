@@ -2,14 +2,11 @@
 layout: post
 title: "[Medium] 1242. Web Crawler Multithreaded"
 date: 2025-09-24 18:00:00 -0000
-categories: python web-crawler concurrent-programming problem-solving
+categories: leetcode algorithm multithreading concurrency data-structures synchronization medium cpp web-crawler concurrent-programming problem-solving
 ---
 
-# [Medium] 1242. Web Crawler Multithreaded
-
+{% raw %}
 This is a multithreading problem that requires implementing a concurrent web crawler. The key insight is using proper synchronization mechanisms to avoid race conditions while crawling URLs from the same domain concurrently.
-
-## Problem Description
 
 Given a start URL and an HTML parser, implement a multithreaded web crawler that:
 1. Crawls all URLs from the same domain as the start URL
@@ -17,8 +14,7 @@ Given a start URL and an HTML parser, implement a multithreaded web crawler that
 3. Avoids visiting the same URL multiple times
 4. Returns all discovered URLs
 
-### Examples
-
+## Examples
 **Example 1:**
 ```
 Input: 
@@ -49,13 +45,13 @@ startUrl = "http://news.google.com"
 Output: ["http://news.google.com"]
 ```
 
-### Constraints
+## Constraints
 - 1 <= urls.length <= 1000
 - 1 <= urls[i].length <= 300
 - startUrl is one of the urls
 - All URLs have the same hostname
 
-## Approach
+## Thinking Process
 
 The solution involves:
 
@@ -65,8 +61,30 @@ The solution involves:
 4. **URL Filtering**: Only crawl URLs from the same domain
 5. **Visited Tracking**: Avoid revisiting the same URL
 
-## Solution in Python
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 110" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Array + hash map</text>
 
+  <rect x="30" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="44" y="61" text-anchor="middle" font-size="10">2</text>
+  <rect x="62" y="45" width="28" height="28" rx="3" fill="#E0D8E4" stroke="#A098A8"/><text x="76" y="61" text-anchor="middle" font-size="10">7</text>
+  <rect x="106" y="45" width="28" height="28" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="120" y="61" text-anchor="middle" font-size="10">11</text>
+  <rect x="150" y="40" width="60" height="38" rx="4" fill="#FAF8F5" stroke="#D4D1CC"/>
+  <text x="180" y="61" text-anchor="middle" font-size="10" fill="#6B6560">map</text>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#6B6560">hash map for O(1) lookups</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Brute force** *(this problem)* | Often O(n^2) or O(2^n) | O(n) | Baseline; clarifies the optimization target |
+| Sort + scan | O(n log n) | O(1) | Pairs, intervals, greedy ordering |
+| Hash map / set | O(n) | O(n) | Frequency, membership, two-sum style |
+| Single-pass linear | O(n) | O(1) | Two pointers, sliding window, Kadane |
+
+## Solution
 **Time Complexity:** O(n) where n is the number of URLs in the same domain  
 **Space Complexity:** O(n) for storing visited URLs and results
 
@@ -100,45 +118,24 @@ class Solution:
         return list(visited)
 ```
 
-## Solution in Python
+### Solution Explanation
 
-**Time Complexity:** O(n) where n is the number of URLs in the same domain  
-**Space Complexity:** O(n) for storing visited URLs and results
+**Approach:** Brute force (this problem)
 
-```python
-from threading import Lock
-from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
-class Solution:
-    def crawl(self, startUrl: str, htmlParser: 'HtmlParser') -> list[str]:
-        def host(url: str) -> str:
-            return url.split('/')[2]
+**Key idea:** The solution involves:
 
-        base = host(startUrl)
-        visited = {startUrl}
-        lock = Lock()
+**How the code works:**
+1. **Domain Extraction**: Extract the base domain from the start URL
+2. **Thread Pool**: Use multiple threads for concurrent crawling
+3. **Synchronization**: Use locks to prevent race conditions
+4. **URL Filtering**: Only crawl URLs from the same domain
+5. **Visited Tracking**: Avoid revisiting the same URL
 
-        def worker(url: str) -> list[str]:
-            next_urls = []
-            for u in htmlParser.getUrls(url):
-                if host(u) != base:
-                    continue
-                with lock:
-                    if u in visited:
-                        continue
-                    visited.add(u)
-                next_urls.append(u)
-            return next_urls
+**Walkthrough** — input `urls = [`, expected output `[`:
 
-        with ThreadPoolExecutor(max_workers=32) as ex:
-            pending = {ex.submit(worker, startUrl)}
-            while pending:
-                done, pending = wait(pending, return_when=FIRST_COMPLETED)
-                for fut in done:
-                    for nxt in fut.result():
-                        pending.add(ex.submit(worker, nxt))
-        return list(visited)
-```
-
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Step-by-Step Example
 
 Let's trace through the Python solution with startUrl = "http://news.yahoo.com/news/topics/":
@@ -162,17 +159,9 @@ Let's trace through the Python solution with startUrl = "http://news.yahoo.com/n
 - Wait for completion and process results
 - Repeat until all URLs are processed
 
-## Key Insights
-
-1. **Thread Safety**: Use locks to protect shared data structures
-2. **Domain Filtering**: Only process URLs from the same domain
-3. **Concurrent Processing**: Use thread pools for parallel execution
-4. **Deadlock Prevention**: Careful lock ordering and timeout handling
-5. **Memory Management**: Proper cleanup of thread resources
-
 ## Synchronization Patterns
 
-### Python Approach:
+### C++ Approach:
 - **Multiple Mutexes**: Separate locks for queue, map, and results
 - **Manual Thread Management**: Create and join threads manually
 - **Polling**: Sleep and check for work periodically
@@ -191,3 +180,19 @@ Let's trace through the Python solution with startUrl = "http://news.yahoo.com/n
 - **Domain Mismatch**: Processing URLs from different domains
 
 ---
+
+## References
+
+- [LC 1242: Web Crawler Multithreaded on LeetCode](https://www.leetcode.com/problems/web-crawler-multithreaded/)
+- [LeetCode Discuss — LC 1242: Web Crawler Multithreaded](https://www.leetcode.com/problems/web-crawler-multithreaded/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/web-crawler-multithreaded/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Thread Safety**: Use locks to protect shared data structures
+2. **Domain Filtering**: Only process URLs from the same domain
+3. **Concurrent Processing**: Use thread pools for parallel execution
+4. **Deadlock Prevention**: Careful lock ordering and timeout handling
+5. **Memory Management**: Proper cleanup of thread resources
+
+{% endraw %}

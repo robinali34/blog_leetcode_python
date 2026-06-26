@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 990. Satisfiability of Equality Equations"
 date: 2025-10-04 00:00:00 -0000
-categories: python connected-components graph-coloring disjoint-set problem-solving
+categories: leetcode algorithm data-structures disjoint-set graph dfs medium cpp connected-components graph-coloring problem-solving
 ---
 
-# [Medium] 990. Satisfiability of Equality Equations
-
+{% raw %}
 You are given an array of strings `equations` that represent relationships between variables. Each string `equations[i]` is of length `4` and takes one of two different forms: `"xi==yi"` or `"xi!=yi"`. Here, `xi` and `yi` are lowercase letters (not necessarily different) representing one-letter variable names.
 
 Return `true` if it is possible to assign integers to variable names so as to satisfy all the given equations, or `false` otherwise.
@@ -51,7 +50,7 @@ Explanation: We cannot assign values to satisfy all equations.
 - `equations[i][2]` is `'='`
 - `equations[i][3]` is a lowercase letter
 
-## Approach
+## Thinking Process
 
 This problem can be solved using two main approaches:
 
@@ -60,7 +59,32 @@ This problem can be solved using two main approaches:
 
 The key insight is that variables connected by equality equations must have the same value, while variables connected by inequality equations must have different values.
 
-## Solution 1: Union-Find (Disjoint Set Union)
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
+
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Solution
 
 ```python
 class UnionFind:
@@ -98,116 +122,20 @@ class Solution:
         return True
 ```
 
-**Time Complexity:** O(n * α(26)) where α is the inverse Ackermann function (practically constant)
-**Space Complexity:** O(26) = O(1) - constant space for 26 letters
+### Solution Explanation
 
-### How Union-Find Works:
+**Approach:** Recursive DFS (this problem)
 
-1. **Initialize**: Each letter is its own parent initially
-2. **Process Equality**: For each `"a==b"`, unite `a` and `b` into the same component
-3. **Check Inequality**: For each `"a!=b"`, verify that `a` and `b` are in different components
+**Key idea:** This problem can be solved using two main approaches:
 
-## Solution 2: Graph Coloring with DFS
+**How the code works:**
+1. **Union-Find (Disjoint Set Union)**: Process equality equations first to build connected components, then check inequality equations
+2. **Graph Coloring/DFS**: Build a graph from equality equations and use DFS to find connected components
 
-```python
-class Solution:
-    def equationsPossible(self, equations: list[str]) -> bool:
-        SIZE = 26
-        graph = [[] for _ in range(SIZE)]
+**Walkthrough** — input `equations = ["a==b","b!=a"]`, expected output `false`:
 
-        # Step 1: build graph from "=="
-        for eq in equations:
-            if eq[1] == '=':
-                x = ord(eq[0]) - ord('a')
-                y = ord(eq[3]) - ord('a')
-                graph[x].append(y)
-                graph[y].append(x)
-
-        color = [-1] * SIZE
-
-        # DFS to assign components
-        def dfs(node: int, c: int) -> None:
-            color[node] = c
-            for nei in graph[node]:
-                if color[nei] == -1:
-                    dfs(nei, c)
-
-        # Step 2: color connected components
-        for i in range(SIZE):
-            if color[i] == -1:
-                dfs(i, i)
-
-        # Step 3: check inequalities
-        for eq in equations:
-            if eq[1] == '!':
-                x = ord(eq[0]) - ord('a')
-                y = ord(eq[3]) - ord('a')
-                if color[x] == color[y]:
-                    return False
-
-        return True
-```
-
-**Time Complexity:** O(n + 26) = O(n) - process equations + DFS on graph
-**Space Complexity:** O(26) = O(1) - graph and color array
-
-### How Graph Coloring Works:
-
-1. **Build Graph**: Create adjacency list from equality equations
-2. **Color Components**: Use DFS to assign the same color to connected components
-3. **Check Conflicts**: Verify that inequality equations don't connect same-colored nodes
-
-## Solution 3: DFS with Component Tracking
-
-```python
-class Solution:
-    SIZE = 26
-
-    def dfs(self, node: int, comp_id: int, adjacency: list[list[int]], component: list[int]) -> None:
-        component[node] = comp_id
-        for neighbor in adjacency[node]:
-            if component[neighbor] == -1:
-                self.dfs(neighbor, comp_id, adjacency, component)
-
-    def equationsPossible(self, equations: list[str]) -> bool:
-        adjacency = [[] for _ in range(self.SIZE)]
-        component = [-1] * self.SIZE
-
-        # Step 1: build graph from "=="
-        for eq in equations:
-            if eq[1] == '=':
-                x = ord(eq[0]) - ord('a')
-                y = ord(eq[3]) - ord('a')
-                adjacency[x].append(y)
-                adjacency[y].append(x)
-
-        # Step 2: assign components using DFS
-        comp_id = 0
-        for i in range(self.SIZE):
-            if component[i] == -1:
-                self.dfs(i, comp_id, adjacency, component)
-                comp_id += 1
-
-        # Step 3: check inequalities
-        for eq in equations:
-            if eq[1] == '!':
-                x = ord(eq[0]) - ord('a')
-                y = ord(eq[3]) - ord('a')
-                if component[x] != -1 and component[x] == component[y]:
-                    return False
-
-        return True
-```
-
-**Time Complexity:** O(n + 26) = O(n)
-**Space Complexity:** O(26) = O(1)
-
-### Key Differences in Solution 3:
-
-1. **Component ID Tracking**: Assigns unique IDs to each connected component
-2. **Empty Component Handling**: Only processes nodes that have edges
-3. **Self-Reference Check**: Handles cases like `"a!=a"` explicitly
-
+If we assign say, a = 1 and b = 1, then the first equation is satisfied, but the second is not.
+There is no way to assign the variables to satisfy both equations.
 ## Step-by-Step Example (Union-Find)
 
 Let's trace through `["a==b","b!=c","c==a"]`:
@@ -259,29 +187,12 @@ parent = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
   - Requires building adjacency list
   - DFS overhead for each component
 
-## Key Insights
-
-1. **Two-Phase Processing**: Process equality equations first, then check inequality equations
-2. **Connected Components**: Variables connected by equality must have the same value
-3. **Conflict Detection**: Inequality equations create conflicts if variables are in the same component
-4. **Self-Reference**: Handle cases like `"a!=a"` which are always false
-
-## Edge Cases
+## Common Mistakes
 
 1. **Self-inequality**: `["a!=a"]` → `false`
 2. **Transitive equality**: `["a==b","b==c","a==c"]` → `true`
 3. **Circular conflict**: `["a==b","b!=c","c==a"]` → `false`
 4. **Single variable**: `["a==a"]` → `true`
-
-## Solution Comparison
-
-| Approach | Time Complexity | Space Complexity | Implementation | Intuition |
-|----------|----------------|-----------------|----------------|-----------|
-| Union-Find | O(n * α(26)) | O(1) | Moderate | Moderate |
-| Graph Coloring | O(n) | O(1) | Simple | High |
-| Component DFS | O(n) | O(1) | Simple | High |
-
-## Common Mistakes
 
 1. **Processing order**: Must process equality before inequality
 2. **Self-reference**: Forgetting to handle `"a!=a"` cases
@@ -290,14 +201,29 @@ parent = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
 
 ## Related Problems
 
-- [399. Evaluate Division](https://leetcode.com/problems/evaluate-division/)
-- [547. Number of Provinces](https://leetcode.com/problems/number-of-provinces/)
-- [684. Redundant Connection](https://leetcode.com/problems/redundant-connection/)
-- [685. Redundant Connection II](https://leetcode.com/problems/redundant-connection-ii/)
-- [721. Accounts Merge](https://leetcode.com/problems/accounts-merge/)
+- [399. Evaluate Division](https://www.leetcode.com/problems/evaluate-division/)
+- [547. Number of Provinces](https://www.leetcode.com/problems/number-of-provinces/)
+- [684. Redundant Connection](https://www.leetcode.com/problems/redundant-connection/)
+- [685. Redundant Connection II](https://www.leetcode.com/problems/redundant-connection-ii/)
+- [721. Accounts Merge](https://www.leetcode.com/problems/accounts-merge/)
 
 ## Conclusion
 
 This problem demonstrates the power of Union-Find and graph algorithms for handling equality constraints. The key insight is recognizing that equality equations create equivalence classes (connected components), while inequality equations create conflicts between these classes.
 
 Both Union-Find and graph coloring approaches are valid, with Union-Find being more efficient for dynamic connectivity and graph coloring being more intuitive for static analysis.
+
+## References
+
+- [LC 990: Satisfiability of Equality Equations on LeetCode](https://www.leetcode.com/problems/satisfiability-of-equality-equations/)
+- [LeetCode Discuss — LC 990: Satisfiability of Equality Equations](https://www.leetcode.com/problems/satisfiability-of-equality-equations/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/satisfiability-of-equality-equations/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Two-Phase Processing**: Process equality equations first, then check inequality equations
+2. **Connected Components**: Variables connected by equality must have the same value
+3. **Conflict Detection**: Inequality equations create conflicts if variables are in the same component
+4. **Self-Reference**: Handle cases like `"a!=a"` which are always false
+
+{% endraw %}

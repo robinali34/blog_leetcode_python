@@ -6,10 +6,7 @@ categories: [leetcode, medium, tree, bfs, vertical-order]
 permalink: /2025/10/20/medium-314-binary-tree-vertical-order-traversal/
 ---
 
-# [Medium] 314. Binary Tree Vertical Order Traversal
-
-## Problem Statement
-
+{% raw %}
 Given the root of a binary tree, return the **vertical order traversal** of its nodes' values. (i.e., from top to bottom, column by column).
 
 If two nodes are in the same row and column, the order should be from **left to right**.
@@ -44,23 +41,40 @@ Output: [[4],[9,5],[3,0,1],[8,2],[7]]
 - The number of nodes in the tree is in the range `[0, 100]`.
 - `-100 <= Node.val <= 100`
 
-## Solution Approach
+## Thinking Process
 
-This problem requires traversing a binary tree in **vertical order** (column by column from left to right). The key insight is to assign **column indices** to nodes and group them accordingly.
+Given the root of a binary tree, return the **vertical order traversal** of its nodes' values. (i.e., from top to bottom, column by column).
 
-### Key Insights:
+If two nodes are in the same row and column, the order should be from **left to right**.
 
-1. **Column assignment**: Root gets column 0, left child gets `column - 1`, right child gets `column + 1`
-2. **Level order**: Use BFS to maintain top-to-bottom order within each column
-3. **Grouping**: Use a map to group nodes by their column index
-4. **Ordering**: Process columns from left to right (sorted by column index)
+- Trees have no cycles — recursion is natural.
+- Combine results from left and right subtrees at each node.
+- Base case is usually `null`; height drives stack space.
 
-### Algorithm:
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
 
-1. **BFS with column tracking**: Use queue to store `(node, column)` pairs
-2. **Column mapping**: Use `dict[int, list[int]]` to group nodes by column
-3. **Level-by-level**: Process nodes level by level to maintain top-to-bottom order
-4. **Result construction**: Convert map to result vector in column order
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| Queue BFS | O(n) | O(n) | Shortest path in unweighted graphs |
+| Multi-source BFS | O(n) | O(n) | Start from all sources simultaneously |
+| 0-1 BFS / deque | O(n) | O(n) | Weights 0 or 1 |
+| **Level-order BFS** *(this problem)* | O(n) | O(w) | Process by depth/layer |
 
 ## Solution
 
@@ -96,6 +110,24 @@ class Solution:
 
         return [column_map[col] for col in sorted(column_map.keys())]
 ```
+
+### Solution Explanation
+
+**Approach:** Level-order BFS (this problem)
+
+**Key idea:** Given the root of a binary tree, return the **vertical order traversal** of its nodes' values. (i.e., from top to bottom, column by column).
+
+**How the code works:**
+- Trees have no cycles — recursion is natural.
+- Combine results from left and right subtrees at each node.
+- Base case is usually `null`; height drives stack space.
+
+**Walkthrough** — input `root = [3,9,20,null,null,15,7]`, expected output `[[9],[3,15],[20],[7]]`:
+
+Column -1: Only node 9
+Column  0: Nodes 3 and 15
+Column  1: Only node 20
+Column  2: Only node 7
 
 ### **Algorithm Explanation:**
 
@@ -138,8 +170,6 @@ Final map: {-1: [9], 0: [3,15], 1: [20], 2: [7]}
 Result: [[9], [3,15], [20], [7]]
 ```
 
-## Complexity Analysis
-
 ### **Time Complexity:** O(n log n)
 - **BFS traversal**: O(n) - visit each node once
 - **Map operations**: O(log n) per insertion (map is sorted)
@@ -150,7 +180,6 @@ Result: [[9], [3,15], [20], [7]]
 - **Map**: O(n) - stores all node values
 - **Result**: O(n) - output vector
 - **Total**: O(n)
-
 ## Key Points
 
 1. **BFS for level order**: Maintains top-to-bottom order within columns
@@ -159,48 +188,36 @@ Result: [[9], [3,15], [20], [7]]
 4. **Level-by-level processing**: Ensures proper ordering within columns
 5. **Edge case handling**: Return empty vector for null root
 
-## Alternative Approaches
+## Common Mistakes
 
-### **DFS Approach (Not Recommended)**
-```python
-class Solution:
-    def verticalOrder(self, root: TreeNode) -> list[list[int]]:
-        from collections import defaultdict
-
-        column_map = defaultdict(list)
-
-        self.dfs(root, 0, 0, column_map)
-
-        result = []
-
-        for col in sorted(column_map.keys()):
-            nodes = column_map[col]
-            nodes.sort()  # sort by (row, value)
-            result.append([val for row, val in nodes])
-
-        return result
-
-    def dfs(self, node: TreeNode, row: int, col: int, column_map: dict) -> None:
-        if not node:
-            return
-
-        column_map[col].append((row, node.val))
-
-        self.dfs(node.left, row + 1, col - 1, column_map)
-        self.dfs(node.right, row + 1, col + 1, column_map)
-```
-
-**Why BFS is better:**
-- **Natural ordering**: BFS maintains level order automatically
-- **Simpler code**: No need to sort by row
-- **Better performance**: O(n log n) vs O(n log n + sorting)
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
 
 ## Related Problems
 
-- [987. Vertical Order Traversal of a Binary Tree](https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/) - More complex ordering rules
-- [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/) - Level order traversal
-- [199. Binary Tree Right Side View](https://leetcode.com/problems/binary-tree-right-side-view/) - Right view traversal
+- [987. Vertical Order Traversal of a Binary Tree](https://www.leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/) - More complex ordering rules
+- [102. Binary Tree Level Order Traversal](https://www.leetcode.com/problems/binary-tree-level-order-traversal/) - Level order traversal
+- [199. Binary Tree Right Side View](https://www.leetcode.com/problems/binary-tree-right-side-view/) - Right view traversal
 
 ## Tags
 
 `Tree`, `BFS`, `Vertical Order`, `Level Order`, `Medium`
+
+## Key Takeaways
+
+- Trees have no cycles — recursion is natural.
+- Combine results from left and right subtrees at each node.
+- Base case is usually `null`; height drives stack space.
+
+## References
+
+- [LC 314: Binary Tree Vertical Order Traversal on LeetCode](https://www.leetcode.com/problems/binary-tree-vertical-order-traversal/)
+- [LeetCode Discuss — LC 314: Binary Tree Vertical Order Traversal](https://www.leetcode.com/problems/binary-tree-vertical-order-traversal/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/binary-tree-vertical-order-traversal/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+
+{% endraw %}

@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 394. Decode String"
 date: 2025-10-19 17:24:19 -0700
-categories: python stack string-processing problem-solving
+categories: leetcode algorithm medium cpp stack string-processing problem-solving
 ---
 
-# [Medium] 394. Decode String
-
+{% raw %}
 Given an encoded string, return its decoded string.
 
 The encoding rule is: `k[encoded_string]`, where the `encoded_string` inside the square brackets is being repeated exactly `k` times. Note that `k` is guaranteed to be a positive integer.
@@ -55,7 +54,39 @@ Explanation:
 - `s` is a valid encoded string, that is always possible to decode.
 - All the integers in `s` are in the range `[1, 300]`.
 
-## Solution: Stack-Based Decoding
+## Thinking Process
+
+1. **Two stacks:** One for counts, one for strings
+1. **Current string:** Maintains the string being built
+
+- Stack matches nested or LIFO structure (parentheses, monotonic scans).
+- Push on open / larger; pop when the current element resolves pending work.
+- Monotonic stack finds next greater/smaller in O(n).
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Stack</text>
+
+  <rect x="100" y="30" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="46" text-anchor="middle" font-size="10">top</text>
+  <rect x="100" y="54" width="80" height="24" rx="3" fill="#E8E3D8" stroke="#B8B5B0"/>
+  <rect x="100" y="78" width="80" height="24" rx="3" fill="#D4D8E0" stroke="#8B8680"/>
+  <text x="200" y="70" font-size="11" fill="#6B6560">push / pop</text>
+  <path d="M90 42v60" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="115" text-anchor="middle" font-size="11" fill="#6B6560">LIFO — monotonic stack scans array</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Monotonic stack** *(this problem)* | O(n) | O(n) | Next greater/smaller element |
+| Parentheses matching | O(n) | O(n) | Push open, pop on close |
+| Expression evaluation | O(n) | O(n) | Operand + operator stacks |
+| Stack simulation | O(n) | O(n) | Process in LIFO order |
+
+## Solution
 
 **Time Complexity:** O(n) where n is the length of the decoded string  
 **Space Complexity:** O(n) for the stack and result string
@@ -91,8 +122,7 @@ class Solution:
         return curr
 ```
 
-## How the Algorithm Works
-
+### Solution Explanation
 **Key Insight:** Use two stacks to handle nested encoded strings and maintain the current string being built.
 
 **Steps:**
@@ -166,8 +196,7 @@ count = counts.pop()
 curr = prev + curr * count
 ```
 
-## Complexity Analysis
-
+### Complexity
 | Operation | Time Complexity | Space Complexity |
 |-----------|----------------|------------------|
 | Character processing | O(n) | O(n) |
@@ -176,27 +205,6 @@ curr = prev + curr * count
 | **Total** | **O(n + m)** | **O(n + m)** |
 
 Where n is the input length and m is the decoded string length.
-
-## Edge Cases
-
-1. **Single letter:** `s = "a"` → `"a"`
-2. **Single repetition:** `s = "2[a]"` → `"aa"`
-3. **No nesting:** `s = "3[a]2[b]"` → `"aaabb"`
-4. **Deep nesting:** `s = "2[3[4[a]]]"` → `"aaaaaaaaaaaaaaaaaaaaaaaa"`
-
-## Key Insights
-
-### Stack-Based Approach:
-1. **Two stacks:** One for counts, one for strings
-2. **State preservation:** Save current state when entering nested brackets
-3. **State restoration:** Restore state when exiting nested brackets
-4. **Efficient processing:** Handle arbitrary nesting levels
-
-### String Building:
-1. **Current string:** Maintains the string being built
-2. **Repetition:** Repeat current string by count
-3. **Concatenation:** Build final result incrementally
-4. **Memory efficient:** Process character by character
 
 ## Detailed Example Walkthrough
 
@@ -220,72 +228,12 @@ Where n is the input length and m is the decoded string length.
 
 **Final result:** `"abcabccdcdcdef"`
 
-## Alternative Approaches
-
-### Approach 1: Recursive Solution
-```python
-class Solution:
-    def decodeHelper(self, s: str, i: list[int]) -> str:
-        result = ""
-        
-        while i[0] < len(s) and s[i[0]] != ']':
-            if s[i[0]].isdigit():
-                k = 0
-                while i[0] < len(s) and s[i[0]].isdigit():
-                    k = k * 10 + int(s[i[0]])   # FIXED
-                    i[0] += 1
-                
-                i[0] += 1  # skip '['
-                decoded = self.decodeHelper(s, i)
-                i[0] += 1  # skip ']'
-                
-                result += decoded * k   # FIXED
-            else:
-                result += s[i[0]]
-                i[0] += 1
-        
-        return result
-
-    def decodeString(self, s: str) -> str:
-        return self.decodeHelper(s, [0])
-```
-
-**Time Complexity:** O(n + m)  
-**Space Complexity:** O(n) for recursion stack
-
-### Approach 2: Iterative with Single Stack
-```python
-class Solution:
-    def decodeString(self, s: str) -> str:
-        st = []
-        curr = ""
-        k = 0
-
-        for c in s:
-            if c.isdigit():
-                k = k * 10 + int(c)
-
-            elif c == '[':
-                st.append(str(k))
-                st.append(curr)
-                curr = ""
-                k = 0
-
-            elif c == ']':
-                prev = st.pop()
-                count = int(st.pop())
-                curr = prev + curr * count
-
-            else:
-                curr += c
-
-        return curr
-```
-
-**Time Complexity:** O(n + m)  
-**Space Complexity:** O(n)
-
 ## Common Mistakes
+
+1. **Single letter:** `s = "a"` → `"a"`
+2. **Single repetition:** `s = "2[a]"` → `"aa"`
+3. **No nesting:** `s = "3[a]2[b]"` → `"aaabb"`
+4. **Deep nesting:** `s = "2[3[4[a]]]"` → `"aaaaaaaaaaaaaaaaaaaaaaaa"`
 
 1. **Wrong count handling:** Not building multi-digit numbers correctly
 2. **Stack order:** Pushing/popping in wrong order
@@ -294,10 +242,10 @@ class Solution:
 
 ## Related Problems
 
-- [71. Simplify Path](https://leetcode.com/problems/simplify-path/)
-- [150. Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)
-- [224. Basic Calculator](https://leetcode.com/problems/basic-calculator/)
-- [227. Basic Calculator II](https://leetcode.com/problems/basic-calculator-ii/)
+- [71. Simplify Path](https://www.leetcode.com/problems/simplify-path/)
+- [150. Evaluate Reverse Polish Notation](https://www.leetcode.com/problems/evaluate-reverse-polish-notation/)
+- [224. Basic Calculator](https://www.leetcode.com/problems/basic-calculator/)
+- [227. Basic Calculator II](https://www.leetcode.com/problems/basic-calculator-ii/)
 
 ## Why This Solution Works
 
@@ -318,3 +266,25 @@ class Solution:
 2. **Efficiency:** O(n + m) time complexity
 3. **Simplicity:** Easy to understand and implement
 4. **Scalability:** Handles arbitrary nesting levels
+
+## References
+
+- [LC 394: Decode String on LeetCode](https://www.leetcode.com/problems/decode-string/)
+- [LeetCode Discuss — LC 394: Decode String](https://www.leetcode.com/problems/decode-string/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/decode-string/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+### Stack-Based Approach:
+1. **Two stacks:** One for counts, one for strings
+2. **State preservation:** Save current state when entering nested brackets
+3. **State restoration:** Restore state when exiting nested brackets
+4. **Efficient processing:** Handle arbitrary nesting levels
+
+### String Building:
+1. **Current string:** Maintains the string being built
+2. **Repetition:** Repeat current string by count
+3. **Concatenation:** Build final result incrementally
+4. **Memory efficient:** Process character by character
+
+{% endraw %}

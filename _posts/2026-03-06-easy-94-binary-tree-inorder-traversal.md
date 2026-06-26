@@ -1,24 +1,95 @@
 ---
 layout: post
 title: "[Easy] 94. Binary Tree Inorder Traversal"
-date: 2026-03-06 00:00:00 -0700
+date: 2026-03-06
 categories: [leetcode, easy, tree, dfs]
-tags: [leetcode, easy, tree, inorder, stack]
+tags: [leetcode, easy, tree, dfs, stack, morris]
 permalink: /2026/03/06/easy-94-binary-tree-inorder-traversal/
 ---
 
-# [Easy] 94. Binary Tree Inorder Traversal
-
-## Problem Statement
-
-Given the `root` of a binary tree, return the **inorder traversal** of its nodes' values.
-
-Inorder: **left → root → right**.
+{% raw %}
+Given the `root` of a binary tree, return the **inorder** traversal of its nodes' values. Inorder visits: **left → root → right**.
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: root = [1,null,2,3]
+    1
+     \
+      2
+     /
+    3
+Output: [1,3,2]
+```
+
+**Example 2:**
+
+```
+Input: root = [1,2,3,4,5,null,8,null,null,6,7,null,9]
+Output: [4,2,6,5,7,1,3,8,9]
+```
+
+**Example 3:**
+
+```
+Input: root = []
+Output: []
+```
+
+## Constraints
+
+- The number of nodes is in `[0, 100]`
+- `-100 <= Node.val <= 100`
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Thinking Process
+
+Inorder traversal processes nodes in **left → root → right** order. For a BST, this produces sorted output.
+
+Three standard implementations:
+
+1. **Recursive** -- direct translation
+2. **Iterative (stack)** -- go as far left as possible, then process and go right
+3. **Morris traversal** -- O(1) auxiliary space using threaded tree
+
+### Iterative Key Insight
+
+Unlike preorder where we can simply push right then left, inorder requires us to **defer** visiting a node until its entire left subtree is processed. The pattern is: push all left children onto the stack, pop and visit, then move to the right child.
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 165" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Tree DFS (bottom-up)</text>
+
+  <line x1="140" y1="42" x2="80" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="140" y1="42" x2="200" y2="88" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="80" y1="88" x2="50" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <line x1="200" y1="88" x2="230" y2="128" stroke="#8E9AAF" stroke-width="2"/>
+  <circle cx="140" cy="42" r="18" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="140" y="46" text-anchor="middle" font-size="12" fill="#3D3535">3</text>
+  <circle cx="80" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="80" y="92" text-anchor="middle" font-size="11" fill="#3D3535">9</text>
+  <circle cx="200" cy="88" r="16" fill="#C9B1BD" stroke="#8E9AAF" stroke-width="2"/>
+  <text x="200" y="92" text-anchor="middle" font-size="11" fill="#3D3535">20</text>
+  <circle cx="50" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="50" y="132" text-anchor="middle" font-size="10" fill="#3D3535">15</text>
+  <circle cx="230" cy="128" r="14" fill="#A8B5A2" stroke="#8E9AAF" stroke-width="1.5"/>
+  <text x="230" y="132" text-anchor="middle" font-size="10" fill="#3D3535">7</text>
+  <text x="140" y="155" text-anchor="middle" font-size="11" fill="#6B6560">post-order: combine left + right + 1</text>
+
+</svg>
+
+## Approach 1: Recursive -- O(n)
 ```python
 Input: root = [1,null,2,3]
 Output: [1,3,2]
@@ -29,178 +100,88 @@ Output: [1,3,2]
 #        3
 ```
 
-**Example 2:**
+### Solution Explanation
 
+**Approach:** Recursive DFS (this problem)
+
+**Key idea:** Inorder traversal processes nodes in **left → root → right** order. For a BST, this produces sorted output.
+
+**How the code works:**
+1. **Recursive** -- direct translation
+2. **Iterative (stack)** -- go as far left as possible, then process and go right
+3. **Morris traversal** -- O(1) auxiliary space using threaded tree
+
+**Walkthrough** — input `root = [1,null,2,3]`, expected output `[1,3,2]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
+## Approach 2: Iterative (Stack) -- O(n)
+
+Push all left children first. When there's nothing left to go, pop, visit, and move right.
 ```python
 Input: root = []
 Output: []
 ```
 
-**Example 3:**
+**Time**: O(n)
+**Space**: O(n) for the output; O(h) for the stack
 
+## Approach 3: Morris Traversal -- O(n)
+
+Thread the rightmost node of the left subtree back to the current node. Visit the node **after** returning via the thread (between left and right).
 ```python
 Input: root = [1]
 Output: [1]
 ```
 
-## Constraints
+**Time**: O(n)
+**Space**: O(n) for the output; O(1) auxiliary
 
-- The number of nodes in the tree is in the range `[0, 100]`.
-- `-100 <= Node.val <= 100`
+## Comparison
 
-## Clarification Questions
+| Approach | Time | Space | Notes |
+|---|---|---|---|
+| Recursive | O(n) | O(h) aux | Simplest |
+| Iterative Stack | O(n) | O(h) aux | "Go left, pop, go right" pattern |
+| Morris | O(n) | O(1) aux | Modifies tree temporarily, restores it |
 
-1. **Empty tree**: Return empty list when `root` is `None`?  
-   **Assumption**: Yes.
-2. **Order**: Strict left → root → right?  
-   **Assumption**: Yes — classic inorder (e.g. BST gives sorted order).
-3. **Space**: Recursion stack counts toward space?  
-   **Assumption**: Yes — iterative stack or Morris avoids/minimizes it.
+## Preorder vs Inorder: Key Difference
 
-## Interview Deduction Process (20 minutes)
+The Morris and iterative templates are almost identical across traversal orders. The only difference is **when** you record the node's value:
 
-**Step 1: Recursive definition (5 min)**  
-Inorder = inorder(left), then process root, then inorder(right). Base case: `node is None` → return.
-
-**Step 2: Recursive implementation (7 min)**  
-Use a helper that recurses on left, appends `node.val`, then recurses on right. Collect results in a list (closure or passed list).
-
-**Step 3: Iterative with stack (8 min)**  
-Simulate the call stack: go left to the bottom (pushing nodes), then pop (visit), then go right. Repeat until stack is empty and current node is None.
-
-## Solution Approach
-
-**Recursive:** Recurse left, append root, recurse right. Use a shared list or pass it as argument.
-
-**Iterative:** Use a stack. While current node is not None or stack is not empty: if node is not None, push and go left; else pop, append value, set node to right. This yields left → root → right.
-
-**Morris (O(1) space):** Use the right pointer of the inorder predecessor (rightmost in left subtree) as a temporary link back to the current node. When we follow the link back, we visit (inorder) and go right. No stack.
-
-### Key Insights
-
-1. **Inorder = root in the middle** — Process left subtree, then root, then right subtree.
-2. **Iterative stack** — “Go left to the bottom, then pop (visit), then go right” captures the same order.
-3. **Morris** — Thread from inorder predecessor’s right back to current node; visit when we return via the thread (inorder).
-
-## Python Solution
-
-### Recursive (DFS)
-
-```python
-from typing import List, Optional
-
-
-# Definition for a binary tree node.
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-
-class Solution:
-    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        rtn: List[int] = []
-
-        def inorder_dfs(node: Optional[TreeNode]) -> None:
-            if not node:
-                return
-            inorder_dfs(node.left)
-            rtn.append(node.val)
-            inorder_dfs(node.right)
-
-        inorder_dfs(root)
-        return rtn
-```
-
-### Iterative (Stack)
-
-```python
-from typing import List, Optional
-
-
-class Solution:
-    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        rtn: List[int] = []
-        stk: List[TreeNode] = []
-        node = root
-
-        while node or stk:
-            while node:
-                stk.append(node)
-                node = node.left
-            node = stk.pop()
-            rtn.append(node.val)
-            node = node.right
-
-        return rtn
-```
-
-### Morris Inorder (O(1) space)
-
-```python
-from typing import List, Optional
-
-
-class Solution:
-    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:
-        rtn: List[int] = []
-        node = root
-
-        while node:
-            if not node.left:
-                rtn.append(node.val)
-                node = node.right
-            else:
-                predecessor = node.left
-                while predecessor.right and predecessor.right is not node:
-                    predecessor = predecessor.right
-
-                if not predecessor.right:
-                    predecessor.right = node
-                    node = node.left
-                else:
-                    predecessor.right = None
-                    rtn.append(node.val)  # visit when we return via thread
-                    node = node.right
-
-        return rtn
-```
-
-## Algorithm Explanation
-
-**Recursive:**  
-If node is null, return. Otherwise recurse on left subtree, append `node.val`, then recurse on right subtree. The closure collects values in inorder.
-
-**Iterative:**  
-We simulate the same order with a stack. “Go left until null” (pushing nodes), then pop (visit), then go right. Repeat. This processes left subtree first, then root, then right subtree.
-
-**Morris:**  
-We reuse the right pointer of the **inorder predecessor** (rightmost in left subtree). When there is no left child, we visit the node and go right. When there is a left child: if the predecessor’s right is null, we set `predecessor.right = node` and go left; when we later return via this thread, we visit the node (inorder), clear the thread, and go right. Each edge is traversed at most twice; no stack.
-
-## Complexity Analysis
-
-- **Time Complexity**: \(O(n)\), where \(n\) is the number of nodes — each node is visited once (recursive/iterative); in Morris each edge is traversed at most twice, so still \(O(n)\).
-- **Space Complexity**:  
-  - Recursive: \(O(h)\) for the call stack (\(h\) = height, worst \(O(n)\)).  
-  - Iterative: \(O(h)\) for the stack.  
-  - Morris: \(O(1)\) extra space (tree is restored after traversal).
-
-## Edge Cases
-
-- `root is None` → return `[]`.
-- Single node → return `[root.val]`.
-- Skewed tree → recursion/stack depth \(O(n)\).
+| Order | Record when... |
+|---|---|
+| Preorder | **Before** going left (first visit) |
+| Inorder | **After** returning from left (second visit / thread return) |
 
 ## Common Mistakes
 
-- **Recursive:** Appending before recursing left (would be preorder, not inorder).
-- **Iterative:** Visiting before going left, or wrong loop condition (must continue while `node or stk`).
-- **Morris:** Visiting when creating the thread instead of when following it back (that would be preorder); or forgetting to clear `predecessor.right`.
+- Skipping edge cases (empty input, single element, boundaries).
+- Off-by-one errors in loops and index ranges.
+- Forgetting to handle the case when no valid answer exists.
+
+## Key Takeaways
+
+- **Iterative inorder** = "go left as far as possible, pop, visit, go right" -- this is the most commonly tested iterative pattern
+- **Morris inorder** visits the node when it encounters the thread for the **second time** (thread already exists), unlike preorder which visits on the first encounter
+- For a BST, inorder traversal yields sorted order -- useful for validation and kth-element problems
 
 ## Related Problems
 
-- [LC 144: Binary Tree Preorder Traversal](/2026/03/06/easy-144-binary-tree-preorder-traversal/) — Preorder (root → left → right).
-- [LC 145: Binary Tree Postorder Traversal](/2026/03/06/easy-145-binary-tree-postorder-traversal/) — Postorder (left → right → root).
-- [LC 102: Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/) — BFS by level.
-- [LC 230: Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/) — Inorder on BST gives sorted order; stop at k-th.
+- [144. Binary Tree Preorder Traversal](https://www.leetcode.com/problems/binary-tree-preorder-traversal/) -- root before children
+- [145. Binary Tree Postorder Traversal](https://www.leetcode.com/problems/binary-tree-postorder-traversal/) -- root after children
+- [230. Kth Smallest Element in a BST](https://www.leetcode.com/problems/kth-smallest-element-in-a-bst/) -- inorder + early stop
+- [98. Validate Binary Search Tree](https://www.leetcode.com/problems/validate-binary-search-tree/) -- inorder must be strictly increasing
+
+## References
+
+- [LC 94: Binary Tree Inorder Traversal on LeetCode](https://www.leetcode.com/problems/binary-tree-inorder-traversal/)
+- [LeetCode Discuss — LC 94: Binary Tree Inorder Traversal](https://www.leetcode.com/problems/binary-tree-inorder-traversal/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/binary-tree-inorder-traversal/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Trees](/posts/2025-10-29-leetcode-templates-trees/)
+
+{% endraw %}

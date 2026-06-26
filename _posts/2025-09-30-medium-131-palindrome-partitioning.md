@@ -2,11 +2,10 @@
 layout: post
 title: "[Medium] 131. Palindrome Partitioning"
 date: 2025-09-30 00:00:00 -0000
-categories: python partitioning problem-solving
+categories: leetcode algorithm backtracking data-structures string palindrome recursion medium cpp partitioning problem-solving
 ---
 
-# [Medium] 131. Palindrome Partitioning
-
+{% raw %}
 Given a string `s`, partition `s` such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of `s`.
 
 ## Examples
@@ -28,7 +27,7 @@ Output: [["a"]]
 - 1 <= s.length <= 16
 - s contains only lowercase English letters
 
-## Approach
+## Thinking Process
 
 The solution uses backtracking (DFS) with the following strategy:
 
@@ -37,8 +36,29 @@ The solution uses backtracking (DFS) with the following strategy:
 3. **Backtrack**: If palindrome, add to current partition and recurse, then remove
 4. **Palindrome Check**: Verify if substring from start to end is a palindrome
 
-## Solution in Python
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Backtracking tree</text>
 
+  <circle cx="140" cy="30" r="12" fill="#E0D8E4" stroke="#A098A8"/><text x="140" y="34" text-anchor="middle" font-size="9">start</text>
+  <line x1="140" y1="42" x2="90" y2="65" stroke="#9A9792"/><line x1="140" y1="42" x2="190" y2="65" stroke="#9A9792"/>
+  <circle cx="90" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/><circle cx="190" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/>
+  <line x1="90" y1="82" x2="60" y2="100" stroke="#9A9792" stroke-dasharray="3"/><line x1="190" y1="82" x2="220" y2="100" stroke="#9A9792" stroke-dasharray="3"/>
+  <text x="140" y="118" text-anchor="middle" font-size="11" fill="#6B6560">choose → explore → undo (prune)</text>
+
+</svg>
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Choose / explore / unchoose** *(this problem)* | O(2^n) | O(n) | Subsets, combinations |
+| Constraint pruning | Reduced search | O(n) | Early exit on invalid partial |
+| Sort + skip duplicates | O(2^n) | O(n) | Combination sum II style |
+| Path recording | O(n!) worst | O(n) | Permutations |
+
+## Solution
 **Time Complexity:** O(2^n × n) - Exponential due to backtracking, n for palindrome check  
 **Space Complexity:** O(n) - For recursion stack and current partition
 
@@ -66,6 +86,23 @@ class Solution:
         return substring == substring[::-1]
 ```
 
+### Solution Explanation
+
+**Approach:** Choose / explore / unchoose (this problem)
+
+**Key idea:** The solution uses backtracking (DFS) with the following strategy:
+
+**How the code works:**
+1. **Base Case**: When we've processed the entire string, add the current partition to results
+2. **Recursive Case**: For each possible end position, check if substring is palindrome
+3. **Backtrack**: If palindrome, add to current partition and recurse, then remove
+4. **Palindrome Check**: Verify if substring from start to end is a palindrome
+
+**Walkthrough** — input `s = "aab"`, expected output `[["a","a","b"],["aa","b"]]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Step-by-Step Example
 
 For `s = "aab"`:
@@ -97,34 +134,6 @@ For `s = "aab"`:
 
 **Result:** `[["a","a","b"],["aa","b"]]`
 
-## Key Insights
-
-1. **Backtracking Pattern**: Add → Recurse → Remove
-2. **Palindrome Check**: Verify each substring before adding to partition
-3. **Index Management**: Use start and end indices to define substrings
-4. **Base Case**: When start >= string length, we have a complete partition
-5. **Pruning**: Only recurse if current substring is a palindrome
-
-## Alternative Approaches
-
-### 1. **Optimized Palindrome Check**
-```python
-def isPalindrome(self, s: str, start: int, end: int) -> bool:
-    while start < end:
-        if s[start] != s[end]:
-            return False
-        start += 1
-        end -= 1
-    return True
-```
-
-### 2. **Precompute Palindrome Table**
-```python
-isPal = [[False] * n for _ in range(n)]
-# Precompute all palindrome substrings
-# Time: O(n²), Space: O(n²)
-```
-
 ## Common Mistakes
 
 1. **Forgetting to backtrack**: Not removing elements after recursion
@@ -135,10 +144,10 @@ isPal = [[False] * n for _ in range(n)]
 
 ## Related Problems
 
-- [132. Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/) - Minimum cuts
-- [5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)
-- [647. Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/)
-- [93. Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses/) - Similar partitioning pattern
+- [132. Palindrome Partitioning II](https://www.leetcode.com/problems/palindrome-partitioning-ii/) - Minimum cuts
+- [5. Longest Palindromic Substring](https://www.leetcode.com/problems/longest-palindromic-substring/)
+- [647. Palindromic Substrings](https://www.leetcode.com/problems/palindromic-substrings/)
+- [93. Restore IP Addresses](https://www.leetcode.com/problems/restore-ip-addresses/) - Similar partitioning pattern
 
 ## Visual Representation
 
@@ -160,3 +169,19 @@ Results: ["a","a","b"] and ["aa","b"]
 ```
 
 This problem demonstrates the classic backtracking pattern for generating all possible partitions with a constraint (palindrome check).
+
+## References
+
+- [LC 131: Palindrome Partitioning on LeetCode](https://www.leetcode.com/problems/palindrome-partitioning/)
+- [LeetCode Discuss — LC 131: Palindrome Partitioning](https://www.leetcode.com/problems/palindrome-partitioning/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/palindrome-partitioning/editorial/) *(may require premium)*
+
+## Key Takeaways
+
+1. **Backtracking Pattern**: Add → Recurse → Remove
+2. **Palindrome Check**: Verify each substring before adding to partition
+3. **Index Management**: Use start and end indices to define substrings
+4. **Base Case**: When start >= string length, we have a complete partition
+5. **Pruning**: Only recurse if current substring is a palindrome
+
+{% endraw %}

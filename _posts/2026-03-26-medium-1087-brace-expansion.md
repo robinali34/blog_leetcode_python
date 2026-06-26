@@ -1,160 +1,141 @@
 ---
 layout: post
 title: "[Medium] 1087. Brace Expansion"
-date: 2026-03-26 00:00:00 -0700
+date: 2026-03-26
 categories: [leetcode, medium, backtracking, string]
-tags: [leetcode, medium, backtracking, dfs, string-parsing]
+tags: [leetcode, medium, backtracking, string, parsing]
 permalink: /2026/03/26/medium-1087-brace-expansion/
 ---
 
-# [Medium] 1087. Brace Expansion
+{% raw %}
+Given a string `s` representing a list of words, where each letter can be replaced by a group of letters inside braces `{a,b,c}`, return all possible words in **sorted** order.
 
-## Problem Statement
-
-A string `s` represents a list of words where each letter can be fixed or selected from a brace group.
-
-Examples:
-
-- `"a{b,c}d"` -> `["abd", "acd"]`
-- `"{a,b}c{d,e}f"` -> `["acdf", "acef", "bcdf", "bcef"]`
-
-Return all words in **lexicographical order**.
+For example, `"{a,b}c{d,e}f"` means the first letter can be `a` or `b`, the second is `c`, the third can be `d` or `e`, and the fourth is `f`.
 
 ## Examples
 
 **Example 1:**
 
-```python
+```
 Input: s = "{a,b}c{d,e}f"
 Output: ["acdf","acef","bcdf","bcef"]
 ```
 
 **Example 2:**
 
-```python
+```
 Input: s = "abcd"
 Output: ["abcd"]
 ```
 
 ## Constraints
 
-- `1 <= len(s) <= 50`
-- `s` consists of lowercase letters, `{`, `}`, and `,`
-- Input is valid and brace groups are well-formed
+- `1 <= s.length <= 50`
+- `s` consists of `{`, `}`, `,`, and lowercase English letters
+- `s` is guaranteed to be a valid brace expression
 
-## Clarification Questions
+## Thinking Process
 
-1. **Are brace options single characters only?**  
-   For this problem, yes (e.g. `{a,b,c}`).
-2. **Do we need sorted output?**  
-   Yes, lexicographical order is required.
-3. **Can there be nested braces?**  
-   No, this version has no nested brace expressions.
+### Two-Phase Approach
 
-## Analysis Process
+**Phase 1: Parse** the string into a list of "groups." Each group is either:
+- A single character (literal like `c`)
+- A sorted list of characters (options like `{a,b}`)
 
-### 1) Parse into groups
+**Phase 2: Backtrack** through the groups, picking one character from each, to generate all combinations.
 
-Convert string into a list of character groups:
+### Why Sort Each Group?
 
-- fixed character -> one-element group (e.g. `['x']`)
-- brace group -> sorted choice group (e.g. `{b,a,c}` -> `['a','b','c']`)
+The problem requires the output in sorted order. If we sort each group's options during parsing, then the DFS generates results in lexicographic order naturally -- no post-sort needed.
 
-Example:
+### Walk-through
 
-`"{a,b}c{d,e}"` -> `[['a','b'], ['c'], ['d','e']]`
+```
+s = "{a,b}c{d,e}f"
 
-### 2) Generate combinations with DFS
+Parse → groups = [[a,b], [c], [d,e], [f]]
 
-Do backtracking over group index:
+DFS tree:
+  [a,b] → a → [c] → c → [d,e] → d → [f] → f → "acdf"
+                                → e → [f] → f → "acef"
+        → b → [c] → c → [d,e] → d → [f] → f → "bcdf"
+                                → e → [f] → f → "bcef"
 
-- at position `pos`, try each character in `groups[pos]`
-- append to current path
-- recurse to `pos + 1`
-- pop to backtrack
-
-When `pos == len(groups)`, one full expanded word is built.
-
-Because each group is sorted and DFS visits in that order, output is naturally lexicographical.
-
-## Solution Options
-
-### Option 1: Parse + DFS Backtracking (Recommended)
-
-```python
-from typing import List
-
-
-class Solution:
-    def expand(self, s: str) -> List[str]:
-        groups = []
-        i = 0
-        while i < len(s):
-            if s[i] == '{':
-                i += 1
-                choices = []
-
-                while s[i] != '}':
-                    if s[i].isalpha():
-                        choices.append(s[i])
-                    i += 1
-                groups.append(sorted(choices))
-                i += 1
-            else:
-                groups.append([s[i]])
-                i += 1
-        rtn = []
-
-        def dfs(pos: int, path: list[str]) -> None:
-            if pos == len(groups):
-                rtn.append(''.join(path))
-                return
-            for ch in groups[pos]:
-                path.append(ch)
-                dfs(pos + 1, path)
-                path.pop()
-
-        dfs(0, [])
-        return rtn
+Output: ["acdf", "acef", "bcdf", "bcef"]
 ```
 
-### Option 2: Iterative Product Build
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 125" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Backtracking tree</text>
 
-Build results progressively:
+  <circle cx="140" cy="30" r="12" fill="#E0D8E4" stroke="#A098A8"/><text x="140" y="34" text-anchor="middle" font-size="9">start</text>
+  <line x1="140" y1="42" x2="90" y2="65" stroke="#9A9792"/><line x1="140" y1="42" x2="190" y2="65" stroke="#9A9792"/>
+  <circle cx="90" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/><circle cx="190" cy="72" r="10" fill="#D4D8E0" stroke="#8B8680"/>
+  <line x1="90" y1="82" x2="60" y2="100" stroke="#9A9792" stroke-dasharray="3"/><line x1="190" y1="82" x2="220" y2="100" stroke="#9A9792" stroke-dasharray="3"/>
+  <text x="140" y="118" text-anchor="middle" font-size="11" fill="#6B6560">choose → explore → undo (prune)</text>
 
-- start with `[""]`
-- for each group, create new list by appending every choice to each existing prefix
+</svg>
 
-This avoids recursion but follows the same Cartesian-product idea.
+## Common Approaches
 
-## Comparison
+Typical techniques for this pattern:
 
-| Option | Time | Extra Space | Pros | Cons |
-|---|---:|---:|---|---|
-| Parse + DFS | O(total output size) | O(depth + output) | Clean recursion, interview-friendly | Recursion stack |
-| Iterative product | O(total output size) | O(output) | No recursion | Less intuitive for some |
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Choose / explore / unchoose** *(this problem)* | O(2^n) | O(n) | Subsets, combinations |
+| Constraint pruning | Reduced search | O(n) | Early exit on invalid partial |
+| Sort + skip duplicates | O(2^n) | O(n) | Combination sum II style |
+| Path recording | O(n!) worst | O(n) | Permutations |
 
-## Complexity Analysis
+## Solution
+```python
+Input: s = "{a,b}c{d,e}f"
+Output: ["acdf","acef","bcdf","bcef"]
+```
 
-Let:
+### Solution Explanation
 
-- `k` = number of groups
-- `m_i` = number of choices in group `i`
-- `W = product(m_i)` = number of output words
+**Approach:** Choose / explore / unchoose (this problem)
 
-Then:
+**Key idea:** ### Two-Phase Approach
 
-- **Time:** `O(W * k)` (must generate all output strings)
-- **Space:** `O(k)` recursion depth (excluding output), plus output storage
+**How the code works:**
+**Phase 1: Parse** the string into a list of "groups." Each group is either:
+- A single character (literal like `c`)
+- A sorted list of characters (options like `{a,b}`)
+**Phase 2: Backtrack** through the groups, picking one character from each, to generate all combinations.
 
+**Walkthrough** — input `s = "{a,b}c{d,e}f"`, expected output `["acdf","acef","bcdf","bcef"]`:
+
+1. Initialize variables from the problem setup.
+2. Apply the main loop / recursion until the condition is met.
+3. Confirm the result matches the expected output.
 ## Common Mistakes
 
-- Forgetting to sort choices inside braces, causing non-lexicographic result.
-- Including commas as choices during parsing.
-- Not backtracking (`path.pop()`), which corrupts subsequent paths.
+- Forgetting to skip commas during parsing (adding `,` as a character option)
+- Not sorting groups, then needing to sort the entire output (O(k^m · m log(k^m)) instead of O(k^m · m))
+- Off-by-one: not incrementing `i` past the closing `}`
+
+## Key Takeaways
+
+- **"Generate all combinations from groups of choices"** = backtracking over groups
+- Parsing into an intermediate representation (groups) cleanly separates concerns from the combinatorial generation
+- Sorting inputs early often eliminates the need to sort outputs
 
 ## Related Problems
 
-- [LC 17: Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/)
-- [LC 784: Letter Case Permutation](https://leetcode.com/problems/letter-case-permutation/)
-- [LC 1096: Brace Expansion II](https://leetcode.com/problems/brace-expansion-ii/)
+- [17. Letter Combinations of a Phone Number](https://www.leetcode.com/problems/letter-combinations-of-a-phone-number/) -- same pattern: groups of choices → backtrack
+- [78. Subsets](https://www.leetcode.com/problems/subsets/) -- backtracking enumeration
+- [22. Generate Parentheses](https://www.leetcode.com/problems/generate-parentheses/) -- constrained backtracking
+- [394. Decode String](https://www.leetcode.com/problems/decode-string/) -- string parsing with brackets
+
+## References
+
+- [LC 1087: Brace Expansion on LeetCode](https://www.leetcode.com/problems/brace-expansion/)
+- [LeetCode Discuss — LC 1087: Brace Expansion](https://www.leetcode.com/problems/brace-expansion/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/brace-expansion/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [Backtracking](/posts/2025-11-24-leetcode-templates-backtracking/)
+
+{% endraw %}

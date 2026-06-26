@@ -1,31 +1,83 @@
 ---
 layout: post
 title: "[Medium] 841. Keys and Rooms"
-date: 2026-03-12 00:00:00 -0700
+date: 2026-03-12
 categories: [leetcode, medium, graph, dfs, bfs]
-tags: [leetcode, medium, graph, reachability, stack, queue]
+tags: [leetcode, medium, graph, dfs, bfs, reachability]
 permalink: /2026/03/12/medium-841-keys-and-rooms/
 ---
 
-# [Medium] 841. Keys and Rooms
-
-## Problem Statement
-
-There are `n` rooms labeled from `0` to `n - 1`. You start in room `0`.  
-
-Each room `i` contains a list of keys `rooms[i]`, where **each key is labeled with a room number**.
-
-All rooms are initially locked except room `0`.  
-You can enter a room only if you have its key.
-
-You can take all the keys in any room you enter.
-
-Return `True` if you can visit **all the rooms**, or `False` otherwise.
+{% raw %}
+There are `n` rooms labeled `0` to `n-1`. All rooms are locked except room `0`. Each room contains a set of keys to other rooms. Given `rooms[i]` -- the set of keys in room `i` -- return `true` if you can visit **all** rooms.
 
 ## Examples
 
 **Example 1:**
 
+```
+Input: rooms = [[1],[2],[3],[]]
+Output: true
+Explanation: Room 0 → key 1 → Room 1 → key 2 → Room 2 → key 3 → Room 3
+```
+
+**Example 2:**
+
+```
+Input: rooms = [[1,3],[3,0,1],[2],[0]]
+Output: false
+Explanation: Room 2 is never reachable.
+```
+
+## Constraints
+
+- `n == rooms.length`
+- `2 <= n <= 1000`
+- `0 <= rooms[i].length <= 1000`
+- `1 <= sum(rooms[i].length) <= 3000`
+- `0 <= rooms[i][j] < n`
+- All values of `rooms[i]` are unique
+
+## Common Approaches
+
+Typical techniques for this pattern:
+
+| Approach | Time | Space | Notes |
+|----------|------|-------|-------|
+| **Recursive DFS** *(this problem)* | O(n) | O(h) stack | Natural for trees and graphs |
+| Iterative DFS (stack) | O(n) | O(n) | Avoid recursion depth limits |
+| DFS with memoization | O(n) | O(n) | Overlapping subproblems on graphs |
+| Backtracking DFS | O(2^n) typical | O(n) | Enumerate choices with pruning |
+
+## Thinking Process
+
+### Graph Abstraction
+
+Each room is a **node** and each key is a **directed edge** to another room. Starting from room 0, can we reach all nodes?
+
+This is a **graph reachability** problem -- standard DFS or BFS from a starting node.
+
+### Algorithm
+
+1. Start from room 0
+2. Traverse reachable rooms using DFS or BFS
+3. Track visited rooms
+4. If `visited.size() == n`, all rooms are reachable
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 135" style="max-width:100%;height:auto;display:block;margin:1.5em auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<text x="50%" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#5A5752">Graph BFS layers</text>
+
+  <circle cx="60" cy="70" r="16" fill="#D4D8E0" stroke="#8B8680"/><text x="60" y="74" text-anchor="middle" font-size="11">S</text>
+  <circle cx="140" cy="45" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="49" text-anchor="middle" font-size="10">a</text>
+  <circle cx="140" cy="95" r="14" fill="#E8E3D8" stroke="#B8B5B0"/><text x="140" y="99" text-anchor="middle" font-size="10">b</text>
+  <circle cx="210" cy="70" r="14" fill="#E8D5D0" stroke="#B8A5A0"/><text x="210" y="74" text-anchor="middle" font-size="10">t</text>
+  <line x1="74" y1="65" x2="126" y2="50" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="74" y1="75" x2="126" y2="95" stroke="#9A9792" stroke-width="1.5"/>
+  <line x1="154" y1="50" x2="196" y2="65" stroke="#9A9792" stroke-width="1.5"/>
+  <text x="140" y="125" text-anchor="middle" font-size="11" fill="#6B6560">BFS: expand by layers (queue)</text>
+
+</svg>
+
+## Approach 1: DFS (Stack) -- O(V + E)
 ```python
 Input: rooms = [[1],[2],[3],[]]
 Output: True
@@ -35,157 +87,59 @@ Output: True
 # All rooms are reachable.
 ```
 
-**Example 2:**
+### Solution Explanation
 
+**Approach:** Recursive DFS (this problem)
+
+**Key idea:** ### Graph Abstraction
+
+**How the code works:**
+1. Start from room 0
+2. Traverse reachable rooms using DFS or BFS
+3. Track visited rooms
+4. If `visited.size() == n`, all rooms are reachable
+
+**Walkthrough** — input `rooms = [[1],[2],[3],[]]`, expected output `true`:
+
+Room 0 → key 1 → Room 1 → key 2 → Room 2 → key 3 → Room 3
+## Approach 2: BFS (Queue) -- O(V + E)
 ```python
 Input: rooms = [[1,3],[3,0,1],[2],[0]]
 Output: False
 # Room 2 is never reachable; we never get key 2.
 ```
 
-## Constraints
-
-- `n == len(rooms)`
-- `1 <= n <= 1000`
-- `0 <= rooms[i].length <= 1000`
-- `1 <= sum(len(rooms[i])) <= 3000`
-- `0 <= rooms[i][j] < n`
-- There are no duplicate keys in `rooms[i]`.
-
-## Clarification Questions
-
-1. **Key reuse**: Once we have a key for a room, can we use it multiple times?  
-   **Assumption**: Yes — having the key means the room is effectively unlocked; we only need to visit it once.
-2. **Duplicate keys**: Can a room contain duplicate keys or its own key?  
-   **Assumption**: The constraints say no duplicates per room, but even if they existed, they do not change reachability (extra edges to the same node).
-3. **Goal**: We just need to know if we can **reach all rooms** starting from room `0`?  
-   **Assumption**: Yes — this is a graph reachability question.
-
-## Abstraction
-
-Treat this as a **graph problem**:
-
-- Each room is a **node**.  
-- Each key in `rooms[i]` is a **directed edge** from room `i` to `key`.  
-- We begin at node `0` and want to know if we can **reach every node**.
-
-So the problem is equivalent to:
-
-> Starting from node 0 in a directed graph, can we visit all nodes?
-
-## Baseline (Naive) — Why it’s suboptimal
-
-A naive idea:
-
-- For each room `i`, scan all previously visited rooms to see if any contains key `i`.  
-- If yes, mark room `i` as reachable. Repeat until no new rooms are discovered.
-
-This leads to repeatedly scanning previous rooms and keys:
-
-- Potentially **O(n²)** or worse in practice due to repeated work.  
-- Harder to reason about correctness and stopping conditions.
-
-## Optimized Approach — DFS / BFS
-
-We only need **reachability** from room `0`. The natural approach:
-
-- Perform a **DFS or BFS** starting from room `0`.  
-- Maintain a `visited` set (rooms we have entered).  
-- Whenever we see a key `k` in the current room, if `k` is not visited, we add it to `visited` and push it onto the stack/queue.
-
-At the end, if `len(visited) == n`, then **all rooms are reachable**.
-
-### Complexity
-
-- Let `V = n` (rooms), `E = total number of keys` (sum of `len(rooms[i])`).  
-- **Time**: O(V + E) — we visit each room at most once and traverse each key once.  
-- **Space**: O(V) for the `visited` set and stack/queue.
-
-### Key Insights
-
-1. **Graph reachability** — This is simply “can we reach all nodes from node 0?”  
-2. **DFS or BFS both work** — Either traversal explores the reachable subgraph; only the order differs.  
-3. **Visited set** — Prevents re-processing rooms, bounds time to O(V + E).
-
-## Python Solution (DFS with stack)
-
-```python
-from typing import List
-
-
-class Solution:
-    def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
-        n = len(rooms)
-        visited = set([0])
-        stack = [0]
-
-        while stack:
-            room = stack.pop()
-            for key in rooms[room]:
-                if key not in visited:
-                    visited.add(key)
-                    stack.append(key)
-
-        return len(visited) == n
-```
-
-## Python Solution (BFS with queue)
-
-```python
-from typing import List
-from collections import deque
-
-
-class Solution:
-    def canVisitAllRooms(self, rooms: List[List[int]]) -> bool:
-        n = len(rooms)
-        visited = set([0])
-        queue = deque([0])
-
-        while queue:
-            room = queue.popleft()
-            for key in rooms[room]:
-                if key not in visited:
-                    visited.add(key)
-                    queue.append(key)
-
-        return len(visited) == n
-```
-
-## Algorithm Explanation
-
-We model rooms as graph nodes and keys as directed edges. Starting from room `0`, we:
-
-1. Initialize `visited = {0}` and a stack/queue containing just `0`.  
-2. While there are rooms to process:
-   - Pop a room `r`.  
-   - For each `key` in `rooms[r]`:
-     - If `key` has not been visited, add it to `visited` and push it to stack/queue.  
-3. At the end, if `len(visited) == n`, we have reached all rooms and return `True`; otherwise `False`.
-
-Because each room is processed at most once and each key is examined at most once, the time complexity is linear in the size of the graph (`V + E`).
-
-## Complexity Analysis
-
-- **Time**: O(V + E), where `V = n` (rooms), `E = sum(len(rooms[i]))` (total keys).  
-- **Space**: O(V) for the `visited` set and stack/queue.
-
-## Edge Cases
-
-- `n = 1` and `rooms = [[]]` → already in room 0, so return `True`.  
-- Some rooms have no keys (empty lists) — fine; they might still be reachable from others.  
-- A room may contain a key to itself or duplicate keys — harmless; `visited` prevents re-processing.
+**Time**: O(V + E)
+**Space**: O(V)
 
 ## Common Mistakes
 
-- **Re-scanning rooms** — Repeatedly scanning all previously visited rooms for keys leads to O(n²) behavior; use DFS/BFS instead.  
-- **No visited set** — Without `visited`, you can loop indefinitely or process rooms many times.  
-- **Assuming undirected edges** — Keys give directed edges; but for this problem, whether edges are considered directed or undirected doesn’t change the answer because you only ever travel along available keys.
+- Starting with all rooms as "visitable" instead of just room 0
+- Not marking rooms as visited when adding to the stack/queue (causes duplicates)
+- Treating this as an undirected graph (keys are one-way: having key to room 3 doesn't mean room 3 has a key back)
+
+## Key Takeaways
+
+- **"Can we reach all nodes from a source?"** = graph reachability = DFS or BFS
+- The rooms/keys metaphor maps directly to an adjacency list: `rooms[i]` is the neighbor list for node `i`
+- Both DFS and BFS give the same result here since we only care about reachability, not shortest path
 
 ## Related Problems
 
-- [LC 200: Number of Islands](https://leetcode.com/problems/number-of-islands/) — DFS/BFS for connected components in a grid.  
-- [LC 207: Course Schedule](https://leetcode.com/problems/course-schedule/) — Graph reachability and cycle detection.  
-- [LC 133: Clone Graph](https://leetcode.com/problems/clone-graph/) — DFS/BFS graph traversal and cloning.  
-- [LC 323: Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/) — Count components by DFS/BFS.
+- [200. Number of Islands](https://www.leetcode.com/problems/number-of-islands/) -- DFS/BFS grid traversal
+- [547. Number of Provinces](https://www.leetcode.com/problems/number-of-provinces/) -- connected components
+- [1091. Shortest Path in Binary Matrix](https://www.leetcode.com/problems/shortest-path-in-binary-matrix/) -- BFS shortest path
+- [323. Number of Connected Components](https://www.leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/) -- connectivity
 
+## References
+
+- [LC 841: Keys and Rooms on LeetCode](https://www.leetcode.com/problems/keys-and-rooms/)
+- [LeetCode Discuss — LC 841: Keys and Rooms](https://www.leetcode.com/problems/keys-and-rooms/discuss/)
+- [LeetCode Editorial](https://www.leetcode.com/problems/keys-and-rooms/editorial/) *(may require premium)*
+
+## Template Reference
+
+- [BFS](/posts/2025-11-24-leetcode-templates-bfs/)
+- [DFS](/posts/2025-11-24-leetcode-templates-dfs/)
+
+{% endraw %}
