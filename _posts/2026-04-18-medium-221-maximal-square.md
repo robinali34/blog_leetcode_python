@@ -86,40 +86,6 @@ class Solution:
         return max_side * max_side
 ```
 
-## Solution (C++)
-
-```cpp
-#include <algorithm>
-#include <vector>
-
-class Solution {
- public:
-  int maximalSquare(std::vector<std::vector<char>>& matrix) {
-    if (matrix.empty()) {
-      return 0;
-    }
-    const int rows = static_cast<int>(matrix.size());
-    const int cols = static_cast<int>(matrix[0].size());
-    std::vector<std::vector<int>> dp(rows, std::vector<int>(cols, 0));
-    int max_side = 0;
-
-    for (int i = 0; i < rows; ++i) {
-      for (int j = 0; j < cols; ++j) {
-        if (matrix[i][j] == '1') {
-          if (i == 0 || j == 0) {
-            dp[i][j] = 1;
-          } else {
-            dp[i][j] = 1 + std::min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]});
-          }
-          max_side = std::max(max_side, dp[i][j]);
-        }
-      }
-    }
-    return max_side * max_side;
-  }
-};
-```
-
 ## Complexity
 
 - **Time:** `O(m * n)`

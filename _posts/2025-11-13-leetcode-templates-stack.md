@@ -7,18 +7,32 @@ permalink: /posts/2025-11-13-leetcode-templates-stack/
 tags: [leetcode, templates, stack, data-structures]
 ---
 
-Minimal, copy-paste C++ for parentheses matching, expression evaluation, nested structures, and monotonic stack.
+{% raw %}
+The stack is one of the most versatile data structures in coding interviews. Whether you're matching parentheses, evaluating expressions, or finding the next greater element in an array, a stack gives you an elegant O(n) solution. This guide collects the essential C++ templates you'll need, organized by pattern so you can quickly find the right approach for any stack problem.
+
+> **New to Stack problems?** A stack is Last-In-First-Out (LIFO). The key insight: whenever a problem asks you to match, nest, or find the "next greater/smaller" element, think stack.
 
 ## Contents
 
 - [Parentheses Matching](#parentheses-matching)
 - [Expression Evaluation](#expression-evaluation)
 - [Nested Structure Processing](#nested-structure-processing)
-- [Monotonic Stack](#monotonic-stack)
+- [Monotonic Stack & Deque Patterns](#monotonic-stack--deque-patterns)
+  - [Pattern 1: Next Greater Element](#pattern-1-next-greater-element)
+  - [Pattern 2: Next Smaller Element](#pattern-2-next-smaller-element)
+  - [Pattern 3: Previous Greater / Smaller Element](#pattern-3-previous-greater--smaller-element)
+  - [Pattern 4: Histogram Expansion](#pattern-4-histogram-expansion)
+  - [Pattern 5: Matrix → Histogram Trick](#pattern-5-matrix--histogram-trick)
+  - [Pattern 6: Monotonic Deque (Sliding Window)](#pattern-6-monotonic-deque-sliding-window-maxmin)
+  - [Pattern 7: Greedy Stack](#pattern-7-greedy-stack-remove-digits--lexicographic-optimization)
+  - [Pattern 8: Prefix Sum + Monotonic Deque](#pattern-8-prefix-sum--monotonic-deque)
+  - [Practice Roadmap](#practice-roadmap)
 - [Stack for State Management](#stack-for-state-management)
 - [Stack Design](#stack-design-minmax-stack)
 
 ## Parentheses Matching
+
+> **When to use:** matching brackets, nested structures
 
 Use stack's LIFO property to match opening and closing brackets in reverse order.
 
@@ -39,11 +53,13 @@ def is_valid_parentheses(s: str) -> bool:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 20 | Valid Parentheses | [Link](https://leetcode.com/problems/valid-parentheses/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-04-easy-20-valid-parentheses/) |
-| 921 | Minimum Add to Make Valid Parentheses | [Link](https://leetcode.com/problems/minimum-add-to-make-valid-parentheses/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-04-medium-921-minimum-add-to-make-valid-parentheses/) |
-| 1249 | Minimum Remove to Make Valid Parentheses | [Link](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-10-22-medium-1249-minimum-remove-to-make-valid-parentheses/) |
+| 20 | Valid Parentheses | [Link](https://leetcode.com/problems/valid-parentheses/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-04-easy-20-valid-parentheses/) |
+| 921 | Minimum Add to Make Valid Parentheses | [Link](https://leetcode.com/problems/minimum-add-to-make-valid-parentheses/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-04-medium-921-minimum-add-to-make-valid-parentheses/) |
+| 1249 | Minimum Remove to Make Valid Parentheses | [Link](https://leetcode.com/problems/minimum-remove-to-make-valid-parentheses/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-22-medium-1249-minimum-remove-to-make-valid-parentheses/) |
 
 ## Expression Evaluation
+
+> **When to use:** calculate expression, operator precedence
 
 Use stack to handle operator precedence and parentheses in mathematical expressions.
 
@@ -75,10 +91,10 @@ def calculate_basic(s: str) -> int:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 150 | Evaluate Reverse Polish Notation | [Link](https://leetcode.com/problems/evaluate-reverse-polish-notation/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/09/24/medium-150-evaluate-reverse-polish-notation/) |
-| 224 | Basic Calculator | [Link](https://leetcode.com/problems/basic-calculator/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-13-medium-224-basic-calculator/) |
-| 227 | Basic Calculator II | [Link](https://leetcode.com/problems/basic-calculator-ii/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-13-medium-227-basic-calculator-ii/) |
-| 772 | Basic Calculator III | [Link](https://leetcode.com/problems/basic-calculator-iii/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-13-hard-772-basic-calculator-iii/) |
+| 150 | Evaluate Reverse Polish Notation | [Link](https://leetcode.com/problems/evaluate-reverse-polish-notation/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-150-evaluate-reverse-polish-notation/) |
+| 224 | Basic Calculator | [Link](https://leetcode.com/problems/basic-calculator/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-medium-224-basic-calculator/) |
+| 227 | Basic Calculator II | [Link](https://leetcode.com/problems/basic-calculator-ii/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-medium-227-basic-calculator-ii/) |
+| 772 | Basic Calculator III | [Link](https://leetcode.com/problems/basic-calculator-iii/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-hard-772-basic-calculator-iii/) |
 
 ## Nested Structure Processing
 
@@ -108,13 +124,59 @@ def decode_string(s: str) -> str:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 394 | Decode String | [Link](https://leetcode.com/problems/decode-string/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/10/19/medium-394-decode-string/) |
-| 636 | Exclusive Time of Functions | [Link](https://leetcode.com/problems/exclusive-time-of-functions/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-10-27-medium-636-exclusive-time-of-functions/) |
+| 394 | Decode String | [Link](https://leetcode.com/problems/decode-string/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-394-decode-string/) |
+| 636 | Exclusive Time of Functions | [Link](https://leetcode.com/problems/exclusive-time-of-functions/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-27-medium-636-exclusive-time-of-functions/) |
 | 71 | Simplify Path | [Link](https://leetcode.com/problems/simplify-path/) | - |
 
-## Monotonic Stack
+## Monotonic Stack & Deque Patterns
 
-Maintain a stack with elements in monotonic order (increasing or decreasing) to efficiently find next/previous greater/smaller elements.
+> **When to use:** next greater/smaller element, histogram problems
+
+Eight common patterns that cover nearly all monotonic stack / deque problems. Recognize the pattern by this clue: *"find the next/previous smaller/greater element, or determine how far an element can extend."*
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 260" style="max-width:720px;font-family:monospace">
+  <text x="360" y="22" text-anchor="middle" fill="#5A5752" font-size="14" font-weight="bold">Monotonic Stack — Next Greater Element for [2, 1, 4, 3]</text>
+  <rect x="230" y="32" width="56" height="28" rx="4" fill="#D4D8D0" stroke="#B8B5B0"/>
+  <text x="258" y="51" text-anchor="middle" fill="#5A5752" font-size="13">2</text>
+  <rect x="290" y="32" width="56" height="28" rx="4" fill="#D4D8D0" stroke="#B8B5B0"/>
+  <text x="318" y="51" text-anchor="middle" fill="#5A5752" font-size="13">1</text>
+  <rect x="350" y="32" width="56" height="28" rx="4" fill="#D4D8D0" stroke="#B8B5B0"/>
+  <text x="378" y="51" text-anchor="middle" fill="#5A5752" font-size="13">4</text>
+  <rect x="410" y="32" width="56" height="28" rx="4" fill="#D4D8D0" stroke="#B8B5B0"/>
+  <text x="438" y="51" text-anchor="middle" fill="#5A5752" font-size="13">3</text>
+  <text x="90" y="86" text-anchor="middle" fill="#5A5752" font-size="11" font-weight="bold">Step 1: push 2</text>
+  <rect x="65" y="94" width="50" height="28" rx="3" fill="#E8D5D0" stroke="#B8B5B0"/>
+  <text x="90" y="113" text-anchor="middle" fill="#5A5752" font-size="12">2</text>
+  <text x="90" y="138" text-anchor="middle" fill="#5A5752" font-size="10">stack: [2]</text>
+  <text x="270" y="86" text-anchor="middle" fill="#5A5752" font-size="11" font-weight="bold">Step 2: push 1</text>
+  <text x="270" y="100" text-anchor="middle" fill="#5A5752" font-size="10">(1 &lt; 2, no pop)</text>
+  <rect x="245" y="108" width="50" height="28" rx="3" fill="#D4D8E0" stroke="#B8B5B0"/>
+  <text x="270" y="127" text-anchor="middle" fill="#5A5752" font-size="12">1</text>
+  <rect x="245" y="136" width="50" height="28" rx="3" fill="#E8D5D0" stroke="#B8B5B0"/>
+  <text x="270" y="155" text-anchor="middle" fill="#5A5752" font-size="12">2</text>
+  <text x="270" y="180" text-anchor="middle" fill="#5A5752" font-size="10">stack: [2, 1]</text>
+  <text x="450" y="86" text-anchor="middle" fill="#5A5752" font-size="11" font-weight="bold">Step 3: push 4</text>
+  <text x="450" y="100" text-anchor="middle" fill="#5A5752" font-size="10">4 &gt; 1 → pop, ans[1]=4</text>
+  <text x="450" y="113" text-anchor="middle" fill="#5A5752" font-size="10">4 &gt; 2 → pop, ans[0]=4</text>
+  <rect x="425" y="122" width="50" height="28" rx="3" fill="#D4D8E0" stroke="#B8B5B0"/>
+  <text x="450" y="141" text-anchor="middle" fill="#5A5752" font-size="12">4</text>
+  <text x="450" y="166" text-anchor="middle" fill="#5A5752" font-size="10">stack: [4]</text>
+  <text x="630" y="86" text-anchor="middle" fill="#5A5752" font-size="11" font-weight="bold">Step 4: push 3</text>
+  <text x="630" y="100" text-anchor="middle" fill="#5A5752" font-size="10">(3 &lt; 4, no pop)</text>
+  <rect x="605" y="108" width="50" height="28" rx="3" fill="#D4D8E0" stroke="#B8B5B0"/>
+  <text x="630" y="127" text-anchor="middle" fill="#5A5752" font-size="12">3</text>
+  <rect x="605" y="136" width="50" height="28" rx="3" fill="#E8D5D0" stroke="#B8B5B0"/>
+  <text x="630" y="155" text-anchor="middle" fill="#5A5752" font-size="12">4</text>
+  <text x="630" y="180" text-anchor="middle" fill="#5A5752" font-size="10">stack: [4, 3]</text>
+  <text x="360" y="210" text-anchor="middle" fill="#5A5752" font-size="13" font-weight="bold">Result: [4, 4, -1, -1]</text>
+  <text x="360" y="228" text-anchor="middle" fill="#5A5752" font-size="11">Elements left on the stack have no next greater element → -1</text>
+</svg>
+
+---
+
+### Pattern 1: Next Greater Element
+
+Find the first element **to the right** that is strictly greater. Use a **monotonic decreasing** stack (top is smallest).
 
 ```python
 def next_greater_elements(nums: list[int]) -> list[int]:
@@ -131,17 +193,17 @@ def next_greater_elements(nums: list[int]) -> list[int]:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 42 | Trapping Rain Water | [Link](https://leetcode.com/problems/trapping-rain-water/) | [Solution](https://robinali34.github.io/blog_leetcode/2026/02/17/hard-42-trapping-rain-water/) |
-| 84 | Largest Rectangle in Histogram | [Link](https://leetcode.com/problems/largest-rectangle-in-histogram/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/10/20/hard-84-largest-rectangle-in-histogram/) |
-| 239 | Sliding Window Maximum | [Link](https://leetcode.com/problems/sliding-window-maximum/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-04-hard-239-sliding-window-maximum/) |
-| 496 | Next Greater Element I | [Link](https://leetcode.com/problems/next-greater-element-i/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/12/31/easy-496-next-greater-element-i/) |
-| 503 | Next Greater Element II | [Link](https://leetcode.com/problems/next-greater-element-ii/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/10/17/medium-503-next-greater-element-ii/) |
-| 316 | Remove Duplicate Letters | [Link](https://leetcode.com/problems/remove-duplicate-letters/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/10/17/medium-316-remove-duplicate-letters/) |
-| 1944 | Visible People in Queue | [Link](https://leetcode.com/problems/number-of-visible-people-in-a-queue/) | [Solution](https://robinali34.github.io/blog_leetcode/2026/02/09/hard-1944-number-of-visible-people-in-a-queue/) |
+| 496 | Next Greater Element I | [Link](https://leetcode.com/problems/next-greater-element-i/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/12/31/easy-496-next-greater-element-i/) |
+| 739 | Daily Temperatures | [Link](https://leetcode.com/problems/daily-temperatures/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/01/29/medium-739-daily-temperatures/) |
+| 503 | Next Greater Element II | [Link](https://leetcode.com/problems/next-greater-element-ii/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-503-next-greater-element-ii/) |
+| 901 | Online Stock Span | [Link](https://leetcode.com/problems/online-stock-span/) | - |
+| 1944 | Visible People in Queue | [Link](https://leetcode.com/problems/number-of-visible-people-in-a-queue/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/02/09/hard-1944-number-of-visible-people-in-a-queue/) |
 
-## Stack for State Management
+---
 
-Use stack to save and restore state when processing nested or hierarchical structures.
+### Pattern 2: Next Smaller Element
+
+Same idea but reversed comparison. Use a **monotonic increasing** stack (top is largest).
 
 ```python
 # Example: exclusive time of functions (simplified)
@@ -165,12 +227,16 @@ def exclusive_time(n: int, logs: list[str]) -> list[int]:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 636 | Exclusive Time of Functions | [Link](https://leetcode.com/problems/exclusive-time-of-functions/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-10-27-medium-636-exclusive-time-of-functions/) |
-| 394 | Decode String | [Link](https://leetcode.com/problems/decode-string/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/10/19/medium-394-decode-string/) |
+| 1475 | Final Prices With Special Discount | [Link](https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/) | - |
+| 84 | Largest Rectangle in Histogram | [Link](https://leetcode.com/problems/largest-rectangle-in-histogram/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/20/hard-84-largest-rectangle-in-histogram/) |
 
-## Stack Design (Min/Max Stack)
+---
 
-Maintaining extra information (like minimums or frequencies) alongside the primary stack data.
+### Pattern 3: Previous Greater / Smaller Element
+
+Instead of looking right, find the **left boundary**. Scan left-to-right, the stack top is the previous greater/smaller.
+
+Finding both **previous smaller** and **next smaller** defines the range where an element is the minimum -- critical for range-based counting.
 
 ```python
 class MinStack:
@@ -196,7 +262,233 @@ class MinStack:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 155 | Min Stack | [Link](https://leetcode.com/problems/min-stack/) | [Solution](https://robinali34.github.io/blog_leetcode/2026/02/11/medium-155-min-stack/) |
+| 907 | Sum of Subarray Minimums | [Link](https://leetcode.com/problems/sum-of-subarray-minimums/) | - |
+| 2104 | Sum of Subarray Ranges | [Link](https://leetcode.com/problems/sum-of-subarray-ranges/) | - |
+
+---
+
+### Pattern 4: Histogram Expansion
+
+Each bar expands left and right until hitting a shorter bar. Width = `right_smaller - left_smaller - 1`.
+
+Combine **next smaller** (right boundary) and **previous smaller** (left boundary) to compute the maximum rectangle.
+
+```python
+def largestRectangleArea(heights: list[int]) -> int:
+    n = len(heights)
+    ans = 0
+    st: list[int] = []
+
+    for i in range(n + 1):
+        h = 0 if i == n else heights[i]
+        while st and heights[st[-1]] > h:
+            height = heights[st.pop()]
+            width = i if not st else i - st[-1] - 1
+            ans = max(ans, height * width)
+        st.append(i)
+    return ans
+```
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 84 | Largest Rectangle in Histogram | [Link](https://leetcode.com/problems/largest-rectangle-in-histogram/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/20/hard-84-largest-rectangle-in-histogram/) |
+| 42 | Trapping Rain Water | [Link](https://leetcode.com/problems/trapping-rain-water/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/02/17/hard-42-trapping-rain-water/) |
+
+---
+
+### Pattern 5: Matrix → Histogram Trick
+
+Convert each row of a binary matrix into a histogram of heights, then run the histogram algorithm on each row.
+
+```python
+def maximalRectangle(matrix: list[list[str]]) -> int:
+    if not matrix:
+        return 0
+    m, n = len(matrix), len(matrix[0])
+    ans = 0
+    heights = [0] * n
+
+    for i in range(m):
+        for j in range(n):
+            heights[j] = heights[j] + 1 if matrix[i][j] == "1" else 0
+        ans = max(ans, largestRectangleArea(heights))
+    return ans
+```
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 85 | Maximal Rectangle | [Link](https://leetcode.com/problems/maximal-rectangle/) | - |
+
+---
+
+### Pattern 6: Monotonic Deque (Sliding Window Max/Min)
+
+> **When to use:** sliding window maximum/minimum
+
+Maintain a **monotonic decreasing deque** of indices for sliding window maximum. Remove smaller elements from back, remove out-of-window elements from front.
+
+```python
+from collections import deque
+
+
+def maxSlidingWindow(nums: list[int], k: int) -> list[int]:
+    dq: deque[int] = deque()
+    ans: list[int] = []
+
+    for i in range(len(nums)):
+        while dq and nums[dq[-1]] <= nums[i]:
+            dq.pop()
+        dq.append(i)
+        if dq[0] <= i - k:
+            dq.popleft()
+        if i >= k - 1:
+            ans.append(nums[dq[0]])
+    return ans
+```
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 239 | Sliding Window Maximum | [Link](https://leetcode.com/problems/sliding-window-maximum/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-04-hard-239-sliding-window-maximum/) |
+
+---
+
+### Pattern 7: Greedy Stack (Remove Digits / Lexicographic Optimization)
+
+> **When to use:** remove digits, lexicographic optimization
+
+Use the stack to maintain an optimal ordering. While the stack top is worse than the current element and we still have removals left, pop it.
+
+```python
+def removeKdigits(num: str, k: int) -> str:
+    st: list[str] = []
+    for c in num:
+        while k > 0 and st and st[-1] > c:
+            st.pop()
+            k -= 1
+        st.append(c)
+    while k > 0:
+        st.pop()
+        k -= 1
+
+    # strip leading zeros
+    start = 0
+    while start < len(st) and st[start] == "0":
+        start += 1
+    ans = "".join(st[start:])
+    return "0" if not ans else ans
+```
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 402 | Remove K Digits | [Link](https://leetcode.com/problems/remove-k-digits/) | - |
+| 316 | Remove Duplicate Letters | [Link](https://leetcode.com/problems/remove-duplicate-letters/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/17/medium-316-remove-duplicate-letters/) |
+
+---
+
+### Pattern 8: Prefix Sum + Monotonic Deque
+
+Find the shortest subarray with sum at least `k`. Combine prefix sums with an **increasing deque** to efficiently find the closest valid left boundary.
+
+```python
+from collections import deque
+
+
+def shortestSubarray(nums: list[int], k: int) -> int:
+    n = len(nums)
+    ans = n + 1
+    pre = [0] * (n + 1)
+    for i in range(n):
+        pre[i + 1] = pre[i] + nums[i]
+
+    dq: deque[int] = deque()
+    for i in range(n + 1):
+        while dq and pre[i] - pre[dq[0]] >= k:
+            ans = min(ans, i - dq[0])
+            dq.popleft()
+        while dq and pre[dq[-1]] >= pre[i]:
+            dq.pop()
+        dq.append(i)
+    return ans if ans <= n else -1
+```
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 862 | Shortest Subarray with Sum at Least K | [Link](https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/01/26/hard-862-shortest-subarray-with-sum-at-least-k/) |
+
+---
+
+### Practice Roadmap
+
+Follow this progression from basics to advanced:
+
+| Step | Focus | Problems |
+|---|---|---|
+| 1 | Basics | Next Greater Element I (496), Daily Temperatures (739) |
+| 2 | Core Stack Mastery | Next Greater Element II (503), Online Stock Span (901) |
+| 3 | Histogram | Largest Rectangle in Histogram (84), Maximal Rectangle (85) |
+| 4 | Advanced Range Counting | Sum of Subarray Minimums (907), Sum of Subarray Ranges (2104) |
+| 5 | Deque + Advanced | Sliding Window Maximum (239), Shortest Subarray with Sum at Least K (862) |
+
+## Stack for State Management
+
+Use stack to save and restore state when processing nested or hierarchical structures.
+
+```python
+# Example: Tracking function call stack
+def processLogs(logs: list[str]) -> None:
+    st: list[tuple[int, int]] = []  # {function_id, start_time}
+    result = [0] * n
+
+    for log in logs:
+        # Parse log entry
+        if isStart:
+            st.append((id, time))
+        else:
+            funcId, startTime = st.pop()
+            duration = time - startTime + 1
+            result[funcId] += duration
+
+            # Subtract from parent if exists
+            if st:
+                result[st[-1][0]] -= duration
+```
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 636 | Exclusive Time of Functions | [Link](https://leetcode.com/problems/exclusive-time-of-functions/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-27-medium-636-exclusive-time-of-functions/) |
+| 394 | Decode String | [Link](https://leetcode.com/problems/decode-string/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/19/medium-394-decode-string/) |
+
+## Stack Design (Min/Max Stack)
+
+Maintaining extra information (like minimums or frequencies) alongside the primary stack data.
+
+```python
+class MinStack:
+    def __init__(self):
+        self.stk: list[int] = []
+        self.minStk: list[int] = []
+
+    def push(self, val: int) -> None:
+        self.stk.append(val)
+        if not self.minStk:
+            self.minStk.append(val)
+        else:
+            self.minStk.append(min(self.minStk[-1], val))
+
+    def pop(self) -> None:
+        self.stk.pop()
+        self.minStk.pop()
+
+    def top(self) -> int:
+        return self.stk[-1]
+
+    def getMin(self) -> int:
+        return self.minStk[-1]
+```
+
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 155 | Min Stack | [Link](https://leetcode.com/problems/min-stack/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/02/11/medium-155-min-stack/) |
 | 716 | Max Stack | [Link](https://leetcode.com/problems/max-stack/) | - |
 
 ## Key Patterns
@@ -224,9 +516,21 @@ class MinStack:
 3. **Not resetting state** after processing elements
 4. **Index vs value** confusion in monotonic stack problems
 
+## Quick Reference
+
+| Pattern | Signal Phrases | Key Idea |
+|---|---|---|
+| Parentheses | "valid brackets", "minimum remove" | Match open/close pairs |
+| Expression | "calculate", "evaluate" | Operator precedence via stack |
+| Next Greater | "next greater", "next warmer day" | Monotonic decreasing stack |
+| Next Smaller | "next smaller", "stock span" | Monotonic increasing stack |
+| Histogram | "largest rectangle", "maximal rectangle" | Expand left/right using stack |
+| Sliding Window Max | "maximum in window" | Monotonic deque |
+
 ## More templates
 
+- **Beginner's Guide:** [LeetCode Beginner's Guide](/2026/06/25/leetcode-beginners-guide/)
 - **Data structures (monotonic stack/queue):** [Data Structures & Core Algorithms](/posts/2025-10-29-leetcode-templates-data-structures/)
 - **Graph, Search:** [Graph](/posts/2025-10-29-leetcode-templates-graph/), [Search](/posts/2026-01-20-leetcode-templates-search/)
 - **Master index:** [Categories & Templates](/posts/2025-10-29-leetcode-categories-and-templates/)
-
+{% endraw %}

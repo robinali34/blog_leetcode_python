@@ -1,15 +1,21 @@
 ---
 layout: post
-title: "LeetCode Templates: Arrays & Strings"
+title: "Algorithm Templates: Arrays & Strings"
 date: 2025-10-29 00:00:00 -0700
-categories: [leetcode, templates, arrays, strings]
+categories: leetcode templates arrays strings
 permalink: /posts/2025-10-29-leetcode-templates-arrays-strings/
 tags: [leetcode, templates, arrays, strings]
 ---
 
+{% raw %}
+Arrays and strings are the foundation of coding interviews — you'll encounter them in nearly every problem set. This page provides battle-tested C++ templates for the most important patterns: sliding window, two pointers, binary search on answer, prefix sum, hash maps, and string algorithms like KMP and Manacher. Master these and you'll have the tools to solve a huge fraction of Medium-level problems.
+
+> **This template covers the fundamental patterns for array and string problems.** Sliding window, two pointers, and prefix sum together solve a huge fraction of Medium problems.
+
+- **Beginner's Guide:** [LeetCode Beginner's Guide](/2026/06/25/leetcode-beginners-guide/)
+
 ## Contents
 
-- [How to Analyze Arrays & Strings](#how-to-analyze-arrays--strings)
 - [Sliding Window (fixed/variable)](#sliding-window-fixedvariable)
 - [Two Pointers (sorted arrays/strings)](#two-pointers-sorted-arraysstrings)
 - [Binary Search on Answer](#binary-search-on-answer-monotonic-predicate)
@@ -18,26 +24,11 @@ tags: [leetcode, templates, arrays, strings]
 - [KMP (Substring Search)](#kmp-substring-search)
 - [Manacher](#manacher-longest-palindromic-substring-on)
 - [Z-Algorithm](#z-algorithm-pattern-occurrences)
-- [String Rolling Hash](#string-rolling-hash-rabin-karp)
-
-## How to Analyze Arrays & Strings
-
-Use this checklist before coding:
-
-1. **What kind of interval logic?**
-   - contiguous segment -> sliding window / prefix sum
-   - pair/triple relation -> two pointers / sort + scan
-
-2. **Is there monotonic feasibility?**
-   - if answer can be binary-searched (min/max feasible value), use binary search on answer
-
-3. **Need exact substring matching?**
-   - many text-pattern checks -> KMP / Z / rolling hash
-
-4. **Target complexity**
-   - most interview-quality solutions should land in `O(n)` or `O(n log n)`
+- [String Rolling Hash](#string-rolling-hash-rabin–karp)
 
 ## Sliding Window (fixed/variable)
+
+**When to use:** "longest substring", "shortest subarray", "at most k distinct", or any problem asking for a contiguous subrange that satisfies a constraint.
 
 ```python
 def longest_no_repeat(s: str) -> int:
@@ -55,14 +46,20 @@ def longest_no_repeat(s: str) -> int:
     return best
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 3 | [Longest Substring Without Repeating Characters](/2025/10/09/medium-3-longest-substring-without-repeating-characters/) | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) |
-| 713 | [Subarray Product Less Than K](/2026/03/21/medium-713-subarray-product-less-than-k/) | [Subarray Product Less Than K](https://leetcode.com/problems/subarray-product-less-than-k/) |
-| 76 | Minimum Window Substring | [Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/) |
-| 424 | Longest Repeating Character Replacement | [Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 3 | Longest Substring Without Repeating Characters | [Link](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/10/medium-3-longest-substring-without-repeating-characters/) |
+| 76 | Minimum Window Substring | [Link](https://leetcode.com/problems/minimum-window-substring/) | - |
+| 392 | Is Subsequence | [Link](https://leetcode.com/problems/is-subsequence/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/01/03/easy-392-is-subsequence/) |
+| 424 | Longest Repeating Character Replacement | [Link](https://leetcode.com/problems/longest-repeating-character-replacement/) | - |
+| 616 | Add Bold Tag in String | [Link](https://leetcode.com/problems/add-bold-tag-in-string/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/12/30/medium-616-add-bold-tag-in-string/) |
+| 681 | Next Closest Time | [Link](https://leetcode.com/problems/next-closest-time/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/12/30/medium-681-next-closest-time/) |
+| 713 | Subarray Product Less Than K | [Link](https://leetcode.com/problems/subarray-product-less-than-k/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/21/medium-713-subarray-product-less-than-k/) |
+| 2461 | Maximum Sum of Distinct Subarrays With Length K | [Link](https://leetcode.com/problems/maximum-sum-of-distinct-subarrays-with-length-k/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/09/medium-2461-maximum-sum-of-distinct-subarrays-with-length-k/) |
 
 ## Two Pointers (sorted arrays/strings)
+
+**When to use:** "pair with target sum in sorted array", "container with most water", "valid palindrome", or when the array is sorted and you can shrink the search space from both ends.
 
 ```python
 def two_sum_sorted(a: list[int], target: int) -> bool:
@@ -78,13 +75,16 @@ def two_sum_sorted(a: list[int], target: int) -> bool:
     return False
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 15 | 3Sum | [3Sum](https://leetcode.com/problems/3sum/) |
-| 11 | Container With Most Water | [Container With Most Water](https://leetcode.com/problems/container-with-most-water/) |
-| 125 | Valid Palindrome | [Valid Palindrome](https://leetcode.com/problems/valid-palindrome/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 15 | 3Sum | [Link](https://leetcode.com/problems/3sum/) | - |
+| 11 | Container With Most Water | [Link](https://leetcode.com/problems/container-with-most-water/) | - |
+| 125 | Valid Palindrome | [Link](https://leetcode.com/problems/valid-palindrome/) | - |
+| 1768 | Merge Strings Alternately | [Link](https://leetcode.com/problems/merge-strings-alternately/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/27/easy-1768-merge-strings-alternately/) |
 
 ## Binary Search on Answer (monotonic predicate)
+
+**When to use:** "minimize the maximum", "feasibility check", "minimum speed/capacity", or when the answer has a monotonic property (if x works, then x+1 also works).
 
 ```python
 def first_good(lo: int, hi: int, good) -> int:
@@ -98,13 +98,17 @@ def first_good(lo: int, hi: int, good) -> int:
     return lo
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 875 | Koko Eating Bananas | [Koko Eating Bananas](https://leetcode.com/problems/koko-eating-bananas/) |
-| 1011 | Capacity To Ship Packages Within D Days | [Capacity To Ship Packages Within D Days](https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/) |
-| 410 | Split Array Largest Sum | [Split Array Largest Sum](https://leetcode.com/problems/split-array-largest-sum/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 33 | Search in Rotated Sorted Array | [Link](https://leetcode.com/problems/search-in-rotated-sorted-array/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/09/23/medium-33-search-in-rotated-sorted-array/) |
+| 34 | Find First and Last Position of Element in Sorted Array | [Link](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) | - |
+| 162 | Find Peak Element | [Link](https://leetcode.com/problems/find-peak-element/) | - |
+| 875 | Koko Eating Bananas | [Link](https://leetcode.com/problems/koko-eating-bananas/) | - |
+| 1870 | Minimum Speed to Arrive on Time | [Link](https://leetcode.com/problems/minimum-speed-to-arrive-on-time/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/30/medium-1870-minimum-speed-to-arrive-on-time/) |
 
 ## Prefix Sum / Difference Array
+
+**When to use:** "range sum query", "subarray sum equals k", "number of subarrays with sum", or when you need O(1) range queries after O(n) preprocessing.
 
 ```python
 def prefix_sum(nums: list[int]) -> list[int]:
@@ -119,13 +123,21 @@ def range_sum(ps: list[int], l: int, r: int) -> int:
     return ps[r + 1] - ps[l]
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 560 | [Subarray Sum Equals K](/2026/02/01/medium-560-subarray-sum-equals-k/) | [Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/) |
-| 238 | [Product of Array Except Self](/2026/01/27/medium-238-product-of-array-except-self/) | [Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/) |
-| 370 | Range Addition | [Range Addition](https://leetcode.com/problems/range-addition/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 303 | Range Sum Query - Immutable | [Link](https://leetcode.com/problems/range-sum-query-immutable/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/01/01/easy-303-range-sum-query-immutable/) |
+| 523 | Continuous Subarray Sum | [Link](https://leetcode.com/problems/continuous-subarray-sum/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/04/medium-523-continuous-subarray-sum/) |
+| 560 | Subarray Sum Equals K | [Link](https://leetcode.com/problems/subarray-sum-equals-k/) | - |
+| 238 | Product of Array Except Self | [Link](https://leetcode.com/problems/product-of-array-except-self/) | - |
+| 525 | Contiguous Array | [Link](https://leetcode.com/problems/contiguous-array/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-04-medium-525-contiguous-array/) |
+| 1177 | Can Make Palindrome from Substring | [Link](https://leetcode.com/problems/can-make-palindrome-from-substring/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/01/01/medium-1177-can-make-palindrome-from-substring/) |
+| 370 | Range Addition | [Link](https://leetcode.com/problems/range-addition/) | - |
+| 134 | Gas Station | [Link](https://leetcode.com/problems/gas-station/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/22/medium-134-gas-station/) |
+| 2270 | Number of Ways to Split Array | [Link](https://leetcode.com/problems/number-of-ways-to-split-array/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/06/medium-2270-number-of-ways-to-split-array/) |
 
 ## Hash Map Frequencies
+
+**When to use:** "two sum", "group anagrams", "frequency count", "contains duplicate", or any problem where you need O(1) lookups by value.
 
 ```python
 from collections import Counter
@@ -142,13 +154,41 @@ def freq_map_manual(nums: list[int]) -> dict[int, int]:
     return freq
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 1 | Two Sum | [Two Sum](https://leetcode.com/problems/two-sum/) |
-| 49 | [Group Anagrams](/posts/2025-11-18-medium-49-group-anagrams/) | [Group Anagrams](https://leetcode.com/problems/group-anagrams/) |
-| 359 | Logger Rate Limiter | [Logger Rate Limiter](https://leetcode.com/problems/logger-rate-limiter/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 1 | Two Sum | [Link](https://leetcode.com/problems/two-sum/) | - |
+| 49 | Group Anagrams | [Link](https://leetcode.com/problems/group-anagrams/) | - |
+| 242 | Valid Anagram | [Link](https://leetcode.com/problems/valid-anagram/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-242-valid-anagram/) |
+| 217 | Contains Duplicate | [Link](https://leetcode.com/problems/contains-duplicate/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-217-contains-duplicate/) |
+| 219 | Contains Duplicate II | [Link](https://leetcode.com/problems/contains-duplicate-ii/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-219-contains-duplicate-ii/) |
+| 383 | Ransom Note | [Link](https://leetcode.com/problems/ransom-note/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/07/easy-383-ransom-note/) |
+| 981 | Time Based Key-Value Store | [Link](https://leetcode.com/problems/time-based-key-value-store/) | - |
+| 359 | Logger Rate Limiter | [Link](https://leetcode.com/problems/logger-rate-limiter/) | - |
+| 2365 | Task Scheduler II | [Link](https://leetcode.com/problems/task-scheduler-ii/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/10/medium-2365-task-scheduler-ii/) |
+| 2342 | Max Sum of a Pair With Equal Sum of Digits | [Link](https://leetcode.com/problems/max-sum-of-a-pair-with-equal-sum-of-digits/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/04/11/medium-2342-max-sum-of-a-pair-with-equal-sum-of-digits/) |
 
 ## KMP (Substring Search)
+
+**When to use:** "find pattern in string", "shortest palindrome by prepending", "repeated string match", or when you need O(n + m) exact pattern matching.
+
+KMP is a pattern matching algorithm that finds occurrences of a pattern string P within a text string T efficiently — without re-checking characters that are already known to match.
+
+While a naive substring search checks character-by-character and backtracks when a mismatch occurs (worst case O(n * m)),
+KMP preprocesses the pattern to know how far it can safely skip ahead when mismatches happen.
+
+It does this using a “prefix function” (also called LPS — longest prefix which is also suffix).
+
+### Steps
+
+Preprocess the pattern to build the lps[] array.
+
+* lps[i] = the length of the longest proper prefix of the substring P[0..i] which is also a suffix of this substring.
+
+* Proper prefix = prefix ≠ the string itself.
+
+Use the LPS array during the search
+
+* When mismatch occurs, instead of resetting j = 0, we move j back to lps[j-1].
 
 ```python
 def kmp_pi(s: str) -> list[int]:
@@ -182,12 +222,15 @@ def kmp_find_all(text: str, pattern: str) -> list[int]:
     return out
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 28 | Find the Index of the First Occurrence in a String | [Find the Index of the First Occurrence in a String](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/) |
-| 214 | Shortest Palindrome | [Shortest Palindrome](https://leetcode.com/problems/shortest-palindrome/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 28 | Find the Index of the First Occurrence in a String | [Link](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/) | - |
+| 214 | Shortest Palindrome | [Link](https://leetcode.com/problems/shortest-palindrome/) | - |
+| 686 | Repeated String Match | [Link](https://leetcode.com/problems/repeated-string-match/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/12/30/medium-686-repeated-string-match/) |
 
 ## Manacher (Longest Palindromic Substring, O(n))
+
+**When to use:** "longest palindromic substring" when O(n) time is required, or counting all palindromic substrings efficiently.
 
 ```python
 def manacher(s: str) -> str:
@@ -219,11 +262,13 @@ def manacher(s: str) -> str:
     return s[start : start + best_len]
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 5 | [Longest Palindromic Substring](/2026/01/08/medium-5-longest-palindromic-substring/) | [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 5 | Longest Palindromic Substring | [Link](https://leetcode.com/problems/longest-palindromic-substring/) | - |
 
 ## Z-Algorithm (Pattern occurrences)
+
+**When to use:** "find all pattern occurrences", "longest happy prefix", or as an alternative to KMP for pattern matching.
 
 ```python
 def z_func(s: str) -> list[int]:
@@ -244,11 +289,13 @@ def z_func(s: str) -> list[int]:
     return z
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 1392 | Longest Happy Prefix | [Longest Happy Prefix](https://leetcode.com/problems/longest-happy-prefix/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 1392 | Longest Happy Prefix | [Link](https://leetcode.com/problems/longest-happy-prefix/) | - |
 
-## String Rolling Hash (Rabin-Karp)
+## String Rolling Hash (Rabin–Karp)
+
+**When to use:** "repeated DNA sequences", "longest duplicate substring", or when you need to compare many substrings in O(1) each after O(n) preprocessing.
 
 ```python
 class RH:
@@ -268,8 +315,26 @@ class RH:
         return (self.h[r] - self.h[l] * self.p[r - l]) % self.M
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 187 | [Repeated DNA Sequences](/2026/02/27/medium-187-repeated-dna-sequences/) | [Repeated DNA Sequences](https://leetcode.com/problems/repeated-dna-sequences/) |
-| 1044 | Longest Duplicate Substring | [Longest Duplicate Substring](https://leetcode.com/problems/longest-duplicate-substring/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 187 | Repeated DNA Sequences | [Link](https://leetcode.com/problems/repeated-dna-sequences/) | - |
+| 686 | Repeated String Match | [Link](https://leetcode.com/problems/repeated-string-match/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/12/30/medium-686-repeated-string-match/) |
+| 1044 | Longest Duplicate Substring | [Link](https://leetcode.com/problems/longest-duplicate-substring/) | - |
 
+## Summary
+
+| Pattern | Signal Phrases | Time |
+|---|---|---|
+| Sliding Window | "substring", "subarray", "at most k" | O(n) |
+| Two Pointers | "sorted", "pair", "container" | O(n) |
+| Binary Search on Answer | "minimize max", "feasibility" | O(n log range) |
+| Prefix Sum | "range sum", "subarray sum" | O(n) build, O(1) query |
+| Hash Map | "frequency", "group", "two sum" | O(n) |
+| KMP | "pattern in string" | O(n + m) |
+
+## More templates
+
+- **Data structures (prefix sum, monotonic stack):** [Data Structures & Core Algorithms](/posts/2025-10-29-leetcode-templates-data-structures/)
+- **Graph, Search:** [Graph](/posts/2025-10-29-leetcode-templates-graph/), [Search](/posts/2026-01-20-leetcode-templates-search/)
+- **Master index:** [Categories & Templates](/posts/2025-10-29-leetcode-categories-and-templates/)
+{% endraw %}

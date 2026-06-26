@@ -1,78 +1,36 @@
 ---
 layout: post
-title: "LeetCode Templates: Data Structures"
+title: "Algorithm Templates: Data Structures & Core Algorithms"
 date: 2025-10-29 00:00:00 -0700
-categories: [leetcode, templates, data-structures]
+categories: leetcode templates data-structures algorithms
 permalink: /posts/2025-10-29-leetcode-templates-data-structures/
-tags: [leetcode, templates, data-structures]
+tags: [leetcode, templates, data-structures, algorithms]
 ---
+
+This page is your toolbox of essential data structures for LeetCode. Each template is self-contained C++ you can copy directly into your solution. They range from beginner-friendly (binary search, prefix sum) to advanced (segment tree, sparse table) — start with what you need and come back for more as you level up.
+
+> **This is the foundation.** These data structures are the building blocks that other templates (DFS, BFS, DP) build on. Master binary search and prefix sums first, then work outward — you'll see them appear inside graph, tree, and dynamic programming solutions.
 
 ## Contents
 
-- [How to Analyze Data Structures](#how-to-analyze-data-structures)
-- [Quick Selection Checklist](#quick-selection-checklist)
-- [Monotonic Stack](#monotonic-stack-next-greater--histogram)
-- [Monotonic Queue](#monotonic-queue-sliding-window-extrema)
-- [Heap / K-way Merge](#heap--k-way-merge)
-- [Union-Find (DSU)](#union-find-disjoint-set-union)
-- [Trie (Prefix Tree)](#trie-prefix-tree)
-- [Segment Tree](#segment-tree-range-query--point-update)
-- [Fenwick Tree](#fenwick-tree-binary-indexed-tree)
+- [Binary Search (Bounds)](#binary-search-bounds)
+- [Prefix Sum & Difference Array](#prefix-sum--difference-array)
+- [Monotonic Stack](#monotonic-stack)
+- [Monotonic Queue](#monotonic-queue)
+- [Heap / Priority Queue](#heap--priority-queue)
+- [Union-Find (DSU)](#union-find-dsu)
+- [Trie](#trie)
+- [Segment Tree](#segment-tree)
+- [Fenwick Tree (BIT)](#fenwick-tree-bit)
+- [Sparse Table (Range Min/Max)](#sparse-table-range-minmax)
 
-## How to Analyze Data Structures
+---
 
-When choosing a structure in interviews, use this decision frame:
+## Binary Search (Bounds)
 
-1. **Operation profile**
-   - What operations are needed? (insert, delete, query, min/max, prefix/range, connectivity)
-   - Which operation dominates total runtime?
+**When to use:** The input is sorted (or the answer space is monotonic) and you need to find a boundary — first element ≥ x, last element ≤ x, or the minimum/maximum value satisfying a condition.
 
-2. **Complexity targets**
-   - Required time per operation: `O(1)`, `O(log n)`, or `O(n)`?
-   - Can preprocessing be expensive if queries are cheap afterward?
-
-3. **Data properties**
-   - Sorted vs unsorted, static vs dynamic, unique vs duplicate-heavy
-   - Local window constraints vs global graph constraints
-
-4. **Invariant design**
-   - Define the exact invariant your structure maintains
-   - Example: "Deque indices are decreasing by value" or "Parent pointers form disjoint components"
-
-5. **Memory and constants**
-   - Same asymptotic complexity can have very different constants
-   - Python-specific overhead matters for large `n`
-
-6. **Failure modes**
-   - Off-by-one index bugs
-   - Incorrect stale-element removal in window structures
-   - Incorrect path compression / union logic in DSU
-
-### Operation Matrix
-
-| Structure | Typical Use | Update | Query |
-|---|---|---:|---:|
-| Monotonic Stack | next greater, histogram | `O(1)` amortized | `O(1)` amortized per element |
-| Monotonic Queue | sliding window max/min | `O(1)` amortized | `O(1)` per window |
-| Heap | top-k, k-way merge | `O(log n)` | `O(1)` top, `O(log n)` pop |
-| DSU | connectivity under unions | almost `O(1)` amortized | almost `O(1)` amortized |
-| Trie | prefix/word dictionary | `O(L)` | `O(L)` |
-| Segment Tree | dynamic range query | `O(log n)` | `O(log n)` |
-| Fenwick Tree | prefix sum / point update | `O(log n)` | `O(log n)` |
-
-## Quick Selection Checklist
-
-- Need **next greater / nearest constraint** on each element -> monotonic stack
-- Need **sliding window max/min** -> monotonic queue
-- Need repeated **top-k or global min/max with updates** -> heap
-- Need **dynamic connectivity** -> DSU
-- Need **prefix dictionary** or string lookup by prefix -> trie
-- Need **range query + point update** on arrays -> segment tree or Fenwick
-- Need just **prefix/range sums** with point updates -> Fenwick is simpler
-
-## Monotonic Stack (next greater / histogram)
-
-Use when each element should be processed once and you need nearest larger/smaller relationships.
+Half-open range `[lo, hi)`. Use when you need first ≥ x (lower_bound) or first > x (upper_bound).
 
 ```python
 from typing import List
@@ -93,14 +51,18 @@ def next_greater_circular(nums: List[int]) -> List[int]:
 ```
 
 | ID | Title | Link |
-|---|---|---|
-| 739 | Daily Temperatures | [Daily Temperatures](https://leetcode.com/problems/daily-temperatures/) |
-| 84 | Largest Rectangle in Histogram | [Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/) |
-| 503 | Next Greater Element II | [Next Greater Element II](https://leetcode.com/problems/next-greater-element-ii/) |
+|----|--------|------|
+| 34 | Find First and Last Position | [Link](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/) |
+| 35 | Search Insert Position | [Link](https://leetcode.com/problems/search-insert-position/) |
+| 875 | Koko Eating Bananas | [Link](https://leetcode.com/problems/koko-eating-bananas/) |
 
-## Monotonic Queue (sliding window extrema)
+---
 
-Use when you need min/max over every fixed-size window in linear time.
+## Prefix Sum & Difference Array
+
+**When to use:** You need to answer many "sum of subarray [l, r]" queries, or apply the same increment to many ranges efficiently.
+
+Prefix sum: range sum in O(1). Difference array: range add in O(1), then one prefix sum to recover.
 
 ```python
 from collections import deque
@@ -126,13 +88,18 @@ def max_sliding_window(nums: List[int], k: int) -> List[int]:
 ```
 
 | ID | Title | Link |
-|---|---|---|
-| 239 | Sliding Window Maximum | [Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/) |
-| 1438 | Longest Continuous Subarray With Absolute Diff <= Limit | [Longest Continuous Subarray With Absolute Diff <= Limit](https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/) |
+|----|--------|------|
+| 560 | Subarray Sum Equals K | [Link](https://leetcode.com/problems/subarray-sum-equals-k/) |
+| 1109 | Corporate Flight Bookings | [Link](https://leetcode.com/problems/corporate-flight-bookings/) |
+| 1094 | Car Pooling | [Link](https://leetcode.com/problems/car-pooling/) |
 
-## Heap / K-way Merge
+---
 
-Use for "always extract smallest/largest next" workflows.
+## Monotonic Stack
+
+**When to use:** You need "next greater element", "next smaller element", "largest rectangle in histogram", or any problem where each element is compared to its neighbors in one direction.
+
+Maintain indices with strictly increasing (or decreasing) values. Use for next greater/smaller, or histogram rectangle.
 
 ```python
 import heapq
@@ -157,13 +124,20 @@ def merge_k_sorted_lists(lists: List[List[int]]) -> List[int]:
 ```
 
 | ID | Title | Link |
-|---|---|---|
-| 23 | Merge k Sorted Lists | [Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/) |
-| 295 | Find Median from Data Stream | [Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/) |
+|----|--------|------|
+| 739 | Daily Temperatures | [Link](https://leetcode.com/problems/daily-temperatures/) |
+| 42 | Trapping Rain Water | [Link](https://leetcode.com/problems/trapping-rain-water/) |
+| 84 | Largest Rectangle in Histogram | [Link](https://leetcode.com/problems/largest-rectangle-in-histogram/) |
+| 503 | Next Greater Element II | [Link](https://leetcode.com/problems/next-greater-element-ii/) |
+| 1944 | Visible People in Queue | [Link](https://leetcode.com/problems/number-of-visible-people-in-a-queue/) |
 
-## Union-Find (Disjoint Set Union)
+---
 
-Use for incremental connectivity queries in undirected graphs.
+## Monotonic Queue
+
+**When to use:** You need the maximum or minimum within a sliding window of fixed size, or need to maintain a monotonic property as elements enter and leave a window.
+
+Deque of indices with values in monotonic order. Sliding window max/min.
 
 ```python
 class DSU:
@@ -192,14 +166,17 @@ class DSU:
 ```
 
 | ID | Title | Link |
-|---|---|---|
-| 684 | Redundant Connection | [Redundant Connection](https://leetcode.com/problems/redundant-connection/) |
-| 721 | Accounts Merge | [Accounts Merge](https://leetcode.com/problems/accounts-merge/) |
-| 1319 | Number of Operations to Make Network Connected | [Number of Operations to Make Network Connected](https://leetcode.com/problems/number-of-operations-to-make-network-connected/) |
+|----|--------|------|
+| 239 | Sliding Window Maximum | [Link](https://leetcode.com/problems/sliding-window-maximum/) |
+| 1438 | Longest Continuous Subarray With Abs Diff ≤ Limit | [Link](https://leetcode.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit/) |
 
-## Trie (Prefix Tree)
+---
 
-Use for fast prefix-based word operations.
+## Heap / Priority Queue
+
+**When to use:** You repeatedly need the smallest (or largest) element — merging k sorted lists, scheduling, median maintenance, or any "top K" problem.
+
+Min-heap: `priority_queue<T, vector<T>, greater<T>>`. K-way merge: push heads, pop min, push next from same list.
 
 ```python
 class TrieNode:
@@ -238,14 +215,17 @@ class Trie:
 ```
 
 | ID | Title | Link |
-|---|---|---|
-| 208 | Implement Trie | [Implement Trie](https://leetcode.com/problems/implement-trie-prefix-tree/) |
-| 211 | Add and Search Word | [Add and Search Word](https://leetcode.com/problems/design-add-and-search-words-data-structure/) |
-| 212 | Word Search II | [Word Search II](https://leetcode.com/problems/word-search-ii/) |
+|----|--------|------|
+| 23 | Merge k Sorted Lists | [Link](https://leetcode.com/problems/merge-k-sorted-lists/) |
+| 295 | Find Median from Data Stream | [Link](https://leetcode.com/problems/find-median-from-data-stream/) |
 
-## Segment Tree (range query / point update)
+---
 
-Use when you need many dynamic range queries beyond simple prefix sums.
+## Union-Find (DSU)
+
+**When to use:** You need to track connected components, determine if two nodes are in the same group, or merge groups — common in graph connectivity, redundant edge detection, and "accounts merge" problems.
+
+Path compression + rank merge. `find(x)`, `unite(a,b)`.
 
 ```python
 from typing import List
@@ -297,13 +277,18 @@ class SegmentTreeSum:
 ```
 
 | ID | Title | Link |
-|---|---|---|
-| 307 | Range Sum Query - Mutable | [Range Sum Query - Mutable](https://leetcode.com/problems/range-sum-query-mutable/) |
-| 732 | My Calendar III | [My Calendar III](https://leetcode.com/problems/my-calendar-iii/) |
+|----|--------|------|
+| 684 | Redundant Connection | [Link](https://leetcode.com/problems/redundant-connection/) |
+| 721 | Accounts Merge | [Link](https://leetcode.com/problems/accounts-merge/) |
+| 1319 | Number of Operations to Make Network Connected | [Link](https://leetcode.com/problems/number-of-operations-to-make-network-connected/) |
 
-## Fenwick Tree (Binary Indexed Tree)
+---
 
-Use when operations are point update + prefix/range sum, with lower implementation overhead than segment tree.
+## Trie
+
+**When to use:** Problems involve prefix matching, autocomplete, word search in a dictionary, or "find all words with prefix X". Also useful for XOR-maximization with a bitwise trie.
+
+Fixed alphabet (e.g. 26). Insert and search in O(|s|).
 
 ```python
 class Fenwick:
@@ -334,6 +319,152 @@ class Fenwick:
 ```
 
 | ID | Title | Link |
-|---|---|---|
-| 315 | Count of Smaller Numbers After Self | [Count of Smaller Numbers After Self](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) |
-| 307 | Range Sum Query - Mutable | [Range Sum Query - Mutable](https://leetcode.com/problems/range-sum-query-mutable/) |
+|----|--------|------|
+| 208 | Implement Trie | [Link](https://leetcode.com/problems/implement-trie-prefix-tree/) |
+| 211 | Design Add and Search Words | [Link](https://leetcode.com/problems/design-add-and-search-words-data-structure/) |
+| 212 | Word Search II | [Link](https://leetcode.com/problems/word-search-ii/) |
+
+---
+
+## Segment Tree
+
+**When to use:** You need both range queries (sum, min, max) AND point or range updates on the same array. More powerful than Fenwick tree when you need lazy propagation or non-commutative operations.
+
+0-indexed range [0, n-1]. Point update, range sum (or min/max). Recursive implementation.
+
+```python
+class SegTree:
+    def __init__(self, n: int):
+        self.n = n
+        self.st = [0] * (4 * n)
+
+    def _upd(self, i: int, l: int, r: int, p: int, v: int) -> None:
+        if l == r:
+            self.st[i] = v
+            return
+        m = (l + r) // 2
+        if p <= m:
+            self._upd(2 * i, l, m, p, v)
+        else:
+            self._upd(2 * i + 1, m + 1, r, p, v)
+        self.st[i] = self.st[2 * i] + self.st[2 * i + 1]
+
+    def _qry(self, i: int, l: int, r: int, ql: int, qr: int) -> int:
+        if qr < l or r < ql:
+            return 0
+        if ql <= l and r <= qr:
+            return self.st[i]
+        m = (l + r) // 2
+        return self._qry(2 * i, l, m, ql, qr) + self._qry(
+            2 * i + 1, m + 1, r, ql, qr
+        )
+
+    def upd(self, p: int, v: int) -> None:
+        self._upd(1, 0, self.n - 1, p, v)
+
+    def qry(self, ql: int, qr: int) -> int:
+        return self._qry(1, 0, self.n - 1, ql, qr)
+```
+
+| ID | Title | Link |
+|----|--------|------|
+| 307 | Range Sum Query – Mutable | [Link](https://leetcode.com/problems/range-sum-query-mutable/) |
+| 732 | My Calendar III | [Link](https://leetcode.com/problems/my-calendar-iii/) |
+
+---
+
+## Fenwick Tree (BIT)
+
+**When to use:** You need prefix sums with point updates — simpler and faster constant than segment tree when you don't need lazy propagation. Great for counting inversions or "count of smaller numbers after self".
+
+1-indexed. Point add, prefix sum. Range sum [l, r] = sum(r) - sum(l-1).
+
+```python
+class BIT:
+    def __init__(self, n: int):
+        self.n = n
+        self.f = [0] * (n + 1)
+
+    def add(self, i: int, v: int) -> None:
+        i += 1  # convert 0-indexed to 1-indexed
+        while i <= self.n:
+            self.f[i] += v
+            i += i & -i
+
+    def sum(self, i: int) -> int:
+        i += 1  # convert 0-indexed to 1-indexed
+        s = 0
+        while i > 0:
+            s += self.f[i]
+            i -= i & -i
+        return s
+
+    def range_sum(self, l: int, r: int) -> int:
+        return self.sum(r) - self.sum(l - 1)
+```
+
+| ID | Title | Link |
+|----|--------|------|
+| 307 | Range Sum Query – Mutable | [Link](https://leetcode.com/problems/range-sum-query-mutable/) |
+| 315 | Count of Smaller Numbers After Self | [Link](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) |
+| 308 | Range Sum Query 2D – Mutable | [Link](https://leetcode.com/problems/range-sum-query-2d-mutable/) |
+
+---
+
+## Sparse Table (Range Min/Max)
+
+**When to use:** You need O(1) range min/max/gcd queries with NO updates. Perfect for static arrays where you precompute once and query many times.
+
+O(n log n) build, O(1) range min/max. Idempotent only (min, max, gcd). 0-indexed.
+
+```python
+class SparseTable:
+    def __init__(self, a: list[int]):
+        n = len(a)
+        self.lg = [0] * (n + 1)
+        for i in range(2, n + 1):
+            self.lg[i] = self.lg[i // 2] + 1
+        k = self.lg[n] + 1
+        self.st = [[0] * k for _ in range(n)]
+        for i in range(n):
+            self.st[i][0] = a[i]
+        for j in range(1, k):
+            step = 1 << j
+            prev = 1 << (j - 1)
+            for i in range(n - step + 1):
+                self.st[i][j] = self.op(self.st[i][j - 1], self.st[i + prev][j - 1])
+
+    def op(self, a: int, b: int) -> int:
+        return min(a, b)  # or max
+
+    def qry(self, l: int, r: int) -> int:
+        j = self.lg[r - l + 1]
+        return self.op(self.st[l][j], self.st[r - (1 << j) + 1][j])
+```
+
+| ID | Title | Link |
+|----|--------|------|
+| — | Range min/max, GCD (no update) | — |
+
+---
+
+---
+
+## Quick Reference
+
+| Structure | When to Use | Operations | Time |
+|---|---|---|---|
+| Binary Search | Sorted data, find boundary | lower/upper bound | O(log n) |
+| Prefix Sum | Range sum queries | build + query | O(n) + O(1) |
+| Monotonic Stack | Next greater/smaller | push/pop | O(n) |
+| DSU | Connected components, union | find/union | O(α(n)) |
+| Trie | Prefix search, autocomplete | insert/search | O(L) |
+| Segment Tree | Range query + update | build/query/update | O(n) + O(log n) |
+| Fenwick Tree | Prefix sums + point update | update/query | O(log n) |
+
+## More Templates
+
+- **Beginner's Guide:** [LeetCode Beginner's Guide](/2026/06/25/leetcode-beginners-guide/)
+- **Graph (BFS, Dijkstra, Topo, DSU):** [Graph Templates](/posts/2025-10-29-leetcode-templates-graph/)
+- **Binary search (rotated, 2D, answer space):** [Search Templates](/posts/2026-01-20-leetcode-templates-search/)
+- **DP, Backtracking, Greedy, Stack:** [Categories & Templates](/posts/2025-10-29-leetcode-categories-and-templates/)

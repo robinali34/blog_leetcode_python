@@ -8,7 +8,11 @@ tags: [leetcode, templates, design, data-structures]
 ---
 
 {% raw %}
-Minimal, copy-paste Python for LRU/LFU cache, Trie, time-based key-value store, and common design patterns.
+Data structure design problems are among the most popular interview questions at top tech companies. This page provides complete, tested C++ implementations for LRU/LFU cache, Trie, time-based key-value store, and other classic design patterns. The key insight for most of these problems is combining two or more simple structures to achieve the required time complexity.
+
+> **Design problems test your ability to compose data structures.** The trick is almost always combining a hash map with another structure (linked list, heap, array) to get O(1) for multiple operations.
+
+- **Beginner's Guide:** [LeetCode Beginner's Guide](/2026/06/25/leetcode-beginners-guide/)
 
 ## Contents
 
@@ -17,10 +21,11 @@ Minimal, copy-paste Python for LRU/LFU cache, Trie, time-based key-value store, 
 - [LFU Cache](#lfu-cache)
 - [Trie](#trie)
 - [Time-based Key-Value Store](#time-based-key-value-store)
-- [Hit counter (time window)](#hit-counter-time-window)
 - [Design Patterns](#design-patterns)
 
 ## Stack-based Design
+
+**When to use:** "get min/max in O(1)", "design a stack with extra operations", or when you need to track additional state alongside the primary data.
 
 ### Min Stack
 Maintain a primary stack for data and an auxiliary stack to track the minimum value at each state.
@@ -52,9 +57,11 @@ class MinStack:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 155 | Min Stack | [Link](https://leetcode.com/problems/min-stack/) | [Solution](https://robinali34.github.io/blog_leetcode/2026/02/11/medium-155-min-stack/) |
+| 155 | Min Stack | [Link](https://leetcode.com/problems/min-stack/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/02/11/medium-155-min-stack/) |
 
 ## LRU Cache
+
+**When to use:** "least recently used", "design a cache with O(1) get and put", or any eviction policy based on access recency.
 
 Least Recently Used cache using hash map + doubly linked list.
 
@@ -124,9 +131,11 @@ class ThreadSafeLRUCache:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 146 | LRU Cache | [Link](https://leetcode.com/problems/lru-cache/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-14-medium-146-lru-cache/) |
+| 146 | LRU Cache | [Link](https://leetcode.com/problems/lru-cache/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-14-medium-146-lru-cache/) |
 
 ## LFU Cache
+
+**When to use:** "least frequently used", "evict the element used fewest times", or cache designs where frequency matters more than recency.
 
 Least Frequently Used cache.
 
@@ -177,9 +186,11 @@ class LFUCache:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 460 | LFU Cache | [Link](https://leetcode.com/problems/lfu-cache/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-14-hard-460-lfu-cache/) |
+| 460 | LFU Cache | [Link](https://leetcode.com/problems/lfu-cache/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-14-hard-460-lfu-cache/) |
 
 ## Trie
+
+**When to use:** "prefix search", "autocomplete", "word dictionary with wildcards", or any problem requiring efficient prefix lookups over a set of strings.
 
 Prefix tree for efficient string operations.
 
@@ -227,6 +238,8 @@ class Trie:
 
 ## Time-based Key-Value Store
 
+**When to use:** "get value at timestamp", "versioned storage", or when you need to retrieve the most recent value at or before a given time.
+
 ```python
 import bisect
 from collections import defaultdict
@@ -253,16 +266,12 @@ class TimeMap:
 | ID | Title | Link | Solution |
 |---|---|---|---|
 | 981 | Time Based Key-Value Store | [Link](https://leetcode.com/problems/time-based-key-value-store/) | - |
-
-## Hit counter (time window)
-
-Rolling window of timestamps: deque of hits, binary search on sorted times, or bucket counts per second — see blog for tradeoffs.
-
-| ID | Title | Link | Solution |
-|---|---|---|---|
-| 362 | Design Hit Counter | [Link](https://leetcode.com/problems/design-hit-counter/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/19/medium-362-design-hit-counter/) |
+| 362 | Design Hit Counter | [Link](https://leetcode.com/problems/design-hit-counter/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/18/medium-362-design-hit-counter/) |
+| 1146 | Snapshot Array | [Link](https://leetcode.com/problems/snapshot-array/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/19/medium-1146-snapshot-array/) |
 
 ## Design Patterns
+
+**When to use:** "random with weight", "design tic-tac-toe", "iterator", or other custom data structure problems that combine multiple techniques.
 
 ### Random Pick with Weight
 
@@ -318,12 +327,26 @@ class TicTacToe:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 528 | Random Pick with Weight | [Link](https://leetcode.com/problems/random-pick-with-weight/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-24-medium-528-random-pick-with-weight/) |
-| 348 | Design Tic-Tac-Toe | [Link](https://leetcode.com/problems/design-tic-tac-toe/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-10-21-medium-348-design-tic-tac-toe/) |
-| 398 | Random Pick Index | [Link](https://leetcode.com/problems/random-pick-index/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-24-medium-398-random-pick-index/) |
-| 2043 | Simple Bank System | [Link](https://leetcode.com/problems/simple-bank-system/) | [Solution](https://robinali34.github.io/blog_leetcode/2025/10/20/medium-2043-simple-bank-system/) |
-| 281 | Zigzag Iterator | [Link](https://leetcode.com/problems/zigzag-iterator/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-12-10-medium-281-zigzag-iterator/) |
-| 1206 | Design Skiplist | [Link](https://leetcode.com/problems/design-skiplist/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-12-03-hard-1206-design-skiplist/) |
+| 528 | Random Pick with Weight | [Link](https://leetcode.com/problems/random-pick-with-weight/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-medium-528-random-pick-with-weight/) |
+| 348 | Design Tic-Tac-Toe | [Link](https://leetcode.com/problems/design-tic-tac-toe/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/04/medium-348-design-tic-tac-toe/) |
+| 1275 | Find Winner on a Tic Tac Toe Game | [Link](https://leetcode.com/problems/find-winner-on-a-tic-tac-toe-game/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/04/easy-1275-find-winner-on-a-tic-tac-toe-game/) |
+| 398 | Random Pick Index | [Link](https://leetcode.com/problems/random-pick-index/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-medium-398-random-pick-index/) |
+| 2043 | Simple Bank System | [Link](https://leetcode.com/problems/simple-bank-system/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/10/20/medium-2043-simple-bank-system/) |
+| 281 | Zigzag Iterator | [Link](https://leetcode.com/problems/zigzag-iterator/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-10-medium-281-zigzag-iterator/) |
+| 1206 | Design Skiplist | [Link](https://leetcode.com/problems/design-skiplist/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-03-hard-1206-design-skiplist/) |
+| 341 | Flatten Nested List Iterator | [Link](https://leetcode.com/problems/flatten-nested-list-iterator/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/24/medium-341-flatten-nested-list-iterator/) |
+| 1115 | Print FooBar Alternately | [Link](https://leetcode.com/problems/print-foobar-alternately/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/28/medium-1115-print-foobar-alternately/) |
+| 1188 | Design Bounded Blocking Queue | [Link](https://leetcode.com/problems/design-bounded-blocking-queue/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/29/medium-1188-design-bounded-blocking-queue/) |
+
+## Summary
+
+| Pattern | Signal Phrases | Structures Used |
+|---|---|---|
+| Min Stack | "min in O(1)" | Two stacks |
+| LRU Cache | "least recently used" | Hash map + doubly linked list |
+| LFU Cache | "least frequently used" | Hash map + frequency buckets |
+| Trie | "prefix search", "autocomplete" | Tree of character nodes |
+| Time-based KV | "get value at timestamp" | Hash map + binary search |
 
 ## More templates
 

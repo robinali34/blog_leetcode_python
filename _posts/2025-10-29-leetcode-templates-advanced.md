@@ -1,44 +1,29 @@
 ---
 layout: post
-title: "LeetCode Templates: Advanced Techniques"
+title: "Algorithm Templates: Advanced Techniques"
 date: 2025-10-29 00:00:00 -0700
-categories: [leetcode, templates, advanced]
+categories: leetcode templates advanced
 permalink: /posts/2025-10-29-leetcode-templates-advanced/
 tags: [leetcode, templates, advanced]
 ---
 
+This page covers specialized algorithmic techniques that appear in Hard-level LeetCode problems and competitive programming. These are not everyday patterns — most interviews won't require them — but when a problem does call for one of these techniques, knowing the template can turn an impossible problem into a straightforward implementation.
+
+> **These are specialized techniques for hard problems.** You won't need them for most interviews, but they appear in competitive programming and occasional Hard-level LeetCode problems.
+
+- **Beginner's Guide:** [LeetCode Beginner's Guide](/2026/06/25/leetcode-beginners-guide/)
+
 ## Contents
 
-- [How to Analyze Advanced Techniques](#how-to-analyze-advanced-techniques)
 - [Coordinate Compression](#coordinate-compression)
 - [Meet-in-the-Middle (subset sums)](#meet-in-the-middle-subset-sums)
 - [Manacher (LPS O(n))](#manacher-longest-palindromic-substring-on)
 - [Z-Algorithm](#z-algorithm-pattern-occurrences)
 - [Bitwise Trie (Max XOR Pair)](#bitwise-trie-max-xor-pair)
 
-## How to Analyze Advanced Techniques
-
-Use advanced techniques only when baseline patterns are close but still too slow.
-
-1. **Identify the bottleneck**
-   - `O(n^2)` from pairwise checks?
-   - `O(2^n)` subset brute force?
-   - repeated string comparisons?
-
-2. **Match structure to pattern**
-   - Huge values, small distinct coordinates -> coordinate compression
-   - `n <= 40` subset sum variants -> meet-in-the-middle
-   - many palindrome queries -> Manacher
-   - prefix/suffix match logic -> Z-algorithm
-   - maximum XOR objective -> bitwise trie
-
-3. **Validate complexity**
-   - Compression: `O(n log n)` preprocess, `O(log n)` map lookup
-   - MITM: `O(2^(n/2) log 2^(n/2))`
-   - Manacher/Z: `O(n)`
-   - Bitwise trie: `O(B)` per insert/query (`B=31`)
-
 ## Coordinate Compression
+
+**When to use:** values are too large for direct array indexing (e.g., values up to 10^9 but only n ≤ 10^5 distinct values), or you need to map sparse values into a dense range.
 
 ```python
 from bisect import bisect_left
@@ -58,12 +43,14 @@ class Compressor:
         return bisect_left(self.vals, x)
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 315 | Count of Smaller Numbers After Self | [Count of Smaller Numbers After Self](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) |
-| 327 | Count of Range Sum | [Count of Range Sum](https://leetcode.com/problems/count-of-range-sum/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 315 | Count of Smaller Numbers After Self | [Link](https://leetcode.com/problems/count-of-smaller-numbers-after-self/) | - |
+| 327 | Count of Range Sum | [Link](https://leetcode.com/problems/count-of-range-sum/) | - |
 
 ## Meet-in-the-Middle (subset sums)
+
+**When to use:** "subset sum" with n ≤ 40 (too large for 2^n but feasible as 2^(n/2)), or when brute-force is exponential but splitting the input in half makes it tractable.
 
 ```python
 from bisect import bisect_left, bisect_right
@@ -95,12 +82,14 @@ def count_subsets_equal_target(nums: list[int], target: int) -> int:
     return ans
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 1755 | Closest Subsequence Sum | [Closest Subsequence Sum](https://leetcode.com/problems/closest-subsequence-sum/) |
-| 805 | Split Array With Same Average | [Split Array With Same Average](https://leetcode.com/problems/split-array-with-same-average/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 1755 | Closest Subsequence Sum | [Link](https://leetcode.com/problems/closest-subsequence-sum/) | - |
+| 805 | Split Array With Same Average | [Link](https://leetcode.com/problems/split-array-with-same-average/) | - |
 
 ## Manacher (Longest Palindromic Substring, O(n))
+
+**When to use:** "longest palindromic substring" when O(n) is required, or when you need all palindrome radii in linear time.
 
 ```python
 def manacher(s: str) -> str:
@@ -137,11 +126,13 @@ def manacher(s: str) -> str:
     return s[start : start + best_len]
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 5 | Longest Palindromic Substring | [Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 5 | Longest Palindromic Substring | [Link](https://leetcode.com/problems/longest-palindromic-substring/) | - |
 
 ## Z-Algorithm (Pattern occurrences)
+
+**When to use:** "find all occurrences of pattern in string", or when you need the longest prefix match at each position (alternative to KMP).
 
 ```python
 def z_func(s: str) -> list[int]:
@@ -162,11 +153,13 @@ def z_func(s: str) -> list[int]:
     return z
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 1392 | Longest Happy Prefix | [Longest Happy Prefix](https://leetcode.com/problems/longest-happy-prefix/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 1392 | Longest Happy Prefix | [Link](https://leetcode.com/problems/longest-happy-prefix/) | - |
 
 ## Bitwise Trie (Max XOR Pair)
+
+**When to use:** "maximum XOR of two numbers", or when you need to greedily pick bits to maximize/minimize a bitwise operation.
 
 ```python
 class BitTrie:
@@ -200,6 +193,23 @@ class BitTrie:
         return ans
 ```
 
-| ID | Title | Link |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 421 | Maximum XOR of Two Numbers in an Array | [Link](https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/) | - |
+
+## Summary
+
+| Technique | When to Use | Time |
 |---|---|---|
-| 421 | Maximum XOR of Two Numbers in an Array | [Maximum XOR of Two Numbers in an Array](https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/) |
+| Coordinate Compression | Values too large for array indexing | O(n log n) |
+| Meet-in-the-Middle | Subset sum with n ≤ 40 | O(2^(n/2)) |
+| Manacher | Longest palindromic substring in O(n) | O(n) |
+| Z-Algorithm | Pattern matching | O(n + m) |
+| Bitwise Trie | Maximum XOR pair | O(n × 32) |
+
+## More templates
+
+- **Arrays & Strings (Manacher, Z, rolling hash):** [Arrays & Strings](/posts/2025-10-29-leetcode-templates-arrays-strings/)
+- **Data structures (Trie):** [Data Structures & Core Algorithms](/posts/2025-10-29-leetcode-templates-data-structures/)
+- **Search (divide and conquer):** [Search](/posts/2026-01-20-leetcode-templates-search/)
+- **Master index:** [Categories & Templates](/posts/2025-10-29-leetcode-categories-and-templates/)

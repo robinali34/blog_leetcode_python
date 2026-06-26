@@ -12,9 +12,9 @@ This page contains a comprehensive list of all LeetCode problems solved in this 
 
 ## Summary Statistics
 
-- **Total Posts:** 325 (LC problem posts)
+- **Total Posts:** 327 (LC problem posts)
 - **Easy:** 57 problems
-- **Medium:** 234 problems
+- **Medium:** 236 problems
 - **Hard:** 34 problems
 
 ## Problems by Category
@@ -29,7 +29,7 @@ _Counts are computed from the `Category` + `Solution Approach` columns in the fu
 - **Backtracking** (15): [Backtracking](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/)
 - **Monotonic Stack / Queue** (11): [Stack](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/), [Queue](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-queue/)
 - **Graph & Union Find** (38): [Graph](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/)
-- **Data Structure Design** (33): [Data Structure Design](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/)
+- **Data Structure Design** (34): [Data Structure Design](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/)
 - **Intervals & Sweep Line** (12): [Greedy](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/)
 - **Math & Bit Manipulation** (28): [Math & Bit Manipulation](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-math-bit-manipulation/), [Math & Geometry](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-math-geometry/)
 - **Run-Length Encoding** (2)
@@ -42,16 +42,16 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 
 1. **Dynamic Programming (DP)** - 39 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-dp/))
 2. **Monotonic Stack** - 9 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-leetcode-templates-stack/))
-3. **Binary Search** - 20 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/))
+3. **Binary Search** - 21 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2026-01-20-leetcode-templates-search/))
 4. **Hash Map/Set** - 45 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
-5. **DFS/BFS** - 64 problems ([DFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/))
+5. **DFS/BFS** - 65 problems ([DFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-dfs/), [BFS template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-bfs/))
 6. **Backtracking** - 15 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-backtracking/))
 7. **Sliding Window** - 17 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
 8. **Two Pointers** - 38 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-arrays-strings/))
 9. **Trie** - 8 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-data-structures/))
 10. **Union Find** - 10 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-29-leetcode-templates-graph/))
 11. **Sweep Line** - 4 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-12-14-leetcode-templates-greedy/))
-12. **Data Structure Design** - 33 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/))
+12. **Data Structure Design** - 34 problems ([template](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-24-leetcode-templates-data-structure-design/))
 
 ## Tips for Problem Solving
 
@@ -327,8 +327,10 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 | [1115](https://robinali34.github.io/blog_leetcode_python/2026/03/28/medium-1115-print-foobar-alternately/)                                    | [Print FooBar Alternately](https://leetcode.com/problems/print-foobar-alternately/)                                                               | Medium     | Concurrency, Threading                                                                  | [Threading, Semaphore, Condition Variable](https://robinali34.github.io/blog_leetcode_python/2026/03/28/medium-1115-print-foobar-alternately/)                                                  | 2026-03-28 |
 | [1124](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-1124-longest-well-performing-interval/)                            | [Longest Well Performing Interval](https://leetcode.com/problems/longest-well-performing-interval/)                                               | Medium     | Hash Map, Prefix Sum                                                                    | [Hash Map, Prefix Sum](https://robinali34.github.io/blog_leetcode_python/2025/10/16/medium-1124-longest-well-performing-interval/)                                                              | 2025-10-16 |
 | [1136](https://robinali34.github.io/blog_leetcode_python/2026/01/27/hard-1136-parallel-courses/)                                              | [Parallel Courses](https://leetcode.com/problems/parallel-courses/)                                                                               | Hard       | Graph, Topological Sort, DFS, Dynamic Programming                                       | [Graph, Topological Sort, DFS, Dynamic Programming, Memoization](https://robinali34.github.io/blog_leetcode_python/2026/01/27/hard-1136-parallel-courses/)                                      | 2026-01-27 |
+| [1146](https://robinali34.github.io/blog_leetcode_python/2026/03/19/medium-1146-snapshot-array/)                                            | [Snapshot Array](https://leetcode.com/problems/snapshot-array/)                                                                                   | Medium     | Design, Binary Search                                                                   | [Design, Binary Search, Versioned Data](https://robinali34.github.io/blog_leetcode_python/2026/03/19/medium-1146-snapshot-array/)                                                               | 2026-03-19 |
 | [1177](https://robinali34.github.io/blog_leetcode_python/2026/01/01/medium-1177-can-make-palindrome-from-substring/)                          | [Can Make Palindrome From Substring](https://leetcode.com/problems/can-make-palindrome-from-substring/)                                           | Medium     | String, Bit Manipulation, Prefix Sum, Hash Table                                        | [String, Bit Manipulation, Prefix Sum, Hash Table](https://robinali34.github.io/blog_leetcode_python/2026/01/01/medium-1177-can-make-palindrome-from-substring/)                                | 2026-01-01 |
 | [1188](https://robinali34.github.io/blog_leetcode_python/2026/03/29/medium-1188-design-bounded-blocking-queue/)                               | [Design Bounded Blocking Queue](https://leetcode.com/problems/design-bounded-blocking-queue/)                                                     | Medium     | Concurrency, Design                                                                     | [Threading, Semaphore, Queue](https://robinali34.github.io/blog_leetcode_python/2026/03/29/medium-1188-design-bounded-blocking-queue/)                                                          | 2026-03-29 |
+| [1197](https://robinali34.github.io/blog_leetcode_python/2026/03/19/medium-1197-minimum-knight-moves/)                                        | [Minimum Knight Moves](https://leetcode.com/problems/minimum-knight-moves/)                                                                       | Medium     | BFS, Graph                                                                              | [BFS, Shortest Path, Symmetry](https://robinali34.github.io/blog_leetcode_python/2026/03/19/medium-1197-minimum-knight-moves/)                                                                  | 2026-03-19 |
 | [1202](https://robinali34.github.io/blog_leetcode_python/2026/03/09/medium-1202-smallest-string-with-swaps/)                                  | [Smallest String With Swaps](https://leetcode.com/problems/smallest-string-with-swaps/)                                                           | Medium     | String, Union Find, Graph                                                               | [String, Dsu, Connected Components](https://robinali34.github.io/blog_leetcode_python/2026/03/09/medium-1202-smallest-string-with-swaps/)                                                       | 2026-03-09 |
 | [1206](https://robinali34.github.io/blog_leetcode_python/2025/12/03/hard-1206-design-skiplist/)                                               | [Design Skiplist](https://leetcode.com/problems/design-skiplist/)                                                                                 | Hard       | Data Structures, Skiplist, Linked List                                                  | [Data Structures, Skiplist, Linked List](https://robinali34.github.io/blog_leetcode_python/2025/12/03/hard-1206-design-skiplist/)                                                               | 2025-12-03 |
 | [1207](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-20-easy-1207-unique-number-of-occurrences/)                            | [Unique Number Of Occurrences](https://leetcode.com/problems/unique-number-of-occurrences/)                                                       | Easy       | Array, Hash Table                                                                       | [Array, Hash Table, Counting](https://robinali34.github.io/blog_leetcode_python/posts/2025-10-20-easy-1207-unique-number-of-occurrences/)                                                       | 2025-10-20 |
@@ -395,4 +397,4 @@ See the **All LeetCode Problems** table below for concrete problems in each cate
 ---
 
 *Last updated: April 22, 2026*
-*Total posts (LC problems): 325*
+*Total posts (LC problems): 327*

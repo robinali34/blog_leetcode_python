@@ -7,7 +7,7 @@ permalink: /posts/2025-11-13-leetcode-templates-calculator/
 tags: [leetcode, templates, calculator, expression-evaluation, stack]
 ---
 
-Minimal, copy-paste C++ for expression evaluation with +, −, ×, ÷ and parentheses. See also [Stack](/posts/2025-11-13-leetcode-templates-stack/) for RPN and nested expressions.
+Minimal, copy-paste Python for expression evaluation with +, −, ×, ÷ and parentheses. See also [Stack](/posts/2025-11-13-leetcode-templates-stack/) for RPN and nested expressions.
 
 ## Contents
 
@@ -62,7 +62,7 @@ return result + (sign  num)
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 224 | Basic Calculator | [Link](https://leetcode.com/problems/basic-calculator/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-13-medium-224-basic-calculator/) |
+| 224 | Basic Calculator | [Link](https://leetcode.com/problems/basic-calculator/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-medium-224-basic-calculator/) |
 
 ## Basic Calculator II (+, -, *, /)
 
@@ -131,7 +131,7 @@ return result + last
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 227 | Basic Calculator II | [Link](https://leetcode.com/problems/basic-calculator-ii/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-13-medium-227-basic-calculator-ii/) |
+| 227 | Basic Calculator II | [Link](https://leetcode.com/problems/basic-calculator-ii/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-medium-227-basic-calculator-ii/) |
 
 ## Basic Calculator III (All operators + parentheses)
 
@@ -206,7 +206,7 @@ class Solution:
 
 | ID | Title | Link | Solution |
 |---|---|---|---|
-| 772 | Basic Calculator III | [Link](https://leetcode.com/problems/basic-calculator-iii/) | [Solution](https://robinali34.github.io/blog_leetcode/posts/2025-11-13-hard-772-basic-calculator-iii/) |
+| 772 | Basic Calculator III | [Link](https://leetcode.com/problems/basic-calculator-iii/) | [Solution](https://robinali34.github.io/blog_leetcode_python/posts/2025-11-13-hard-772-basic-calculator-iii/) |
 
 ## Common Patterns
 

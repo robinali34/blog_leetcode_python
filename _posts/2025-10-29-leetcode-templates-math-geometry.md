@@ -1,33 +1,18 @@
 ---
 layout: post
-title: "LeetCode Templates: Math & Geometry"
+title: "Algorithm Templates: Math & Geometry"
 date: 2025-10-29 00:00:00 -0700
-categories: [leetcode, templates, math, geometry]
+categories: leetcode templates math geometry
 permalink: /posts/2025-10-29-leetcode-templates-math-geometry/
 tags: [leetcode, templates, math, geometry]
 ---
 
+Minimal, copy-paste Python for combinatorics (nCk mod P) and 2D geometry primitives (cross product, point on segment).
+
 ## Contents
 
-- [How to Analyze Math & Geometry](#how-to-analyze-math--geometry)
 - [Combinatorics (nCk mod P)](#combinatorics-nck-mod-p)
 - [Geometry Primitives (2D)](#geometry-primitives-2d)
-
-## How to Analyze Math & Geometry
-
-1. **Choose representation first**
-   - integers vs floating point
-   - normalized slope / gcd fractions for line problems
-
-2. **Avoid precision drift**
-   - use cross products and integer arithmetic when possible
-
-3. **Precompute for repeated queries**
-   - factorial / inverse factorial for many combination queries
-
-4. **Complexity targets**
-   - combinatorics preprocessing `O(N)`, query `O(1)`
-   - geometry primitives `O(1)` per orientation/intersection test
 
 ## Combinatorics (nCk mod P)
 
@@ -64,10 +49,10 @@ def nCk(n: int, k: int) -> int:
     return fact[n] * invfact[k] % MOD * invfact[n - k] % MOD
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 62 | Unique Paths | [Unique Paths](https://leetcode.com/problems/unique-paths/) |
-| 172 | Factorial Trailing Zeroes | [Factorial Trailing Zeroes](https://leetcode.com/problems/factorial-trailing-zeroes/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 62 | Unique Paths | [Link](https://leetcode.com/problems/unique-paths/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2025/09/24/medium-62-unique-paths/) |
+| 172 | Factorial Trailing Zeroes | [Link](https://leetcode.com/problems/factorial-trailing-zeroes/) | - |
 
 ## Geometry Primitives (2D)
 
@@ -95,8 +80,14 @@ def on_segment(a: P, b: P, c: P) -> bool:
     )
 ```
 
-| ID | Title | Link |
-|---|---|---|
-| 149 | Max Points on a Line | [Max Points on a Line](https://leetcode.com/problems/max-points-on-a-line/) |
-| 223 | Rectangle Area | [Rectangle Area](https://leetcode.com/problems/rectangle-area/) |
+| ID | Title | Link | Solution |
+|---|---|---|---|
+| 149 | Max Points on a Line | [Link](https://leetcode.com/problems/max-points-on-a-line/) | - |
+| 223 | Rectangle Area | [Link](https://leetcode.com/problems/rectangle-area/) | - |
+| 1344 | Angle Between Hands of a Clock | [Link](https://leetcode.com/problems/angle-between-hands-of-a-clock/) | [Solution](https://robinali34.github.io/blog_leetcode_python/2026/03/04/medium-1344-angle-between-hands-of-a-clock/) |
 
+## More templates
+
+- **DP (counting, paths):** [Dynamic Programming](/posts/2025-10-29-leetcode-templates-dp/)
+- **Data structures, Graph, Search:** [Data Structures & Core Algorithms](/posts/2025-10-29-leetcode-templates-data-structures/), [Graph](/posts/2025-10-29-leetcode-templates-graph/), [Search](/posts/2026-01-20-leetcode-templates-search/)
+- **Master index:** [Categories & Templates](/posts/2025-10-29-leetcode-categories-and-templates/)
